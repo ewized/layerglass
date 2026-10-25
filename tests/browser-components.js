@@ -94,13 +94,22 @@ async function run(name, engine) {
       stats.show(true);
     });
     await page.waitForFunction(() => window.statsReads >= 2);
-    const cellCount = await page.locator('#player-stats dd').count();
+    await page.locator('#player-stats [data-stats-section="video"]').evaluate(list => {
+      window.componentVideoCells = [...list.querySelectorAll('dd')].map(cell => [cell.dataset.statKey, cell]);
+    });
     const reads = await page.evaluate(() => { window.componentStats.remove(); return window.statsReads; });
     await page.waitForTimeout(1200);
     assert.equal(await page.evaluate(() => window.statsReads), reads, 'Removing stats must stop its sampling timer.');
     await page.evaluate(() => window.statsParent.insertBefore(window.componentStats, window.statsNext));
     await page.waitForFunction(before => window.statsReads >= before + 2, reads);
-    assert.equal(await page.locator('#player-stats dd').count(), cellCount, 'Reconnecting stats must reuse its diagnostic rows.');
+    assert.equal(await page.locator('#player-stats [data-stats-section="video"]').evaluate(list =>
+      window.componentVideoCells.every(([key, cell]) =>
+        [...list.querySelectorAll('dd')].find(node => node.dataset.statKey === key) === cell)), true,
+    'Reconnecting stats must reuse its existing diagnostic cells.');
+    assert.equal(await page.locator('#player-stats [data-stats-section]').evaluateAll(lists => lists.every(list => {
+      const keys = [...list.querySelectorAll('dd')].map(cell => cell.dataset.statKey);
+      return new Set(keys).size === keys.length;
+    })), true, 'New telemetry may add rows, but reconnecting cannot duplicate keys.');
     await page.locator('#close-stats').click();
     const closedReads = await page.evaluate(() => window.statsReads);
     await page.waitForTimeout(1200);
