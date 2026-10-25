@@ -55,3 +55,10 @@ accounting for any future data migrations in that release's notes.
 
 Never put access codes or live stream URLs in workflow variables, build args or
 image labels. Current Compose deployments use their own `.env` and local volumes.
+
+## Public website and demo
+
+Cloudflare hosts the separate static product website and demo app. Its
+[deployment guide](../operations/cloudflare.md) covers exact domain scopes,
+containerized build/check/dry-run commands, a gated GitHub workflow and rollback.
+Public hosting never deploys a Python backend or receives private camera feeds.
