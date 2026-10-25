@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+# Preserve the published certificate bundle byte-for-byte, including its hash.
+providers/bambu/ca.pem whitespace=-blank-at-eof
