@@ -163,10 +163,7 @@ async function run(name, engine) {
   } finally { await block(false).catch(() => {}); await browser.close(); }
 }
 
-const runs = [];
-if (process.env.BROWSER !== 'webkit') runs.push(run('chromium', chromium));
-if (process.env.BROWSER !== 'chromium') runs.push(run('webkit', webkit));
-for (const result of await Promise.allSettled(runs)) if (result.status === 'rejected') {
-  console.error(result.reason);
-  process.exitCode = 1;
+for (const [name, engine] of Object.entries({ chromium, webkit })) {
+  if (process.env.BROWSER && process.env.BROWSER !== name) continue;
+  await run(name, engine);
 }
