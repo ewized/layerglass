@@ -186,13 +186,16 @@ test('cancelled loads release their waiters and cannot deliver stale data', asyn
 test('a forward seek does not wait for the old paced replay to reach its target', async t => {
   const h = await harness(); t.after(() => h.stream.destroy());
   h.stream.accept(index(0, 50), new Uint8Array());
-  h.stream.nextSequence = 10;
   const starts = [];
   h.stream.connect = start => { starts.push(start); h.stream.nextSequence = start; };
-  const pending = h.stream.segment(12, new AbortController().signal);
-  assert.deepEqual(starts, [12]);
-  h.stream.accept({ type: 'segment', sequence: 12 }, new Uint8Array([71]));
-  await pending;
+  for (const target of [11, 12]) {
+    h.stream.nextSequence = 10;
+    const pending = h.stream.segment(target, new AbortController().signal);
+    assert.equal(starts.at(-1), target, 'Skipping even one recorded fragment must reposition immediately.');
+    h.stream.accept({ type: 'segment', sequence: target }, new Uint8Array([71]));
+    await pending;
+  }
+  assert.deepEqual(starts, [11, 12]);
 });
 
 test('backgrounding closes the video response and returning reconnects the same page', async t => {

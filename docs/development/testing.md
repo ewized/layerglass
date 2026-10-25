@@ -45,6 +45,12 @@ The fixture explicitly trusts only its second loopback origin for the selected
 backend check. This exercises native video, SSE and protected POSTs across
 origins; deployment defaults still trust no hosted origin until configured.
 
+The transport regression includes forward seeks that skip just one recorded
+fragment. Those seeks must reposition the paced archive response immediately;
+ordinary consecutive playback keeps the existing response. The browser checks
+also verify that returning to Live reaches the current edge without recurring
+playlist or segment requests.
+
 ## Focused commands
 
 For an individual Python file, use a built runtime image and mount the checkout
