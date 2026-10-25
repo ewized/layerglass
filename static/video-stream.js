@@ -249,9 +249,12 @@ export class PlayerVideoStream {
   segment(sequence, signal) {
     if (this.index && sequence < this.index.start) return Promise.reject(new Error('Footage was trimmed'));
     this.requested = sequence;
+    // The next consecutive fragment is already on its way. A forward seek
+    // that skips it must reposition even by one fragment: archived delivery
+    // is paced, so waiting here would keep Live behind the old replay clock.
     if (!this.cache.has(sequence) && !this.suspended &&
         (!this.controller || (this.nextSequence !== null &&
-          (sequence < this.nextSequence || sequence > this.nextSequence + 1)))) this.connect(sequence);
+          (sequence < this.nextSequence || sequence > this.nextSequence)))) this.connect(sequence);
     return this.waitFor(() => {
       if (this.index && sequence < this.index.start) throw new Error('Footage was trimmed');
       // The worker transfers/detaches its ArrayBuffer; retain our own copy.
