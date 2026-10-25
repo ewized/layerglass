@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 const available = [
   'browser-esm.js',
   'browser-components.js',
+  'browser-backends.js',
   'browser-video-stream.js',
   'browser-stream-recovery.js',
   'browser-preview-storage.js',

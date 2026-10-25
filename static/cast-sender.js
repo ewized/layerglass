@@ -35,17 +35,19 @@ export function loadCastSDK(view = window) {
 // Google Cast loads a reachable HLS URL on the receiver. Chrome's generic
 // RemotePlayback API cannot initiate remoting from our local MediaSource blob.
 export class GoogleCastSender {
-  constructor(video, replay, identity, changed) {
+  constructor(video, replay, identity, changed, { backend = null } = {}) {
     Object.assign(this, { video, replay, identity, changed });
     this.eligible = castPlatform(video);
     this.state = 'idle';
     this.version = 0;
+    this.backend = backend;
     this.latest = { start: 0, end: 0, current: 0, paused: false };
   }
 
   setSource(source) {
     const url = new URL(source, location.href);
-    const valid = url.origin === location.origin && !url.username && !url.password &&
+    const valid = (!this.backend || this.backend.capabilities.casting) &&
+      url.origin === (this.backend?.origin || location.origin) && !url.username && !url.password &&
       /^\/(?:replay\/[a-f0-9]{32}|stream\/(?:[a-f0-9]{16}\/)?[a-f0-9]{32})\/live\.m3u8$/.test(url.pathname);
     const next = valid ? url.href : null;
     if (this.source && this.source !== next) this.clearSource();

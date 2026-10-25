@@ -42,6 +42,27 @@ APP_SHELL_REVISION = app_shell_revision()
 PWA_CACHE_ENABLED = os.environ.get('PWA_CACHE_ENABLED', '0') == '1'
 
 
+def configured_origins(value):
+    """Exact, credential-free origins; no wildcard or arbitrary CSP tokens."""
+    origins = set()
+    for origin in value.split(',') if isinstance(value, str) else value:
+        if not isinstance(origin, str):
+            raise ValueError('Viewer origins must be strings.')
+        origin = origin.strip().rstrip('/')
+        if not origin:
+            continue
+        parsed = urlsplit(origin)
+        if (not re.fullmatch(r'https?://(?:[A-Za-z0-9.-]+|\[[a-fA-F0-9:]+\])(?::[0-9]{1,5})?', origin) or
+                parsed.scheme not in ('http', 'https') or not parsed.hostname or
+                parsed.username or parsed.password or parsed.path or parsed.query or parsed.fragment or
+                any(character.isspace() for character in origin) or '*' in origin):
+            raise ValueError('Viewer origins must be exact HTTP(S) origins without paths, wildcards or credentials.')
+        if parsed.port is not None and not 1 <= parsed.port <= 65535:
+            raise ValueError('Viewer origin port is invalid.')
+        origins.add(origin)
+    return frozenset(origins)
+
+
 @dataclass(frozen=True)
 class Settings:
     stream_url: str
@@ -284,11 +305,13 @@ class Relay:
 class ViewerServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, address, relay=None, registry=None, replay=None):
+    def __init__(self, address, relay=None, registry=None, replay=None, allowed_origins=None, backend_origins=None):
         self.relay = relay
         self.registry = registry
         self.replay = replay
         self.close_event = threading.Event()
+        self.allowed_origins = configured_origins(os.environ.get('VIEWER_ALLOWED_ORIGINS', '') if allowed_origins is None else allowed_origins)
+        self.backend_origins = configured_origins(os.environ.get('VIEWER_BACKEND_ORIGINS', '') if backend_origins is None else backend_origins)
         super().__init__(address, ViewerHandler)
 
     def server_close(self):
@@ -326,9 +349,27 @@ class ViewerHandler(BaseHTTPRequestHandler):
             r'(?:live\.m3u8|segment-[0-9]+\.ts)', urlsplit(self.path).path) is not None
 
     def do_OPTIONS(self):
+        if self._cors_origin():
+            method = self.headers.get('Access-Control-Request-Method')
+            headers = {header.strip().lower() for header in self.headers.get('Access-Control-Request-Headers', '').split(',') if header.strip()}
+            if method in ('GET', 'HEAD', 'POST') and headers <= {'content-type', 'x-viewer-request', 'range'}:
+                return self._headers(204, 'text/plain', 0)
+            return self._json(405, {'error': 'Method not allowed.'})
         if self._cast_media_path() and self.headers.get('Access-Control-Request-Method') in ('GET', 'HEAD'):
             return self._headers(204, 'text/plain', 0)
         return self._json(405, {'error': 'Method not allowed.'})
+
+    def _cors_origin(self):
+        origin = self.headers.get('Origin')
+        path = urlsplit(self.path).path
+        viewer_path = path.startswith('/api/') or re.match(r'/replay/[a-f0-9]{32}/', path)
+        return origin if viewer_path and origin in self.server.allowed_origins else None
+
+    def _origin_allowed(self):
+        origin = self.headers.get('Origin')
+        if not origin:
+            return True
+        return origin in (f'http://{self.headers.get("Host")}', f'https://{self.headers.get("Host")}') or bool(self._cors_origin())
 
     def _headers(self, code, content_type, length, stream=False, shell=False):
         self.send_response(code)
@@ -350,7 +391,17 @@ class ViewerHandler(BaseHTTPRequestHandler):
         # A Cast receiver fetches public HLS media from its own origin. Keep
         # cross-origin access limited to playlists/segments, never APIs, codes,
         # telemetry, preview images or the continuous browser transport.
-        if self.command in ('GET', 'HEAD', 'OPTIONS') and self._cast_media_path():
+        if self._cors_origin():
+            self.send_header('Access-Control-Allow-Origin', self._cors_origin())
+            self.send_header('Vary', 'Origin')
+            self.send_header('Access-Control-Expose-Headers', 'Content-Length')
+            if self.command == 'OPTIONS':
+                self.send_header('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS')
+                self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-Viewer-Request, Range')
+                self.send_header('Access-Control-Max-Age', '300')
+                if self.headers.get('Access-Control-Request-Private-Network') == 'true':
+                    self.send_header('Access-Control-Allow-Private-Network', 'true')
+        elif self.command in ('GET', 'HEAD', 'OPTIONS') and self._cast_media_path():
             self.send_header('Access-Control-Allow-Origin', '*')
             self.send_header('Access-Control-Expose-Headers', 'Content-Length')
             if self.command == 'OPTIONS':
@@ -358,11 +409,12 @@ class ViewerHandler(BaseHTTPRequestHandler):
                 self.send_header('Access-Control-Allow-Headers', 'Range, Content-Type')
                 if self.headers.get('Access-Control-Request-Private-Network') == 'true':
                     self.send_header('Access-Control-Allow-Private-Network', 'true')
+        targets = ''.join(' ' + origin for origin in sorted(self.server.backend_origins))
         self.send_header('Content-Security-Policy',
                          "default-src 'self'; script-src 'self' https://www.gstatic.com "
                          "chrome-extension://pkedcjkdefgpdelpbcmbmeomcjbeemfm "
                          "chrome-extension://enhhojjnijigcajfphajepfemndkmdlo; style-src 'self'; "
-                         "img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; "
+                         f"img-src 'self' data: blob:{targets}; media-src 'self' blob:{targets}; connect-src 'self'{targets}; "
                          "worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; frame-ancestors 'none'")
         self.end_headers()
 
@@ -382,8 +434,7 @@ class ViewerHandler(BaseHTTPRequestHandler):
         parsed = urlsplit(self.path)
         path = unquote(parsed.path)
         if path in ('/api/events', '/api/snapshot'):
-            origin = self.headers.get('Origin')
-            if origin and urlsplit(origin).netloc != self.headers.get('Host'):
+            if not self._origin_allowed():
                 return self._json(403, {'error': 'Cross-origin requests are not allowed.'}, head)
             query = parse_qs(parsed.query)
             camera = query.get('camera', [None])[0]
@@ -394,6 +445,10 @@ class ViewerHandler(BaseHTTPRequestHandler):
             if path == '/api/snapshot':
                 return self._json(200, self.server.snapshot(camera, session), head)
             return self._events(camera, session, head)
+        if path == '/api/backend':
+            return self._json(200, {'id': 'python', 'protocol_version': 1,
+                'capabilities': {'discovery': True, 'configuration': True, 'telemetry': True,
+                    'serverDvr': True, 'previewFallback': True, 'casting': True, 'localMedia': False}}, head)
         if path == '/api/status':
             if self.server.registry:
                 key = parse_qs(parsed.query).get('camera', [None])[0]
@@ -422,8 +477,7 @@ class ViewerHandler(BaseHTTPRequestHandler):
             return self._json(200 if healthy else 503, {'ok': healthy}, head)
         video_match = re.fullmatch(r'/replay/([a-f0-9]{32})/video', path)
         if video_match and self.server.replay:
-            origin = self.headers.get('Origin')
-            if origin and urlsplit(origin).netloc != self.headers.get('Host'):
+            if not self._origin_allowed():
                 return self._json(403, {'error': 'Cross-origin requests are not allowed.'}, head)
             try:
                 value = parse_qs(parsed.query).get('start', [None])[0]
@@ -654,11 +708,10 @@ class ViewerHandler(BaseHTTPRequestHandler):
         if path not in ('/api/restart', '/api/discover', '/api/sessions') and not configure_match and not forget_match and not close_match:
             return self._json(404, {'error': 'Not found.'})
         # A cross-origin page cannot set this header without a successful CORS
-        # preflight. No CORS permission is granted by this LAN service.
+        # preflight. Only explicitly trusted hosted frontends receive permission.
         if self.headers.get('X-Viewer-Request') != '1':
             return self._json(403, {'error': 'Use the viewer to manage cameras.'})
-        origin = self.headers.get('Origin')
-        if origin and urlsplit(origin).netloc != self.headers.get('Host'):
+        if not self._origin_allowed():
             return self._json(403, {'error': 'Cross-origin requests are not allowed.'})
         try:
             length = int(self.headers.get('Content-Length', '0'))

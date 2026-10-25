@@ -4,7 +4,7 @@ import { GoogleCastSender, castError } from './cast-sender.js';
 // Native pickers and Media Session control the existing video, decoder and DVR.
 // Google Cast uses the network HLS URL; Safari retains its native AirPlay picker.
 export class PlayerMedia {
-  constructor(player, video, replay, { play, mini, remoteChanged = () => {} }) {
+  constructor(player, video, replay, { play, mini, remoteChanged = () => {}, backend = null }) {
     Object.assign(this, { player, video, replay, play, mini, remoteChanged });
     this.button = player.querySelector('#cast-button');
     this.session = navigator.mediaSession;
@@ -14,7 +14,7 @@ export class PlayerMedia {
     this.source = null;
     this.remoteActive = false;
     this.handlers = new Set();
-    this.sender = new GoogleCastSender(video, replay, () => this.identity, () => { this.syncRemote(); this.update(); });
+    this.sender = new GoogleCastSender(video, replay, () => this.identity, () => { this.syncRemote(); this.update(); }, { backend });
     player.addEventListener('cast-request', () => this.cast());
     for (const name of ['loadedmetadata', 'loadeddata', 'emptied', 'play', 'pause', 'ended', 'seeking', 'seeked']) {
       video.addEventListener(name, () => this.update());

@@ -57,6 +57,7 @@ export class PlayerVideoStream {
     this.onFailure = onFailure;
     this.failureLimit = options.failureLimit ?? 3;
     this.quiet = options.quiet ?? false;
+    this.fetcher = options.backend?.fetch?.bind(options.backend) || ((...args) => fetch(...args));
     this.maxBytes = options.maxBytes ?? 16 * 1024 * 1024;
     this.maxSegments = options.maxSegments ?? 24;
     this.cache = new Map();
@@ -132,7 +133,7 @@ export class PlayerVideoStream {
     try {
       const url = new URL(this.url, location.href);
       if (Number.isSafeInteger(start) && start >= 0) url.searchParams.set('start', start);
-      const response = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+      const response = await this.fetcher(url, { signal: controller.signal, cache: 'no-store' });
       if (!response.ok || !response.body?.getReader) throw new Error('Video streaming unavailable');
       reader = response.body.getReader();
       // Observe failures on both read() and closed, then release buffered

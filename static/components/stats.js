@@ -108,10 +108,10 @@ export class PrinterStats extends PlayerElement {
       ['Frames / dropped', !jpeg && Number.isFinite(frames) ? `${frames} / ${dropped ?? '—'}` : null],
       ['Frame rate', fps === null ? null : `${fps} fps`],
       ['Decoder', jpeg ? 'Browser JPEG' : 'Browser native'],
-      ['Media pipeline', jpeg ? 'Image' : hls ? 'hls.js + MediaSource' : 'Native HLS'],
+      ['Media pipeline', jpeg ? 'Image' : hls ? 'hls.js + MediaSource' : replay.session?.kind === 'file' ? 'Native video' : 'Native HLS'],
       ['Video codec', jpeg ? 'JPEG' : videoCodec],
       ['Video delivery', jpeg ? 'JPEG frames' : videoStream ?
-        (videoStream.connected ? 'HTTP stream' : 'Reconnecting') : 'HLS'],
+        (videoStream.connected ? 'HTTP stream' : 'Reconnecting') : replay.session?.kind === 'file' ? 'Browser media' : 'HLS'],
       ['Video buffer', jpeg ? null : `${ahead.toFixed(1)} s`],
       ['Recorded history', replay.session ? `${Math.max(0, bounds.end - bounds.start).toFixed(1)} s` : null],
       ['Live offset', replay.session ? `−${behind.toFixed(1)} s` : null],

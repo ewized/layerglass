@@ -14,11 +14,14 @@ import { readCamera, writeCamera } from './preferences.js';
 import { PrinterHistory } from './printer-history.js';
 import { PrinterTimelineEvents } from './timeline-events.js';
 import { PreviewHistory, PreviewCapture } from './preview-history.js';
+import { backend, backendConfig, configuration, PythonBackend, saveBackend } from './backend/index.js';
 
 const player = document.getElementById('player');
 const $ = id => id === 'player' ? player : player.querySelector(`#${id}`);
 const video = $('video');
+video.crossOrigin = 'anonymous';
 const jpeg = $('jpeg');
+jpeg.crossOrigin = 'anonymous';
 const viewer = $('viewer');
 const overlay = $('overlay');
 const statusPill = $('status-pill');
@@ -58,6 +61,7 @@ let settingUp = false;
 let resumeAfterOffline = false;
 const timelineEvents = new PrinterTimelineEvents();
 const printerHistory = new PrinterHistory(() => playerTools.stats.renderStats(), {
+  fetcher: backend.fetch.bind(backend),
   onSession: session => timelineEvents.setSession(session),
   onSamples: payload => timelineEvents.apply(payload),
 });
@@ -68,10 +72,10 @@ const pageReplay = new PageReplay(video, jpeg, () => hls?.liveSyncPosition,
     previewHistory.setSession(session);
     $('scrub-preview').reset();
     updates.subscribe(selectedCamera, session?.session_id);
-  });
+  }, backend);
 const previewHistory = new PreviewHistory();
 const previewCapture = new PreviewCapture(previewHistory, video, jpeg, () => pageReplay);
-const updates = new PlayerUpdates(applyUpdates, updatesUnavailable);
+const updates = new PlayerUpdates(applyUpdates, updatesUnavailable, backend);
 const playerChrome = $('player');
 $('scrub-preview').configure(() => pageReplay, previewHistory, previewCapture);
 $('timeline-events').configure(() => pageReplay, timelineEvents);
@@ -86,6 +90,7 @@ const playerTools = new PlayerTools($('player'), video, jpeg, playerChrome, play
   () => ({ camera: catalog?.cameras.find(item => item.id === selectedCamera),
     printer: status?.printer, server: status, printerHistory, previewHistory, discovery: catalog?.discovery, replay: pageReplay, hls, videoStream, videoCodec }));
 const playerMedia = new PlayerMedia(player, video, pageReplay, {
+  backend,
   play,
   mini: () => { if (!playerTools.nativeMiniMode()) playerTools.toggleMini(); },
   remoteChanged: active => {
@@ -100,8 +105,63 @@ selectedCamera = readCamera();
 if (reloadIntent?.cameraId) selectedCamera = reloadIntent.cameraId;
 const playerPullRefresh = new PlayerPullRefresh($('player'), () => PlayerReload.reload(selectedCamera));
 
+const backendType = $('backend-type');
+const backendURL = $('backend-url');
+backendType.value = configuration.type;
+backendURL.value = configuration.url || location.origin;
+function renderBackendForm() {
+  const demo = backendType.value === 'demo';
+  backendURL.hidden = demo;
+  $('backend-url-label').hidden = demo;
+  $('backend-capabilities').textContent = demo ?
+    'Runs in this browser with generated demo video or a local file. No LAN discovery, printer connection, or server recording.' :
+    'Adds approved-printer discovery, saved connections, live telemetry and server-backed replay. No cloud account required.';
+  $('local-media-label').hidden = !backend.capabilities.localMedia;
+  restartButton.hidden = !backend.capabilities.serverDvr;
+}
+backendType.addEventListener('change', renderBackendForm);
+$('backend-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const error = $('backend-error');
+  const submit = event.currentTarget.querySelector('[type="submit"]');
+  error.hidden = true; submit.disabled = true;
+  try {
+    const config = backendConfig({ type: backendType.value, url: backendURL.value.trim() });
+    if (config.type === 'python') {
+      const candidate = new PythonBackend(config.url);
+      const response = await candidate.fetch('/api/backend', { signal: AbortSignal.timeout(6000), cache: 'no-store' });
+      const description = await response.json();
+      if (!response.ok || description.id !== 'python' || description.protocol_version !== 1) throw new Error('This address is not a compatible Layerglass backend.');
+    }
+    saveBackend(config);
+    const next = new URL(location.href);
+    next.searchParams.delete('backend');
+    if (next.href === location.href) location.reload();
+    else location.assign(next.href);
+  } catch (failure) {
+    error.textContent = failure instanceof TypeError && failure.message.startsWith('Failed') ?
+      'Cannot reach this backend. Check HTTPS, the allowed frontend origin, and your network permission.' : failure.message;
+    error.hidden = false;
+    console.warn('[Layerglass] Backend selection failed', failure.name);
+    submit.disabled = false;
+  }
+});
+$('local-media').addEventListener('change', async event => {
+  const file = event.target.files?.[0];
+  if (!file || !backend.capabilities.localMedia) return;
+  backend.setLocalMedia(file);
+  selectionVersion++;
+  pageReplay.close();
+  detachPlayer();
+  status = null;
+  await loadCatalog();
+  await loadStatus();
+});
+video.addEventListener('loadedmetadata', () => backend.setDuration?.(video.duration));
+renderBackendForm();
+
 function waiting(title, detail, spinning = true) {
-  if (!navigator.onLine) {
+  if (!networkAvailable()) {
     title = 'Offline';
     detail = 'Connect to your network to view your printer camera.';
     spinning = false;
@@ -111,8 +171,10 @@ function waiting(title, detail, spinning = true) {
   viewer.waiting(title, detail, spinning);
 }
 
+function networkAvailable() { return backend.id === 'demo' || navigator.onLine; }
+
 function markFrame() {
-  if (!navigator.onLine) return;
+  if (!networkAvailable()) return;
   // A decoded poster frame does not mean autoplay was allowed.
   if (!video.hidden && video.paused && !playButton.hidden) return;
   const wasWaiting = !overlay.hidden;
@@ -140,7 +202,7 @@ for (const event of ['timeupdate', 'loadeddata', 'playing']) video.addEventListe
 jpeg.addEventListener('load', () => { if (!jpeg.hidden && status?.state === 'live') markFrame(); });
 
 async function play() {
-  if (!navigator.onLine) return;
+  if (!networkAvailable()) return;
   try {
     if (reloadAutoplay) { video.muted = true; video.playsInline = true; }
     await video.play();
@@ -198,7 +260,7 @@ async function retryContinuous() {
   const session = pageReplay.session;
   const abort = streamProbeAbort = new AbortController();
   const timeout = setTimeout(() => abort.abort(), 10000);
-  const probe = streamProbe = new PlayerVideoStream(session, () => abort.abort(), { failureLimit: 1, quiet: true });
+  const probe = streamProbe = new PlayerVideoStream(session, () => abort.abort(), { failureLimit: 1, quiet: true, backend });
   let adopted = false;
   try {
     // Headers or heartbeats alone cannot prove video will stream through a proxy.
@@ -247,8 +309,8 @@ function detachPlayer() {
 }
 
 async function attachPlayer(prepared = null) {
-  if (!navigator.onLine || pageHidden || !playerVisible() || playerMedia.remoteActive ||
-      status?.state !== 'live' || (!status.playlist_url && !status.jpeg_url) || pageReplay.opening) {
+  if (!networkAvailable() || pageHidden || !playerVisible() || playerMedia.remoteActive ||
+      status?.state !== 'live' || (!status.playlist_url && !status.jpeg_url && !status.media_url) || pageReplay.opening) {
     prepared?.destroy();
     return;
   }
@@ -256,7 +318,7 @@ async function attachPlayer(prepared = null) {
   const camera = selectedCamera;
   attachedGeneration = status.generation;
   try { await pageReplay.open(camera); } catch (_) { /* Live playback remains available if temporary storage is unavailable. */ }
-  if (version !== selectionVersion || !navigator.onLine || pageHidden || !playerVisible() || playerMedia.remoteActive) {
+  if (version !== selectionVersion || !networkAvailable() || pageHidden || !playerVisible() || playerMedia.remoteActive) {
     prepared?.destroy();
     return;
   }
@@ -265,6 +327,14 @@ async function attachPlayer(prepared = null) {
   attachedGeneration = pageReplay.session?.session_id || status.generation;
   lastAttachAt = Date.now();
   waiting('Loading the live view', 'Getting the latest image from your camera.');
+  if (status.media_url) {
+    // Browser/demo media uses the same native decoder and custom controls, with
+    // no Python relay, HLS polling, or network-discovery side effects.
+    video.src = status.media_url;
+    video.disableRemotePlayback = true;
+    play();
+    return;
+  }
   if (status.jpeg_url) {
     reloadAutoplay = false;
     video.hidden = true;
@@ -292,7 +362,7 @@ async function attachPlayer(prepared = null) {
     play();
   } else if (hlsSupported) {
     if (continuous) {
-      const transport = videoStream = prepared || new PlayerVideoStream(pageReplay.session, () => {});
+      const transport = videoStream = prepared || new PlayerVideoStream(pageReplay.session, () => {}, { backend });
       transport.failureLimit = 3;
       transport.quiet = false;
       transport.onFailure = () => {
@@ -339,13 +409,13 @@ async function attachPlayer(prepared = null) {
 function finishRestart() {
   restartDeadline = 0;
   restartRequest = false;
-  restartButton.disabled = !selectedCamera || ['setup', 'empty'].includes(status?.state);
+  restartButton.disabled = !backend.capabilities.serverDvr || !selectedCamera || ['setup', 'empty'].includes(status?.state);
   $('restart-label').textContent = 'Restart stream';
   restartButton.setAttribute('aria-busy', 'false');
 }
 
 function renderStatus() {
-  if (!navigator.onLine) {
+  if (!networkAvailable()) {
     statusPill.classList.remove('live');
     statusPill.classList.add('offline');
     statusLabel.textContent = 'Offline';
@@ -363,7 +433,7 @@ function renderStatus() {
   const unavailable = ['setup', 'empty'].includes(status.state);
   const noStreams = catalog?.discovery.state === 'done' && !catalog.cameras.some(camera => camera.discovered);
   $('empty-scan-button').hidden = !(status.state !== 'live' && (status.state === 'empty' || noStreams) && catalog?.discovery.state !== 'scanning');
-  restartButton.disabled = unavailable || Boolean(restartDeadline) || restartRequest;
+  restartButton.disabled = !backend.capabilities.serverDvr || unavailable || Boolean(restartDeadline) || restartRequest;
   restartButton.setAttribute('aria-busy', String(Boolean(restartDeadline) || restartRequest));
   $('refresh-button').disabled = unavailable;
   PlayerLog.changed('debug', 'Playback status', { state: status.state, viewing: statusLabel.textContent });
@@ -434,6 +504,8 @@ function renderCatalog() {
     selectCamera(choices.find(camera => camera.id === catalog.default_camera_id)?.id || choices[0]?.id || null);
   }
   cameraList.update(choices, selectedCamera, settingUp);
+  $('printers-button').hidden = !backend.capabilities.discovery;
+  $('scan-button').disabled ||= !backend.capabilities.discovery;
   playerChrome.settings.busy = settingUp;
   const selected = choices.find(camera => camera.id === selectedCamera);
   renderPrinterIdentity();
@@ -458,7 +530,7 @@ function renderCatalog() {
 
 async function loadCatalog() {
   try {
-    const response = await fetch('/api/cameras', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+    const response = await backend.fetch('/api/cameras', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     if (!response.ok) throw new Error('Discovery unavailable');
     catalog = await response.json();
     renderCatalog();
@@ -474,7 +546,7 @@ async function loadStatus() {
   const version = selectionVersion;
   try {
     const query = selectedCamera ? `?camera=${encodeURIComponent(selectedCamera)}` : '';
-    const response = await fetch(`/api/status${query}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+    const response = await backend.fetch(`/api/status${query}`, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     if (!response.ok) throw new Error('Viewer unavailable');
     const incoming = await response.json();
     if (version !== selectionVersion) return;
@@ -512,7 +584,7 @@ function updatesUnavailable() {
 }
 
 async function post(path, payload = {}) {
-  const response = await fetch(path, { method: 'POST',
+  const response = await backend.fetch(path, { method: 'POST',
     headers: { 'X-Viewer-Request': '1', 'Content-Type': 'application/json' },
     body: JSON.stringify(payload), signal: AbortSignal.timeout(15000) });
   const body = await response.json();
@@ -529,6 +601,7 @@ cameraList.addEventListener('printer-select', event => {
 cameraList.addEventListener('printer-forget', event => forgetPrinter(event.detail.cameraId));
 playerChrome.addEventListener('printer-scan', scanPrinters);
 async function scanPrinters() {
+  if (!backend.capabilities.discovery) return;
   if (scanPending || catalog?.discovery.state === 'scanning') return;
   scanPending = true;
   renderScanState();
@@ -638,6 +711,7 @@ window.addEventListener('replayexpired', () => { if (status?.state === 'live') a
 video.addEventListener('error', () => { if (attachedGeneration && !video.hidden) scheduleRefresh(); });
 
 window.addEventListener('offline', () => {
+  if (backend.id === 'demo') return;
   cancelStreamRetry();
   resumeAfterOffline = video.hidden ? !pageReplay.paused : !video.paused;
   hls?.stopLoad();

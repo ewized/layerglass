@@ -4,9 +4,11 @@ import { playerVisible } from './visibility.js';
 // One metadata connection per visible player. Commands remain occasional POSTs;
 // video playlists and segments remain owned by the platform decoder / hls.js.
 export class PlayerUpdates {
-  constructor(onState, onUnavailable) {
+  constructor(onState, onUnavailable, backend = {}) {
     this.onState = onState;
     this.onUnavailable = onUnavailable;
+    this.backend = backend;
+    this.fetcher = backend.fetch?.bind(backend) || ((...args) => fetch(...args));
     this.camera = null;
     this.session = null;
     this.started = false;
@@ -25,7 +27,7 @@ export class PlayerUpdates {
     document.addEventListener('visibilitychange', visibility);
     window.addEventListener('playerviewchange', visibility);
     window.addEventListener('online', () => { if (this.started) this.connect(); });
-    window.addEventListener('offline', () => { this.disconnect(); this.onUnavailable(); });
+    window.addEventListener('offline', () => { if (this.backend.id !== 'demo') { this.disconnect(); this.onUnavailable(); } });
     window.addEventListener('pagehide', () => { this.suspended = true; this.disconnect(); }, true);
     window.addEventListener('pageshow', event => {
       this.suspended = false;
@@ -68,11 +70,11 @@ export class PlayerUpdates {
 
   connect() {
     this.disconnect();
-    if (!playerVisible() || this.suspended || globalThis.navigator?.onLine === false) return;
+    if (!playerVisible() || this.suspended || this.backend.id !== 'demo' && globalThis.navigator?.onLine === false) return;
     const version = this.version;
-    if (typeof window.EventSource !== 'function') { this.fallback(); return; }
+    if (!this.backend.events && typeof window.EventSource !== 'function') { this.fallback(); return; }
     let source;
-    try { source = new EventSource(`/api/events${this.query()}`); }
+    try { source = this.backend.events ? this.backend.events(`/api/events${this.query()}`) : new EventSource(`/api/events${this.query()}`); }
     catch (_) { this.fallback(); return; }
     this.source = source;
     const current = () => this.version === version && this.source === source;
@@ -120,7 +122,7 @@ export class PlayerUpdates {
     this.controller = controller;
     const timeout = setTimeout(() => controller.abort(), 5000);
     try {
-      const response = await fetch(`/api/snapshot${this.query()}`, { cache: 'no-store', signal: controller.signal });
+      const response = await this.fetcher(`/api/snapshot${this.query()}`, { cache: 'no-store', signal: controller.signal });
       if (!response.ok) throw new Error('Viewer updates unavailable');
       const state = await response.json();
       if (this.version === version && !this.streaming && state?.version === 1) {
