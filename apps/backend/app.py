@@ -305,11 +305,12 @@ class Relay:
 class ViewerServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, address, relay=None, registry=None, replay=None, allowed_origins=None, backend_origins=None):
+    def __init__(self, address, relay=None, registry=None, replay=None, allowed_origins=None, backend_origins=None, serve_ui=None):
         self.relay = relay
         self.registry = registry
         self.replay = replay
         self.close_event = threading.Event()
+        self.serve_ui = os.environ.get('VIEWER_SERVE_UI', '1') != '0' if serve_ui is None else serve_ui
         self.allowed_origins = configured_origins(os.environ.get('VIEWER_ALLOWED_ORIGINS', '') if allowed_origins is None else allowed_origins)
         self.backend_origins = configured_origins(os.environ.get('VIEWER_BACKEND_ORIGINS', '') if backend_origins is None else backend_origins)
         super().__init__(address, ViewerHandler)
@@ -433,6 +434,8 @@ class ViewerHandler(BaseHTTPRequestHandler):
     def _get(self, head=False):
         parsed = urlsplit(self.path)
         path = unquote(parsed.path)
+        if not self.server.serve_ui and (path in ('/', '/service-worker.js', '/manifest.webmanifest') or path.startswith('/static/')):
+            return self._json(404, {'error': 'The web UI is disabled on this backend.'}, head)
         if path in ('/api/events', '/api/snapshot'):
             if not self._origin_allowed():
                 return self._json(403, {'error': 'Cross-origin requests are not allowed.'}, head)

@@ -62,6 +62,22 @@ class BackendCorsTests(unittest.TestCase):
         self.assertEqual(response.status, 200)
         self.assertEqual(json.loads(response.read())['replay']['session_id'], TOKEN)
 
+    def test_backend_only_mode_disables_shell_but_keeps_hosted_apis(self):
+        self.server.serve_ui = False
+        for path in ('/', '/static/bootstrap.js', '/static/style.css', '/manifest.webmanifest', '/service-worker.js'):
+            for method in ('GET', 'HEAD'):
+                response = self.request(path, method)
+                self.assertEqual(response.status, 404)
+                self.assertIsNone(response.getheader('Access-Control-Allow-Origin'))
+                response.read()
+        response = self.request('/api/backend')
+        self.assertEqual(response.status, 200)
+        self.assertEqual(response.getheader('Access-Control-Allow-Origin'), 'https://app.layer.glass')
+        self.assertEqual(json.loads(response.read())['id'], 'python')
+        response = self.request(f'/api/snapshot?camera={CAMERA}&session={TOKEN}')
+        self.assertEqual(response.status, 200)
+        self.assertEqual(json.loads(response.read())['replay']['session_id'], TOKEN)
+
     def test_trusted_origin_still_requires_the_viewer_csrf_header(self):
         response = self.request(f'/api/sessions/{TOKEN}/close', 'POST', body='{}')
         self.assertEqual(response.status, 403)
