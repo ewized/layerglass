@@ -12,6 +12,8 @@ unit tests, validates documentation/version metadata, starts a generated-camera
 fixture, and runs representative Chromium/WebKit regressions. It needs Docker,
 not a printer or host-installed language toolchains. `unit` and `browser` modes
 run the corresponding portion. Logs and screenshots go to ignored `test-results/`.
+Pass representative suite names to focus a browser run, for example
+`./scripts/check.sh browser browser-scrub-commit.js browser-components.js`.
 
 | Change | Focused coverage |
 | --- | --- |
@@ -30,6 +32,10 @@ pause/resume, media-worker continuity, SSE/recovery, real IndexedDB reads and
 writes, and a 540-point simulated 45-minute thumbnail sweep with zero preview
 HTTP requests. The accelerated sweep proves retention/mapping, not 45 minutes
 of wall-clock capture or physical phone performance.
+Timed streaming/recovery checks run one engine at a time so their decoders do
+not compete for runner CPU. Frame counters verify progress rather than a fixed
+headless frame rate. See [Playwright's CI guidance](https://playwright.dev/docs/ci)
+on limiting concurrency for reproducible checks.
 
 ## Focused commands
 
