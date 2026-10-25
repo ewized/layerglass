@@ -9,6 +9,10 @@ tags: [technical]
 
 The bar is a live DVR control. It does not show a percentage of a finished video.
 
+Observed printer changes appear as [print-event markers](timeline-events.md),
+using the same recorded clock and range input mapping. Their small touch targets
+stay above the slider.
+
 ## Why the previous model moved
 
 Freezing the end of the timeline made the playhead move toward that end during

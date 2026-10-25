@@ -52,6 +52,7 @@ export class PrinterPlayer extends PlayerElement {
     return this.isPlaying() && this.panel.hidden && !this.interacting &&
       this.querySelector('#video-context-menu')?.hidden !== false &&
       this.querySelector('#scrub-preview')?.hidden !== false &&
+      !this.querySelector('#timeline-events [role="menu"]') &&
       !this.ownerDocument.activeElement?.matches(':focus-visible') && !this.ownerDocument.hidden;
   }
 

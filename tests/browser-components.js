@@ -29,7 +29,7 @@ async function run(name, engine) {
         idsUnique: new Set([...document.querySelectorAll('[id]')].map(node => node.id)).size === document.querySelectorAll('[id]').length,
       };
     });
-    assert.deepEqual(initial, { registered: true, native: true, count: 11, player: true, idsUnique: true });
+    assert.deepEqual(initial, { registered: true, native: true, count: 12, player: true, idsUnique: true });
     await page.evaluate(() => {
       const mount = document.createElement('div');
       mount.id = 'component-test';

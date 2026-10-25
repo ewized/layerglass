@@ -1,6 +1,7 @@
 import { PrinterPlayer } from './player.js';
 import { PrinterControls } from './controls.js';
 import { PrinterScrubPreview } from './scrub-preview.js';
+import { PrinterTimelineMarkers } from './timeline-events.js';
 import { PrinterSettings } from './settings.js';
 import { PrinterItem, PrinterList } from './printers.js';
 import { PrinterStats } from './stats.js';
@@ -11,6 +12,7 @@ export const components = new Map([
   ['printer-camera-view', PrinterCameraView],
   ['printer-pull-indicator', PrinterPullIndicator],
   ['printer-scrub-preview', PrinterScrubPreview],
+  ['printer-timeline-events', PrinterTimelineMarkers],
   ['printer-controls', PrinterControls],
   ['printer-item', PrinterItem],
   ['printer-list', PrinterList],

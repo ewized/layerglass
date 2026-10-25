@@ -62,6 +62,7 @@ export class PageReplay {
     this.onSession = onSession;
     this.controls = document.getElementById('replay-controls');
     this.slider = document.getElementById('replay-slider');
+    this.eventMarkers = document.getElementById('timeline-events');
     this.pauseButton = document.getElementById('pause-button');
     this.liveButton = document.getElementById('live-button');
     this.clock = document.getElementById('replay-time');
@@ -191,6 +192,7 @@ export class PageReplay {
     this.paused = false;
     this.position = 0;
     this.timeline.reset();
+    this.eventMarkers?.reset?.();
     this.scrubbing = false;
     if (hadSession) this.onSession(null);
   }
@@ -404,6 +406,7 @@ export class PageReplay {
     if (this.slider.style.getPropertyValue('--scrub-progress') !== fill) this.slider.style.setProperty('--scrub-progress', fill);
     const offline = globalThis.navigator?.onLine === false;
     this.slider.disabled = offline || !this.session.ready || end - start < 1;
+    this.eventMarkers?.render?.();
     const behindLive = Math.max(0, this.timeline.edge - playhead);
     const offset = `−${PageReplay.time(behindLive)}`;
     const showOffset = !this.followLive && behindLive >= 1;

@@ -10,7 +10,7 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 .icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
-printer-player, printer-camera-view, printer-controls, printer-list, printer-stats, printer-context-menu, printer-scrub-preview { display: block; }
+printer-player, printer-camera-view, printer-controls, printer-list, printer-stats, printer-context-menu, printer-scrub-preview, printer-timeline-events { display: block; }
 .boot-loader { position: absolute; inset: 0; margin: auto; }
 html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior-y: contain; background: #080a09; color: var(--text); }
 button, select, input { font: inherit; }
@@ -62,7 +62,20 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .replay-controls input::-moz-range-progress { height: 6px; border: 0; background: transparent; }
 .replay-controls input::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--green); box-shadow: none; }
 .replay-controls input:disabled { opacity: .45; cursor: default; }
-.scrub-preview { position: absolute; bottom: calc(100% + 8px); width: min(176px, 100%); pointer-events: none; }
+.timeline-events { position: absolute; z-index: 2; bottom: 100%; left: 8px; right: 8px; height: 32px; pointer-events: none; }
+.timeline-event { position: absolute; bottom: 0; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--green); transform: translateX(-50%); pointer-events: auto; }
+.timeline-event::before { content: ''; position: absolute; bottom: 6px; left: 13px; width: 6px; height: 6px; border: 1px solid #fff8; border-radius: 1px; background: currentColor; transform: rotate(45deg); }
+.timeline-event[aria-haspopup]::before { box-shadow: 3px -3px 0 #ffffff5c; }
+.timeline-event:hover, .timeline-event:focus-visible { background: #ffffff16; }
+.timeline-event.event-paused, .timeline-event.event-job { color: #edbd76; }
+.timeline-event.event-failed, .timeline-event.event-error, .timeline-event.event-cancelled { color: #ed907d; }
+.timeline-event-tooltip, .timeline-event-menu { position: absolute; bottom: calc(100% + 4px); width: 172px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 7px; background: #101411f5; color: var(--text); transform: translateX(-50%); box-shadow: 0 4px 20px #0009; }
+.timeline-event-tooltip { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 12px; text-align: center; pointer-events: none; }
+.timeline-event-tooltip time, .timeline-event-menu time { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.timeline-event-menu { width: 212px; max-height: 180px; padding: 4px; overflow-y: auto; pointer-events: auto; }
+.timeline-event-menu button { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; padding: 8px; border: 0; border-radius: 5px; background: transparent; color: var(--text); text-align: left; font-size: 12px; }
+.timeline-event-menu button:hover, .timeline-event-menu button:focus-visible { background: #ffffff16; }
+.scrub-preview { z-index: 3; position: absolute; bottom: calc(100% + 8px); width: min(176px, 100%); pointer-events: none; }
 .scrub-preview-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid #ffffff38; border-radius: 7px; background: #101411; box-shadow: 0 4px 20px #0009; }
 .scrub-preview canvas { display: block; width: 100%; height: 100%; }
 .scrub-preview-time { display: table; margin: 6px auto 0; padding: 2px 6px; border-radius: 5px; background: #000c; color: #fff; font-size: 13px; line-height: 1.4; font-variant-numeric: tabular-nums; white-space: nowrap; }

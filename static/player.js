@@ -12,6 +12,7 @@ import { PlayerVideoStream } from './video-stream.js';
 import { playerVisible } from './visibility.js';
 import { readCamera, writeCamera } from './preferences.js';
 import { PrinterHistory } from './printer-history.js';
+import { PrinterTimelineEvents } from './timeline-events.js';
 import { PreviewHistory, PreviewCapture } from './preview-history.js';
 
 const player = document.getElementById('player');
@@ -55,7 +56,11 @@ let restartingGeneration = null;
 let scanPending = false;
 let settingUp = false;
 let resumeAfterOffline = false;
-const printerHistory = new PrinterHistory(() => playerTools.stats.renderStats());
+const timelineEvents = new PrinterTimelineEvents();
+const printerHistory = new PrinterHistory(() => playerTools.stats.renderStats(), {
+  onSession: session => timelineEvents.setSession(session),
+  onSamples: payload => timelineEvents.apply(payload),
+});
 const pageReplay = new PageReplay(video, jpeg, () => hls?.liveSyncPosition,
   session => {
     printerHistory.setSession(session);
@@ -69,6 +74,7 @@ const previewCapture = new PreviewCapture(previewHistory, video, jpeg, () => pag
 const updates = new PlayerUpdates(applyUpdates, updatesUnavailable);
 const playerChrome = $('player');
 $('scrub-preview').configure(() => pageReplay, previewHistory, previewCapture);
+$('timeline-events').configure(() => pageReplay, timelineEvents);
 playerChrome.configure({
   isPlaying: () => overlay.hidden && (jpeg.hidden && !pageReplay.remote ? !video.paused : !pageReplay.paused),
   togglePause: () => pageReplay.togglePause(),

@@ -18,6 +18,8 @@ There are no new runtime dependencies or build steps.
 | `printer-camera-view` | Stable native video/JPEG elements, loading presentation, and frame-colored diffusion in unused space |
 | `printer-loading` | Spinner, accessible loading state, explicit play/discovery actions |
 | `printer-controls` | Timeline and native buttons; settings/cast/fullscreen action events |
+| `printer-scrub-preview` | Local thumbnail preview and negative Live offset during hover/scrubbing |
+| `printer-timeline-events` | Session-clock event markers, clustered event picker and accessible seek actions |
 | `printer-settings` | Root/Printers/Connection navigation, keyboard access, discovery intent |
 | `printer-list` | Keyed printer reconciliation, editor selection, focus after removal |
 | `printer-item` | Name/IP, inline code input, save/forget actions, per-printer errors |
