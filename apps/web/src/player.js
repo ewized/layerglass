@@ -15,7 +15,7 @@ import { PrinterHistory } from './printer-history.js';
 import { PrinterTimelineEvents } from './timeline-events.js';
 import { PreviewHistory, PreviewCapture } from './preview-history.js';
 import { DirectMjpegStream } from './direct-stream.js';
-import { backend, backendConfig, configuration, PythonBackend, saveBackend } from './backend/index.js';
+import { backend, backendConfig, configuration, PythonBackend, probeDirectPrinter, directBrowserError, saveBackend } from './backend/index.js';
 
 const player = document.getElementById('player');
 const $ = id => id === 'player' ? player : player.querySelector(`#${id}`);
@@ -112,14 +112,18 @@ const playerPullRefresh = new PlayerPullRefresh($('player'), () => PlayerReload.
 const backendType = $('backend-type');
 const backendURL = $('backend-url');
 backendType.value = configuration.type;
+backendType.querySelector('option[value="direct"]').disabled = Boolean(directBrowserError());
 backendURL.value = configuration.url || location.origin;
 function renderBackendForm() {
   const demo = backendType.value === 'demo';
+  const direct = backendType.value === 'direct';
   backendURL.hidden = demo;
   $('backend-url-label').hidden = demo;
   $('backend-capabilities').textContent = demo ?
-    'Runs in this browser with generated demo video or a local file. No LAN discovery, printer connection, or server recording.' :
+    'Runs in this browser with generated demo video or a local file. No LAN discovery, printer connection, or server recording.' : direct ?
+    directBrowserError() || 'Connects to an identified Klipper / Moonraker controller with a configured MJPEG webcam. Live only; no recording, rewind, timeline or video PiP. Bambu printers require Docker.' :
     'Adds approved-printer discovery, saved connections, live telemetry and server-backed replay. No cloud account required.';
+  $('backend-url-label').textContent = direct ? 'Printer / controller address' : 'Backend address';
   $('local-media-label').hidden = !backend.capabilities.localMedia;
   restartButton.hidden = !backend.capabilities.serverDvr;
 }
@@ -137,6 +141,7 @@ $('backend-form').addEventListener('submit', async event => {
       const description = await response.json();
       if (!response.ok || description.id !== 'python' || description.protocol_version !== 1) throw new Error('This address is not a compatible Layerglass backend.');
     }
+    if (config.type === 'direct') await probeDirectPrinter(config.url, { profile: config.profile });
     saveBackend(config);
     const next = new URL(location.href);
     next.searchParams.delete('backend');
@@ -347,7 +352,7 @@ async function attachPlayer(prepared = null) {
       onFailure: error => {
         if (directStream !== stream || version !== selectionVersion) return;
         pageReplay.mediaReady();
-        console.warn('[Layerglass] Direct webcam interrupted', error.name);
+        console.warn('[Layerglass] Direct webcam interrupted', { type: error.name, message: error.message });
         waiting('Reconnecting the camera', 'Direct live camera connection interrupted.');
         scheduleRefresh(Math.min(30000, 1000 * 2 ** Math.min(directRetryAttempts++, 5)));
       },
@@ -712,7 +717,7 @@ async function forgetPrinter(key) {
 $('refresh-button').addEventListener('click', async () => {
   streamFallback = false;
   streamRetryAttempts = 0;
-  if (backend.capabilities.liveOnly && status?.state !== 'live') {
+  if (backend.capabilities.liveOnly) {
     try { await backend.refresh(); } catch (error) { console.warn('[Layerglass] Direct printer connection unavailable', error.name); }
     await loadCatalog();
     await loadStatus();

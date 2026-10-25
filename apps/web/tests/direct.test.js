@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DirectPrinterBackend, directOrigin, probeDirectPrinter } from '../src/backend/direct.js';
+import { DirectPrinterBackend, directOrigin, probeDirectPrinter, directBrowserError } from '../src/backend/direct.js';
 import { DirectMjpegStream, MultipartJpegDecoder } from '../src/direct-stream.js';
 import { PageReplay } from '../src/replay.js';
+import { backendConfig, readBackend, saveBackend } from '../src/backend/config.js';
 
 const origin = 'https://printer.test';
 const camera = { uid: 'camera-one', name: 'Print chamber', enabled: true, service: 'mjpegstreamer', stream_url: '/webcam/?action=stream' };
@@ -10,6 +11,28 @@ const server = { moonraker_version: 'v0.9.3', api_version: [1, 5, 0], components
 const printer = { state: 'ready', hostname: 'workshop-klipper', software_version: 'v0.13.0' };
 const fixtures = (overrides = {}) => ({ '/server/info': server, '/printer/info': printer,
   '/server/webcams/list': { webcams: [camera] }, ...overrides });
+
+test('WebKit and iOS browser variants reject unsupported direct MJPEG before any stream can leak', () => {
+  for (const agent of ['AppleWebKit/605.1.15 Version/18.0 Safari/605.1.15',
+    'AppleWebKit/605.1.15 CriOS/145.0 Mobile Safari/604.1', 'AppleWebKit/605.1.15 FxiOS/145.0 Mobile Safari/604.1']) {
+    assert.match(directBrowserError(agent), /Safari and iPhone.*Docker/);
+  }
+  assert.equal(directBrowserError('AppleWebKit/537.36 Chrome/145.0 Safari/537.36'), null);
+  assert.equal(directBrowserError('AppleWebKit/537.36 Chrome/145.0 Mobile Safari/537.36'), null);
+});
+
+test('direct configuration is separate from demo and persists only the approved profile and origin', () => {
+  let saved;
+  const storage = { setItem: (_, value) => { saved = value; }, getItem: () => saved };
+  const value = { type: 'direct', profile: 'moonraker', url: origin, api_key: 'not-persisted' };
+  assert.deepEqual(saveBackend(value, storage, 'https://app.layer.glass'), { type: 'direct', profile: 'moonraker', url: origin });
+  assert(!saved.includes('not-persisted'));
+  assert.deepEqual(readBackend(storage, 'https://app.layer.glass', 'choose'), { type: 'direct', profile: 'moonraker', url: origin });
+  assert.deepEqual(backendConfig({ type: 'demo' }), { type: 'demo' });
+  assert.throws(() => backendConfig({ ...value, profile: 'unapproved' }), /not approved/);
+  saved = JSON.stringify({ ...value, profile: 'unapproved' });
+  assert.equal(readBackend(storage, 'https://app.layer.glass', 'choose'), null);
+});
 function fixtureFetcher(data = fixtures(), requests = []) {
   return async (url, options) => {
     requests.push({ url, options });
@@ -44,6 +67,7 @@ test('direct cameras must be enabled approved MJPEG entries on the selected orig
     { ...camera, uid: 'off-origin', stream_url: 'https://camera.other/stream' },
     { ...camera, uid: 'credentials', stream_url: 'https://name:code@printer.test/stream' },
     { ...camera, uid: 'key-query', stream_url: '/stream?api_key=secret' },
+    { ...camera, uid: 'blob', stream_url: 'blob:https://printer.test/camera' },
     { ...camera, uid: 'off', enabled: false }, { ...camera, uid: 'webrtc', service: 'webrtc-camerastreamer' },
     { ...camera, uid: '', service: 'mjpegstreamer' }, { ...camera, uid: 'rtsp', stream_url: 'rtsps://printer.test:322/stream' },
     { ...camera, uid: 'hash', stream_url: '/stream#secret' },

@@ -1,9 +1,14 @@
 // Configuration contains only the chosen transport and its public origin.
 // Printer access codes remain on the Python server, never in this preference.
+import { directOrigin } from './direct.js';
 export const BACKEND_KEY = 'layerglass-backend';
 
 export function backendConfig(value = {}, page = globalThis.location?.href || 'http://localhost/') {
   if (value.type === 'demo') return { type: 'demo' };
+  if (value.type === 'direct') {
+    if (value.profile && value.profile !== 'moonraker') throw new TypeError('This direct printer profile is not approved.');
+    return { type: 'direct', profile: 'moonraker', url: directOrigin(value.url, page) };
+  }
   const current = new URL(page);
   const url = new URL(value.url || current.origin);
   if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password ||
@@ -26,7 +31,8 @@ export function readBackend(storage, page = globalThis.location?.href,
   try {
     storage ??= globalThis.localStorage;
     const saved = JSON.parse(storage?.getItem(BACKEND_KEY) || 'null');
-    if (saved?.type !== 'demo' && !(saved?.type === 'python' && typeof saved.url === 'string' && saved.url)) return fallback;
+    if (saved?.type !== 'demo' && !(saved?.type === 'python' && typeof saved.url === 'string' && saved.url) &&
+        !(saved?.type === 'direct' && saved.profile === 'moonraker' && typeof saved.url === 'string' && saved.url)) return fallback;
     return backendConfig(saved, page);
   }
   catch (_) { return fallback; }

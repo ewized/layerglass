@@ -120,6 +120,7 @@ export class DirectMjpegStream {
         cache: 'no-store', signal: this.controller.signal });
       if (this.stopped || this.failed) { await response.body?.cancel(); return; }
       if (!response.ok || !response.body) throw new Error('The direct webcam stream is unavailable.');
+      this.contentType = response.headers.get('Content-Type');
       const decoder = new MultipartJpegDecoder(response.headers.get('Content-Type'), bytes => this.present(bytes));
       this.reader = response.body.getReader();
       while (!this.stopped && !this.failed) {
@@ -139,6 +140,7 @@ export class DirectMjpegStream {
   fail(error) {
     if (this.failed || this.stopped) return;
     this.failed = true;
+    this.failure = { type: error.name, message: error.message };
     clearTimeout(this.timer);
     this.controller.abort();
     this.onFailure(error);
@@ -156,3 +158,4 @@ export class DirectMjpegStream {
     this.urls.clear(); this.pending = null; this.current = null; this.queued = null;
   }
 }
+

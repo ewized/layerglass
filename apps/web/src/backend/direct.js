@@ -12,6 +12,16 @@ const json = (body, status = 200) => Response.json(body, { status });
 const text = (value, limit = 128) => typeof value === 'string' && value.trim() && value.length <= limit;
 const states = new Set(['ready', 'startup', 'error', 'shutdown']);
 
+export function directBrowserError(agent = globalThis.navigator?.userAgent || '') {
+  // WebKit cancels multipart fetch resources, and its native image loader does
+  // not reliably close or report ended MJPEG connections. Do not open a feed
+  // that this app cannot safely own. iOS Chrome/Firefox use the same engine.
+  if (/AppleWebKit\//.test(agent) && !/Chrome\/|Chromium\/|Edg\//.test(agent)) {
+    return 'Direct MJPEG is unavailable in Safari and iPhone browsers. Use the Docker backend, or Chrome / Chromium on desktop or Android.';
+  }
+  return null;
+}
+
 export function directOrigin(value, page = globalThis.location?.href || 'http://localhost/') {
   let url;
   try { url = new URL(value); } catch (_) { throw new TypeError('Enter the Moonraker printer/controller HTTP(S) origin.'); }
@@ -30,8 +40,8 @@ function cameraURL(value, origin) {
   if (!text(value, 2048)) return null;
   let url;
   try { url = new URL(value, origin); } catch (_) { return null; }
-  if (url.origin !== origin || url.username || url.password || url.hash ||
-      [...url.searchParams.keys()].some(key => /password|token|api.?key|access.?code|authorization/i.test(key))) return null;
+  if (!['http:', 'https:'].includes(url.protocol) || url.origin !== origin || url.username || url.password || url.hash ||
+      [...url.searchParams.keys()].some(key => /pass(?:word)?|token|key|access.?code|auth|secret|credential/i.test(key))) return null;
   return url.href;
 }
 
@@ -46,6 +56,8 @@ function cameraID(origin, uid) {
 
 export async function probeDirectPrinter(value, { profile = 'moonraker', fetcher = (...args) => fetch(...args),
   page = globalThis.location?.href || 'http://localhost/', signal } = {}) {
+  const unsupported = directBrowserError();
+  if (unsupported) throw new Error(unsupported);
   if (!Object.hasOwn(DIRECT_PROFILES, profile)) throw new TypeError('This direct printer profile is not approved.');
   const origin = directOrigin(value, page);
   const get = async path => {
@@ -55,7 +67,7 @@ export async function probeDirectPrinter(value, { profile = 'moonraker', fetcher
         redirect: 'error', cache: 'no-store', signal: signal || AbortSignal.timeout(6000) });
     } catch (error) {
       if (signal?.aborted) throw error;
-      throw new Error('Cannot reach the printer/controller. Check HTTPS, CORS and trusted local access.');
+      throw new Error('Cannot reach the printer/controller. Check HTTPS, CORS and trusted local access, and allow browser local-network permission.');
     }
     if ([401, 403].includes(response.status)) throw new Error('The printer/controller requires authorized local access. Direct mode does not store access keys.');
     if (!response.ok || !response.headers.get('Content-Type')?.includes('application/json')) {
@@ -63,7 +75,11 @@ export async function probeDirectPrinter(value, { profile = 'moonraker', fetcher
     }
     if (Number(response.headers.get('Content-Length')) > 1024 * 1024) throw new Error('The printer/controller returned an invalid identity response.');
     let payload;
-    try { payload = JSON.parse(await response.text()); }
+    try {
+      const body = await response.text();
+      if (body.length > 1024 * 1024) throw new Error('Oversized identity response');
+      payload = JSON.parse(body);
+    }
     catch (_) { throw new Error('The printer/controller returned an invalid identity response.'); }
     return payload?.result;
   };
