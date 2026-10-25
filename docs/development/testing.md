@@ -37,6 +37,12 @@ not compete for runner CPU. Frame counters verify progress rather than a fixed
 headless frame rate. See [Playwright's CI guidance](https://playwright.dev/docs/ci)
 on limiting concurrency for reproducible checks.
 
+The transport regression includes forward seeks that skip just one recorded
+fragment. Those seeks must reposition the paced archive response immediately;
+ordinary consecutive playback keeps the existing response. The browser checks
+also verify that returning to Live reaches the current edge without recurring
+playlist or segment requests.
+
 ## Focused commands
 
 For an individual Python file, use a built runtime image and mount the checkout
