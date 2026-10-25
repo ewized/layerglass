@@ -1,0 +1,16 @@
+{
+  "name": "layerglass",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules --test tests/*.test.js",
+    "test:browser": "node tests/run-browser.js"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

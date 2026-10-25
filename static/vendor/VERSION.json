@@ -1,0 +1,11 @@
+{
+  "package": "hls.js",
+  "version": "1.7.3",
+  "license": "Apache-2.0",
+  "source": "https://registry.npmjs.org/hls.js/-/hls.js-1.7.3.tgz",
+  "integrity": "sha512-MsPlx6yVW4Qv4C7mEVou4/gk/5cN2dVxOTnrNjPSmyH2f0Ln+/UkG10Ax1PE6OvrmTVPKgQYozTtBaPOuCzq7A==",
+  "module": "hls.min.mjs",
+  "module_sha256": "5527dccd891e4b24c269049c5097de9277b8771d93c3e6d31dea3d9e5652df6d",
+  "worker": "hls.worker.js",
+  "worker_sha256": "42794b9ca89d78c54407c6a0e46cdcde9fbd976e476259428e506be857cb16ea"
+}
