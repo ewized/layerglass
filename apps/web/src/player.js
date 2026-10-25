@@ -125,6 +125,7 @@ function renderBackendForm() {
   backendConfirm.setAttribute('aria-label', action);
   backendConfirm.title = action;
   backendURL.hidden = demo;
+  backendURL.disabled = demo;
   backendURL.required = !demo;
   $('backend-url-label').hidden = demo;
   $('backend-capabilities').textContent = demo ?
@@ -172,6 +173,7 @@ backendForm.addEventListener('submit', async event => {
     if (backendType.value !== 'demo') backendURL.setAttribute('aria-invalid', 'true');
     console.warn('[Layerglass] Backend selection failed', failure.name);
     for (const control of [backendType, backendURL, backendConfirm]) control.disabled = false;
+    backendURL.disabled = backendType.value === 'demo';
     backendConfirm.removeAttribute('aria-busy');
     backendConfirm.querySelector('use').setAttribute('href', '#i-check');
   }

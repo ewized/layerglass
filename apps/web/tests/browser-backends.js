@@ -116,7 +116,11 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(await page.locator('#backend-error').isVisible(), false, 'Editing clears the error for the previous address.');
     assert.equal(await page.locator('#backend-url').getAttribute('aria-invalid'), null);
     await page.evaluate(() => { window.fetch = window.backendTestFetch; });
+    await page.locator('#backend-url').fill('not a backend address');
     await page.locator('#backend-type').selectOption('demo');
+    assert.equal(await page.locator('#backend-url').isDisabled(), true);
+    assert.equal(await page.locator('#backend-form').evaluate(form => form.checkValidity()), true,
+      'A hidden invalid address draft must not prevent selecting Demo.');
     await page.evaluate(async () => {
       const app = await import('/static/player.js');
       app.playerChrome.options(false);
@@ -192,6 +196,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
       'Same-origin backend requests preserve a reverse-proxy session cookie.');
     await normalPage.locator('#options-button').click();
     await normalPage.locator('[data-settings-target="connection"]').click();
+    await normalPage.locator('#backend-url').fill('not a backend address');
     await normalPage.locator('#backend-type').selectOption('demo');
     await Promise.all([
       normalPage.waitForEvent('domcontentloaded'),
