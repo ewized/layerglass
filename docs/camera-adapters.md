@@ -5,6 +5,12 @@ tags: [technical]
 
 # Approved printer adapters
 
+The [Direct printer backend](architecture/direct-printer.md) has a separate,
+browser-owned approval registry for identified **Klipper/Moonraker** firmware
+controllers and their enabled same-origin MJPEG webcams. It is live only and
+verified in Chromium; Safari/iPhone direct MJPEG is explicitly unavailable.
+This does not add generic cameras to the Python server's approved port scanner.
+
 [Vault home](index.md)
 
 Layerglass discovers camera services first, then races bounded manufacturer

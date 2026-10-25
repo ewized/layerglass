@@ -5,11 +5,17 @@ tags: [architecture, web, backend]
 
 # Backend providers
 
-Layerglass has two transport providers behind the same native video player.
+Layerglass has three transport providers behind the same camera player.
 The Python container is optional for the browser demo and local-file viewer;
 it supplies the network protocols and retained recordings that browsers cannot.
 This repository work does not replace or reconfigure an existing prototype
 container, proxy, stored printer code or private deployment.
+
+The [Direct printer provider](direct-printer.md) connects to an identified
+Klipper/Moonraker controller and its configured, same-origin MJPEG webcams.
+It is an actual live camera connection without a Layerglass container, with no
+recording, rewind, timeline, telemetry or video PiP. Current Bambu LAN cameras
+still require the Python backend because their protocols are not browser APIs.
 
 | Capability | Python backend | Browser demo / local file |
 | --- | --- | --- |
@@ -32,12 +38,14 @@ telemetry. Neither source is admitted as a network printer.
 
 ## Selecting a provider
 
-On a first visit to the hosted or standalone app, choose **Demo** or **Docker
-backend**. Nothing connects, plays or probes a backend before that choice.
+On a first visit to the hosted or standalone app, choose **Demo**, **Docker
+backend**, or **Direct printer**. Nothing connects, plays or probes a backend before that choice.
 Docker asks for the container's HTTP(S) origin and checks `/api/backend` before
 saving it. Failed or incompatible connections keep the chooser open.
 
-Open **Settings → Connection** to change to **Docker backend** or **Demo** later.
+Open **Settings → Connection** to change to **Docker backend**, **Demo**, or
+**Direct printer (Klipper / Moonraker)** later. Direct mode verifies the controller
+identity and configured webcams, then provides live-only camera playback.
 The choice is saved as `layerglass-backend` and a
 reload closes the previous page session. Browser mode also offers a local video
 file picker; the file stays on the device and its object URL is released when
@@ -66,7 +74,9 @@ provider exposes:
   `addEventListener`, `onerror`, `readyState` and `close`.
 
 The existing update envelope is retained:
-`{version: 1, catalog, status, session_id, replay, telemetry}`. Sessions retain
+`{version: 1, catalog, status, session_id, replay, telemetry}`. Direct mode uses
+`status.mjpeg_url`, a `liveOnly` capability and no session/history or telemetry.
+Sessions for replay-capable providers retain
 opaque IDs, clock anchors and page ownership. Browser media adds `kind: 'file'`,
 `media_url`, and `preview_fallback: false`. Telemetry keeps epoch-second history
 samples so statistics and timeline events follow the frame's recorded time.
@@ -75,7 +85,8 @@ The adapter is injected into `PageReplay`, `PlayerUpdates`, `PrinterHistory`,
 `PlayerVideoStream`, scrub-preview fallback and Cast selection. Commands,
 SSE, snapshots, session open/close, rewind media, JPEGs and history use the same
 configured origin. Existing `printer-camera*` preview and preference namespaces
-are retained. There is still one native video element and one decoder.
+are retained. There is still one native video element; direct MJPEG uses the
+existing native image element while the video decoder stays idle.
 
 `GET /api/backend` identifies a compatible service with `id: 'python'`,
 `protocol_version: 1` and capability flags. Saving a Python address first checks

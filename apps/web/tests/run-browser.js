@@ -6,6 +6,7 @@ const available = [
   'browser-components.js',
   'browser-backends.js',
   'browser-backend-origin.js',
+  'browser-direct.js',
   'browser-video-stream.js',
   'browser-stream-recovery.js',
   'browser-preview-storage.js',

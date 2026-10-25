@@ -1,6 +1,7 @@
 import { PlayerElement } from './base.js';
 import { backendConfig, saveBackend } from '../backend/config.js';
 import { PythonBackend } from '../backend/python.js';
+import { probeDirectPrinter, directBrowserError } from '../backend/direct.js';
 
 export class PrinterBackendPicker extends PlayerElement {
   static template = `
@@ -20,11 +21,16 @@ export class PrinterBackendPicker extends PlayerElement {
             <span><strong>Docker backend</strong><span>Connect to Layerglass on your hardware.</span></span>
             <svg class="backend-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg>
           </button>
+          <button type="button" class="backend-choice" data-backend-choice="direct">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-printer"/></svg>
+            <span><strong>Direct printer</strong><span>Klipper / Moonraker live camera. No rewind. Bambu printers need Docker.</span></span>
+            <svg class="backend-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
         </div>
       </section>
       <section data-backend-page="docker" aria-labelledby="backend-docker-title" hidden>
         <div class="backend-heading"><button type="button" class="icon-button" data-backend-back aria-label="Back to backend choices"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-back"/></svg></button><h1 id="backend-docker-title">Docker backend</h1></div>
-        <p class="backend-intro">Enter the address of your Layerglass container.</p>
+        <p class="backend-intro" data-connection-intro>Enter the address of your Layerglass container.</p>
         <form class="backend-connect-form">
           <label for="backend-connect-url">Backend address</label>
           <input id="backend-connect-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com" required>
@@ -41,12 +47,19 @@ export class PrinterBackendPicker extends PlayerElement {
     this.form = this.querySelector('form');
     this.input = this.querySelector('input');
     this.error = this.querySelector('.backend-connect-error');
+    const unsupported = directBrowserError();
+    if (unsupported) {
+      const direct = this.querySelector('[data-backend-choice="direct"]');
+      direct.disabled = true;
+      direct.querySelector('span span').textContent = unsupported;
+    }
     this.querySelector('.backend-address-hint').textContent = this.ownerDocument.location.protocol === 'https:' ?
       'Use an HTTPS address that this device can reach.' : 'Use the address you open to view your container.';
     this.listen(this, 'click', event => {
       const choice = event.target.closest('[data-backend-choice]')?.dataset.backendChoice;
       if (choice === 'demo') this.select({ type: 'demo' });
       if (choice === 'docker') this.page('docker');
+      if (choice === 'direct') this.page('direct');
       if (event.target.closest('[data-backend-back]')) this.page('choose');
     });
     this.listen(this.form, 'submit', event => { event.preventDefault(); this.connect(); });
@@ -58,8 +71,16 @@ export class PrinterBackendPicker extends PlayerElement {
   page(name) {
     this.cancel();
     this.error.hidden = true;
-    for (const page of this.querySelectorAll('[data-backend-page]')) page.hidden = page.dataset.backendPage !== name;
-    (name === 'docker' ? this.input : this.querySelector('[data-backend-choice="docker"]')).focus({ preventScroll: true });
+    if (name !== 'choose') this.connectionType = name === 'direct' ? 'direct' : 'python';
+    for (const page of this.querySelectorAll('[data-backend-page]')) page.hidden = page.dataset.backendPage !== (name === 'choose' ? 'choose' : 'docker');
+    const direct = this.connectionType === 'direct';
+    this.querySelector('#backend-docker-title').textContent = direct ? 'Direct printer' : 'Docker backend';
+    this.querySelector('[data-connection-intro]').textContent = direct ?
+      'Connect to your existing Klipper / Moonraker controller. Live camera only; Bambu printers need Docker.' :
+      'Enter the address of your Layerglass container.';
+    this.form.querySelector('label').textContent = direct ? 'Printer / controller address' : 'Backend address';
+    this.input.placeholder = direct ? 'https://klipper.example.com' : 'https://printer.example.com';
+    (name !== 'choose' ? this.input : this.querySelector(`[data-backend-choice="${direct ? 'direct' : 'docker'}"]`)).focus({ preventScroll: true });
   }
 
   busy(value) {
@@ -75,12 +96,15 @@ export class PrinterBackendPicker extends PlayerElement {
     const timer = setTimeout(() => request.abort(), 6000);
     this.busy(true);
     try {
-      const config = backendConfig({ type: 'python', url: this.input.value.trim() });
-      const candidate = new PythonBackend(config.url);
-      const response = await candidate.fetch('/api/backend', { signal: request.signal, cache: 'no-store' });
-      const description = await response.json();
-      if (!response.ok || description.id !== 'python' || description.protocol_version !== 1) {
-        throw new Error('This address is not a compatible Layerglass backend.');
+      const config = backendConfig({ type: this.connectionType || 'python', url: this.input.value.trim() });
+      if (config.type === 'direct') await probeDirectPrinter(config.url, { profile: config.profile, signal: request.signal });
+      else {
+        const candidate = new PythonBackend(config.url);
+        const response = await candidate.fetch('/api/backend', { signal: request.signal, cache: 'no-store' });
+        const description = await response.json();
+        if (!response.ok || description.id !== 'python' || description.protocol_version !== 1) {
+          throw new Error('This address is not a compatible Layerglass backend.');
+        }
       }
       if (this.pending === request) this.select(config);
     } catch (failure) {

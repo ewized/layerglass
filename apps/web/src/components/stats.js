@@ -69,7 +69,7 @@ export class PrinterStats extends PlayerElement {
 
   renderStats() {
     if (!this.readState || !this.isConnected || this.hidden || this.ownerDocument.hidden) return;
-    const { camera, printer: currentPrinter, printerHistory, discovery, replay, hls, videoStream, videoCodec } = this.readState();
+    const { camera, printer: currentPrinter, server, printerHistory, discovery, replay, hls, videoStream, videoCodec } = this.readState();
     const printer = printerHistory && replay.session ?
       printerHistory.read(printerPlaybackTime(this.video, hls, replay)) : currentPrinter;
     const video = this.video;
@@ -110,7 +110,7 @@ export class PrinterStats extends PlayerElement {
       ['Decoder', jpeg ? 'Browser JPEG' : 'Browser native'],
       ['Media pipeline', jpeg ? 'Image' : hls ? 'hls.js + MediaSource' : replay.session?.kind === 'file' ? 'Native video' : 'Native HLS'],
       ['Video codec', jpeg ? 'JPEG' : videoCodec],
-      ['Video delivery', jpeg ? 'JPEG frames' : videoStream ?
+      ['Video delivery', jpeg ? server?.live_only ? 'MJPEG stream' : 'JPEG frames' : videoStream ?
         (videoStream.connected ? 'HTTP stream' : 'Reconnecting') : replay.session?.kind === 'file' ? 'Browser media' : 'HLS'],
       ['Video buffer', jpeg ? null : `${ahead.toFixed(1)} s`],
       ['Recorded history', replay.session ? `${Math.max(0, bounds.end - bounds.start).toFixed(1)} s` : null],

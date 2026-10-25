@@ -26,6 +26,7 @@ Pass representative suite names to focus a browser run, for example
 | Live-relative timeline and gesture commits | `timeline.test.js`, `scrub-preview.test.js`, browser scrub-commit suite |
 | Observed print-event markers | `timeline-events.test.js`, browser timeline-events suite |
 | Backend selection and CORS | `backend.test.js`, `test_backend_cors.py`, browser backends/backend-origin suites |
+| Direct printer admission and live-only MJPEG | `direct.test.js`, browser direct suite (generated HTTP multipart media, no printer) |
 | Local thumbnail retention and storage | `preview-history.test.js`, browser preview-storage/buffer suites |
 | Media/platform UI | `media.test.js`, `cast-sender.test.js`, browser fullscreen/Google Cast suites |
 | Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
