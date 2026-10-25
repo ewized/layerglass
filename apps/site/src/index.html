@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#111712" />
+    <meta
+      name="description"
+      content="Layerglass is a camera companion for your 3D printer. Watch live, rewind and inspect your print on your own hardware, including Bambu Lab in LAN-only mode."
+    />
+    <title>Layerglass — a clear view of your print</title>
+    <link rel="icon" type="image/svg+xml" href="/mark.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="nav shell">
+      <a class="brand" href="/" aria-label="Layerglass home"
+        ><img src="/mark.svg" alt="" width="31" height="31" />Layerglass</a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="https://github.com/ewized/layerglass"
+          >GitHub <span aria-hidden="true">↗</span></a
+        >
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="intro">
+          <p class="eyebrow">
+            <span class="dot" aria-hidden="true"></span>Your camera. Your
+            hardware.
+          </p>
+          <h1 id="hero-title">Keep an eye on<br />every layer.</h1>
+          <p class="lead">
+            A quiet camera companion for your 3D printer. Watch live, look back,
+            and see how your print is doing. Right on your own network.
+          </p>
+          <div class="actions">
+            <a
+              class="button primary"
+              href="https://app.layer.glass/?backend=demo"
+              >Explore the demo <span aria-hidden="true">↗</span></a
+            >
+            <a
+              class="button secondary"
+              href="https://github.com/ewized/layerglass/blob/main/docs/operations/installation.md"
+              >Run it yourself <span aria-hidden="true">→</span></a
+            >
+          </div>
+          <p class="quiet">
+            No account for the local viewer. Bambu Lab LAN-only mode supported.
+          </p>
+        </div>
+        <div
+          class="player-illustration"
+          role="img"
+          aria-label="Illustration of a camera view of a 3D print, with a live timeline and playback controls"
+        >
+          <div class="illustration-label">A little peace of mind.</div>
+          <div class="camera-view">
+            <div class="camera-header">
+              <strong>Workshop printer</strong
+              ><span>Made for a clear view</span>
+            </div>
+            <svg
+              class="printer-art"
+              viewBox="0 0 520 390"
+              fill="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient
+                  id="frame"
+                  x1="140"
+                  y1="60"
+                  x2="415"
+                  y2="320"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#667668" />
+                  <stop offset="1" stop-color="#26362a" />
+                </linearGradient>
+                <linearGradient
+                  id="object"
+                  x1="190"
+                  y1="155"
+                  x2="325"
+                  y2="315"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#c3ec9e" />
+                  <stop offset="1" stop-color="#77995a" />
+                </linearGradient>
+                <pattern
+                  id="layers"
+                  width="3"
+                  height="5"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path d="M0 4.5h3" stroke="#233a21" stroke-opacity=".23" />
+                </pattern>
+                <pattern
+                  id="bed"
+                  width="25"
+                  height="25"
+                  patternTransform="skewX(-20)"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path d="M0 0h25v25" stroke="#7b9a77" stroke-opacity=".14" />
+                </pattern>
+              </defs>
+              <ellipse
+                cx="270"
+                cy="331"
+                rx="185"
+                ry="22"
+                fill="#000"
+                opacity=".24"
+              />
+              <path
+                d="M110 309V65h305v244M122 304V78h280v226"
+                stroke="url(#frame)"
+                stroke-width="13"
+                stroke-linejoin="round"
+              />
+              <path d="M93 299h304l48 35H66l27-35Z" fill="#384a37" />
+              <path d="M103 292h289l45 35H76l27-35Z" fill="#1c2b20" />
+              <path d="M103 292h289l45 35H76l27-35Z" fill="url(#bed)" />
+              <path
+                d="M187 295c9-25 31-35 39-54 7-18-6-33-1-49 8-24 46-28 60-6 10 15-2 30 5 46 8 19 35 32 43 63-23 16-125 17-146 0Z"
+                fill="url(#object)"
+              />
+              <path
+                d="M187 295c9-25 31-35 39-54 7-18-6-33-1-49 8-24 46-28 60-6 10 15-2 30 5 46 8 19 35 32 43 63-23 16-125 17-146 0Z"
+                fill="url(#layers)"
+              />
+              <path d="M124 125h277" stroke="#85947f" stroke-width="6" />
+              <path d="M239 105h41v44h-41z" fill="#758471" />
+              <path d="M247 149h25l-8 12h-9l-8-12Z" fill="#d0d7cb" />
+              <circle cx="250" cy="119" r="3" fill="#c3ec9e" />
+            </svg>
+            <div class="camera-toolbar">
+              <div class="timeline"><span></span><i></i></div>
+              <div class="toolbar-row">
+                <span class="pause" aria-hidden="true">Ⅱ</span
+                ><span class="live"><span class="dot"></span>Live</span
+                ><span class="toolbar-icons" aria-hidden="true"
+                  >⚙ <span>⛶</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="benefits shell" aria-label="What Layerglass does">
+        <article>
+          <span class="feature-number">01 / WATCH</span>
+          <h2>Open it. See your print.</h2>
+          <p>
+            A player built for your phone, with discovery and setup tucked into
+            settings. Your print gets the screen.
+          </p>
+        </article>
+        <article>
+          <span class="feature-number">02 / LOOK BACK</span>
+          <h2>Catch the moment.</h2>
+          <p>
+            Rewind the footage collected since you opened the viewer. Local
+            previews make finding a moment easier.
+          </p>
+        </article>
+        <article>
+          <span class="feature-number">03 / UNDERSTAND</span>
+          <h2>A little more context.</h2>
+          <p>
+            Temperatures, progress and printer status follow the recorded video
+            time. Useful details when you need them.
+          </p>
+        </article>
+      </section>
+      <section
+        class="setup shell"
+        id="how-it-works"
+        aria-labelledby="setup-title"
+      >
+        <div>
+          <p class="eyebrow">AT HOME ON YOUR NETWORK</p>
+          <h2 id="setup-title">A small container.<br />A better view.</h2>
+          <p>
+            Run the Python backend with Docker on hardware you control. It
+            discovers approved printers, keeps their access codes locally, and
+            relays the camera to your browser.
+          </p>
+          <p>
+            The hosted demo uses sample footage. Connecting to a real printer
+            uses your local backend; it does not send your printer feed through
+            our website.
+          </p>
+        </div>
+        <ol class="steps">
+          <li>
+            <span>1</span>
+            <div>
+              <h3>Start Layerglass</h3>
+              <p>
+                Build and run the Docker container on your server, NAS or other
+                Docker host.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>2</span>
+            <div>
+              <h3>Find your printer</h3>
+              <p>
+                Discover it on your LAN and save its own access code in Settings
+                → Printers.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>3</span>
+            <div>
+              <h3>Watch from your browser</h3>
+              <p>
+                Open the viewer on your phone or desktop. Your local setup works
+                without a cloud account.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+      <section class="scope shell" aria-labelledby="scope-title">
+        <div>
+          <p class="eyebrow">AN EARLY PRODUCT, BUILT IN THE OPEN</p>
+          <h2 id="scope-title">Focused on the view.</h2>
+        </div>
+        <div>
+          <p>
+            Bambu Lab is the first supported manufacturer. Other manufacturers
+            need an approved adapter; generic camera streams are not added as
+            printers.
+          </p>
+          <p>
+            Printer controls, accounts and recording entire print jobs are
+            possibilities on the roadmap. Today's app focuses on live viewing,
+            session replay and read-only telemetry.
+          </p>
+          <a
+            class="text-link"
+            href="https://github.com/ewized/layerglass/blob/main/docs/product/roadmap.md"
+            >Follow the roadmap <span aria-hidden="true">→</span></a
+          >
+        </div>
+      </section>
+    </main>
+    <footer class="footer shell">
+      <a class="brand" href="/">Layerglass</a
+      ><span>A clear view of your print.</span
+      ><a href="https://github.com/ewized/layerglass"
+        >Source &amp; documentation <span aria-hidden="true">↗</span></a
+      >
+    </footer>
+  </body>
+</html>

@@ -8,7 +8,7 @@ services:
     image: local/layerglass-dev
     init: true
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
-    command: ["python", "tests/fixture_server.py"]
+    command: ["python", "apps/backend/tests/fixture_server.py"]
     environment:
       FIXTURE_TELEMETRY: "1"
       FIXTURE_DUAL_TELEMETRY: "1"

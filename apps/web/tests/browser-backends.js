@@ -54,7 +54,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(await page.locator('video').evaluate(video => video.paused), true);
     // A local user file reuses the same decoder and loses simulated telemetry.
     await page.locator('#options-button').click();
-    const demoFile = await fs.readFile(new URL('../static/demo/printer.mp4', import.meta.url));
+    const demoFile = await fs.readFile(new URL('../src/demo/printer.mp4', import.meta.url));
     await page.locator('#local-media').setInputFiles({ name: 'local-print.mp4', mimeType: 'video/mp4', buffer: demoFile });
     await waitForPlayer(page, ({ app }) => app.video.currentSrc.startsWith('blob:') && app.video.currentTime > 0 && !app.video.paused);
     assert.equal(await page.locator('#camera-name').textContent(), 'Local video');

@@ -4,13 +4,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules --test tests/*.test.js",
-    "test:browser": "node tests/run-browser.js"
+    "test": "nx test web",
+    "test:python": "nx test backend",
+    "test:browser": "nx run web:browser",
+    "build": "nx run-many -t build --projects=backend,web,site",
+    "check:docs": "nx run docs:check",
+    "graph": "nx graph"
   },
   "devDependencies": {
+    "nx": "24.0.1",
     "playwright": "1.61.1"
   },
+  "nx": {
+    "includedScripts": []
+  },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   }
 }

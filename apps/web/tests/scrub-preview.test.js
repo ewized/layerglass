@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { previewPoint, previewLeft, previewSheet } from '../static/scrub-preview.js';
+import { previewPoint, previewLeft, previewSheet } from '../src/scrub-preview.js';
 
 const track = { min: 0, max: 100, start: 0, end: 100, left: 10, width: 216 };
 

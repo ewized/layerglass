@@ -7,7 +7,7 @@ tags: [technical]
 
 [Vault home](../index.md)
 
-[`providers/bambu/ca.pem`](../../providers/bambu/ca.pem) is the public Bambu CA bundle published by
+[`apps/backend/providers/bambu/ca.pem`](../../apps/backend/providers/bambu/ca.pem) is the public Bambu CA bundle published by
 [OpenBambuAPI](https://github.com/Doridian/OpenBambuAPI/blob/main/examples/ca_cert.pem).
 It contains no printer access codes or private keys.
 

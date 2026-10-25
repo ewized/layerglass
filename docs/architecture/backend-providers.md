@@ -46,7 +46,7 @@ Blocked or corrupt local preferences fall back to the declared default.
 
 ## Transport contract
 
-[`static/backend/`](../../static/backend/) contains native ES modules. Each
+[`apps/web/src/backend/`](../../apps/web/src/backend/) contains native ES modules. Each
 provider exposes:
 
 - `id`, `label`, and a frozen `capabilities` object.

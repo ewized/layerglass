@@ -72,7 +72,7 @@ interaction choices are specific to this viewer.
   clears the clock and window. Temporary recording and its storage cap are
   unchanged.
 
-`tests/timeline.test.js` exercises the actual browser controller with a fake
+`apps/web/tests/timeline.test.js` exercises the actual browser controller with a fake
 clock and media inputs. The core regression first failed with a movement from
 50% to 51% after one second; it now remains at 50% through two minutes of matched
 playback and recording. Browser tests additionally check real decoding, capture,

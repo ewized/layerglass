@@ -8,7 +8,7 @@ tags: [technical]
 [Vault home](index.md)
 
 The UI uses native autonomous custom elements, registered by
-`static/components/index.js` through the existing ESM entry point. The page has
+`apps/web/src/components/index.js` through the existing ESM entry point. The page has
 one `printer-player` host; importing the entry again reuses its module and player.
 There are no new runtime dependencies or build steps.
 
@@ -55,7 +55,7 @@ details until submitted; they are not interpolated into markup or attributes.
 UI actions are synchronous bubbling/composed `CustomEvent`s: `printer-select`,
 `printer-save`, `printer-forget`, `printer-scan`, `player-play`, `settings-toggle`,
 `cast-request`, `fullscreen-toggle` and `player-action`. The printer list consumes
-`printer-edit` locally. `static/player.js` handles the application/network
+`printer-edit` locally. `apps/web/src/player.js` handles the application/network
 actions; UI elements do not fetch, scan, save credentials, or open recordings.
 Synchronous fullscreen and Cast events retain the original click's browser activation.
 
@@ -71,7 +71,7 @@ as a replacement.
 
 `PageReplay`, `PlayerVideoStream`, `PlayerUpdates`, and the fullscreen/gesture
 controllers keep their existing media, timeline, SSE and orientation behavior.
-`tests/browser-components.js` covers native registration, independent instances,
+`apps/web/tests/browser-components.js` covers native registration, independent instances,
 safe names, labels, reconnecting editors, one action per gesture, and sampling
 cleanup in Chromium and WebKit. The existing browser suites cover the player
 behavior against generated footage.

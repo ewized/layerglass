@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { PreviewHistory, PreviewCapture } from '../static/preview-history.js';
+import { PreviewHistory, PreviewCapture } from '../src/preview-history.js';
 
 const session = session_id => ({ session_id });
 const blob = (value, size = 20000) => new Blob([new Uint8Array(size).fill(value)], { type: 'image/jpeg' });

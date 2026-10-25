@@ -24,6 +24,7 @@ Start with the [README](../README.md) for a quick introduction.
 - [Testing](development/testing.md) — reproducible checks without a printer.
 - [CI/CD](development/ci-cd.md) — validation, versioning and image publication.
 - [Architecture](architecture/overview.md) — source boundaries and data flow.
+- [Nx workspace](architecture/workspace.md) — applications, targets, caching and relocation map.
 - [Agent router](../AGENTS.md) — scoped guidance for agents.
 - [Prototype import decision](decisions/0001-prototype-import.md) — provenance and history.
 

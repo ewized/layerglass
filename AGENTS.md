@@ -8,8 +8,9 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
 
 | Task | Read first | Main source |
 | --- | --- | --- |
-| Player, Web Components, scrubbing, previews, PiP, casting | [Player skill](.agents/skills/layerglass-player/SKILL.md) | `static/`, `replay.py` |
-| Discovery, manufacturer support, access codes, printer telemetry | [Printer skill](.agents/skills/layerglass-printers/SKILL.md) | `discovery.py`, `cameras.py`, `identity.py`, `providers/` |
+| Player, Web Components, scrubbing, previews, PiP, casting | [Player skill](.agents/skills/layerglass-player/SKILL.md) | `apps/web/src/`, `apps/backend/replay.py` |
+| Discovery, manufacturer support, access codes, printer telemetry | [Printer skill](.agents/skills/layerglass-printers/SKILL.md) | `apps/backend/`, `apps/backend/providers/` |
+| Nx projects, builds, product website | [Workspace map](docs/architecture/workspace.md), [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `apps/*/project.json`, `apps/site/`, `nx.json` |
 | Docker, tests, workflows, versions, releases | [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `Dockerfile`, `compose*.yaml`, `scripts/`, `.github/` |
 | Product scope or documentation | [Vision](docs/product/vision.md), [vault home](docs/index.md) | `docs/` |
 
@@ -26,6 +27,9 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
   checks require the user's intended device scope.
 - Prefer native ES modules and Web Components. Preserve the single native video
   decoder and existing browser storage keys unless a task includes a migration.
+- Nx manages independent backend, web and site targets. Keep the player native
+  ESM; build static hosting outputs without introducing a framework or runtime CDN.
+  Cache only deterministic tasks, never discovery, browser fixtures or runtime state.
 - Use Docker for project runtimes and tests. Run focused checks during development
   and `./scripts/check.sh all` for changes spanning the core parts. The
   [testing guide](docs/development/testing.md) distinguishes fixture and hardware tests.

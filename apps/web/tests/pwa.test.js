@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs/promises';
-import { SHELL_PATHS, shellPath } from '../static/pwa-shell.js';
+import { SHELL_PATHS, shellPath } from '../src/pwa-shell.js';
 
 const origin = 'https://viewer.test';
 const request = (path, options) => new Request(new URL(path, origin), options);
@@ -25,13 +25,13 @@ test('cross-origin, range and mutation requests never enter the app cache', () =
 });
 
 test('the offline shell includes the full shipped module graph and media worker', async () => {
-  const files = await fs.readdir(new URL('../static/', import.meta.url), { recursive: true });
+  const files = await fs.readdir(new URL('../src/', import.meta.url), { recursive: true });
   for (const file of files.filter(file => /\.(?:m?js|css)$/.test(file) && file !== 'service-worker.js')) {
     assert.ok(SHELL_PATHS.includes('/static/' + file), `Missing offline dependency: ${file}`);
   }
   assert.equal(new Set(SHELL_PATHS).size, SHELL_PATHS.length);
   for (const path of SHELL_PATHS) {
     const file = path === '/' ? 'index.html' : path === '/manifest.webmanifest' ? 'manifest.webmanifest' : path.slice('/static/'.length);
-    assert.ok((await fs.stat(new URL('../static/' + file, import.meta.url))).isFile(), `Missing shell file: ${path}`);
+    assert.ok((await fs.stat(new URL('../src/' + file, import.meta.url))).isFile(), `Missing shell file: ${path}`);
   }
 });

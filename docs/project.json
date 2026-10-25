@@ -1,0 +1,14 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "docs",
+  "projectType": "library",
+  "tags": ["type:documentation"],
+  "implicitDependencies": ["backend", "web", "site"],
+  "targets": {
+    "check": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": { "command": "python3 -B scripts/check-docs.py" }
+    }
+  }
+}

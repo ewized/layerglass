@@ -1,0 +1,28 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "site",
+  "projectType": "application",
+  "sourceRoot": "apps/site/src",
+  "tags": ["type:application", "runtime:browser", "scope:product"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": ["default", "{workspaceRoot}/scripts/build-static.mjs"],
+      "outputs": ["{workspaceRoot}/dist/apps/site"],
+      "options": { "command": "node scripts/build-static.mjs site" }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "dependsOn": ["build"],
+      "options": { "command": "node apps/site/tests/browser-site.js" }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "dependsOn": ["build"],
+      "options": { "command": "node scripts/serve-static.mjs site 8102" }
+    }
+  }
+}

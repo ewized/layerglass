@@ -1,0 +1,40 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "web",
+  "projectType": "application",
+  "sourceRoot": "apps/web/src",
+  "tags": ["type:application", "runtime:browser", "scope:player"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": ["default", "{workspaceRoot}/scripts/build-static.mjs"],
+      "outputs": ["{workspaceRoot}/dist/apps/web"],
+      "options": { "command": "node scripts/build-static.mjs web" }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default"],
+      "outputs": [],
+      "options": { "command": "node --experimental-vm-modules --test apps/web/tests/*.test.js" }
+    },
+    "browser": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": { "command": "./scripts/check.sh browser" }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "options": { "command": "docker compose -f compose.dev.yaml up --build viewer" }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "dependsOn": ["build"],
+      "options": { "command": "node scripts/serve-static.mjs web 8101" }
+    }
+  }
+}

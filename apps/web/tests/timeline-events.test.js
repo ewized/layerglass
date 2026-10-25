@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { PrinterTimelineEvents, timelineTime, timelinePosition, groupTimelineEvents } from '../static/timeline-events.js';
-import { PrinterHistory } from '../static/printer-history.js';
+import { PrinterTimelineEvents, timelineTime, timelinePosition, groupTimelineEvents } from '../src/timeline-events.js';
+import { PrinterHistory } from '../src/printer-history.js';
 
 const session = { session_id: 'events-session', camera_id: 'printer', start_seconds: 0, end_seconds: 3000,
   clock: [{ position: 0, time: 1000 }] };

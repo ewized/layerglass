@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultBase": "main",
+  "neverConnectToCloud": true,
+  "cacheDirectory": ".nx/cache",
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "libs"
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/package-lock.json",
+      "{workspaceRoot}/VERSION",
+      { "runtime": "node --version" }
+    ]
+  },
+  "targetDefaults": {
+    "build": { "cache": true },
+    "serve": { "cache": false },
+    "preview": { "cache": false },
+    "browser": { "cache": false }
+  }
+}

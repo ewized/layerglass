@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { backendConfig, readBackend, saveBackend } from '../static/backend/config.js';
-import { PythonBackend } from '../static/backend/python.js';
-import { DemoBackend } from '../static/backend/demo.js';
+import { backendConfig, readBackend, saveBackend } from '../src/backend/config.js';
+import { PythonBackend } from '../src/backend/python.js';
+import { DemoBackend } from '../src/backend/demo.js';
 
 test('backend choice defaults to the self-hosted origin and stores no printer credentials', () => {
   const data = new Map();
