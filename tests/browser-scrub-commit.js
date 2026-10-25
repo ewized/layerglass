@@ -46,6 +46,16 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
       window.addEventListener('replaypositionchange', () => window.scrubCommits++);
       document.querySelector('video').addEventListener('seeking', () => window.scrubSeeks++);
     });
+    await page.evaluate(async () => {
+      const app = await import('/static/player.js');
+      const connect = app.videoStream.connect;
+      window.scrubStreamOpens = [];
+      app.videoStream.connect = function(start) {
+        window.scrubStreamOpens.push({ start, at: performance.now(), commits: window.scrubCommits,
+          gesture: app.pageReplay.scrubType, current: app.video.currentTime });
+        return connect.call(this, start);
+      };
+    });
     const original = await state();
     const slider = page.locator('#replay-slider');
     const box = await slider.boundingBox();
@@ -107,6 +117,19 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
       undefined, { timeout: 20000 });
     await slider.evaluate(node => node.blur());
 
+    // A decoded seek frame is ready before hls.js finishes its forward refill.
+    // Drain that preceding keyboard seek before attributing HTTP requests to
+    // the next gesture; its delayed archive fetch is not caused by scrolling.
+    await waitForPlayer(page, ({ app }) => {
+      const video = app.video;
+      const target = Math.min(app.pageReplay.session.end_seconds - 2,
+        video.currentTime + app.hls.config.maxBufferLength);
+      const openedAt = window.scrubStreamOpens.at(-1)?.at ?? 0;
+      return !video.seeking && video.readyState >= 2 && app.videoStream.connected &&
+        performance.now() - openedAt >= 1500 &&
+        Array.from({ length: video.buffered.length }, (_, i) => i).some(i =>
+          video.buffered.start(i) <= video.currentTime && video.buffered.end(i) >= target);
+    }, undefined, { timeout: 20000 });
     const beforeScroll = await state();
     requests.length = 0;
     await move(0.5);
@@ -176,6 +199,8 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
       previews: true, keyboardRepeat: true, scrollCoalescing: true, cancel: true, touch: true, preservePauseAndPlay: true }));
   } catch (error) {
     console.error(name, error.message, await state().catch(() => null));
+    console.error('Stream opens', await page.evaluate(() => window.scrubStreamOpens).catch(() => null),
+      'Requests', videoRequests().map(url => url.pathname + url.search));
     throw error;
   } finally { await browser.close(); }
 }

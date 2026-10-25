@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 
 // Representative, fixture-only regressions. Hardware checks remain opt-in.
-const suites = [
+const available = [
   'browser-esm.js',
   'browser-components.js',
   'browser-video-stream.js',
@@ -13,6 +13,12 @@ const suites = [
   'browser-google-cast.js',
   'browser-pwa.js',
 ];
+const selected = process.argv.slice(2);
+const suites = selected.length ? selected : available;
+if (suites.some(suite => !available.includes(suite))) {
+  console.error('Choose browser suites from:', available.join(', '));
+  process.exit(2);
+}
 
 for (const suite of suites) {
   console.log(`\nRunning ${suite}`);

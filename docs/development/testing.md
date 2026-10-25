@@ -12,6 +12,8 @@ unit tests, validates documentation/version metadata, starts a generated-camera
 fixture, and runs representative Chromium/WebKit regressions. It needs Docker,
 not a printer or host-installed language toolchains. `unit` and `browser` modes
 run the corresponding portion. Logs and screenshots go to ignored `test-results/`.
+Pass representative suite names to focus a browser run, for example
+`./scripts/check.sh browser browser-scrub-commit.js browser-components.js`.
 
 | Change | Focused coverage |
 | --- | --- |
