@@ -9,8 +9,9 @@ tags: [development, delivery]
 
 ## Continuous integration
 
-[`ci.yml`](../../.github/workflows/ci.yml) runs on pushes to `main` and pull
-requests, and is reusable by the release workflow. It validates both Compose
+[`ci.yml`](../../.github/workflows/ci.yml) runs on pushes to `main` and `codex/**`
+topic branches, and on pull requests. It is reusable by the release workflow.
+Topic branches can be validated before a pull request exists. It validates both Compose
 files and workflow syntax, builds the runtime container, then runs Python,
 JavaScript and representative Chromium/WebKit checks. The README badge points
 to this workflow. Artifacts expire after seven days.

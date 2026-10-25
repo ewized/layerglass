@@ -2,7 +2,7 @@ name: Public hosting checks
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'codex/**']
     paths:
       - 'infra/cloudflare/**'
       - 'scripts/cloudflare.mjs'
