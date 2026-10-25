@@ -2,7 +2,8 @@
 set -euo pipefail
 
 mode=${1:-all}
-case "$mode" in unit|browser|all) ;; *) echo 'Usage: scripts/check.sh [unit|browser|all]' >&2; exit 2 ;; esac
+case "$mode" in unit|browser|all) ;; *) echo 'Usage: scripts/check.sh [unit|browser|all] [browser-suite.js ...]' >&2; exit 2 ;; esac
+task_browser_suites=("${@:2}")
 project_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
 task_host_path=${LAYERGLASS_HOST_PATH:-$project_root}
 task_run_id=${GITHUB_RUN_ID:-$$}
@@ -82,9 +83,9 @@ run_browsers() {
   task_containers+=("${task_prefix}_browser")
   docker run --rm --init --name "${task_prefix}_browser" --user "$task_uid:$task_gid" \
     --network "container:$task_fixture" --shm-size=512m \
-    -e npm_config_cache=/tmp/npm-cache -e VIEWER_URL=http://127.0.0.1:8080 \
+    -e npm_config_cache=/tmp/npm-cache -e VIEWER_URL=http://127.0.0.1:8080 -e PWA_CACHE_ENABLED=0 \
     -v "$task_host_path:/app:ro" -v "$task_host_path/test-results:/app/test-results" -w /app \
-    "$task_playwright_image" sh tests/run-js.sh tests/run-browser.js \
+    "$task_playwright_image" sh tests/run-js.sh tests/run-browser.js "${task_browser_suites[@]}" \
     2>&1 | tee "$project_root/test-results/browser.log"
 }
 
