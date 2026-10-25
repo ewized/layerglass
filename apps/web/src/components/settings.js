@@ -6,6 +6,11 @@ export class PrinterSettings extends PlayerElement {
 
   set busy(value) { this.querySelector('#settings-back').disabled = value; }
 
+  set discoveryEnabled(value) {
+    this.canScan = value;
+    this.querySelector('#scan-button').hidden = this.page !== 'printers' || !value;
+  }
+
   set searching(value) {
     const list = this.querySelector('printer-list');
     list.setAttribute('aria-busy', String(value));
@@ -50,8 +55,8 @@ export class PrinterSettings extends PlayerElement {
     this.back.hidden = page === 'root';
     this.back.setAttribute('aria-label', 'Back to settings');
     this.updateHeading();
-    this.querySelector('#scan-button').hidden = page !== 'printers';
-    if (page === 'printers' && search) this.emit('printer-scan');
+    this.querySelector('#scan-button').hidden = page !== 'printers' || this.canScan === false;
+    if (page === 'printers' && search && this.canScan !== false) this.emit('printer-scan');
     if (focus) {
       const target = [...this.panel.querySelectorAll(`[data-settings-page="${page}"] button:not(:disabled), [data-settings-page="${page}"] input`)]
         .find(node => node.getClientRects().length);

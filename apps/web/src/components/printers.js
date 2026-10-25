@@ -33,8 +33,27 @@ export class PrinterItem extends PlayerElement {
   updatePresentation() {
     if (!this.model) return;
     const { camera, selected, busy, editing } = this.model;
-    this.hidden = camera.setup?.type !== 'access_code';
+    const direct = camera.setup?.type === 'direct';
+    this.hidden = !direct && camera.setup?.type !== 'access_code';
     if (this.hidden) return;
+    const select = this.querySelector('.printer-select');
+    const access = this.querySelector('.printer-access');
+    const forget = this.querySelector('.printer-forget');
+    this.dataset.cameraId = camera.id;
+    select.setAttribute('aria-pressed', String(selected));
+    select.setAttribute('aria-label', `View ${camera.name}`);
+    select.title = camera.name;
+    select.disabled = busy || !camera.configured;
+    this.querySelector('.printer-name').textContent = camera.name;
+    this.querySelector('.printer-address').textContent = camera.port ? `${camera.host}:${camera.port}` : camera.host;
+    this.querySelector('.printer-state').toggleAttribute('hidden', !selected || !camera.configured);
+    if (direct) {
+      // Direct camera admission belongs to the controller's webcam settings.
+      // No access-code or forget action is sent to this printer/controller.
+      access.hidden = true; forget.hidden = true; this.form.hidden = true;
+      return;
+    }
+    forget.hidden = false;
     if (!this.input) {
       this.form.innerHTML = accessCodeTemplate;
       this.input = this.form.querySelector('input');
@@ -45,20 +64,9 @@ export class PrinterItem extends PlayerElement {
         label.htmlFor = input.id;
       }
     }
-    const select = this.querySelector('.printer-select');
-    const access = this.querySelector('.printer-access');
     const save = this.querySelector('.printer-code-save');
-    const forget = this.querySelector('.printer-forget');
     const open = editing && !camera.configured;
     const wasEditing = !this.form.hidden;
-    this.dataset.cameraId = camera.id;
-    select.setAttribute('aria-pressed', String(selected));
-    select.setAttribute('aria-label', `View ${camera.name}`);
-    select.title = camera.name;
-    select.disabled = busy || !camera.configured;
-    this.querySelector('.printer-name').textContent = camera.name;
-    this.querySelector('.printer-address').textContent = camera.port ? `${camera.host}:${camera.port}` : camera.host;
-    this.querySelector('.printer-state').toggleAttribute('hidden', !selected || !camera.configured);
     access.hidden = camera.configured || open;
     const action = 'Access code';
     access.setAttribute('aria-label', `${action} for ${camera.name}`);
@@ -104,7 +112,7 @@ export class PrinterList extends PlayerElement {
   }
 
   update(cameras, selectedCamera, busy = false) {
-    this.model = { cameras: cameras.filter(camera => camera.setup?.type === 'access_code'), selectedCamera, busy };
+    this.model = { cameras: cameras.filter(camera => ['access_code', 'direct'].includes(camera.setup?.type)), selectedCamera, busy };
     if (this.isConnected && this.rendered) this.renderRows();
   }
 

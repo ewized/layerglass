@@ -11,6 +11,7 @@ export const SHELL_PATHS = Object.freeze([
   '/static/cast-sender.js',
   '/static/timeline-events.js', '/static/components/timeline-events.js',
   '/static/backend/index.js', '/static/backend/config.js', '/static/backend/python.js', '/static/backend/demo.js',
+  '/static/backend/direct.js', '/static/direct-stream.js',
   '/static/printer-history.js', '/static/printer-stats.js', '/static/diffusion.js', '/static/debug-info.js',
   '/static/scrub-preview.js', '/static/components/scrub-preview.js',
   '/static/preview-history.js', '/static/preview-storage.js',

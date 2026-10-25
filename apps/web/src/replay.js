@@ -149,6 +149,8 @@ export class PageReplay {
   get hasHistory() { return Boolean(this.session?.ready); }
 
   async open(camera) {
+    // A direct live transport has no page recording, synthetic session or DVR.
+    if (this.backend.capabilities?.liveOnly) return null;
     if (this.session?.camera_id === camera) return this.session;
     if (this.opening) return this.opening;
     const version = this.version;

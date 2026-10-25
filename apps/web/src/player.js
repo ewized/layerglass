@@ -14,6 +14,7 @@ import { readCamera, writeCamera } from './preferences.js';
 import { PrinterHistory } from './printer-history.js';
 import { PrinterTimelineEvents } from './timeline-events.js';
 import { PreviewHistory, PreviewCapture } from './preview-history.js';
+import { DirectMjpegStream } from './direct-stream.js';
 import { backend, backendConfig, configuration, PythonBackend, saveBackend } from './backend/index.js';
 
 const player = document.getElementById('player');
@@ -51,6 +52,8 @@ let lastDecodedFrames = null;
 let lastAttachAt = 0;
 let refreshTimer = null;
 let jpegTimer = null;
+let directStream = null;
+let directRetryAttempts = 0;
 let polling = false;
 let selectionVersion = 0;
 let restartDeadline = 0;
@@ -77,6 +80,7 @@ const previewHistory = new PreviewHistory();
 const previewCapture = new PreviewCapture(previewHistory, video, jpeg, () => pageReplay);
 const updates = new PlayerUpdates(applyUpdates, updatesUnavailable, backend);
 const playerChrome = $('player');
+playerChrome.classList.toggle('live-only', Boolean(backend.capabilities.liveOnly));
 $('scrub-preview').configure(() => pageReplay, previewHistory, previewCapture);
 $('timeline-events').configure(() => pageReplay, timelineEvents);
 playerChrome.configure({
@@ -218,12 +222,12 @@ async function play() {
   }
 }
 
-function scheduleRefresh() {
+function scheduleRefresh(delay = 3000) {
   if (refreshTimer || playerMedia.remoteActive) return;
   refreshTimer = setTimeout(() => {
     refreshTimer = null;
     if (navigator.onLine && status?.state === 'live') attachPlayer();
-  }, 3000);
+  }, delay);
 }
 
 function canStream() {
@@ -285,6 +289,8 @@ async function retryContinuous() {
 }
 
 function detachPlayer() {
+  directStream?.destroy();
+  directStream = null;
   cancelStreamRetry();
   loadingSuspended = false;
   clearTimeout(refreshTimer);
@@ -310,7 +316,7 @@ function detachPlayer() {
 
 async function attachPlayer(prepared = null) {
   if (!networkAvailable() || pageHidden || !playerVisible() || playerMedia.remoteActive ||
-      status?.state !== 'live' || (!status.playlist_url && !status.jpeg_url && !status.media_url) || pageReplay.opening) {
+      status?.state !== 'live' || (!status.playlist_url && !status.jpeg_url && !status.media_url && !status.mjpeg_url) || pageReplay.opening) {
     prepared?.destroy();
     return;
   }
@@ -327,6 +333,27 @@ async function attachPlayer(prepared = null) {
   attachedGeneration = pageReplay.session?.session_id || status.generation;
   lastAttachAt = Date.now();
   waiting('Loading the live view', 'Getting the latest image from your camera.');
+  if (status.mjpeg_url && backend.capabilities.liveOnly) {
+    reloadAutoplay = false;
+    video.hidden = true;
+    jpeg.hidden = false;
+    playerTools.updateMini();
+    const stream = directStream = new DirectMjpegStream(jpeg, status.mjpeg_url, {
+      onFrame: () => {
+        if (directStream !== stream) return;
+        directRetryAttempts = 0;
+        pageReplay.mediaReady();
+      },
+      onFailure: error => {
+        if (directStream !== stream || version !== selectionVersion) return;
+        pageReplay.mediaReady();
+        console.warn('[Layerglass] Direct webcam interrupted', error.name);
+        waiting('Reconnecting the camera', 'Direct live camera connection interrupted.');
+        scheduleRefresh(Math.min(30000, 1000 * 2 ** Math.min(directRetryAttempts++, 5)));
+      },
+    });
+    return;
+  }
   if (status.media_url) {
     // Browser/demo media uses the same native decoder and custom controls, with
     // no Python relay, HLS polling, or network-discovery side effects.
@@ -430,9 +457,25 @@ function renderStatus() {
   statusPill.classList.remove('offline');
   statusLabel.textContent = pageReplay.reviewing ? (pageReplay.paused ? 'Paused' : 'Replay') : live ? 'Live' : { live: 'Buffering', setup: 'Set up', empty: 'No printers', connecting: 'Connecting' }[status.state] || 'Reconnecting';
   streamMessage.textContent = pageReplay.reviewing ? 'Viewing footage buffered since this page opened.' : live ? 'Receiving live video.' : status.message;
+  if (backend.capabilities.liveOnly) {
+    const button = $('live-button');
+    button.classList.toggle('at-live', Boolean(live));
+    button.setAttribute('aria-pressed', String(Boolean(live)));
+    button.title = 'Live only — recording and rewind require the Docker backend';
+    button.disabled = true;
+    $('pause-button').hidden = true;
+    $('replay-controls').hidden = true;
+    $('replay-time').hidden = true;
+    if (status.state === 'unsupported') {
+      $('empty-scan-button').hidden = true;
+      statusLabel.textContent = 'Direct connection unavailable';
+      waiting('Direct connection unavailable', status.message, false);
+      return;
+    }
+  }
   const unavailable = ['setup', 'empty'].includes(status.state);
   const noStreams = catalog?.discovery.state === 'done' && !catalog.cameras.some(camera => camera.discovered);
-  $('empty-scan-button').hidden = !(status.state !== 'live' && (status.state === 'empty' || noStreams) && catalog?.discovery.state !== 'scanning');
+  $('empty-scan-button').hidden = !backend.capabilities.discovery || !(status.state !== 'live' && (status.state === 'empty' || noStreams) && catalog?.discovery.state !== 'scanning');
   restartButton.disabled = !backend.capabilities.serverDvr || unavailable || Boolean(restartDeadline) || restartRequest;
   restartButton.setAttribute('aria-busy', String(Boolean(restartDeadline) || restartRequest));
   $('refresh-button').disabled = unavailable;
@@ -462,6 +505,7 @@ function selectCamera(key) {
   selectionVersion += 1;
   streamFallback = false;
   streamRetryAttempts = 0;
+  directRetryAttempts = 0;
   selectedCamera = key;
   writeCamera(key);
   status = null;
@@ -504,7 +548,8 @@ function renderCatalog() {
     selectCamera(choices.find(camera => camera.id === catalog.default_camera_id)?.id || choices[0]?.id || null);
   }
   cameraList.update(choices, selectedCamera, settingUp);
-  $('printers-button').hidden = !backend.capabilities.discovery;
+  $('printers-button').hidden = !backend.capabilities.discovery && !backend.capabilities.cameraSelection;
+  playerChrome.settings.discoveryEnabled = backend.capabilities.discovery;
   $('scan-button').disabled ||= !backend.capabilities.discovery;
   playerChrome.settings.busy = settingUp;
   const selected = choices.find(camera => camera.id === selectedCamera);
@@ -512,7 +557,9 @@ function renderCatalog() {
   $('selected-printer').textContent = selected?.name || '—';
   const scanning = renderScanState();
   const message = $('discovery-message');
-  if (scanning) {
+  if (backend.capabilities.liveOnly) {
+    message.textContent = 'Configured cameras from the verified printer/controller. Direct mode has no network scan or recording.';
+  } else if (scanning) {
     message.textContent = 'Scanning for printer cameras…';
   } else if (!discovery.networks.length) {
     message.textContent = 'No scan network configured. Set your printer’s LAN subnet in the server configuration.';
@@ -662,9 +709,14 @@ async function forgetPrinter(key) {
   }
 }
 
-$('refresh-button').addEventListener('click', () => {
+$('refresh-button').addEventListener('click', async () => {
   streamFallback = false;
   streamRetryAttempts = 0;
+  if (backend.capabilities.liveOnly && status?.state !== 'live') {
+    try { await backend.refresh(); } catch (error) { console.warn('[Layerglass] Direct printer connection unavailable', error.name); }
+    await loadCatalog();
+    await loadStatus();
+  }
   if (status?.state === 'live') attachPlayer();
   else renderStatus();
   playerChrome.options(false);
@@ -712,6 +764,7 @@ video.addEventListener('error', () => { if (attachedGeneration && !video.hidden)
 
 window.addEventListener('offline', () => {
   if (backend.id === 'demo') return;
+  if (directStream) { detachPlayer(); pageReplay.mediaReady(); }
   cancelStreamRetry();
   resumeAfterOffline = video.hidden ? !pageReplay.paused : !video.paused;
   hls?.stopLoad();
@@ -743,6 +796,7 @@ setInterval(() => {
 }, 3000);
 function syncPlaybackVisibility() {
   if (pageHidden || !playerVisible()) {
+    if (directStream) { detachPlayer(); pageReplay.mediaReady(); }
     cancelStreamRetry();
     clearTimeout(refreshTimer);
     refreshTimer = null;
@@ -764,4 +818,4 @@ updates.subscribe(selectedCamera);
 renderStatus(); // Cached app shells can start without any network metadata.
 
 // Readable live module bindings for integration checks and local diagnostics.
-export { hls, pageReplay, playerChrome, playerFullscreen, playerMedia, playerPullRefresh, playerTools, printerHistory, previewHistory, previewCapture, reloadAutoplay, scanPending, selectedCamera, status, streamFallback, streamProbe, streamRetryAttempts, streamRetryTimer, loadingSuspended, retryContinuous, updates, video, videoStream };
+export { hls, pageReplay, playerChrome, playerFullscreen, playerMedia, playerPullRefresh, playerTools, printerHistory, previewHistory, previewCapture, reloadAutoplay, scanPending, selectedCamera, status, streamFallback, streamProbe, streamRetryAttempts, streamRetryTimer, loadingSuspended, retryContinuous, updates, video, videoStream, directStream };
