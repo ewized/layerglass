@@ -23,6 +23,12 @@ actions are pinned by commit SHA. Dependabot proposes weekly action, npm and
 Python dependency updates. Review vendored hls.js separately using its recorded
 version/hashes and license notices.
 
+The actions run on Node.js 24 using GitHub-hosted Ubuntu runners. Keep that
+runtime requirement in mind before introducing self-hosted runners. The check
+script reads the exact Playwright package version to select the matching
+[browser container](https://playwright.dev/docs/docker), so a dependency update
+cannot leave the browser binaries on an older release.
+
 ## Versioned image publication
 
 [`release.yml`](../../.github/workflows/release.yml) responds to `v*` tags. Before

@@ -9,7 +9,6 @@ task_host_path=${LAYERGLASS_HOST_PATH:-$project_root}
 task_run_id=${GITHUB_RUN_ID:-$$}
 task_prefix="codex__layerglass_check__${task_run_id}"
 task_image=${LAYERGLASS_TEST_IMAGE:-local/layerglass-check:$task_run_id}
-task_playwright_image=mcr.microsoft.com/playwright:v1.61.1-noble
 task_uid=$(id -u)
 task_gid=$(id -g)
 task_image_owned=0
@@ -37,6 +36,25 @@ if [[ -z "${LAYERGLASS_TEST_IMAGE:-}" && "$mode" != javascript && "$mode" != wor
   task_image_owned=1
   docker build --tag "$task_image" --build-arg "VERSION=$(cat "$project_root/VERSION")" "$project_root"
 fi
+
+# Playwright requires the browser binaries from its matching image release.
+# JavaScript/workspace-only checks intentionally do not build the Python image.
+# Read their package pin in a small bootstrap container instead.
+task_metadata_image=$task_image
+task_metadata_command=(python -B -c "import json; print(json.load(open('package.json'))['devDependencies']['playwright'])")
+if [[ "$mode" == javascript || "$mode" == workspace ]]; then
+  task_metadata_image=node:24-bookworm
+  task_metadata_command=(node --input-type=commonjs -p "require('./package.json').devDependencies.playwright")
+fi
+task_containers+=("${task_prefix}_playwright_version")
+task_playwright_version=$(docker run --rm --init --name "${task_prefix}_playwright_version" \
+  --user "$task_uid:$task_gid" -e PYTHONDONTWRITEBYTECODE=1 \
+  -v "$task_host_path:/app:ro" -w /app "$task_metadata_image" "${task_metadata_command[@]}")
+if [[ ! "$task_playwright_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo 'Pin playwright to an exact stable version in package.json.' >&2
+  exit 1
+fi
+task_playwright_image="mcr.microsoft.com/playwright:v${task_playwright_version}-noble"
 
 run_python() {
   task_containers+=("${task_prefix}_python")
