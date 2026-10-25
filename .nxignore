@@ -1,0 +1,12 @@
+**/.env
+**/.env.*
+**/.dev.vars
+**/.dev.vars.*
+**/.wrangler/**
+**/__pycache__/**
+**/*.pyc
+data/**
+buffer/**
+recordings/**
+test-results/**
+dist/**

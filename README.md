@@ -43,11 +43,15 @@ docker compose -f compose.dev.yaml up --build
 
 # Python, JavaScript and Chromium/WebKit checks in disposable containers.
 ./scripts/check.sh all
+
+# Build and verify the Nx projects and dependency graph in a disposable container.
+./scripts/check.sh workspace
 ```
 
 - [Documentation home](docs/index.md) — open `docs/` as an Obsidian vault, or read it on GitHub.
 - [Development workflow](docs/development/workflow.md) · [Testing](docs/development/testing.md) · [CI/CD](docs/development/ci-cd.md)
 - [Architecture](docs/architecture/overview.md) · [Approved printer adapters](docs/camera-adapters.md)
+- [Nx workspace and targets](docs/architecture/workspace.md) — Python backend, native web app and product website.
 - [AGENTS.md](AGENTS.md) — project guidelines and task-specific skill router.
 
 Commits use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
@@ -57,4 +61,4 @@ Passing version tags can publish `ghcr.io/ewized/layerglass` images; deployments
 remain an explicit operator action.
 
 Project home: [layer.glass](https://layer.glass). A project license has not yet
-been selected. Bundled third-party code retains its [license notices](static/vendor/LICENSE).
+been selected. Bundled third-party code retains its [license notices](apps/web/src/vendor/LICENSE).

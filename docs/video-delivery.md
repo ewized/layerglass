@@ -24,7 +24,7 @@ video in JavaScript. The main picture stays on the native video element.
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified
-upstream package; their hashes are recorded in `static/vendor/VERSION.json`.
+upstream package; their hashes are recorded in `apps/web/src/vendor/VERSION.json`.
 
 ## Wire format and flow control
 
@@ -189,7 +189,7 @@ player controls. WebKit testing uses its desktop test engine with a mobile
 viewport; it does not substitute for testing a physical iPhone.
 
 Artifacts are in `test-results/video-stream/`. The reproducible measurement
-script is `tests/measure-network.js`; it counts real browser requests while
+script is `apps/web/tests/measure-network.js`; it counts real browser requests while
 also measuring video clock advancement.
 
 The mobile performance update was checked against the live 1920 × 1080 H.264

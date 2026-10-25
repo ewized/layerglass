@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { debugInfo, writeDebugClipboard } from '../static/debug-info.js';
+import { debugInfo, writeDebugClipboard } from '../src/debug-info.js';
 
 function fixture() {
   const recorded = { progress: 10, reported: { print: { ams: [{ id: '0', humidity: 4 }], enabled: false, count: 0 } } };

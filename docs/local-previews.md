@@ -15,9 +15,9 @@ per-frame JavaScript loop. JPEG image mode can capture its existing image too.
 Capture pauses when the page/player is hidden or playing remotely. It cannot
 reconstruct video the browser has not decoded while paused or in the background.
 
-`static/preview-history.js` keeps compressed JPEGs in a 32 MiB LRU, with bounded
+`apps/web/src/preview-history.js` keeps compressed JPEGs in a 32 MiB LRU, with bounded
 24-hour/five-second metadata. At 20 KiB per image, 45 minutes is 540 images and
-about 10.3 MiB. Actual image sizes depend on the scene. `static/preview-storage.js`
+about 10.3 MiB. Actual image sizes depend on the scene. `apps/web/src/preview-storage.js`
 backs this with IndexedDB: at most 128 MiB / 20,000 records across page sessions,
 also capped to 10% of the origin's reported remaining storage. These are app
 budgets, not promises that the browser will provide that space. Pending writes
@@ -32,7 +32,7 @@ asset. Each tab has its opaque page-session namespace; a newly loaded page never
 reuses another page's footage. Closing/changing the session removes its records;
 abandoned records expire after 24 hours. Cleanup is best effort on page exit.
 
-`static/components/scrub-preview.js` paints local JPEGs to one canvas. Decoded
+`apps/web/src/components/scrub-preview.js` paints local JPEGs to one canvas. Decoded
 ImageBitmaps are independently capped to 8 MiB and closed on eviction/reset.
 Rapid movement coalesces decoding toward the latest target. A real still remains
 visible during a disk read/decode; the label uses that still's timestamp, with

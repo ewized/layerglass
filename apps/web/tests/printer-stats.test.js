@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { prettyStatKey, printerStatValue, printerStatRows } from '../static/printer-stats.js';
+import { prettyStatKey, printerStatValue, printerStatRows } from '../src/printer-stats.js';
 
 test('printer keys become readable labels without a per-stat label list', () => {
   for (const [key, label] of Object.entries({ nozzle_2_target: 'Nozzle 2 Target', mc_percent: 'MC Percent',

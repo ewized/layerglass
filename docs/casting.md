@@ -14,7 +14,7 @@ sources; an incompatible source leaves no presentation URL and `prompt()` can
 reject as dismissed without opening a picker. Merely checking that `prompt`
 exists does not establish that the streamed source can be cast.
 
-`static/cast-sender.js` is an ESM adapter around Google's Web Sender SDK. On
+`apps/web/src/cast-sender.js` is an ESM adapter around Google's Web Sender SDK. On
 secure Chromium browsers with the Presentation API, it loads the vendor SDK
 once when HLS attaches, before a user clicks Cast. Safari is excluded and keeps
 its native AirPlay path. The required `__onGCastApiAvailable` callback and vendor

@@ -6,9 +6,11 @@
 .agents
 __pycache__
 *.pyc
-tests
+**/tests
 test-results
 node_modules
+.nx
+dist
 README.md
 AGENTS.md
 docs

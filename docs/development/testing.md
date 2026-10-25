@@ -12,6 +12,9 @@ unit tests, validates documentation/version metadata, starts a generated-camera
 fixture, and runs representative Chromium/WebKit regressions. It needs Docker,
 not a printer or host-installed language toolchains. `unit` and `browser` modes
 run the corresponding portion. Logs and screenshots go to ignored `test-results/`.
+The complete run also builds the Nx backend/web/site projects twice to verify
+cache restoration and exports `test-results/project-graph.json`. `workspace`
+mode runs that packaging/graph/documentation check by itself.
 Pass representative suite names to focus a browser run, for example
 `./scripts/check.sh browser browser-scrub-commit.js browser-components.js`.
 
@@ -26,7 +29,7 @@ Pass representative suite names to focus a browser run, for example
 | Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
 | Shell/update behavior | `test_pwa.py`, `pwa.test.js`, browser PWA suite |
 
-The selected browser list is maintained in [`tests/run-browser.js`](../../tests/run-browser.js).
+The selected browser list is maintained in [`apps/web/tests/run-browser.js`](../../apps/web/tests/run-browser.js).
 Each suite has a bounded timeout. It includes real native-video decoding,
 pause/resume, media-worker continuity, SSE/recovery, real IndexedDB reads and
 writes, and a 540-point simulated 45-minute thumbnail sweep with zero preview
@@ -45,14 +48,15 @@ read-only (substitute the daemon-visible path if different):
 ```sh
 docker build -t local/layerglass-test .
 docker run --rm --init --name codex__layerglass_python_focus \
-  -e PYTHONDONTWRITEBYTECODE=1 -v "$PWD:/app:ro" -w /app \
+  -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/app/apps/backend \
+  -v "$PWD:/app:ro" -w /app/apps/backend \
   local/layerglass-test python -B -m unittest discover -s tests -p test_discovery_cache.py -v
 docker image rm local/layerglass-test
 ```
 
-`tests/run-js.sh` copies sources into a temporary directory, installs locked npm
+`apps/web/tests/run-js.sh` copies sources into a temporary directory, installs locked npm
 dependencies there, and runs `npm test` by default. Append a script such as
-`tests/browser-esm.js` for a focused browser run. Use the pinned Playwright image
+`apps/web/tests/browser-esm.js` for a focused browser run. Use the pinned Playwright image
 from `scripts/check.sh`. Point `VIEWER_URL` at the generated fixture, ideally
 `http://127.0.0.1:8080` in its shared Docker network namespace for secure-context
 storage/service-worker checks. No `node_modules` directory is written to the checkout.

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { PrinterHistory, printerPlaybackTime } from '../static/printer-history.js';
+import { PrinterHistory, printerPlaybackTime } from '../src/printer-history.js';
 
 const session = { session_id: 'a'.repeat(32), camera_id: 'b'.repeat(16) };
 const payload = (samples, from, until, extra = {}) => ({ ...session, from, until,

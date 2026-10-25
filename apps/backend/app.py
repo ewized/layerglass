@@ -25,7 +25,7 @@ import uuid
 from providers import validate_source
 
 LOG = logging.getLogger('printer-camera')
-STATIC = Path(__file__).parent / 'static'
+STATIC = Path(os.environ.get('LAYERGLASS_STATIC_DIR', Path(__file__).resolve().parent.parent / 'web' / 'src'))
 
 
 def app_shell_revision():

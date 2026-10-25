@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { diffusionSampleSize, diffusionPalette, diffusionGradient } from '../static/diffusion.js';
+import { diffusionSampleSize, diffusionPalette, diffusionGradient } from '../src/diffusion.js';
 
 function frame(width, height, pixel) {
   return { width, height, data: Uint8ClampedArray.from(Array.from({ length: width * height }, (_, i) =>

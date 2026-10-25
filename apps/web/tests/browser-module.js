@@ -4,7 +4,7 @@ import vm from 'node:vm';
 // Evaluate the actual browser ESM graph with isolated DOM/clock doubles.
 // npm test enables Node's VM modules; production uses native browser imports.
 export async function loadBrowserModule(name, context, mocks = {}) {
-  const url = new URL(`../static/${name}`, import.meta.url);
+  const url = new URL(`../src/${name}`, import.meta.url);
   const replacements = new Map(Object.entries(mocks).map(([specifier, value]) =>
     [new URL(specifier, url).href, value]));
   const modules = new Map();

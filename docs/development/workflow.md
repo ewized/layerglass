@@ -11,7 +11,8 @@ tags: [development]
 
 Use Git, Docker Engine and Docker Compose. Python, FFmpeg, Node and browser
 dependencies run in containers. The browser code uses native ES modules and
-Web Components; there is no bundling step.
+Web Components. Nx orchestrates the projects without bundling the player;
+static builds copy native modules and preserve their public URLs.
 
 ```sh
 docker compose -f compose.dev.yaml up --build
@@ -39,6 +40,8 @@ special cases to the browser entrypoint.
 ```sh
 ./scripts/check.sh unit
 ./scripts/check.sh browser
+# Static packaging, repeatable Nx cache hits and project graph:
+./scripts/check.sh workspace
 # Or build once and run the complete suite:
 ./scripts/check.sh all
 ```
@@ -46,6 +49,11 @@ special cases to the browser entrypoint.
 The check script uses disposable containers and removes the test image it builds.
 It writes ignored logs/artifacts to `test-results/`. To reuse an already built
 runtime image, set `LAYERGLASS_TEST_IMAGE`; the script will not remove that image.
+With the project Node dependencies installed in a development environment,
+`npx nx show projects`, `npx nx test web`, and `npx nx build site` address the
+independent modules. `npx nx test backend` and `npx nx run web:browser` delegate
+to Docker fixture checks. See the [workspace map](../architecture/workspace.md)
+for all targets and static preview commands.
 
 Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
 `feat(player): add a bookmark action`, `fix(discovery): reset retry delay`,

@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "backend",
+  "projectType": "application",
+  "sourceRoot": "apps/backend",
+  "tags": ["type:application", "runtime:python", "scope:local"],
+  "implicitDependencies": ["web"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": ["default", "{workspaceRoot}/scripts/build-backend.mjs"],
+      "outputs": ["{workspaceRoot}/dist/apps/backend"],
+      "options": { "command": "node scripts/build-backend.mjs" }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": { "command": "./scripts/check.sh python" }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "options": { "command": "docker compose up --build viewer" }
+    },
+    "fixture": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "options": { "command": "docker compose -f compose.dev.yaml up --build viewer" }
+    }
+  }
+}
