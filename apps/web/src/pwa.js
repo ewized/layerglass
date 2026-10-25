@@ -7,7 +7,7 @@ export async function registerPWA() {
     });
     return registration;
   } catch (error) {
-    console.warn('[Layerglass] App registration unavailable', error.name);
+    console.warn('[LayerGlass] App registration unavailable', error.name);
     return null;
   }
 }

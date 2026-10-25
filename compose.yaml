@@ -6,7 +6,7 @@ services:
     image: ghcr.io/ewized/layerglass:${LAYERGLASS_VERSION:-0.1.0}
     labels:
       net.unraid.docker.webui: "${LAYERGLASS_URL:-http://[IP]:[PORT:8080]/}"
-      org.opencontainers.image.title: Layerglass
+      org.opencontainers.image.title: LayerGlass
       org.opencontainers.image.source: https://github.com/ewized/layerglass
     init: true
     restart: unless-stopped

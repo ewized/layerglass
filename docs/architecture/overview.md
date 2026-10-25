@@ -7,7 +7,7 @@ tags: [architecture]
 
 [Vault home](../index.md)
 
-Layerglass keeps its established Python modules and native ES modules inside
+LayerGlass keeps its established Python modules and native ES modules inside
 an [Nx workspace](workspace.md). The Python backend, browser application and
 product website have independent targets. The backend can still serve the
 browser application together in one Docker container.

@@ -4,7 +4,7 @@ export const PlayerLog = {
     const signature = JSON.stringify(details);
     if (this.states.get(topic) === signature) return;
     this.states.set(topic, signature);
-    console[level](`[Layerglass] ${topic}`, details);
+    console[level](`[LayerGlass] ${topic}`, details);
   },
   discovery(discovery, requested = false) {
     this.scans ??= new Map();
@@ -15,11 +15,11 @@ export const PlayerLog = {
     if (!run && (discovery.state === 'scanning' || (requested && finished))) {
       run = { finished: false };
       this.scans.set(key, run);
-      console.info('[Layerglass] Printer scan started');
+      console.info('[LayerGlass] Printer scan started');
     }
     if (run && !run.finished && finished) {
       run.finished = true;
-      console[discovery.state === 'error' ? 'warn' : 'info']('[Layerglass] Printer scan finished', {
+      console[discovery.state === 'error' ? 'warn' : 'info']('[LayerGlass] Printer scan finished', {
         result: discovery.state === 'error' ? 'Failed' : 'Completed',
       });
     }

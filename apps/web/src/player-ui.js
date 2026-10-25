@@ -133,7 +133,7 @@ export class PlayerFullscreen {
       // video surface to retry whole-player fullscreen; our controls remain
       // available in the expanded view while waiting for that gesture.
       this.retryOnTap = automatic && !this.exitAfterEntry && this.landscape();
-      console.debug('[Layerglass] Fullscreen request unavailable', error.name);
+      console.debug('[LayerGlass] Fullscreen request unavailable', error.name);
     } finally {
       this.entering = false;
       if (this.exitAfterEntry) this.exit();

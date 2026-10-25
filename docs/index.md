@@ -1,10 +1,10 @@
 ---
-title: Layerglass documentation
+title: LayerGlass documentation
 aliases: [Home]
 tags: [index]
 ---
 
-# Layerglass documentation
+# LayerGlass documentation
 
 Open this `docs/` directory as an Obsidian vault. All links also work on GitHub;
 no community plugins are required. Personal workspace state is ignored by Git.
@@ -27,7 +27,7 @@ Start with the [README](../README.md) for a quick introduction.
 - [Architecture](architecture/overview.md) — source boundaries and data flow.
 - [Nx workspace](architecture/workspace.md) — applications, targets, caching and relocation map.
 - [Backend providers](architecture/backend-providers.md) — optional Python service, browser demo and trusted connections.
-- [Direct printer backend](architecture/direct-printer.md) — live-only approved Klipper/Moonraker webcams without a Layerglass container.
+- [Direct printer backend](architecture/direct-printer.md) — live-only approved Klipper/Moonraker webcams without a LayerGlass container.
 - [Agent router](../AGENTS.md) — scoped guidance for agents.
 - [Prototype import decision](decisions/0001-prototype-import.md) — provenance and history.
 

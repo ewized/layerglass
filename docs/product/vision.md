@@ -7,7 +7,7 @@ tags: [product]
 
 [Vault home](../index.md)
 
-**A clear view of your print, on your own hardware.** Layerglass helps people
+**A clear view of your print, on your own hardware.** LayerGlass helps people
 check a running 3D print from a phone or desktop without giving a cloud service
 access to their camera or relying on a manufacturer's cloud connection.
 

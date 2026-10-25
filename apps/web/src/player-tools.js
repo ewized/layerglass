@@ -65,10 +65,10 @@ export class PlayerTools {
       const report = debugInfo(this.readState(), this, document.defaultView);
       await writeDebugClipboard(document, JSON.stringify(report, null, 2));
       if (this.menu.openRevision === revision && !this.menu.hidden) this.menu.copyFeedback(true);
-      console.info('[Layerglass] Debug info copied');
+      console.info('[LayerGlass] Debug info copied');
     } catch (error) {
       if (this.menu.openRevision === revision && !this.menu.hidden) this.menu.copyFeedback(false);
-      console.warn('[Layerglass] Could not copy debug info', error.name);
+      console.warn('[LayerGlass] Could not copy debug info', error.name);
     } finally { this.copyingDebug = false; }
   }
 
@@ -85,7 +85,7 @@ export class PlayerTools {
       this.chrome.show();
     } catch (error) {
       this.syncNativeMini();
-      console.warn('[Layerglass] Picture in picture unavailable', error.name);
+      console.warn('[LayerGlass] Picture in picture unavailable', error.name);
     } finally {
       this.miniOpening = false;
       this.updateMini();
@@ -127,7 +127,7 @@ export class PlayerTools {
     this.player.classList.toggle('mini-player', native);
     setNativePictureInPicture(native);
     this.updateMini();
-    if (changed) console.info(`[Layerglass] Mini player ${native ? 'opened' : 'closed'}`, { mode: 'video-pip' });
+    if (changed) console.info(`[LayerGlass] Mini player ${native ? 'opened' : 'closed'}`, { mode: 'video-pip' });
   }
 
   async restoreMini() {
@@ -136,7 +136,7 @@ export class PlayerTools {
       try {
         if (native === 'standard') await this.video.ownerDocument.exitPictureInPicture();
         else this.video.webkitSetPresentationMode('inline');
-      } catch (error) { console.debug('[Layerglass] Picture in picture could not close', error.name); }
+      } catch (error) { console.debug('[LayerGlass] Picture in picture could not close', error.name); }
     }
     this.syncNativeMini();
     this.chrome.show();
@@ -157,7 +157,7 @@ export class PlayerTools {
   showStats(open) {
     const wasHidden = this.stats.hidden;
     this.stats.show(open);
-    if (open && wasHidden) console.debug('[Layerglass] Playback diagnostics opened');
+    if (open && wasHidden) console.debug('[LayerGlass] Playback diagnostics opened');
     this.chrome.show();
   }
 }

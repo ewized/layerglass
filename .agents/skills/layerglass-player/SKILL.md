@@ -1,9 +1,9 @@
 ---
 name: layerglass-player
-description: Change Layerglass playback, native ES-module Web Components, live-relative scrubbing, local previews, PiP or casting while preserving its mobile camera experience.
+description: Change LayerGlass playback, native ES-module Web Components, live-relative scrubbing, local previews, PiP or casting while preserving its mobile camera experience.
 ---
 
-# Layerglass player
+# LayerGlass player
 
 Read the relevant portion of [architecture](../../../docs/architecture/overview.md).
 Use [Web Component interfaces](../../../docs/web-components.md) for UI work and

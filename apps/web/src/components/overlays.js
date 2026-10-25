@@ -139,7 +139,7 @@ export class PrinterCameraView extends PlayerElement {
       if (error.name === 'InvalidStateError') return; // A source can change between metadata and drawing.
       this.clearDiffusion();
       this.diffusionUnavailable = true;
-      console.debug('[Layerglass] Video background unavailable', error.name);
+      console.debug('[LayerGlass] Video background unavailable', error.name);
     }
   }
 

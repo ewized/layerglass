@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Layerglass",
-  "short_name": "Layerglass",
+  "name": "LayerGlass",
+  "short_name": "LayerGlass",
   "description": "Your local printer cameras, live and on replay.",
   "lang": "en",
   "start_url": "/",

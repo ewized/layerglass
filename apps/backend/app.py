@@ -334,7 +334,7 @@ class ViewerServer(ThreadingHTTPServer):
 
 
 class ViewerHandler(BaseHTTPRequestHandler):
-    server_version = 'Layerglass'
+    server_version = 'LayerGlass'
     protocol_version = 'HTTP/1.1'
 
     def setup(self):

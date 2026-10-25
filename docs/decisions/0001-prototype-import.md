@@ -13,7 +13,7 @@ date: 2026-10-25
 
 The working camera prototype was developed before this repository existed.
 Its imported baseline is prototype version **3.4.18**. The original source
-directory had no Git history. The product is now named **Layerglass** and its
+directory had no Git history. The product is now named **LayerGlass** and its
 repository is `ewized/layerglass`.
 
 ## Decision
@@ -24,7 +24,7 @@ and delivery tooling. These are logical import commits with actual import
 timestamps. They do not reconstruct or claim the dates or intermediate behavior
 of the original development sessions.
 
-Use **0.1.0** as the initial Layerglass version. The repository is prepared for
+Use **0.1.0** as the initial LayerGlass version. The repository is prepared for
 tagged releases; importing it does not create a release or deploy to the existing host.
 Keep the established runtime module boundaries and behavior. Product naming,
 portable Compose configuration, documentation and reproducible checks are the

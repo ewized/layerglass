@@ -1,9 +1,9 @@
 ---
 name: layerglass-printers
-description: Change Layerglass approved-printer discovery, manufacturer adapters, per-printer connection setup, identity or MQTT telemetry.
+description: Change LayerGlass approved-printer discovery, manufacturer adapters, per-printer connection setup, identity or MQTT telemetry.
 ---
 
-# Layerglass printers
+# LayerGlass printers
 
 Read [approved adapters](../../../docs/camera-adapters.md) before changing
 admission, protocols or manufacturer support. Bambu-specific details belong in

@@ -133,7 +133,7 @@ export class PlayerMedia {
     } catch (error) {
       const code = castError(error);
       const cancelled = ['cancel', 'AbortError', 'NotAllowedError', 'NotFoundError'].includes(code);
-      console[cancelled ? 'debug' : 'warn']('[Layerglass] Cast picker', code);
+      console[cancelled ? 'debug' : 'warn']('[LayerGlass] Cast picker', code);
     } finally {
       this.prompting = false;
       this.syncRemote();
@@ -164,7 +164,7 @@ export class PlayerMedia {
       const key = JSON.stringify(this.identity);
       if (key !== this.metadataKey) {
         this.session.metadata = new MediaMetadata({ title: this.identity.model, artist: this.identity.id,
-          album: 'Layerglass', artwork: [{ src: new URL('/static/icons/icon-512.png', location.href).href, sizes: '512x512', type: 'image/png' }] });
+          album: 'LayerGlass', artwork: [{ src: new URL('/static/icons/icon-512.png', location.href).href, sizes: '512x512', type: 'image/png' }] });
         this.metadataKey = key;
       }
     } else if (!available && this.metadataKey) {

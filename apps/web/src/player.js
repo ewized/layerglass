@@ -156,7 +156,7 @@ backendForm.addEventListener('submit', async event => {
       const candidate = new PythonBackend(config.url);
       const response = await candidate.fetch('/api/backend', { signal: AbortSignal.timeout(6000), cache: 'no-store' });
       const description = await response.json();
-      if (!response.ok || description.id !== 'python' || description.protocol_version !== 1) throw new Error('This address is not a compatible Layerglass backend.');
+      if (!response.ok || description.id !== 'python' || description.protocol_version !== 1) throw new Error('This address is not a compatible LayerGlass backend.');
     }
     if (config.type === 'direct') await probeDirectPrinter(config.url, { profile: config.profile });
     saveBackend(config);
@@ -171,7 +171,7 @@ backendForm.addEventListener('submit', async event => {
         'Cannot reach this backend. Check HTTPS, the allowed frontend origin, and your network permission.' : failure.message;
     backendError.hidden = false;
     if (backendType.value !== 'demo') backendURL.setAttribute('aria-invalid', 'true');
-    console.warn('[Layerglass] Backend selection failed', failure.name);
+    console.warn('[LayerGlass] Backend selection failed', failure.name);
     for (const control of [backendType, backendURL, backendConfirm]) control.disabled = false;
     backendURL.disabled = backendType.value === 'demo';
     backendConfirm.removeAttribute('aria-busy');
@@ -242,11 +242,11 @@ async function play() {
     playButton.hidden = true;
   } catch (error) {
     if (error.name === 'NotAllowedError') {
-      console.info('[Layerglass] Playback needs a tap');
+      console.info('[LayerGlass] Playback needs a tap');
       reloadAutoplay = false;
       waiting('Ready to play', 'Tap below to start the live view.', false);
       playButton.hidden = false;
-    } else console.debug('[Layerglass] Playback attempt interrupted', error.name);
+    } else console.debug('[LayerGlass] Playback attempt interrupted', error.name);
   }
 }
 
@@ -303,7 +303,7 @@ async function retryContinuous() {
       streamFallback = false;
       streamRetryAttempts = 0;
       adopted = true;
-      console.info('[Layerglass] Continuous video recovered');
+      console.info('[LayerGlass] Continuous video recovered');
       await attachPlayer(probe);
     }
   } catch (_) { /* Keep the working HLS player and retry after the cooldown. */ }
@@ -375,7 +375,7 @@ async function attachPlayer(prepared = null) {
       onFailure: error => {
         if (directStream !== stream || version !== selectionVersion) return;
         pageReplay.mediaReady();
-        console.warn('[Layerglass] Direct webcam interrupted', { type: error.name, message: error.message });
+        console.warn('[LayerGlass] Direct webcam interrupted', { type: error.name, message: error.message });
         waiting('Reconnecting the camera', 'Direct live camera connection interrupted.');
         scheduleRefresh(Math.min(30000, 1000 * 2 ** Math.min(directRetryAttempts++, 5)));
       },
@@ -444,7 +444,7 @@ async function attachPlayer(prepared = null) {
     hls.on(Hls.Events.ERROR, (_event, data) => {
       if (!navigator.onLine || pageHidden || !playerVisible() || playerMedia.remoteActive) return;
       if (data.fatal) {
-        console.error('[Layerglass] Playback error', { type: data.type, detail: data.details });
+        console.error('[LayerGlass] Playback error', { type: data.type, detail: data.details });
         // Decoder/SourceBuffer errors do not establish a transport failure.
         // Rebuild the player with continuous delivery; only failed HTTP streams
         // can enable the temporary HLS compatibility path.
@@ -703,7 +703,7 @@ cameraList.addEventListener('printer-save', async event => {
     await loadStatus();
     playerChrome.options(false);
   } catch (error) {
-    console.error('[Layerglass] Printer configuration failed', error.message);
+    console.error('[LayerGlass] Printer configuration failed', error.message);
     row.error = 'Could not save this camera connection. Try again.';
   } finally {
     settingUp = false;
@@ -726,7 +726,7 @@ async function forgetPrinter(key) {
     await loadCatalog();
     await loadStatus();
   } catch (error) {
-    console.error('[Layerglass] Could not forget printer', error.message);
+    console.error('[LayerGlass] Could not forget printer', error.message);
     row.error = 'Could not forget this printer. Try again.';
   } finally {
     settingUp = false;
@@ -741,7 +741,7 @@ $('refresh-button').addEventListener('click', async () => {
   streamFallback = false;
   streamRetryAttempts = 0;
   if (backend.capabilities.liveOnly) {
-    try { await backend.refresh(); } catch (error) { console.warn('[Layerglass] Direct printer connection unavailable', error.name); }
+    try { await backend.refresh(); } catch (error) { console.warn('[LayerGlass] Direct printer connection unavailable', error.name); }
     await loadCatalog();
     await loadStatus();
   }
@@ -754,7 +754,7 @@ restartButton.addEventListener('click', async () => {
   restartRequest = true;
   restartButton.disabled = true;
   restartButton.setAttribute('aria-busy', 'true');
-  console.info('[Layerglass] Restarting camera stream');
+  console.info('[LayerGlass] Restarting camera stream');
   restartingGeneration = status?.generation;
   const version = selectionVersion;
   try {
@@ -772,7 +772,7 @@ restartButton.addEventListener('click', async () => {
   } catch (error) {
     if (version !== selectionVersion) return;
     finishRestart();
-    console.error('[Layerglass] Restart failed', error.message);
+    console.error('[LayerGlass] Restart failed', error.message);
     streamMessage.textContent = 'Could not restart. Check the NAS connection and try again.';
   }
 });

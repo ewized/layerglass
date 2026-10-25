@@ -38,7 +38,7 @@ try {
         page.on('pageerror', error => errors.push(error.message));
         page.on('response', response => { if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`); });
         await page.goto(base, { waitUntil: 'networkidle' });
-        assert.match(await page.title(), /Layerglass/);
+        assert.match(await page.title(), /LayerGlass/);
         assert.equal(await page.locator('h1').count(), 1);
         assert.equal(await page.locator('.actions .primary').getAttribute('href'), 'https://app.layer.glass/?backend=demo');
         assert.equal(await page.locator('script').count(), 0, 'The product site does not need a browser runtime.');

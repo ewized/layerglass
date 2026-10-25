@@ -20,7 +20,7 @@ async function fixture(t, name = 'web') {
   for (const suffix of ['wrangler.json', 'headers']) {
     await copyFile(join(source, `${name}.${suffix}`), join(project, 'infra/cloudflare', `${name}.${suffix}`));
   }
-  await writeFile(join(directory, 'index.html'), name === 'web' ? html : '<h1>Layerglass</h1>');
+  await writeFile(join(directory, 'index.html'), name === 'web' ? html : '<h1>LayerGlass</h1>');
   await writeFile(join(directory, 'service-worker.js'), "const revision = 'fixture';\nconst cacheEnabled = false;");
   await writeFile(join(directory, 'static/backend/index.js'), 'export const backend = {};');
   await writeFile(join(directory, 'static/bootstrap.js'), '// fixture');

@@ -70,7 +70,7 @@ export class GoogleCastSender {
       this.changed();
     }).catch(error => {
       this.state = 'unavailable';
-      console.warn('[Layerglass] Google Cast unavailable', error.name);
+      console.warn('[LayerGlass] Google Cast unavailable', error.name);
       this.changed();
     });
     this.changed();

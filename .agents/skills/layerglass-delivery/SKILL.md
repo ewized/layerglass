@@ -1,9 +1,9 @@
 ---
 name: layerglass-delivery
-description: Work on Layerglass Docker development, fixture tests, GitHub Actions, versioning or container image releases.
+description: Work on LayerGlass Docker development, fixture tests, GitHub Actions, versioning or container image releases.
 ---
 
-# Layerglass delivery
+# LayerGlass delivery
 
 Read [workflow](../../../docs/development/workflow.md) for local development and
 [CI/CD](../../../docs/development/ci-cd.md) for releases.

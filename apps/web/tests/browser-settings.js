@@ -55,7 +55,7 @@ async function run(name, engine) {
   const requests = [];
   const scanLogs = [];
   page.on('pageerror', error => errors.push(error.message));
-  page.on('console', message => { if (message.text().includes('[Layerglass] Printer scan')) scanLogs.push(message.text()); });
+  page.on('console', message => { if (message.text().includes('[LayerGlass] Printer scan')) scanLogs.push(message.text()); });
   page.on('request', request => requests.push(new URL(request.url()).pathname));
   try {
     await page.goto(base);
@@ -189,7 +189,7 @@ async function run(name, engine) {
     assert.equal(await page.locator('[data-stats-section="activity"] [data-stat="Printer scan"]').textContent(), 'Scanning · 43%');
     assert.equal(await page.locator('[data-stats-section="printer"] [data-stat="Printer scan"]').count(), 0);
     assert.equal(await page.locator('[data-stat="Mini player"]').count(), 0);
-    assert.deepEqual(scanLogs, ['[Layerglass] Printer scan started']);
+    assert.deepEqual(scanLogs, ['[LayerGlass] Printer scan started']);
     assert.equal(await page.locator('#discovery-message').textContent(), 'Scanning for printer cameras…');
     await page.evaluate(async () => {
       const { updates } = await import('/static/player.js');
@@ -198,7 +198,7 @@ async function run(name, engine) {
       updates.source.dispatchEvent(new MessageEvent('state', { data: JSON.stringify({ version: 1, catalog }) }));
     });
     assert.equal(await page.locator('[data-stat="Printer scan"]').textContent(), 'Scanning · 43% · 37 cached');
-    assert.deepEqual(scanLogs, ['[Layerglass] Printer scan started'], 'Cache progress must not add console messages.');
+    assert.deepEqual(scanLogs, ['[LayerGlass] Printer scan started'], 'Cache progress must not add console messages.');
     await page.evaluate(async () => (await import('/static/player.js')).playerTools.toggleMini());
     assert.equal(await page.locator('[data-stats-section="activity"] [data-stat="Mini player"]').textContent(), 'Active');
     assert.equal(await page.locator('[data-stats-section="activity"] dd').count(), 2,
@@ -213,7 +213,7 @@ async function run(name, engine) {
       'Finishing a scan must keep the section while the mini player is active.');
     assert.deepEqual(await page.locator('[data-stats-section="activity"] dt').allTextContents(), ['Mini player']);
     assert.equal(scanLogs.length, 2);
-    assert.equal(scanLogs[1].startsWith('[Layerglass] Printer scan finished'), true);
+    assert.equal(scanLogs[1].startsWith('[LayerGlass] Printer scan finished'), true);
     await page.evaluate(async () => (await import('/static/player.js')).playerTools.restoreMini());
     assert.equal(await page.locator('[data-stat="Mini player"]').count(), 0);
     assert.equal(await page.locator('.stats-section[aria-label="Activity"]').isVisible(), false,

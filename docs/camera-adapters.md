@@ -13,7 +13,7 @@ This does not add generic cameras to the Python server's approved port scanner.
 
 [Vault home](index.md)
 
-Layerglass discovers camera services first, then races bounded manufacturer
+LayerGlass discovers camera services first, then races bounded manufacturer
 identity checks. Only an approved printer model using its approved stream
 profile enters the public catalog. Generic stream support is an internal
 transport capability, not an option in Printers or a way to bypass approval.

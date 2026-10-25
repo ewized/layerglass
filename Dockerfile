@@ -18,7 +18,7 @@ COPY apps/web/src /app/apps/web/src
 # Changing release metadata must not invalidate the FFmpeg/pip layers.
 ARG VERSION=0.1.0
 ARG REVISION=unknown
-LABEL org.opencontainers.image.title="Layerglass" \
+LABEL org.opencontainers.image.title="LayerGlass" \
       org.opencontainers.image.description="A local-first camera viewer for your 3D printer" \
       org.opencontainers.image.source="https://github.com/ewized/layerglass" \
       org.opencontainers.image.version="${VERSION}" \

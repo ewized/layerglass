@@ -116,7 +116,7 @@ Build again before preparing headers; a normal Nx build replaces `dist/`.
 
 ## Credentials and first deployment
 
-Use a dedicated API token scoped to this account and the two Layerglass Workers.
+Use a dedicated API token scoped to this account and the two LayerGlass Workers.
 Initial Worker creation requires Workers product permission; attaching these
 custom domains also requires Workers Routes Write for the `layer.glass` zone.
 After creation, reduce the deployment token to the two existing Workers where

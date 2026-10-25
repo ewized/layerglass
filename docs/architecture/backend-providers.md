@@ -5,7 +5,7 @@ tags: [architecture, web, backend]
 
 # Backend providers
 
-Layerglass has three transport providers behind the same camera player.
+LayerGlass has three transport providers behind the same camera player.
 The Python container is optional for the browser demo and local-file viewer;
 it supplies the network protocols and retained recordings that browsers cannot.
 This repository work does not replace or reconfigure an existing prototype
@@ -13,7 +13,7 @@ container, proxy, stored printer code or private deployment.
 
 The [Direct printer provider](direct-printer.md) connects to an identified
 Klipper/Moonraker controller and its configured, same-origin MJPEG webcams.
-It is an actual live camera connection without a Layerglass container, with no
+It is an actual live camera connection without a LayerGlass container, with no
 recording, rewind, timeline, telemetry or video PiP. Current Bambu LAN cameras
 still require the Python backend because their protocols are not browser APIs.
 

@@ -6,7 +6,7 @@ tags: [architecture, printers, web]
 # Direct printer backend
 
 **Direct printer** connects this browser to an existing Klipper/Moonraker
-printer controller and its configured MJPEG webcam. No Layerglass Python
+printer controller and its configured MJPEG webcam. No LayerGlass Python
 container, cloud relay or demo footage participates. This profile is live only.
 Playback is verified in Chromium on desktop/mobile layouts. Safari and iPhone
 browsers explicitly report this direct MJPEG profile as unavailable; use Docker
@@ -86,7 +86,7 @@ The webcam reverse proxy independently needs
 `Access-Control-Allow-Origin: https://app.layer.glass` on its streaming response;
 Moonraker's CORS setting does not add headers to another server. The streaming
 response must remain unbuffered. Browsers may also request local-network access.
-For an HTTP-only LAN controller, use an HTTP-served Layerglass frontend on the
+For an HTTP-only LAN controller, use an HTTP-served LayerGlass frontend on the
 LAN; an HTTPS page cannot portably override mixed-content restrictions.
 
 A Python-served UI's CSP must also permit a separately selected direct origin

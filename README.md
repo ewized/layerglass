@@ -1,10 +1,10 @@
-# Layerglass
+# LayerGlass
 
 [![CI](https://github.com/ewized/layerglass/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ewized/layerglass/actions/workflows/ci.yml)
 
 **A clear view of your print, on your own hardware.**
 
-Layerglass is a self-hosted, mobile-first camera app for 3D printers. Watch live,
+LayerGlass is a self-hosted, mobile-first camera app for 3D printers. Watch live,
 rewind the footage collected since you opened the page, and see printer telemetry
 at the recorded video time. The core viewer works on your LAN without a cloud
 account, including Bambu Lab printers in LAN-only mode.

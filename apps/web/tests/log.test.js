@@ -18,8 +18,8 @@ test('scan progress produces only one start and one finish log per search', asyn
   for (let checked = 0; checked <= 100; checked++) log.discovery({ state: 'scanning', checked, total: 100 });
   for (let repeat = 0; repeat < 10; repeat++) log.discovery({ state: 'done', checked: 100, total: 100 });
   assert.equal(entries.length, 2);
-  assert.equal(entries[0].args[0], '[Layerglass] Printer scan started');
-  assert.equal(entries[1].args[0], '[Layerglass] Printer scan finished');
+  assert.equal(entries[0].args[0], '[LayerGlass] Printer scan started');
+  assert.equal(entries[1].args[0], '[LayerGlass] Printer scan finished');
   assert.equal(JSON.stringify(entries).includes('%'), false);
   log.discovery({ state: 'scanning' });
   log.discovery({ state: 'error' });

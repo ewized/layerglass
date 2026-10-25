@@ -11,7 +11,7 @@ export class PreviewStorage {
   }
 
   fail(error) {
-    if (this.available && !this.warned) console.warn('[Layerglass] Local preview storage unavailable; keeping previews in memory', error?.name);
+    if (this.available && !this.warned) console.warn('[LayerGlass] Local preview storage unavailable; keeping previews in memory', error?.name);
     this.warned = true;
     this.available = false;
   }

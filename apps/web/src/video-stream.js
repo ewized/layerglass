@@ -158,11 +158,11 @@ export class PlayerVideoStream {
       clearTimeout(this.watchdog);
       this.controller = null;
       if (++this.failures >= this.failureLimit) {
-        if (!this.quiet) console.warn('[Layerglass] Continuous video unavailable; using HLS delivery');
+        if (!this.quiet) console.warn('[LayerGlass] Continuous video unavailable; using HLS delivery');
         this.onFailure();
         return;
       }
-      if (!this.quiet) console.info('[Layerglass] Reconnecting continuous video');
+      if (!this.quiet) console.info('[LayerGlass] Reconnecting continuous video');
       this.retryTimer = setTimeout(() => this.connect(this.requested), 1000 * 2 ** (this.failures - 1));
     } finally {
       if (reader) {

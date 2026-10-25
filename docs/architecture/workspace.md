@@ -7,7 +7,7 @@ tags: [architecture, development]
 
 [Vault home](../index.md) · [Architecture](overview.md) · [Workflow](../development/workflow.md)
 
-Layerglass has three applications and a documentation project. Nx is a task
+LayerGlass has three applications and a documentation project. Nx is a task
 runner and dependency graph; it does not introduce a browser framework, CommonJS,
 or a mandatory cloud service. The Python backend can still serve the whole local
 viewer in one container. No shared library is invented just to fill a directory.

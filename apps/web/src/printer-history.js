@@ -136,7 +136,7 @@ export class PrinterHistory {
       this.apply(payload);
     } catch (error) {
       if (version !== this.version || controller.signal.aborted && !timedOut) return;
-      if (!this.warned) console.warn('[Layerglass] Recorded printer readings unavailable', error.name);
+      if (!this.warned) console.warn('[LayerGlass] Recorded printer readings unavailable', error.name);
       this.warned = true;
     } finally {
       clearTimeout(timeout);

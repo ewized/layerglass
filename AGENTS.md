@@ -1,6 +1,6 @@
-# Working in Layerglass
+# Working in LayerGlass
 
-Layerglass is a self-hosted camera companion for 3D printers. Start with the
+LayerGlass is a self-hosted camera companion for 3D printers. Start with the
 [README](README.md), then read only the guidance relevant to the task.
 Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
 
@@ -18,6 +18,8 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
 
 ## Project guidelines
 
+- Write the product name as **LayerGlass** in human-facing copy. Keep existing
+  technical identifiers, domains and storage namespaces stable.
 - Preserve the camera-first mobile experience: header identifies the printer,
   controls stay at the bottom, setup stays in settings, diagnostics in the context menu.
 - The local viewer must work without a cloud account. Keep manufacturer-specific

@@ -40,4 +40,4 @@ createServer(async (request, response) => {
   } catch (error) {
     response.writeHead(error.code === 'ENOENT' || error.code === 'ENOTDIR' ? 404 : 400).end();
   }
-}).listen(port, '0.0.0.0', () => console.log(`Layerglass ${app} preview: http://localhost:${port}`));
+}).listen(port, '0.0.0.0', () => console.log(`LayerGlass ${app} preview: http://localhost:${port}`));

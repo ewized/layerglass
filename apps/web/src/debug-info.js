@@ -12,7 +12,7 @@ export function debugInfo(state, { video, image, player }, view, now = Date.now(
   const jpeg = image && !image.hidden;
   return {
     schema_version: 1,
-    application: 'Layerglass',
+    application: 'LayerGlass',
     generated_at: new Date(now).toISOString(),
     browser: {
       user_agent: view.navigator.userAgent,
