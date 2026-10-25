@@ -1,0 +1,27 @@
+name: layerglass-dev
+
+# Standalone fixture stack: docker compose -f compose.dev.yaml up --build
+# It generates video and telemetry locally and never scans a real printer.
+services:
+  viewer:
+    build: .
+    image: local/layerglass-dev
+    init: true
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    command: ["python", "tests/fixture_server.py"]
+    environment:
+      FIXTURE_TELEMETRY: "1"
+      FIXTURE_DUAL_TELEMETRY: "1"
+      PWA_CACHE_ENABLED: "0"
+      PYTHONDONTWRITEBYTECODE: "1"
+    ports:
+      - "127.0.0.1:${DEV_PORT:-8100}:8080"
+    volumes:
+      - "${LAYERGLASS_HOST_PATH:-.}:/app:ro"
+    read_only: true
+    tmpfs:
+      - /tmp:size=512m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
