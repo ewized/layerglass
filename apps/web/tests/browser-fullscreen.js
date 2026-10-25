@@ -8,7 +8,7 @@ async function ready(page) {
   await page.goto(base);
   await page.waitForFunction(() => {
     const video = document.querySelector('video');
-    return video.readyState >= 2 && video.videoWidth > 0 && !video.paused && document.querySelector('#overlay').hidden;
+    return video?.readyState >= 2 && video.videoWidth > 0 && !video.paused && document.querySelector('#overlay').hidden;
   }, undefined, { timeout: 45000 });
   await page.evaluate(async () => {
     const app = await import('/static/player.js');

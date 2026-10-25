@@ -7,7 +7,7 @@ const mediaRequests = paths => paths.filter(path => /\/(?:live\.m3u8|segment-\d+
 async function playing(page) {
   await page.waitForFunction(() => {
     const v = document.querySelector('video');
-    return v.videoWidth > 0 && v.readyState >= 3 && !v.seeking && !v.paused && v.currentTime > 0 && document.querySelector('#overlay').hidden;
+    return v?.videoWidth > 0 && v.readyState >= 3 && !v.seeking && !v.paused && v.currentTime > 0 && document.querySelector('#overlay').hidden;
   }, undefined, { timeout: 45000 });
 }
 
