@@ -25,7 +25,10 @@ are bounded to eight. Quota failures disable disk writes and retain bounded RAM.
 
 Disk stores compressed JPEG ArrayBuffers, not base64 or file-backed Blobs. The
 binary format avoids WebKit's Blob preparation failure path observed in browser
-testing. Blob reconstruction happens only on reads. ArrayBuffer conversion
+testing. Blob reconstruction happens only on reads. ArrayBuffer conversion starts
+immediately, before waiting for the database to open: a queued WebKit read can
+otherwise outlive the page-owned Blob during navigation. Pending FileReader reads
+are aborted on page exit and storage resumes on a restored page. Conversion also
 finishes before creating an IDB transaction, so an asynchronous conversion cannot
 allow Safari to auto-commit an otherwise idle transaction. Reads coalesce per
 asset. Each tab has its opaque page-session namespace; a newly loaded page never

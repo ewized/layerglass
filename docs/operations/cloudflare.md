@@ -67,9 +67,8 @@ VIEWER_ALLOWED_ORIGINS=https://app.layer.glass
 For an API/video-only container, also set `VIEWER_SERVE_UI=0`. This disables its
 HTML, static assets, manifest and service worker; APIs and streams remain active.
 Keep the backend's HTTPS route even when the player UI moves to app.layer.glass.
-For example, `fdm.meghie.com` can serve only the backend while the hosted app
-connects directly to that origin. Removing its TLS route would also disconnect
-the hosted app on browsers that block HTTP mixed content.
+The hosted app connects directly to that backend origin. Removing its TLS route
+would also disconnect the hosted app on browsers that block HTTP mixed content.
 
 Use an HTTPS backend address with a certificate the phone/browser trusts.
 Browsers normally block an HTTPS page from fetching an HTTP LAN backend as mixed
