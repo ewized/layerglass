@@ -21,7 +21,7 @@ targets, paths and static-hosting outputs.
 - Python and printer providers live in `apps/backend/`; native browser ESM and
   their tests live in `apps/web/`. The product website is independent in `apps/site/`.
   `/static/*` is a public URL and does not change when source directories move.
-- `nx build web` emits `dist/apps/web` with an explicit demo backend default.
+- `nx build web` emits `dist/apps/web` with an explicit backend chooser.
   Python-served source keeps its Python default. Never let a public static host
   silently probe a visitor's LAN or proxy private printer feeds.
 - Nx remote caching is not configured. Cache static/source builds and deterministic

@@ -17,10 +17,11 @@ own hardware without a Cloudflare account.
 | `layerglass-site` | `layer.glass` | `dist/apps/site/` | Product website and install/source links |
 | `layerglass-web` | `app.layer.glass` | `dist/apps/web/` | Browser demo and optional connection to the user's backend |
 
-The hosted app must ship with the browser demo as its default provider. It uses
-bundled sample video and simulated printer data, rather than a private printer
-connection. Settings → Connection can select an HTTPS Python backend or browser
-mode. A browser cannot directly discover Bambu ports, decode RTSPS, or open its
+The hosted app must ship without an automatic backend. First visits show Demo
+and Docker backend choices; valid saved selections open directly. Demo uses
+bundled sample video and simulated printer data. Docker connects to an explicitly
+selected HTTPS Python backend. Settings → Connection can change that choice.
+A browser cannot directly discover Bambu ports, decode RTSPS, or open its
 MQTT TCP connection. Those are Python backend capabilities.
 
 ## Hosting boundaries and freshness
@@ -98,7 +99,7 @@ docker run --rm --init --name codex__layerglass_cloudflare_check \
   '
 ```
 
-The helper refuses a Python-default public bundle, unexpanded/enabled shell
+The helper refuses an automatic Python/demo public bundle, unexpanded/enabled shell
 caching, missing demo assets, a SPA fallback or a changed domain scope. A dry-run
 validates Wrangler's upload configuration without publishing or changing DNS.
 Build again before preparing headers; a normal Nx build replaces `dist/`.
@@ -136,7 +137,7 @@ placeholder DNS records. Check for an existing hostname owner before first
 deployment. The zone must be active and owned by the selected account.
 
 `node scripts/cloudflare.mjs verify all` checks HTTPS, security/freshness headers,
-JavaScript MIME, the demo default, disabled shell cache and real 404s for unknown
+JavaScript MIME, the backend chooser, disabled shell cache and real 404s for unknown
 API paths. Run it in the same Node Docker image. Also inspect the app in a browser
 and confirm the demo creates no Python `/api` requests. First certificate
 issuance/DNS propagation may need time before verification can pass.

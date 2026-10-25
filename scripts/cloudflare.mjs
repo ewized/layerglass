@@ -36,8 +36,8 @@ export async function checkBuild(name, project = root) {
     throw new Error(`Unexpected private/backend file in ${name} output`);
   }
   if (name === 'web') {
-    if (!/<meta\s+name="layerglass-backend"\s+content="demo"\s*\/?\s*>/.test(html)) {
-      throw new Error('Hosted web build must default to the browser demo provider');
+    if (!/<meta\s+name="layerglass-backend"\s+content="choose"\s*\/?\s*>/.test(html)) {
+      throw new Error('Hosted web build must require a backend choice');
     }
     const worker = await readFile(join(directory, 'service-worker.js'), 'utf8');
     if (/__APP_SHELL_REVISION__|__PWA_CACHE_ENABLED__/.test(worker) ||
@@ -45,6 +45,8 @@ export async function checkBuild(name, project = root) {
       throw new Error('Hosted development service worker must have shell caching disabled');
     }
     await access(join(directory, 'static/backend/index.js'));
+    await access(join(directory, 'static/bootstrap.js'));
+    await access(join(directory, 'static/components/backend-picker.js'));
     await access(join(directory, 'static/demo/printer.mp4'));
   }
   return { configPath, directory };
@@ -59,7 +61,7 @@ export async function prepare(name, project = root) {
 export async function verify(name, { fetchImpl = fetch, origin } = {}) {
   const selected = target(name);
   const base = origin || `https://${selected.domain}`;
-  const paths = name === 'web' ? ['/', '/static/player.js', '/service-worker.js', '/manifest.webmanifest'] : ['/'];
+  const paths = name === 'web' ? ['/', '/static/bootstrap.js', '/static/player.js', '/service-worker.js', '/manifest.webmanifest'] : ['/'];
   for (const path of paths) {
     const response = await fetchImpl(new URL(path, base), { redirect: 'error', signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error(`${selected.domain}${path} returned ${response.status}`);
@@ -72,10 +74,10 @@ export async function verify(name, { fetchImpl = fetch, origin } = {}) {
     }
     if (path === '/') {
       const html = await response.text();
-      if (name === 'web' && !/<meta\s+name="layerglass-backend"\s+content="demo"/.test(html)) {
-        throw new Error('Deployed app is not using the browser demo by default');
+      if (name === 'web' && !/<meta\s+name="layerglass-backend"\s+content="choose"/.test(html)) {
+        throw new Error('Deployed app does not require a backend choice');
       }
-    } else if (path === '/static/player.js' || path === '/service-worker.js') {
+    } else if (path.endsWith('.js')) {
       if (!/javascript/.test(response.headers.get('content-type') || '')) {
         throw new Error(`Incorrect module MIME type on ${path}`);
       }

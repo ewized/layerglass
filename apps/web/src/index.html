@@ -14,8 +14,7 @@
   <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png" sizes="180x180">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/static/style.css">
-  <link rel="modulepreload" href="/static/vendor/hls.min.mjs">
-  <script type="module" src="/static/player.js"></script>
+  <script type="module" src="/static/bootstrap.js"></script>
 </head>
 <body>
   <svg class="icon-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -42,6 +41,7 @@
     <symbol id="i-fullscreen" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></symbol>
     <symbol id="i-exit-fullscreen" viewBox="0 0 24 24"><path d="M3 8h5V3M16 3v5h5M21 16h-5v5M8 21v-5H3"/></symbol>
   </svg>
+  <printer-backend-picker id="backend-picker" role="main" aria-label="Backend selection" hidden></printer-backend-picker>
   <printer-player class="player" id="player" role="main" tabindex="0" aria-label="Printer camera player">
     <div class="loader boot-loader" aria-hidden="true"></div>
   </printer-player>

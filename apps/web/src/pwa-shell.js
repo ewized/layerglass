@@ -3,7 +3,8 @@
 export const SHELL_CACHE_PREFIX = 'printer-camera-shell-';
 export const SHELL_PATHS = Object.freeze([
   '/', '/manifest.webmanifest',
-  '/static/style.css', '/static/player.js', '/static/pwa.js', '/static/pwa-shell.js',
+  '/static/style.css', '/static/bootstrap.js', '/static/player.js', '/static/pwa.js', '/static/pwa-shell.js',
+  '/static/components/backend-picker.js',
   '/static/replay.js', '/static/log.js', '/static/refresh.js', '/static/updates.js',
   '/static/video-stream.js', '/static/visibility.js', '/static/preferences.js',
   '/static/player-ui.js', '/static/player-tools.js', '/static/player-media.js',

@@ -57,7 +57,7 @@ export const settingsTemplate = `
       <div data-settings-page="connection" class="settings-page" hidden>
         <form id="backend-form" class="backend-form">
           <label for="backend-type">Backend</label>
-          <select id="backend-type" name="type"><option value="python">Python backend</option><option value="demo">Browser demo</option></select>
+          <select id="backend-type" name="type"><option value="python">Docker backend</option><option value="demo">Demo</option></select>
           <label for="backend-url" id="backend-url-label">Backend address</label>
           <input id="backend-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com">
           <p id="backend-capabilities" class="backend-note"></p>

@@ -63,9 +63,10 @@ intended loopback port when running in Docker.
 
 - `layer.glass` uses `dist/apps/site`.
 - `app.layer.glass` uses `dist/apps/web`, after the backend selector is integrated.
-- The hosted web build selects the demo provider explicitly through its HTML
-  `layerglass-backend` metadata. Python-served source retains its Python default;
-  explicit user preferences can select another configured backend.
+- The hosted web build requires a backend choice through its HTML
+  `layerglass-backend="choose"` metadata. First visits offer Demo or Docker;
+  saved selections open directly. Python-served source knows its own backend
+  and retains its same-origin startup.
 - Root files are `index.html`, `manifest.webmanifest` and `service-worker.js`.
   Browser modules, icons, demo media and hls.js stay under `/static/`.
 - The build computes the service worker's shell revision and substitutes valid

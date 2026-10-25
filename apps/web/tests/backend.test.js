@@ -4,10 +4,12 @@ import { backendConfig, readBackend, saveBackend } from '../src/backend/config.j
 import { PythonBackend } from '../src/backend/python.js';
 import { DemoBackend } from '../src/backend/demo.js';
 
-test('backend choice defaults to the self-hosted origin and stores no printer credentials', () => {
+test('a host-provided backend is retained; standalone apps require a choice and store no printer credentials', () => {
   const data = new Map();
   const storage = { getItem: key => data.get(key), setItem: (key, value) => data.set(key, value) };
-  assert.deepEqual(readBackend(storage, 'https://viewer.test/'), { type: 'python', url: 'https://viewer.test' });
+  assert.equal(readBackend(storage, 'https://app.layer.glass/', 'choose'), null);
+  assert.equal(readBackend(storage, 'https://app.layer.glass/', 'demo'), null);
+  assert.deepEqual(readBackend(storage, 'https://viewer.test/', 'python'), { type: 'python', url: 'https://viewer.test' });
   saveBackend({ type: 'python', url: 'https://backend.test', access_code: 'must-not-be-saved' }, storage, 'https://viewer.test/');
   assert.deepEqual(readBackend(storage, 'https://viewer.test/'), { type: 'python', url: 'https://backend.test' });
   assert(![...data.values()].join().includes('must-not-be-saved'));
@@ -15,18 +17,23 @@ test('backend choice defaults to the self-hosted origin and stores no printer cr
 });
 
 test('invalid preferences recover and unsafe/mixed-content addresses are rejected before requests', () => {
-  assert.deepEqual(readBackend({ getItem: () => '{broken' }, 'https://viewer.test/'), { type: 'python', url: 'https://viewer.test' });
+  assert.equal(readBackend({ getItem: () => '{broken' }, 'https://app.layer.glass/', 'choose'), null);
+  assert.deepEqual(readBackend({ getItem: () => '{broken' }, 'https://viewer.test/', 'python'), { type: 'python', url: 'https://viewer.test' });
+  for (const value of [{}, { type: 'unknown' }, { type: 'python' }, { type: 'python', url: 'https://user:code@printer.test' }]) {
+    assert.equal(readBackend({ getItem: () => JSON.stringify(value) }, 'https://app.layer.glass/', 'choose'), null);
+  }
   for (const url of ['https://name:code@printer.test', 'https://printer.test/api', 'https://printer.test?code=secret',
     'http://192.168.1.4:8099', 'file:///tmp/video', 'javascript:alert(1)']) {
     assert.throws(() => backendConfig({ type: 'python', url }, 'https://app.layer.glass/'));
   }
   assert.equal(backendConfig({ url: 'http://192.168.1.4:8099' }, 'http://192.168.1.2/').url, 'http://192.168.1.4:8099');
-  assert.deepEqual(readBackend({ getItem: () => { throw new DOMException('Storage blocked', 'SecurityError'); } }, 'https://viewer.test/'),
+  assert.deepEqual(readBackend({ getItem: () => { throw new DOMException('Storage blocked', 'SecurityError'); } }, 'https://viewer.test/', 'python'),
     { type: 'python', url: 'https://viewer.test' });
   const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
   try {
     Object.defineProperty(globalThis, 'localStorage', { configurable: true, get() { throw new DOMException('Storage getter blocked', 'SecurityError'); } });
-    assert.deepEqual(readBackend(undefined, 'https://viewer.test/'), { type: 'python', url: 'https://viewer.test' });
+    assert.equal(readBackend(undefined, 'https://app.layer.glass/', 'choose'), null);
+    assert.deepEqual(readBackend(undefined, 'https://viewer.test/', 'python'), { type: 'python', url: 'https://viewer.test' });
   } finally {
     if (descriptor) Object.defineProperty(globalThis, 'localStorage', descriptor);
     else delete globalThis.localStorage;

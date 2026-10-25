@@ -21,10 +21,10 @@ if (app === 'site') {
     await cp(path.join(source, entry.name), path.join(output, 'static', entry.name), { recursive: true });
   }
   let html = await readFile(path.join(source, 'index.html'), 'utf8');
-  // Source served by Python defaults to Python. Standalone hosting is an explicit
-  // demo, so its first page load does not try a same-origin /api on a static host.
+  // Source served by Python knows its own backend. Standalone hosting requires
+  // a choice, so a first visit never probes a backend or starts the demo silently.
   html = html.replace(/(<meta\s+name="layerglass-backend"\s+content=")[^"]+("\s*\/?>)/,
-    '$1demo$2');
+    '$1choose$2');
   await writeFile(path.join(output, 'index.html'), html);
   await cp(path.join(source, 'manifest.webmanifest'), path.join(output, 'manifest.webmanifest'));
 

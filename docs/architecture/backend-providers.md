@@ -32,17 +32,25 @@ telemetry. Neither source is admitted as a network printer.
 
 ## Selecting a provider
 
-Open **Settings → Connection**. Choose **Python backend** with its HTTP(S)
-origin, or **Browser demo**. The choice is saved as `layerglass-backend` and a
+On a first visit to the hosted or standalone app, choose **Demo** or **Docker
+backend**. Nothing connects, plays or probes a backend before that choice.
+Docker asks for the container's HTTP(S) origin and checks `/api/backend` before
+saving it. Failed or incompatible connections keep the chooser open.
+
+Open **Settings → Connection** to change to **Docker backend** or **Demo** later.
+The choice is saved as `layerglass-backend` and a
 reload closes the previous page session. Browser mode also offers a local video
 file picker; the file stays on the device and its object URL is released when
 replaced. Its access does not persist across a reload.
 
 Self-hosted HTML declares `<meta name="layerglass-backend" content="python">`.
-The standalone static build changes only that default to `demo`; explicit user
-preferences win. `?backend=demo` selects the demo for that navigation. There is
+The standalone static build changes that marker to `choose`; it supplies no
+backend. Valid saved choices skip the chooser. Missing, corrupt or blocked
+preferences show it again. A choice works for the current page even when storage
+is blocked, but it cannot be remembered across reloads in that case.
+`?backend=demo` is an explicit demo link for that navigation. There is
 no backend detection by hostname, failed requests or a speculative LAN scan.
-Blocked or corrupt local preferences fall back to the declared default.
+Python-served HTML already knows its backend and retains same-origin startup.
 
 ## Transport contract
 

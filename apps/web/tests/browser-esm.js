@@ -23,11 +23,11 @@ async function run(name, engine) {
     await page.goto(base);
     await page.waitForFunction(() => {
       const video = document.querySelector('video');
-      return video.videoWidth > 0 && video.readyState >= 2 && !video.paused && document.querySelector('#overlay').hidden;
+      return video?.videoWidth > 0 && video.readyState >= 2 && !video.paused && document.querySelector('#overlay').hidden;
     }, undefined, { timeout: 45000 });
     assert.deepEqual(await page.locator('script[src]').evaluateAll(nodes =>
       nodes.map(node => ({ type: node.type, src: new URL(node.src).pathname }))),
-    [{ type: 'module', src: '/static/player.js' }]);
+    [{ type: 'module', src: '/static/bootstrap.js' }]);
     const state = await page.evaluate(async () => {
       const app = await import('/static/player.js');
       const same = await import('/static/player.js');
@@ -48,7 +48,7 @@ async function run(name, engine) {
     assert.deepEqual(errors, []);
     assert.deepEqual(failures, []);
     assert.equal(scripts.filter(path => path === '/static/vendor/hls.min.mjs').length, 1,
-      'The preload and shared imports must load hls.js only once.');
+      'Shared player imports must load hls.js only once.');
     assert(workers.includes('/static/vendor/hls.worker.js'), 'ESM playback must retain worker transmuxing.');
     assert(page.workers().some(worker => new URL(worker.url()).pathname === '/static/vendor/hls.worker.js'),
       'The media worker must remain active after frames decode.');

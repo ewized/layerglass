@@ -18,13 +18,38 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     // Any accidental Python dependency fails immediately in browser-only mode.
     await page.route('**/api/**', route => route.abort());
     await page.route('**/replay/**', route => route.abort());
-    // Match the standalone build's explicit default marker with empty storage.
+    // Match the standalone build with no host-provided backend or saved choice.
     await page.route(base + '/', async route => {
       const response = await route.fetch();
       await route.fulfill({ response, body: (await response.text()).replace(
-        'name="layerglass-backend" content="python"', 'name="layerglass-backend" content="demo"') });
+        'name="layerglass-backend" content="python"', 'name="layerglass-backend" content="choose"') });
     });
     await page.goto(base);
+    await page.getByRole('heading', { name: 'Choose your backend' }).waitFor();
+    assert.equal(await page.locator('video').count(), 0);
+    assert.equal(requests.some(path => path.startsWith('/api/') || path.startsWith('/replay/') || path.endsWith('.mp4') || path.includes('hls.min')), false,
+      'A fresh standalone visit must not select a backend or load the media pipeline.');
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({ path: `/app/test-results/backend-chooser-${name}.png` });
+    await page.locator('[data-backend-choice="docker"]').click();
+    await page.locator('#backend-connect-url').fill(base + '/not-an-origin');
+    await page.locator('.backend-connect-form [type="submit"]').click();
+    await page.locator('.backend-connect-error').waitFor();
+    assert.equal(await page.evaluate(() => localStorage.getItem('layerglass-backend')), null);
+    assert.equal(requests.some(path => path.startsWith('/api/')), false);
+    await page.route(base + '/api/backend', route => route.fulfill({ json: { id: 'unrelated', protocol_version: 1 } }));
+    await page.locator('#backend-connect-url').fill(base);
+    await page.locator('.backend-connect-form [type="submit"]').click();
+    await page.waitForFunction(() => document.querySelector('.backend-connect-error').textContent.includes('not a compatible'));
+    assert.equal(await page.evaluate(() => localStorage.getItem('layerglass-backend')), null);
+    await page.locator('[data-backend-back]').click();
+    requests.length = 0;
+    await page.locator('[data-backend-choice="demo"]').click();
+    await page.locator('#backend-picker').waitFor({ state: 'detached' });
+    assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('layerglass-backend'))), { type: 'demo' });
+    await waitForPlayer(page, ({ app }) => app.video.currentTime > 0 && app.pageReplay.session?.kind === 'file');
+    await page.reload();
+    assert.equal(await page.locator('#backend-picker').count(), 0, 'Saved choices bypass onboarding.');
     await waitForPlayer(page, ({ app }) => app.video.currentTime > 2 && app.video.readyState >= 2 &&
       app.pageReplay.session?.kind === 'file' && document.querySelector('#overlay').hidden, null, { timeout: 15000 });
     assert.equal(await page.locator('video').count(), 1);
@@ -62,9 +87,38 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(requests.filter(path => path.startsWith('/api/') || path.startsWith('/replay/')).length, 0);
     assert.deepEqual(errors, []);
     await context.close();
-    console.log(`${name}: browser demo/local file, native decoder, replay and settings passed without Python requests`);
+    console.log(`${name}: first-visit chooser, validation, saved demo/local file, native decoder, replay and settings passed without Python requests`);
+
+    const blocked = await browser.newContext({ serviceWorkers: 'block' });
+    await blocked.addInitScript(() => Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('Blocked', 'SecurityError'); } }));
+    const blockedPage = await blocked.newPage();
+    await blockedPage.route(base + '/', async route => {
+      const response = await route.fetch();
+      await route.fulfill({ response, body: (await response.text()).replace(
+        'name="layerglass-backend" content="python"', 'name="layerglass-backend" content="choose"') });
+    });
+    await blockedPage.goto(base);
+    await blockedPage.locator('[data-backend-choice="demo"]').click();
+    await blockedPage.locator('#backend-picker').waitFor({ state: 'detached' });
+    await waitForPlayer(blockedPage, ({ app }) => app.video.currentTime > 0 && app.pageReplay.session?.kind === 'file');
+    await blocked.close();
 
     if (process.env.STATIC_ONLY === '1') continue;
+    const docker = await browser.newContext({ serviceWorkers: 'block' });
+    const dockerPage = await docker.newPage();
+    await dockerPage.route(base + '/', async route => {
+      const response = await route.fetch();
+      await route.fulfill({ response, body: (await response.text()).replace(
+        'name="layerglass-backend" content="python"', 'name="layerglass-backend" content="choose"') });
+    });
+    await dockerPage.goto(base);
+    await dockerPage.locator('[data-backend-choice="docker"]').click();
+    await dockerPage.locator('#backend-connect-url').fill(base);
+    await dockerPage.locator('.backend-connect-form [type="submit"]').click();
+    await dockerPage.locator('#backend-picker').waitFor({ state: 'detached' });
+    await waitForPlayer(dockerPage, ({ app }) => app.videoStream?.connected && app.video.currentTime > 0, null, { timeout: 45000 });
+    assert.deepEqual(await dockerPage.evaluate(() => JSON.parse(localStorage.getItem('layerglass-backend'))), { type: 'python', url: base });
+    await docker.close();
     const normal = await browser.newContext({ serviceWorkers: 'block' });
     await normal.addCookies([{ name: 'fixture-proxy-session', value: 'present', url: base, httpOnly: true }]);
     const normalPage = await normal.newPage();

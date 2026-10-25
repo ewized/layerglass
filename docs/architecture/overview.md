@@ -12,7 +12,7 @@ an [Nx workspace](workspace.md). The Python backend, browser application and
 product website have independent targets. The backend can still serve the
 browser application together in one Docker container.
 An explicit [backend provider](backend-providers.md) selects that service or an
-entirely browser-run demo/local video. Standalone hosting defaults to the demo;
+entirely browser-run demo/local video. Standalone hosting first asks for a backend;
 the Python-served viewer defaults to its own backend.
 
 | Part | Source | Responsibility |

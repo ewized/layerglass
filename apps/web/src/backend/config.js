@@ -16,16 +16,20 @@ export function backendConfig(value = {}, page = globalThis.location?.href || 'h
   return { type: 'python', url: url.origin };
 }
 
-export function readBackend(storage, page = globalThis.location?.href) {
+export function readBackend(storage, page = globalThis.location?.href,
+  declared = globalThis.document?.querySelector('meta[name="layerglass-backend"]')?.content) {
   const query = new URL(page || 'http://localhost/').searchParams;
   if (query.get('backend') === 'demo') return { type: 'demo' };
-  const fallback = globalThis.document?.querySelector('meta[name="layerglass-backend"]')?.content === 'demo' ?
-    { type: 'demo' } : {};
+  // Python-served HTML explicitly supplies its own backend. A standalone app
+  // has none until the user chooses; a legacy demo marker is not consent.
+  const fallback = declared === 'python' ? backendConfig({}, page) : null;
   try {
     storage ??= globalThis.localStorage;
-    return backendConfig(JSON.parse(storage?.getItem(BACKEND_KEY) || JSON.stringify(fallback)), page);
+    const saved = JSON.parse(storage?.getItem(BACKEND_KEY) || 'null');
+    if (saved?.type !== 'demo' && !(saved?.type === 'python' && typeof saved.url === 'string' && saved.url)) return fallback;
+    return backendConfig(saved, page);
   }
-  catch (_) { return backendConfig(fallback, page); }
+  catch (_) { return fallback; }
 }
 
 export function saveBackend(value, storage = globalThis.localStorage, page = globalThis.location?.href) {

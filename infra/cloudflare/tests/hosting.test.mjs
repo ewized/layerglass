@@ -7,7 +7,7 @@ import test from 'node:test';
 import { checkBuild, prepare, verify } from '../../../scripts/cloudflare.mjs';
 
 const source = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const html = '<meta name="layerglass-backend" content="demo">';
+const html = '<meta name="layerglass-backend" content="choose">';
 
 async function fixture(t, name = 'web') {
   const project = await mkdtemp(join(tmpdir(), 'layerglass-cloudflare-'));
@@ -15,6 +15,7 @@ async function fixture(t, name = 'web') {
   const directory = join(project, 'dist/apps', name);
   await mkdir(join(directory, 'static/backend'), { recursive: true });
   await mkdir(join(directory, 'static/demo'), { recursive: true });
+  await mkdir(join(directory, 'static/components'), { recursive: true });
   await mkdir(join(project, 'infra/cloudflare'), { recursive: true });
   for (const suffix of ['wrangler.json', 'headers']) {
     await copyFile(join(source, `${name}.${suffix}`), join(project, 'infra/cloudflare', `${name}.${suffix}`));
@@ -22,6 +23,8 @@ async function fixture(t, name = 'web') {
   await writeFile(join(directory, 'index.html'), name === 'web' ? html : '<h1>Layerglass</h1>');
   await writeFile(join(directory, 'service-worker.js'), "const revision = 'fixture';\nconst cacheEnabled = false;");
   await writeFile(join(directory, 'static/backend/index.js'), 'export const backend = {};');
+  await writeFile(join(directory, 'static/bootstrap.js'), '// fixture');
+  await writeFile(join(directory, 'static/components/backend-picker.js'), '// fixture');
   await writeFile(join(directory, 'static/demo/printer.mp4'), 'fixture');
   return { project, directory };
 }
@@ -34,10 +37,12 @@ test('prepare publishes only matching hosting headers into each built output', a
   }
 });
 
-test('hosted app refuses a Python-default bundle before any deployment', async t => {
+test('hosted app refuses an automatic Python or demo backend before deployment', async t => {
   const { project, directory } = await fixture(t);
-  await writeFile(join(directory, 'index.html'), html.replace('demo', 'python'));
-  await assert.rejects(checkBuild('web', project), /must default to the browser demo/);
+  for (const type of ['python', 'demo']) {
+    await writeFile(join(directory, 'index.html'), html.replace('choose', type));
+    await assert.rejects(checkBuild('web', project), /must require a backend choice/);
+  }
 });
 
 test('hosted development app refuses enabled or unexpanded shell caching', async t => {
@@ -91,7 +96,7 @@ function deployed({ apiStatus = 404, scriptType = 'application/javascript', cach
   };
 }
 
-test('post-deployment checks accept static demo and real 404 responses', async () => {
+test('post-deployment checks accept the backend chooser and real 404 responses', async () => {
   await verify('web', { fetchImpl: deployed() });
 });
 
