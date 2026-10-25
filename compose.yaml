@@ -1,0 +1,46 @@
+name: layerglass
+
+services:
+  viewer:
+    build: .
+    image: ghcr.io/ewized/layerglass:${LAYERGLASS_VERSION:-0.1.0}
+    labels:
+      net.unraid.docker.webui: "${LAYERGLASS_URL:-http://[IP]:[PORT:8080]/}"
+      org.opencontainers.image.title: Layerglass
+      org.opencontainers.image.source: https://github.com/ewized/layerglass
+    init: true
+    restart: unless-stopped
+    ports:
+      - "${VIEWER_BIND_ADDRESS:-0.0.0.0}:${VIEWER_PORT:-8099}:8080"
+    environment:
+      STREAM_URL: "${STREAM_URL:-}"
+      DISCOVERY_CIDRS: "${DISCOVERY_CIDRS:-}"
+      DISCOVERY_PORTS: "${DISCOVERY_PORTS:-}"
+      STREAM_MODE: "${STREAM_MODE:-copy}"
+      PWA_CACHE_ENABLED: "${PWA_CACHE_ENABLED:-0}"
+      STALE_TIMEOUT_SECONDS: "${STALE_TIMEOUT_SECONDS:-30}"
+      RECONNECT_DELAY_SECONDS: "${RECONNECT_DELAY_SECONDS:-3}"
+      TRANSCODE_FPS: "${TRANSCODE_FPS:-15}"
+      REPLAY_MAX_MB: "${REPLAY_MAX_MB:-8192}"
+      REPLAY_SESSION_TIMEOUT_SECONDS: "${REPLAY_SESSION_TIMEOUT_SECONDS:-1800}"
+    read_only: true
+    volumes:
+      - camera_data:/data
+      - camera_buffer:/buffer
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+volumes:
+  camera_data:
+  camera_buffer:
