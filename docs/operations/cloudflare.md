@@ -17,10 +17,14 @@ own hardware without a Cloudflare account.
 | `layerglass-site` | `layer.glass` | `dist/apps/site/` | Product website and install/source links |
 | `layerglass-web` | `app.layer.glass` | `dist/apps/web/` | Browser demo and optional connection to the user's backend |
 
-The hosted app must ship without an automatic backend. First visits show Demo
-and Docker backend choices; valid saved selections open directly. Demo uses
+The hosted app must ship without an automatic backend. First visits show Demo,
+Docker and Direct printer choices; valid saved selections open directly. Demo uses
 bundled sample video and simulated printer data. Docker connects to an explicitly
 selected HTTPS Python backend. Settings → Connection can change that choice.
+Direct mode supports an identified Klipper/Moonraker MJPEG camera in a compatible
+browser, with live viewing only. Its browser and controller requirements are in
+[backend providers](../architecture/backend-providers.md). Safari/iPhone and
+Bambu LAN cameras use the Docker backend.
 A browser cannot directly discover Bambu ports, decode RTSPS, or open its
 MQTT TCP connection. Those are Python backend capabilities.
 
