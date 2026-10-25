@@ -55,6 +55,16 @@ export const settingsTemplate = `
         <span id="discovery-message" class="sr-only" role="status" aria-live="polite"></span>
       </div>
       <div data-settings-page="connection" class="settings-page" hidden>
+        <form id="backend-form" class="backend-form">
+          <label for="backend-type">Backend</label>
+          <select id="backend-type" name="type"><option value="python">Python backend</option><option value="demo">Browser demo</option></select>
+          <label for="backend-url" id="backend-url-label">Backend address</label>
+          <input id="backend-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com">
+          <p id="backend-capabilities" class="backend-note"></p>
+          <button class="menu-row" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span>Use backend</span></button>
+          <p id="backend-error" class="printer-error" role="alert" hidden></p>
+        </form>
+        <label id="local-media-label" class="menu-row" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>Open local video</span><input id="local-media" type="file" accept="video/*" class="sr-only"></label>
         <span id="stream-message" class="sr-only" role="status" aria-live="polite">Connecting to the camera…</span>
         <button id="refresh-button" class="menu-row"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg><span>Refresh viewer</span></button>
         <button id="restart-button" class="menu-row"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-restart"/></svg><span id="restart-label">Restart stream</span></button>

@@ -67,7 +67,7 @@ export class PrinterScrubPreview extends PlayerElement {
 
   showPoint(position) {
     const replay = this.readReplay?.(), session = replay?.session;
-    if (this.slider.disabled || !session?.ready || !this.ownerDocument.defaultView.navigator.onLine) return this.hide();
+    if (this.slider.disabled || !session?.ready || replay.backend?.id !== 'demo' && !this.ownerDocument.defaultView.navigator.onLine) return this.hide();
     if (session.session_id !== this.token) {
       const dragging = this.dragging;
       this.reset();
@@ -187,6 +187,7 @@ export class PrinterScrubPreview extends PlayerElement {
   }
 
   schedule() {
+    if (this.readReplay?.().session?.preview_fallback === false) return;
     if (this.hidden || this.request || this.requestTimer) return;
     this.requestTimer = setTimeout(() => {
       this.requestTimer = null;
@@ -201,7 +202,9 @@ export class PrinterScrubPreview extends PlayerElement {
     const request = { controller: new AbortController(), key, sheet };
     this.request = request;
     try {
-      const response = await fetch(`/replay/${token}/preview.jpg?at=${sheet.start}&frames=${sheet.count}`,
+      const replay = this.readReplay();
+      const fetcher = replay.backend?.fetch?.bind(replay.backend) || ((...args) => fetch(...args));
+      const response = await fetcher(`/replay/${token}/preview.jpg?at=${sheet.start}&frames=${sheet.count}`,
         { signal: request.controller.signal, cache: 'no-store', priority: 'low' });
       if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/jpeg')) throw new Error('Preview unavailable');
       const blob = await response.blob();

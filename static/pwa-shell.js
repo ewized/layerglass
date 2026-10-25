@@ -8,6 +8,7 @@ export const SHELL_PATHS = Object.freeze([
   '/static/video-stream.js', '/static/visibility.js', '/static/preferences.js',
   '/static/player-ui.js', '/static/player-tools.js', '/static/player-media.js',
   '/static/cast-sender.js',
+  '/static/backend/index.js', '/static/backend/config.js', '/static/backend/python.js', '/static/backend/demo.js',
   '/static/printer-history.js', '/static/printer-stats.js', '/static/diffusion.js', '/static/debug-info.js',
   '/static/scrub-preview.js', '/static/components/scrub-preview.js',
   '/static/preview-history.js', '/static/preview-storage.js',

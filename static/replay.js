@@ -55,11 +55,13 @@ export class ReplayTimeline {
 
 // Each instance belongs to one page. Only its opaque session ID reaches the browser.
 export class PageReplay {
-  constructor(video, image, livePosition, onSession = () => {}) {
+  constructor(video, image, livePosition, onSession = () => {}, backend = {}) {
     this.video = video;
     this.image = image;
     this.livePosition = livePosition;
     this.onSession = onSession;
+    this.backend = backend;
+    this.fetcher = backend.fetch?.bind(backend) || ((...args) => fetch(...args));
     this.controls = document.getElementById('replay-controls');
     this.slider = document.getElementById('replay-slider');
     this.pauseButton = document.getElementById('pause-button');
@@ -150,7 +152,7 @@ export class PageReplay {
     if (this.opening) return this.opening;
     const version = this.version;
     this.opening = (async () => {
-      const response = await fetch('/api/sessions', { method: 'POST',
+      const response = await this.fetcher('/api/sessions', { method: 'POST',
         headers: { 'X-Viewer-Request': '1', 'Content-Type': 'application/json' },
         body: JSON.stringify({ camera_id: camera }), signal: AbortSignal.timeout(6000) });
       if (!response.ok) throw new Error('Rewind unavailable');
@@ -168,7 +170,7 @@ export class PageReplay {
   }
 
   release(token) {
-    fetch(`/api/sessions/${token}/close`, { method: 'POST', keepalive: true,
+    this.fetcher(`/api/sessions/${token}/close`, { method: 'POST', keepalive: true,
       headers: { 'X-Viewer-Request': '1' }, body: '{}' }).catch(() => {});
   }
 
@@ -227,6 +229,10 @@ export class PageReplay {
       return { start: session.start_seconds, end: session.end_seconds,
         current: this.followLive ? session.end_seconds : this.position };
     }
+    if (session.kind === 'file') {
+      const end = Math.max(0, Math.min(Number.isFinite(this.video.duration) ? this.video.duration : Infinity, session.end_seconds));
+      return { start: 0, end, current: Math.min(end, this.video.currentTime || 0) };
+    }
     const ranges = this.video.seekable;
     const start = Math.max(session.start_seconds, ranges.length ? ranges.start(0) : session.start_seconds);
     const end = ranges.length ? ranges.end(ranges.length - 1) : session.end_seconds;
@@ -234,7 +240,7 @@ export class PageReplay {
   }
 
   beginScrub(kind) {
-    if (!this.session?.ready || this.slider.disabled || globalThis.navigator?.onLine === false) return false;
+    if (!this.session?.ready || this.slider.disabled || this.backend.id !== 'demo' && globalThis.navigator?.onLine === false) return false;
     if (this.scrubbing && this.scrubType === kind) return true;
     this.finishScrub(false);
     this.scrubbing = true;
@@ -276,7 +282,7 @@ export class PageReplay {
     this.scrubKeys.clear();
     this.timeline.fit();
     if (commit && changed && Number.isFinite(target) && this.session?.ready && !this.slider.disabled &&
-        globalThis.navigator?.onLine !== false) this.seek(target);
+        (this.backend.id === 'demo' || globalThis.navigator?.onLine !== false)) this.seek(target);
     else this.render();
     this.slider.dispatchEvent(new CustomEvent('replaypreviewchange', { detail: { active: false, kind, cancelled: !commit } }));
   }
@@ -343,7 +349,8 @@ export class PageReplay {
     if (this.remote) this.remote.goLive();
     else if (this.session.kind === 'jpeg') {
       this.position = this.session.end_seconds;
-      this.image.src = `/api/cameras/${this.session.camera_id}/frame.jpg?t=${Date.now()}`;
+      const path = `/api/cameras/${this.session.camera_id}/frame.jpg?t=${Date.now()}`;
+      this.image.src = this.backend.resolve ? this.backend.resolve(path) : path;
     } else {
       const { start, end } = this.bounds();
       if (end > start) {
@@ -402,7 +409,7 @@ export class PageReplay {
     const progress = span > 0 ? Math.max(0, Math.min(1, (Number(this.slider.value) - Number(this.slider.min)) / span)) : 0;
     const fill = `${(progress * 100).toFixed(4)}%`;
     if (this.slider.style.getPropertyValue('--scrub-progress') !== fill) this.slider.style.setProperty('--scrub-progress', fill);
-    const offline = globalThis.navigator?.onLine === false;
+    const offline = this.backend.id !== 'demo' && globalThis.navigator?.onLine === false;
     this.slider.disabled = offline || !this.session.ready || end - start < 1;
     const behindLive = Math.max(0, this.timeline.edge - playhead);
     const offset = `−${PageReplay.time(behindLive)}`;

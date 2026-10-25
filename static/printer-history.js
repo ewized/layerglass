@@ -93,7 +93,7 @@ export class PrinterHistory {
   }
 
   read(time) {
-    if (!this.session || !Number.isFinite(time)) return null;
+    if (!this.session || this.session.telemetry === false || !Number.isFinite(time)) return null;
     const key = Math.floor(time / WINDOW);
     const window = this.window(key);
     if (window.ranges.some(([start, end]) => start <= time && time <= end)) return preceding(window.samples, time)?.printer || null;

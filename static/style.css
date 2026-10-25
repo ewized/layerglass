@@ -79,6 +79,10 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .settings-heading h2 { flex: 1; min-width: 0; padding-left: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .settings-heading:has(#settings-back:not([hidden])) h2 { padding-left: 0; }
 .settings-page { min-height: 0; padding: 8px; overflow-y: auto; overscroll-behavior: contain; }
+.backend-form { display: grid; gap: 8px; padding: 8px; }
+.backend-form label { font-size: 13px; color: var(--muted); }
+.backend-form input, .backend-form select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 7px; background: #080a09; color: var(--text); font-size: 16px; }
+.backend-note { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
 .menu-row { display: flex; align-items: center; width: 100%; min-height: 48px; padding: 10px 12px; gap: 12px; border: 0; border-radius: 7px; background: transparent; color: var(--text); text-align: left; font-size: 14px; }
 .menu-row:hover, .menu-row:focus-visible { background: #ffffff12; }
 .menu-row > span:not(.menu-value) { flex: 1; min-width: 0; }
