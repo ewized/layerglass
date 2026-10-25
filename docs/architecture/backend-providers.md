@@ -46,6 +46,10 @@ saving it. Failed or incompatible connections keep the chooser open.
 Open **Settings → Connection** to change to **Docker backend**, **Demo**, or
 **Direct printer (Klipper / Moonraker)** later. Direct mode verifies the controller
 identity and configured webcams, then provides live-only camera playback.
+Confirm the address with the adjacent green checkmark, matching the printer
+access-code input. Demo uses the same checkmark beside its selector. Editing
+does not connect or save; failed checks leave the current backend active and
+show an error below the input row.
 The choice is saved as `layerglass-backend` and a
 reload closes the previous page session. Browser mode also offers a local video
 file picker; the file stays on the device and its object URL is released when

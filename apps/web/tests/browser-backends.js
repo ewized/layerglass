@@ -65,6 +65,58 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(await page.locator('#backend-type').inputValue(), 'demo');
     assert.match(await page.locator('#backend-capabilities').textContent(), /No LAN discovery/);
     assert.equal(await page.locator('#restart-button').isVisible(), false);
+    assert.equal(await page.getByRole('button', { name: 'Use demo backend', exact: true }).textContent(), '');
+    // Match the printer access-code interaction: editing does not connect;
+    // one adjacent icon confirms, with errors below the whole input row.
+    await page.locator('#backend-type').selectOption('python');
+    await page.locator('#backend-url').fill(base);
+    await page.evaluate(() => {
+      window.backendTestFetch = window.fetch;
+      window.backendTestRequests = 0;
+      window.fetch = (input, options) => {
+        if (new URL(input, location.href).pathname === '/api/backend') {
+          window.backendTestRequests++;
+          return new Promise((_resolve, reject) => { window.backendTestReject = reject; });
+        }
+        return window.backendTestFetch(input, options);
+      };
+    });
+    await page.locator('#backend-url').fill(base + '/');
+    assert.equal(await page.evaluate(() => window.backendTestRequests), 0);
+    await page.getByRole('button', { name: 'Save and connect', exact: true }).click();
+    assert.equal(await page.locator('#backend-confirm').isDisabled(), true);
+    assert.equal(await page.locator('#backend-url').isDisabled(), true);
+    assert.equal(await page.locator('#backend-type').isDisabled(), true);
+    assert.equal(await page.locator('#backend-confirm').getAttribute('aria-busy'), 'true');
+    await page.evaluate(() => document.querySelector('#backend-form').requestSubmit());
+    assert.equal(await page.evaluate(() => window.backendTestRequests), 1, 'Pending confirmation must not submit twice.');
+    await page.evaluate(() => window.backendTestReject(new DOMException('signal timed out', 'TimeoutError')));
+    await page.waitForFunction(() => document.querySelector('#backend-error').textContent.startsWith('Connection timed out.'));
+    assert.equal(await page.locator('#backend-url').getAttribute('aria-invalid'), 'true');
+    assert.equal(await page.locator('#backend-confirm').isDisabled(), false);
+    assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('layerglass-backend'))), { type: 'demo' });
+    for (const width of [390, 320]) {
+      await page.setViewportSize({ width, height: 844 });
+      const layout = await page.evaluate(() => {
+        const box = id => { const r = document.getElementById(id).getBoundingClientRect(); return { x: r.x, y: r.y, right: r.right, bottom: r.bottom, height: r.height }; };
+        return { input: box('backend-url'), button: box('backend-confirm'), error: box('backend-error'), note: box('backend-capabilities'),
+          overflow: document.documentElement.scrollWidth > innerWidth };
+      });
+      assert.equal(layout.overflow, false);
+      assert(Math.abs(layout.input.y - layout.button.y) < 1);
+      assert(layout.input.height <= 48 && layout.button.height === 44);
+      assert(layout.button.x >= layout.input.right);
+      assert(layout.error.y >= layout.input.bottom);
+      assert(layout.error.x <= layout.input.x && layout.error.right >= layout.button.right - 1);
+      assert(layout.note.y >= layout.error.bottom);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.screenshot({ path: `/app/test-results/backend-confirm-${name}.png` });
+    await page.locator('#backend-url').fill(base);
+    assert.equal(await page.locator('#backend-error').isVisible(), false, 'Editing clears the error for the previous address.');
+    assert.equal(await page.locator('#backend-url').getAttribute('aria-invalid'), null);
+    await page.evaluate(() => { window.fetch = window.backendTestFetch; });
+    await page.locator('#backend-type').selectOption('demo');
     await page.evaluate(async () => {
       const app = await import('/static/player.js');
       app.playerChrome.options(false);

@@ -111,13 +111,21 @@ const playerPullRefresh = new PlayerPullRefresh($('player'), () => PlayerReload.
 
 const backendType = $('backend-type');
 const backendURL = $('backend-url');
+const backendForm = $('backend-form');
+const backendConfirm = $('backend-confirm');
+const backendError = $('backend-error');
 backendType.value = configuration.type;
 backendType.querySelector('option[value="direct"]').disabled = Boolean(directBrowserError());
-backendURL.value = configuration.url || location.origin;
+backendURL.value = configuration.url || '';
 function renderBackendForm() {
   const demo = backendType.value === 'demo';
   const direct = backendType.value === 'direct';
+  backendForm.dataset.backend = backendType.value;
+  const action = demo ? 'Use demo backend' : 'Save and connect';
+  backendConfirm.setAttribute('aria-label', action);
+  backendConfirm.title = action;
   backendURL.hidden = demo;
+  backendURL.required = !demo;
   $('backend-url-label').hidden = demo;
   $('backend-capabilities').textContent = demo ?
     'Runs in this browser with generated demo video or a local file. No LAN discovery, printer connection, or server recording.' : direct ?
@@ -127,12 +135,20 @@ function renderBackendForm() {
   $('local-media-label').hidden = !backend.capabilities.localMedia;
   restartButton.hidden = !backend.capabilities.serverDvr;
 }
-backendType.addEventListener('change', renderBackendForm);
-$('backend-form').addEventListener('submit', async event => {
+function clearBackendError() {
+  backendError.hidden = true;
+  backendError.textContent = '';
+  backendURL.removeAttribute('aria-invalid');
+}
+backendType.addEventListener('change', () => { clearBackendError(); renderBackendForm(); });
+backendURL.addEventListener('input', clearBackendError);
+backendForm.addEventListener('submit', async event => {
   event.preventDefault();
-  const error = $('backend-error');
-  const submit = event.currentTarget.querySelector('[type="submit"]');
-  error.hidden = true; submit.disabled = true;
+  if (backendConfirm.disabled) return;
+  clearBackendError();
+  for (const control of [backendType, backendURL, backendConfirm]) control.disabled = true;
+  backendConfirm.setAttribute('aria-busy', 'true');
+  backendConfirm.querySelector('use').setAttribute('href', '#i-refresh');
   try {
     const config = backendConfig({ type: backendType.value, url: backendURL.value.trim() });
     if (config.type === 'python') {
@@ -148,11 +164,16 @@ $('backend-form').addEventListener('submit', async event => {
     if (next.href === location.href) location.reload();
     else location.assign(next.href);
   } catch (failure) {
-    error.textContent = failure instanceof TypeError && failure.message.startsWith('Failed') ?
-      'Cannot reach this backend. Check HTTPS, the allowed frontend origin, and your network permission.' : failure.message;
-    error.hidden = false;
+    backendError.textContent = ['TimeoutError', 'AbortError'].includes(failure.name) ?
+      'Connection timed out. Check the address and try again.' :
+      failure instanceof TypeError && /fetch|network|load/i.test(failure.message) ?
+        'Cannot reach this backend. Check HTTPS, the allowed frontend origin, and your network permission.' : failure.message;
+    backendError.hidden = false;
+    if (backendType.value !== 'demo') backendURL.setAttribute('aria-invalid', 'true');
     console.warn('[Layerglass] Backend selection failed', failure.name);
-    submit.disabled = false;
+    for (const control of [backendType, backendURL, backendConfirm]) control.disabled = false;
+    backendConfirm.removeAttribute('aria-busy');
+    backendConfirm.querySelector('use').setAttribute('href', '#i-check');
   }
 });
 $('local-media').addEventListener('change', async event => {

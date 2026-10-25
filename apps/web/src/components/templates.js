@@ -59,10 +59,10 @@ export const settingsTemplate = `
           <label for="backend-type">Backend</label>
           <select id="backend-type" name="type"><option value="python">Docker backend</option><option value="demo">Demo</option><option value="direct">Direct printer (Klipper / Moonraker)</option></select>
           <label for="backend-url" id="backend-url-label">Backend address</label>
-          <input id="backend-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com">
+          <input id="backend-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com" aria-describedby="backend-capabilities backend-error">
+          <button id="backend-confirm" class="icon-button primary" type="submit" title="Save and connect" aria-label="Save and connect"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></button>
+          <p id="backend-error" class="backend-error" role="alert" hidden></p>
           <p id="backend-capabilities" class="backend-note"></p>
-          <button class="menu-row" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span>Use backend</span></button>
-          <p id="backend-error" class="printer-error" role="alert" hidden></p>
         </form>
         <label id="local-media-label" class="menu-row" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>Open local video</span><input id="local-media" type="file" accept="video/*" class="sr-only"></label>
         <span id="stream-message" class="sr-only" role="status" aria-live="polite">Connecting to the camera…</span>
