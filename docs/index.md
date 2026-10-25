@@ -23,6 +23,7 @@ Start with the [README](../README.md) for a quick introduction.
 - [Workflow](development/workflow.md) — local fixture, branches and commits.
 - [Testing](development/testing.md) — reproducible checks without a printer.
 - [CI/CD](development/ci-cd.md) — validation, versioning and image publication.
+- [Public Cloudflare hosting](operations/cloudflare.md) — product site, demo, domains and delivery.
 - [Architecture](architecture/overview.md) — source boundaries and data flow.
 - [Agent router](../AGENTS.md) — scoped guidance for agents.
 - [Prototype import decision](decisions/0001-prototype-import.md) — provenance and history.

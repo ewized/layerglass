@@ -17,3 +17,5 @@ docs/.obsidian/workspace*.json
 docs/.obsidian/cache/
 docs/.obsidian/plugins/
 docs/.trash/
+.wrangler/
+dist/
