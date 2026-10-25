@@ -84,9 +84,9 @@ windows. An unusually noisy printer can evict the oldest markers before its
 video is trimmed. Event summaries are temporary page memory, not IndexedDB,
 persistent server settings or the PWA cache. The server still owns DVR media.
 
-`tests/timeline-events.test.js` covers observed transitions, absent/partial data,
+`apps/web/tests/timeline-events.test.js` covers observed transitions, absent/partial data,
 job identities, duplicate and conflicting timestamps, reconnect gaps, clock
 mapping, page isolation, moving windows, retention and bounded memory.
-`tests/browser-timeline-events.js` checks generated-video integration in Chromium
+`apps/web/tests/browser-timeline-events.js` checks generated-video integration in Chromium
 and WebKit: labels, clustered touch/keyboard access, single committed seeks,
 unchanged slider gestures and no additional telemetry requests.

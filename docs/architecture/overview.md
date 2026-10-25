@@ -11,6 +11,9 @@ Layerglass keeps its established Python modules and native ES modules inside
 an [Nx workspace](workspace.md). The Python backend, browser application and
 product website have independent targets. The backend can still serve the
 browser application together in one Docker container.
+An explicit [backend provider](backend-providers.md) selects that service or an
+entirely browser-run demo/local video. Standalone hosting defaults to the demo;
+the Python-served viewer defaults to its own backend.
 
 | Part | Source | Responsibility |
 | --- | --- | --- |
@@ -22,9 +25,13 @@ browser application together in one Docker container.
 | Player controller | [`apps/web/src/player.js`](../../apps/web/src/player.js), [`apps/web/src/replay.js`](../../apps/web/src/replay.js) | One media element, playback state and live-relative timeline |
 | UI elements | [`apps/web/src/components/`](../../apps/web/src/components/) | Light-DOM Web Components and accessible player interactions |
 | Transport and lifecycle | [`apps/web/src/video-stream.js`](../../apps/web/src/video-stream.js), [`apps/web/src/updates.js`](../../apps/web/src/updates.js) | Continuous video response, SSE metadata, recovery and fallback |
+| Backend providers | [`apps/web/src/backend/`](../../apps/web/src/backend/) | Selected-origin Python transport or browser-only media and simulated demo data |
+| Print events | [`apps/web/src/timeline-events.js`](../../apps/web/src/timeline-events.js) | Observed state transitions mapped onto retained video time |
 | Local previews | [`apps/web/src/preview-history.js`](../../apps/web/src/preview-history.js), [`apps/web/src/preview-storage.js`](../../apps/web/src/preview-storage.js) | Sample decoded frames, bounded RAM/IndexedDB and session cleanup |
 
 ## Data flow
+
+With the Python provider:
 
 1. The server scans configured private subnets for approved camera ports. Bounded
    manufacturer checks identify a supported printer before it appears in the list.

@@ -25,6 +25,7 @@ Pass representative suite names to focus a browser run, for example
 | Video transport and DVR | `test_video_stream.py`, `test_replay.py`, `video-stream.test.js`, browser video-stream/recovery suites |
 | Live-relative timeline and gesture commits | `timeline.test.js`, `scrub-preview.test.js`, browser scrub-commit suite |
 | Observed print-event markers | `timeline-events.test.js`, browser timeline-events suite |
+| Backend selection and CORS | `backend.test.js`, `test_backend_cors.py`, browser backends/backend-origin suites |
 | Local thumbnail retention and storage | `preview-history.test.js`, browser preview-storage/buffer suites |
 | Media/platform UI | `media.test.js`, `cast-sender.test.js`, browser fullscreen/Google Cast suites |
 | Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
@@ -40,6 +41,9 @@ Timed streaming/recovery checks run one engine at a time so their decoders do
 not compete for runner CPU. Frame counters verify progress rather than a fixed
 headless frame rate. See [Playwright's CI guidance](https://playwright.dev/docs/ci)
 on limiting concurrency for reproducible checks.
+The fixture explicitly trusts only its second loopback origin for the selected
+backend check. This exercises native video, SSE and protected POSTs across
+origins; deployment defaults still trust no hosted origin until configured.
 
 ## Focused commands
 

@@ -73,6 +73,7 @@ run_browsers() {
   task_containers+=("$task_fixture")
   docker run --detach --rm --init --name "$task_fixture" --user "$task_uid:$task_gid" \
     -e PYTHONDONTWRITEBYTECODE=1 -e FIXTURE_TELEMETRY=1 -e FIXTURE_DUAL_TELEMETRY=1 \
+    -e VIEWER_ALLOWED_ORIGINS=http://localhost:8080 -e VIEWER_BACKEND_ORIGINS=http://127.0.0.1:8080 \
     -e PWA_CACHE_ENABLED=0 -v "$task_host_path:/app:ro" -w /app \
     "$task_image" python -B apps/backend/tests/fixture_server.py >/dev/null
   task_ready=0

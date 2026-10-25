@@ -9,6 +9,7 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
 | Task | Read first | Main source |
 | --- | --- | --- |
 | Player, Web Components, scrubbing, previews, PiP, casting | [Player skill](.agents/skills/layerglass-player/SKILL.md) | `apps/web/src/`, `apps/backend/replay.py` |
+| Backend selection, browser mode, hosted frontend connections | [Backend providers](docs/architecture/backend-providers.md), [Player skill](.agents/skills/layerglass-player/SKILL.md) | `apps/web/src/backend/`, `apps/backend/app.py` |
 | Discovery, manufacturer support, access codes, printer telemetry | [Printer skill](.agents/skills/layerglass-printers/SKILL.md) | `apps/backend/`, `apps/backend/providers/` |
 | Nx projects, builds, product website | [Workspace map](docs/architecture/workspace.md), [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `apps/*/project.json`, `apps/site/`, `nx.json` |
 | Docker, tests, workflows, versions, releases | [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `Dockerfile`, `compose*.yaml`, `scripts/`, `.github/` |
@@ -20,6 +21,9 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
   controls stay at the bottom, setup stays in settings, diagnostics in the context menu.
 - The local viewer must work without a cloud account. Keep manufacturer-specific
   behavior in providers and admit only identified, approved printer profiles.
+- Browser transport providers and server manufacturer adapters have different
+  responsibilities. Browser mode cannot use raw printer TCP/MQTT/RTSPS protocols;
+  expose its capabilities honestly and keep access codes on the selected server.
 - Current printer telemetry is read-only. Printer-control features are roadmap
   work, not an incidental extension of a camera or telemetry change.
 - Keep credentials, private deployment configuration, recordings and generated
