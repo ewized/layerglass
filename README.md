@@ -59,6 +59,7 @@ docker compose -f compose.dev.yaml up --build
 - [Architecture](docs/architecture/overview.md) · [Approved printer adapters](docs/camera-adapters.md)
 - [Nx workspace and targets](docs/architecture/workspace.md) — Python backend, native web app and product website.
 - [Backend providers](docs/architecture/backend-providers.md) · [Timeline events](docs/timeline-events.md) · [Cloudflare hosting](docs/operations/cloudflare.md)
+- [GitHub deployment settings](docs/operations/github-deployment.md) — the secrets and repository variable needed to publish the site and app.
 - [AGENTS.md](AGENTS.md) — project guidelines and task-specific skill router.
 
 Commits use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).

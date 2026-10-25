@@ -154,6 +154,9 @@ issuance/DNS propagation may need time before verification can pass.
 
 ## GitHub delivery
 
+The [GitHub deployment settings file](github-deployment.md) lists the exact two
+secret names, their environment, the repository enable variable and token scope.
+
 The [public hosting checks](../../.github/workflows/cloudflare-check.yml) run on
 relevant main pushes and pull requests without credentials. They build both
 static apps, exercise hosting-policy tests, run Wrangler dry-runs and verify

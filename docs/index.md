@@ -24,6 +24,7 @@ Start with the [README](../README.md) for a quick introduction.
 - [Testing](development/testing.md) — reproducible checks without a printer.
 - [CI/CD](development/ci-cd.md) — validation, versioning and image publication.
 - [Public Cloudflare hosting](operations/cloudflare.md) — product site, demo, domains and delivery.
+- [GitHub deployment settings](operations/github-deployment.md) — required secrets, enable variable and token scope.
 - [Architecture](architecture/overview.md) — source boundaries and data flow.
 - [Nx workspace](architecture/workspace.md) — applications, targets, caching and relocation map.
 - [Backend providers](architecture/backend-providers.md) — optional Python service, browser demo and trusted connections.

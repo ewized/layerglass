@@ -68,4 +68,6 @@ image labels. Current Compose deployments use their own `.env` and local volumes
 Cloudflare hosts the separate static product website and demo app. Its
 [deployment guide](../operations/cloudflare.md) covers exact domain scopes,
 containerized build/check/dry-run commands, a gated GitHub workflow and rollback.
+Use [GitHub deployment settings](../operations/github-deployment.md) for the
+required secrets, repository variable and setup steps.
 Public hosting never deploys a Python backend or receives private camera feeds.
