@@ -1,0 +1,87 @@
+{
+  "retrieved": "2026-10-23",
+  "source": "bambulab/BambuStudio",
+  "local_sha256": "22b357e39ea36a55958b7c24068a4063f858954f3e12dcb35f5310e22f0cfa55",
+  "files": [
+    {
+      "model": "BL-P001",
+      "sha": "e70995e804b2a246e6b70f786a86054332a5b3e6",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/BL-P001.json"
+    },
+    {
+      "model": "BL-P002",
+      "sha": "dd98a724da1d46e3ebe71d7d7b74063a813a61c9",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/BL-P002.json"
+    },
+    {
+      "model": "C11",
+      "sha": "742533387aa2a1752da8ce65eef344cbfd7b2a69",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/C11.json"
+    },
+    {
+      "model": "C12",
+      "sha": "8d8a2f31badf822103b9e98439417e61fcf27ab3",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/C12.json"
+    },
+    {
+      "model": "C13",
+      "sha": "d01708309bb34be9f613f459d7502e053f8ffb59",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/C13.json"
+    },
+    {
+      "model": "N1",
+      "sha": "87eb276581d604f4b62125f2c38054fdfa0c9ad3",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/N1.json"
+    },
+    {
+      "model": "N2S",
+      "sha": "3a5929b98244d7800ee06a7fe41662f0141306ce",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/N2S.json"
+    },
+    {
+      "model": "N6",
+      "sha": "109ec994ccfa71e5f728df2542f6064243d079f3",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/N6.json"
+    },
+    {
+      "model": "N7",
+      "sha": "fc0033168e2f50c71379aab07688b55a1f3d64c0",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/N7.json"
+    },
+    {
+      "model": "N8",
+      "sha": "f1e7a5c32df000642a1646a55bf3abbae66d44fa",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/N8.json"
+    },
+    {
+      "model": "N9",
+      "sha": "ff2a16dfb687cb9db3b0dca06f53e628d1fafd20",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/N9.json"
+    },
+    {
+      "model": "O1C",
+      "sha": "8bc0f524fd4359d060d598d56b5169acc433c6a3",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/O1C.json"
+    },
+    {
+      "model": "O1C2",
+      "sha": "573fe22176a5cdd89d5f4e16c7a000eed0edd135",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/O1C2.json"
+    },
+    {
+      "model": "O1D",
+      "sha": "ec9bc8e47429bfbfa24613ccdb83064c00b85c09",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/O1D.json"
+    },
+    {
+      "model": "O1E",
+      "sha": "1a8dab04adb6aac1c92b488274d14b3e25f6682d",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/O1E.json"
+    },
+    {
+      "model": "O1S",
+      "sha": "658ae895f45df2d792d24b040aa699445a683242",
+      "url": "https://github.com/bambulab/BambuStudio/blob/master/resources/printers/O1S.json"
+    }
+  ]
+}

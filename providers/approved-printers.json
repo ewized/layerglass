@@ -1,0 +1,14 @@
+{
+  "bambu": {
+    "bambu": {
+      "models": ["C11", "C12", "N1", "N2S"],
+      "port": 6000,
+      "path": "/streaming/live/1"
+    },
+    "rtsps": {
+      "models": ["BL-P001", "BL-P002", "C13", "N6", "N7", "O1C", "O1C2", "O1D", "O1E", "O1S"],
+      "port": 322,
+      "path": "/streaming/live/1"
+    }
+  }
+}

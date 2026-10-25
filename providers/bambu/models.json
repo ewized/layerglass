@@ -1,0 +1,66 @@
+{
+  "BL-P001": {
+    "name": "Bambu Lab X1 Carbon",
+    "prefix": "00M"
+  },
+  "BL-P002": {
+    "name": "Bambu Lab X1",
+    "prefix": "00W"
+  },
+  "C11": {
+    "name": "Bambu Lab P1P",
+    "prefix": "01S"
+  },
+  "C12": {
+    "name": "Bambu Lab P1S",
+    "prefix": "01P"
+  },
+  "C13": {
+    "name": "Bambu Lab X1E",
+    "prefix": "03W"
+  },
+  "N1": {
+    "name": "Bambu Lab A1 mini",
+    "prefix": "030"
+  },
+  "N2S": {
+    "name": "Bambu Lab A1",
+    "prefix": "039"
+  },
+  "N6": {
+    "name": "Bambu Lab X2D",
+    "prefix": "20P"
+  },
+  "N7": {
+    "name": "Bambu Lab P2S",
+    "prefix": "22E"
+  },
+  "N8": {
+    "name": "Bambu Lab N8",
+    "prefix": "35F"
+  },
+  "N9": {
+    "name": "Bambu Lab A2L",
+    "prefix": "26A"
+  },
+  "O1C": {
+    "name": "Bambu Lab H2C",
+    "prefix": "31B"
+  },
+  "O1C2": {
+    "name": "Bambu Lab H2C",
+    "prefix": "31B"
+  },
+  "O1D": {
+    "name": "Bambu Lab H2D",
+    "prefix": "094"
+  },
+  "O1E": {
+    "name": "Bambu Lab H2D Pro",
+    "prefix": "239"
+  },
+  "O1S": {
+    "name": "Bambu Lab H2S",
+    "prefix": "093"
+  }
+}
