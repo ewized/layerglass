@@ -37,10 +37,12 @@ export function printerPlaybackTime(video, hls, replay) {
 // Eight two-minute windows bound phone memory. Fresh readings arrive over the
 // existing SSE connection; a distant explicit seek fetches one history window.
 export class PrinterHistory {
-  constructor(onChange = () => {}, { fetcher = (...args) => fetch(...args), maxWindows = 8 } = {}) {
+  constructor(onChange = () => {}, { fetcher = (...args) => fetch(...args), maxWindows = 8, onSamples = () => {}, onSession = () => {} } = {}) {
     this.onChange = onChange;
     this.fetcher = fetcher;
     this.maxWindows = maxWindows;
+    this.onSamples = onSamples;
+    this.onSession = onSession;
     this.windows = new Map();
     this.session = null;
     this.version = 0;
@@ -54,6 +56,7 @@ export class PrinterHistory {
     this.pending = null;
     this.windows.clear();
     this.session = session;
+    this.onSession(session);
     this.warned = false;
   }
 
@@ -89,6 +92,7 @@ export class PrinterHistory {
         else window.ranges.push([...range]);
       }
     }
+    this.onSamples({ ...payload, samples });
     if (notify) this.onChange();
   }
 

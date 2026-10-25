@@ -98,6 +98,7 @@ export const pullTemplate = `
 
 export const controlsTemplate = `
 <section class="replay-controls" id="replay-controls" aria-label="Video playback" hidden>
+        <printer-timeline-events id="timeline-events" class="timeline-events"></printer-timeline-events>
         <input id="replay-slider" type="range" min="0" max="0" value="0" step="any" aria-label="Scrub buffered video" disabled>
         <printer-scrub-preview id="scrub-preview" class="scrub-preview" hidden></printer-scrub-preview>
       </section>

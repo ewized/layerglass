@@ -9,6 +9,7 @@ const available = [
   'browser-preview-storage.js',
   'browser-preview-buffer.js',
   'browser-scrub-commit.js',
+  'browser-timeline-events.js',
   'browser-fullscreen.js',
   'browser-google-cast.js',
   'browser-pwa.js',
