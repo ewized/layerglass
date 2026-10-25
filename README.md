@@ -14,6 +14,12 @@ useful during a print. New manufacturers fit into approved printer adapters;
 Bambu Lab is the first supported manufacturer. See the [product vision](docs/product/vision.md)
 and [roadmap](docs/product/roadmap.md).
 
+[Try the browser demo](https://app.layer.glass/?backend=demo) or visit
+[layer.glass](https://layer.glass). The demo uses generated footage and simulated
+printer readings. Browser mode also opens local video files; connecting a real
+Bambu printer still needs the Python backend for its LAN protocols and DVR.
+Choose the provider in **Settings → Connection**.
+
 ## Run it
 
 Requires Docker Engine and Docker Compose. Build from source for this initial import:
@@ -52,6 +58,7 @@ docker compose -f compose.dev.yaml up --build
 - [Development workflow](docs/development/workflow.md) · [Testing](docs/development/testing.md) · [CI/CD](docs/development/ci-cd.md)
 - [Architecture](docs/architecture/overview.md) · [Approved printer adapters](docs/camera-adapters.md)
 - [Nx workspace and targets](docs/architecture/workspace.md) — Python backend, native web app and product website.
+- [Backend providers](docs/architecture/backend-providers.md) · [Timeline events](docs/timeline-events.md) · [Cloudflare hosting](docs/operations/cloudflare.md)
 - [AGENTS.md](AGENTS.md) — project guidelines and task-specific skill router.
 
 Commits use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).

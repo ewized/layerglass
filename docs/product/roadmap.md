@@ -17,6 +17,13 @@ tags: [product, roadmap]
 - [x] Installable PWA; shell caching disabled by default during development.
 - [x] Containerized tests, GitHub CI and a versioned image release workflow.
 
+## Product workspace
+
+- [x] Selectable Python backend and browser-only demo/local-video provider.
+- [x] Observed print events on the recorded video timeline, without extra polling.
+- [x] Separate Nx backend, web and product website projects.
+- [x] Public site/demo build outputs and scoped Cloudflare hosting workflows.
+
 ## Before a broader release
 
 - [ ] Choose a project license and document the supported-device matrix.

@@ -8,7 +8,7 @@ trap 'rm -rf "$task_js_dir"' EXIT
 cp /app/package.json /app/package-lock.json "$task_js_dir/"
 cp /app/nx.json /app/VERSION /app/README.md /app/AGENTS.md "$task_js_dir/"
 cp /app/.gitignore /app/.nxignore "$task_js_dir/"
-cp -R /app/apps /app/scripts /app/docs /app/.agents /app/.github "$task_js_dir/"
+cp -R /app/apps /app/infra /app/scripts /app/docs /app/.agents /app/.github "$task_js_dir/"
 cd "$task_js_dir"
 # Worktree .git points outside the child container. Nx does not need Git to run
 # explicit projects; ignore Git and never start a long-running background daemon.

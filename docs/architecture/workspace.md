@@ -18,6 +18,7 @@ viewer in one container. No shared library is invented just to fill a directory.
 | `web` | [`apps/web/`](../../apps/web/) | `build`, `test`, `browser`, `serve`, `preview` | `dist/apps/web` native static app |
 | `site` | [`apps/site/`](../../apps/site/) | `build`, `test`, `preview` | `dist/apps/site` product website |
 | `docs` | This vault | `check` | Link/settings/version validation |
+| `cloudflare` | [`infra/cloudflare/`](../../infra/cloudflare/) | `prepare`, `test`, `check`, `dry-run`, `deploy`, `verify` | Public static hosting configuration |
 
 The backend depends on web source because it serves those assets and hashes the
 shell revision. The standalone web build does not depend on Python. Documentation
@@ -76,6 +77,8 @@ intended loopback port when running in Docker.
 The site links to a hosted sample demo and container installation instructions.
 Building these outputs does not create DNS records, publish them or replace the
 existing prototype deployment. Cloudflare deployment configuration is separate.
+See [public hosting](../operations/cloudflare.md) for the isolated Wrangler
+toolchain, nonsecret CI checks, two scoped domains and deployment configuration.
 
 ## Cache policy
 

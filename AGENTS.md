@@ -13,6 +13,7 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
 | Discovery, manufacturer support, access codes, printer telemetry | [Printer skill](.agents/skills/layerglass-printers/SKILL.md) | `apps/backend/`, `apps/backend/providers/` |
 | Nx projects, builds, product website | [Workspace map](docs/architecture/workspace.md), [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `apps/*/project.json`, `apps/site/`, `nx.json` |
 | Docker, tests, workflows, versions, releases | [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `Dockerfile`, `compose*.yaml`, `scripts/`, `.github/` |
+| Public website/app hosting or Cloudflare delivery | [Hosting guide](docs/operations/cloudflare.md), [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `infra/cloudflare/`, `scripts/cloudflare.mjs` |
 | Product scope or documentation | [Vision](docs/product/vision.md), [vault home](docs/index.md) | `docs/` |
 
 ## Project guidelines
