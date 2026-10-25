@@ -104,6 +104,13 @@ Isolated Web Apps, not an ordinary website/PWA, and does not provide an iPhone
 Safari solution. Direct mode does not claim to make an existing Bambu printer
 browser compatible; use its Docker backend.
 
+The [browser-direct RTSPS experiment](../reference/browser-rtsp.md) records an
+actual saved-code camera connection, the camera endpoint's rejected WebSocket
+upgrade, Chromium/WebKit protocol checks and the JavaScript/WASM libraries
+reviewed. It also found a printer HTTPS tunnel whose streaming response lacks
+CORS authorization. Those libraries still need an accessible camera transport
+or a bridge.
+
 ## Runtime and cleanup
 
 After identity is checked on selection and once for the page, in-memory

@@ -37,6 +37,6 @@ Start with the [README](../README.md) for a quick introduction.
 | --- | --- |
 | Printers | [Approved adapters](camera-adapters.md), [telemetry and video time](printer-telemetry.md) |
 | Bambu adapter | [MQTT and identity](reference/bambu-telemetry.md), [certificate bundle](reference/bambu-certificates.md) |
-| Video | [Continuous delivery](video-delivery.md), [live timeline](live-timeline.md), [print events](timeline-events.md), [casting](casting.md) |
+| Video | [Continuous delivery](video-delivery.md), [live timeline](live-timeline.md), [print events](timeline-events.md), [casting](casting.md), [browser-direct RTSPS research](reference/browser-rtsp.md) |
 | Browser UI | [Web Components](web-components.md), [color diffusion math](video-diffusion.md) |
 | Diagnostics and previews | [Debug clipboard](debug-info.md), [local preview storage](local-previews.md) |
