@@ -6,6 +6,8 @@ export class PreviewStorage {
     Object.assign(this, { factory, ranges, storage, maxBytes, maxRecords });
     this.available = Boolean(factory && ranges);
     this.ready = null;
+    this.readers = new Set();
+    this.generation = 0;
   }
 
   fail(error) {
@@ -47,14 +49,19 @@ export class PreviewStorage {
   }
 
   async put(record) {
-    const db = await this.open();
-    if (!db || !this.available || record.blob.size > this.maxBytes) return false;
+    const generation = this.generation;
+    if (!this.available || this.suspended || record.blob.size > this.maxBytes) return false;
     try {
       // Store compressed binary data rather than file-backed Blobs. This avoids
       // WebKit's "Error preparing Blob/File data" path without base64 inflation.
       // Finish conversion BEFORE opening the transaction (Safari auto-commits).
+      // Read immediately, too: waiting for IndexedDB to open can leave WebKit
+      // reading a page-owned Blob after navigation has already started.
       const { blob, ...fields } = record;
-      const data = await blob.arrayBuffer();
+      const data = await this.readBytes(blob);
+      const db = await this.open();
+      if (!db || !this.available || blob.size > this.maxBytes) return false;
+      if (this.suspended || generation !== this.generation) return false;
       await new Promise((resolve, reject) => {
         const tx = db.transaction(['images', 'metadata'], 'readwrite');
         const images = tx.objectStore('images');
@@ -87,8 +94,35 @@ export class PreviewStorage {
         };
       });
       return true;
-    } catch (error) { this.fail(error); return false; }
+    } catch (error) {
+      if (generation === this.generation) this.fail(error);
+      return false;
+    }
   }
+
+  readBytes(blob) {
+    if (typeof FileReader !== 'function') return blob.arrayBuffer();
+    // FileReader can be aborted at pagehide. WebKit can otherwise report a
+    // Blob.arrayBuffer() read as a failed blob URL load while the page unloads.
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      this.readers.add(reader);
+      const finish = callback => { this.readers.delete(reader); callback(); };
+      reader.onload = () => finish(() => resolve(reader.result));
+      reader.onerror = () => finish(() => reject(reader.error));
+      reader.onabort = () => finish(() => reject(new DOMException('Preview read cancelled', 'AbortError')));
+      try { reader.readAsArrayBuffer(blob); }
+      catch (error) { finish(() => reject(error)); }
+    });
+  }
+
+  suspend() {
+    this.suspended = true;
+    this.generation++;
+    for (const reader of this.readers) reader.abort();
+  }
+
+  resume() { this.suspended = false; }
 
   async get(session, key) {
     const db = await this.open();

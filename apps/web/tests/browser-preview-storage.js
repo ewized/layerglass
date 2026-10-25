@@ -15,6 +15,11 @@ for (const [name, engine] of Object.entries({ webkit, chromium })) {
       disk.fail = error => { failures.push({ name: error?.name, message: error?.message }); fail(error); };
       const db = await disk.open();
       const available = disk.available;
+      const interrupted = disk.put({ session: 'storage-test', key: 'interrupted', blob: new Blob([new Uint8Array(300)]) });
+      await new Promise(resolve => queueMicrotask(resolve));
+      disk.suspend();
+      const cancelled = await interrupted === false;
+      disk.resume();
       const results = [];
       for (let i = 0; i < 5; i++) results.push(await disk.put({ session: 'storage-test', key: 'frame:' + i,
         blob: new Blob([new Uint8Array(300).fill(i)], { type: 'image/jpeg' }) }));
@@ -23,13 +28,15 @@ for (const [name, engine] of Object.entries({ webkit, chromium })) {
       const other = await disk.get('another-page', 'frame:4');
       await disk.removeSession('storage-test');
       const closed = await disk.get('storage-test', 'frame:4');
-      return { opened: Boolean(db), available, failures, writes: results, maxBytes: disk.maxBytes,
+      return { opened: Boolean(db), available, cancelled, resumed: disk.available, failures, writes: results, maxBytes: disk.maxBytes,
         oldestEvicted: !old, latest: latest && new Uint8Array(await latest.blob.arrayBuffer())[0],
         anotherPageHidden: !other, closed: !closed };
     });
     console.log(JSON.stringify({ browser: name, ...result }));
     assert.equal(result.opened, true);
     assert.equal(result.available, true);
+    assert.equal(result.cancelled, true);
+    assert.equal(result.resumed, true);
     assert.deepEqual(result.failures, []);
     assert(result.writes.every(Boolean));
     assert.equal(result.oldestEvicted, true);

@@ -201,7 +201,8 @@ export class PreviewCapture {
     listen(image, 'load', () => this.sample());
     listen(video, 'emptied', () => this.cancel());
     listen(video.ownerDocument, 'visibilitychange', () => { if (!playerVisible()) this.cancel(); else this.sample(); });
-    listen(video.ownerDocument.defaultView, 'pagehide', () => this.cancel());
+    listen(video.ownerDocument.defaultView, 'pagehide', () => { this.cancel(); history.disk?.suspend?.(); });
+    listen(video.ownerDocument.defaultView, 'pageshow', () => { history.disk?.resume?.(); this.sample(); });
   }
 
   sample() {

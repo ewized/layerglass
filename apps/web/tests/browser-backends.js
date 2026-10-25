@@ -12,9 +12,11 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
   try {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'block' });
     const page = await context.newPage();
-    const requests = []; const errors = [];
+    const requests = []; const errors = []; const failed = [];
+    let phase = 'chooser';
     page.on('request', request => requests.push(new URL(request.url()).pathname));
-    page.on('pageerror', error => errors.push(error.message));
+    page.on('pageerror', error => errors.push({ phase, message: error.message, stack: error.stack }));
+    page.on('requestfailed', request => failed.push({ phase, url: request.url(), error: request.failure()?.errorText }));
     // Any accidental Python dependency fails immediately in browser-only mode.
     await page.route('**/api/**', route => route.abort());
     await page.route('**/replay/**', route => route.abort());
@@ -45,10 +47,12 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     await page.locator('[data-backend-back]').click();
     requests.length = 0;
     await page.locator('[data-backend-choice="demo"]').click();
+    phase = 'initial demo';
     await page.locator('#backend-picker').waitFor({ state: 'detached' });
     assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('layerglass-backend'))), { type: 'demo' });
     await waitForPlayer(page, ({ app }) => app.video.currentTime > 0 && app.pageReplay.session?.kind === 'file');
     await page.reload();
+    phase = 'saved demo';
     assert.equal(await page.locator('#backend-picker').count(), 0, 'Saved choices bypass onboarding.');
     await waitForPlayer(page, ({ app }) => app.video.currentTime > 2 && app.video.readyState >= 2 &&
       app.pageReplay.session?.kind === 'file' && document.querySelector('#overlay').hidden, null, { timeout: 15000 });
@@ -80,11 +84,13 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     // A local user file reuses the same decoder and loses simulated telemetry.
     await page.locator('#options-button').click();
     const demoFile = await fs.readFile(new URL('../src/demo/printer.mp4', import.meta.url));
+    phase = 'local file';
     await page.locator('#local-media').setInputFiles({ name: 'local-print.mp4', mimeType: 'video/mp4', buffer: demoFile });
     await waitForPlayer(page, ({ app }) => app.video.currentSrc.startsWith('blob:') && app.video.currentTime > 0 && !app.video.paused);
     assert.equal(await page.locator('#camera-name').textContent(), 'Local video');
     assert.equal(await page.locator('video').count(), 1);
     assert.equal(requests.filter(path => path.startsWith('/api/') || path.startsWith('/replay/')).length, 0);
+    if (errors.length) console.error(name, { errors, failed });
     assert.deepEqual(errors, []);
     await context.close();
     console.log(`${name}: first-visit chooser, validation, saved demo/local file, native decoder, replay and settings passed without Python requests`);
