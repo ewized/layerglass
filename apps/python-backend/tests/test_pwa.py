@@ -76,7 +76,7 @@ class PWATests(unittest.TestCase):
         self.assertIn(app.APP_SHELL_REVISION.encode(), source)
         self.assertNotIn(b'__APP_SHELL_REVISION__', source)
         self.assertNotIn(b'__PWA_CACHE_ENABLED__', source)
-        self.assertTrue(source.startswith(b'import '))
+        self.assertTrue(source.startswith(b'export {};'))
         self.assertEqual(worker.headers['Content-Type'], 'text/javascript; charset=utf-8')
         for path in ('/', '/manifest.webmanifest', '/static/player.js', '/static/pwa-shell.js'):
             self.assertEqual(self.get(path).headers['X-App-Shell-Revision'], app.APP_SHELL_REVISION)
@@ -86,7 +86,7 @@ class PWATests(unittest.TestCase):
 
     def test_development_worker_and_ui_responses_disable_storage(self):
         with patch.object(app, 'PWA_CACHE_ENABLED', False):
-            self.assertIn(b'const cacheEnabled = false;', self.get('/service-worker.js').read())
+            self.assertRegex(self.get('/service-worker.js').read(), rb'(?:const|let|var) cacheEnabled = false;')
         for path in ('/', '/service-worker.js', '/manifest.webmanifest',
                      '/static/player.js', '/static/style.css', '/static/pwa.js'):
             with self.subTest(path=path):
@@ -94,7 +94,7 @@ class PWATests(unittest.TestCase):
 
     def test_offline_cache_is_explicitly_opt_in(self):
         with patch.object(app, 'PWA_CACHE_ENABLED', True):
-            self.assertIn(b'const cacheEnabled = true;', self.get('/service-worker.js').read())
+            self.assertRegex(self.get('/service-worker.js').read(), rb'(?:const|let|var) cacheEnabled = true;')
 
     def test_private_api_remains_no_store_without_shell_revision(self):
         for path in ('/api/status', '/api/cameras', '/api/snapshot', '/healthz'):

@@ -23,6 +23,8 @@ class Element extends EventTarget {
       Object.defineProperty(this, property, { get: () => value, set: next => { value = String(next); } });
     }
   }
+  renderMarkers() {}
+  reset() {}
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
 }
 

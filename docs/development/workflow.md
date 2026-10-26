@@ -10,9 +10,10 @@ tags: [development]
 ## Prerequisites and fixture
 
 Use Git, Docker Engine and Docker Compose. Python, FFmpeg, Node and browser
-dependencies run in containers. The browser code uses native ES modules and
-Web Components. Nx orchestrates the projects without bundling the player;
-static builds copy native modules and preserve their public URLs.
+dependencies run in containers. Strict TypeScript compiles to native ES modules;
+Lit supplies the custom-element lifecycle and Emotion supplies cached/extracted CSS.
+Nx preserves the public module URLs and bundles only the third-party UI platform.
+See [coding conventions](coding-conventions.md) and the [workspace map](../architecture/workspace.md).
 
 ```sh
 docker compose -f compose.dev.yaml up --build
@@ -20,8 +21,10 @@ docker compose -f compose.dev.yaml up --build
 
 Open `http://localhost:8100`. The standalone stack generates video and changing
 telemetry, including a second-nozzle example. It never scans a real printer.
-Sources are mounted read-only; reload browser changes, restart the fixture for
-Python changes, and rebuild after dependency changes. Stop with Ctrl-C and
+Sources are mounted read-only. Rebuild/recreate the development stack after browser
+TypeScript, theme or dependency changes so its compiled assets match the source.
+Restart the fixture for Python changes. For standalone UI iteration, run the
+[workspace build and preview targets](../architecture/workspace.md). Stop with Ctrl-C and
 `docker compose -f compose.dev.yaml down`.
 
 Set `LOCAL_UID`/`LOCAL_GID` if your host requires a different file owner. When

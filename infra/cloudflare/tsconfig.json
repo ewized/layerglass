@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.edge.json",
+  "include": [
+    "src/**/*.ts"
+  ]
+}

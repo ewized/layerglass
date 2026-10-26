@@ -7,12 +7,14 @@ tags: [development, testing]
 
 [Vault home](../index.md) · [Workflow](workflow.md)
 
-`./scripts/check.sh all` builds the runtime image, runs all Python and JavaScript
+`./scripts/check.sh all` builds the runtime image, checks strict TypeScript in the
+browser, service-worker, Node and edge environments, runs ESLint and Prettier, then
+runs all Python and JavaScript
 unit tests, validates documentation/version metadata, starts a generated-camera
 fixture, and runs representative Chromium/WebKit regressions. It needs Docker,
 not a printer or host-installed language toolchains. `unit` and `browser` modes
 run the corresponding portion. Logs and screenshots go to ignored `test-results/`.
-The complete run also builds all five Nx application/backend projects twice to verify
+The complete run also builds all six Nx application/backend/contract projects twice to verify
 cache restoration and exports `test-results/project-graph.json`. `workspace`
 mode runs that packaging/graph/documentation check by itself.
 The independent `layerglass-site:test` target writes screenshots into its checkout's
@@ -36,7 +38,8 @@ Pass representative suite names to focus a browser run, for example
 | Media/platform UI | `media.test.js`, `cast-sender.test.js`, browser fullscreen/Google Cast suites |
 | Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
 | Keyboard focus and pending editors | `browser-keyboard-focus.js` (Chromium/WebKit keyboard navigation, Stats, onboarding cancellation and rejected setup) |
-| Delivery artifacts and public routing | `infra/cloudflare/tests/delivery.test.mjs`, `hosting.test.mjs`, local Wrangler checks |
+| Edge SSR and adoption | `infra/cloudflare/tests/rendering.test.ts`, local Wrangler checks, Lit identity/Emotion hydration checks in browser components |
+| Delivery artifacts and public routing | `infra/cloudflare/tests/delivery.test.ts`, `hosting.test.ts`, local Wrangler checks |
 | Shell/update behavior | `test_pwa.py`, `pwa.test.js`, browser PWA suite |
 
 The selected browser list is maintained in [`apps/layerglass/tests/run-browser.js`](../../apps/layerglass/tests/run-browser.js).
@@ -99,7 +102,8 @@ docker image rm local/layerglass-test
 ```
 
 `apps/layerglass/tests/run-js.sh` copies sources into a temporary directory, installs locked npm
-dependencies there, and runs `npm test` by default. Append a script such as
+dependencies there, compiles the browser staging tree and runs type/lint/format
+checks plus `npm test` by default. Append a script such as
 `apps/layerglass/tests/browser-esm.js` for a focused browser run. Use the pinned Playwright image
 from `scripts/check.sh`. Point `VIEWER_URL` at the generated fixture, ideally
 `http://127.0.0.1:8080` in its shared Docker network namespace for secure-context

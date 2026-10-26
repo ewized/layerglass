@@ -79,7 +79,7 @@ for (const [name, type] of Object.entries({ chromium, webkit })) {
         assert.equal(style.headers()['cache-control'], 'no-store');
         assert.equal(style.headers()['x-app-shell-revision'], navigation.headers()['x-app-shell-revision']);
         assert.deepEqual(await shellCaches(), []);
-        assert.match(await page.evaluate(() => fetch('/service-worker.js').then(response => response.text())), /const cacheEnabled = false;/);
+        assert.match(await page.evaluate(() => fetch('/service-worker.js').then(response => response.text())), /(?:const|let|var) cacheEnabled = false;/);
         if (launch === 0) {
           navigation = await page.reload({ waitUntil: 'load' });
           await ready();

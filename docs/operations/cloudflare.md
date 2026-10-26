@@ -7,7 +7,7 @@ tags: [operations, cloudflare, delivery]
 
 [Vault home](../index.md) · [CI/CD](../development/ci-cd.md) · [Local installation](installation.md)
 
-Cloudflare serves two public static builds. It is optional for the self-hosted
+Cloudflare serves the static product website and renders the public app shell at the edge. It is optional for the self-hosted
 viewer and has no printer access codes, camera proxy, recordings or telemetry
 storage. The Python backend and its local viewer continue to work on the user's
 own hardware without a Cloudflare account.
@@ -37,8 +37,12 @@ MQTT TCP connection. Those are Python backend capabilities.
 Each [Wrangler configuration](../../infra/cloudflare/layerglass.wrangler.json) contains
 exactly one custom domain. The equivalent
 [website configuration](../../infra/cloudflare/layerglass-site.wrangler.json) is separate.
-There is no Worker application code, API route, service binding, R2 bucket, KV
-namespace, analytics binding or access to a printer network. Unknown paths,
+The app Worker uses only its own `ASSETS` binding. Its
+[renderer](../../infra/cloudflare/src/worker.ts) shares the
+[backend-choice template](../../apps/layerglass/src/components/backend-template.ts)
+with the Lit client and emits public initial markup. It accepts no backend URL,
+printer credentials or LAN proxy requests. There is no API route, external service
+binding, R2 bucket, KV namespace or printer-network access. Unknown paths,
 including `/api/backend`, return 404; they are never rewritten to the app HTML.
 Workers.dev and version preview URLs are disabled. No zone-wide rules, unrelated
 Workers or existing deployment hosts are changed by these configurations.
@@ -54,7 +58,7 @@ service worker has shell caching disabled for active development. The product
 site uses `max-age=0, must-revalidate` and ETags. Browser IndexedDB thumbnail
 buffers are separate temporary media storage and retain their existing policy.
 
-[`prepare`](../../scripts/cloudflare.mjs) places the appropriate `_headers` file
+[`prepare`](../../scripts/cloudflare.ts) places the appropriate `_headers` file
 in each build output. The templates add CSP, framing protection, HTTPS, MIME and
 referrer headers without disabling fullscreen, PiP or remote playback. The
 website runs no script. The app permits scripts from its own origin plus the
@@ -108,8 +112,8 @@ docker run --rm --init --name codex__layerglass_cloudflare_check \
     npx nx run cloudflare:prepare
     npm --prefix infra/cloudflare test
     npm --prefix infra/cloudflare run test:local
-    node scripts/cloudflare.mjs check all
-    node scripts/cloudflare.mjs dry-run all
+    node scripts/cloudflare.ts check all
+    node scripts/cloudflare.ts dry-run all
   '
 ```
 
@@ -142,7 +146,7 @@ docker run --rm --init --name codex__layerglass_cloudflare_deploy \
   --env-file /secure/layerglass-cloudflare.env \
   -e WRANGLER_SEND_METRICS=false \
   -v "${LAYERGLASS_HOST_PATH:-$PWD}:/app" -w /app \
-  node:24-bookworm node scripts/cloudflare.mjs deploy all
+  node:24-bookworm node scripts/cloudflare.ts deploy all
 ```
 
 Wrangler creates/updates only the two named Workers and their custom domains.
@@ -150,7 +154,7 @@ Cloudflare provisions the domains' DNS and certificates; do not add manual
 placeholder DNS records. Check for an existing hostname owner before first
 deployment. The zone must be active and owned by the selected account.
 
-`node scripts/cloudflare.mjs verify all` checks HTTPS, security/freshness headers,
+`node scripts/cloudflare.ts verify all` checks HTTPS, security/freshness headers,
 JavaScript MIME, the backend chooser, disabled shell cache and real 404s for unknown
 API paths. Run it in the same Node Docker image. Also inspect the app in a browser
 and confirm the demo creates no Python `/api` requests. First certificate
@@ -164,14 +168,20 @@ production environment. No repository enable variable is required.
 The [CI entrypoint](../../.github/workflows/ci.yml) runs reusable source and
 [hosting checks](../../.github/workflows/cloudflare-check.yml) once per pipeline.
 Hosting builds both static apps, checks policy and routing with local Wrangler,
-then records all file hashes and the full Git revision in one uploaded artifact.
+then records all public file hashes plus the private edge renderer and the full Git revision in one uploaded artifact.
 These checks have no deployment credentials and also run for branches and PRs.
 
 After both checks pass on `main`, the
 [website publishing job](../../.github/workflows/cloudflare.yml) downloads that
 exact artifact by ID, verifies its revision and complete file manifest, and
 publishes both domains without rebuilding. It checks HTTPS, headers, module MIME,
-404 routing and public entrypoint bytes against the validated output. The same
+404 routing and public entrypoint bytes against the validated output. The deterministic
+edge HTML is compared with the same canonical render function used by the build;
+all other checked assets retain their exact artifact hashes. The renderer bundle
+is part of that artifact and is never rebuilt by the publishing job. The app
+configuration uses `no_bundle` and disables additional-module discovery so Wrangler
+uploads that self-contained validated bundle. Artifact upload explicitly includes
+the `.edge` directory; the manifest bounds and hashes its only permitted file. The same
 main pipeline also publishes the Docker image; see [CI/CD](../development/ci-cd.md).
 
 Set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in `cloudflare-production`,

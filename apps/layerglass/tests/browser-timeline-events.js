@@ -604,7 +604,7 @@ async function jpegEventViewer(browser, initial, { beforePause, holdImage = fals
 } } = {}) {
   const { createServer } = await import('node:http');
   const { readFile } = await import('node:fs/promises');
-  const source = new URL('../src/', import.meta.url), streams = new Set(), requests = [], opens = [];
+  const source = new URL('../../../dist/browser/apps/layerglass/src/', import.meta.url), streams = new Set(), requests = [], opens = [];
   let current = initial;
   const camera = current.session.camera_id;
   const catalog = { default_camera_id: camera, cameras: [{ id: camera, name: 'Generated event camera',
@@ -857,7 +857,7 @@ async function preciseJpegEvents(engine, name) {
       assert.deepEqual(keyboard.calls, [2.5, 2.5]); assert.equal(keyboard.emits.length, 2);
       const requestCount = v.requests.length;
       await markers.locator('.timeline-event').hover();
-      await v.page.evaluate(() => document.querySelector('#timeline-events').render());
+      await v.page.evaluate(() => document.querySelector('#timeline-events').renderMarkers());
       assert.equal(v.requests.length, requestCount, 'Render and hover make no additional history/media request');
       const controls = await v.page.evaluate(({ app }) => {
         const replay = app.pageReplay, markers = document.querySelector('#timeline-events'), model = markers.history, slider = replay.slider;
@@ -865,26 +865,26 @@ async function preciseJpegEvents(engine, name) {
         const result = {}, count = () => [window.eventCalls.length, window.eventEmits.length];
         const freeze = (start, end) => { replay.scrubbing = true; slider.min = start; slider.max = end; slider.disabled = false; };
         const difference = before => count().map((value, index) => value - before[index]);
-        freeze(0, 30); markers.render();
+        freeze(0, 30); markers.renderMarkers();
         result.mapping = { fraction: markers.groups[0].fraction, edge: replay.timeline.edge,
           label: markers.querySelector('button').getAttribute('aria-label') };
         // Cached renderer coordinates are not authority for activation.
         markers.groups[0].events[0].position = -99;
         const fresh = count(); markers.querySelector('button').click();
         result.fresh = { difference: difference(fresh), target: window.eventCalls.at(-1), emit: window.eventEmits.at(-1).position };
-        freeze(0, 30); markers.render();
+        freeze(0, 30); markers.renderMarkers();
         freeze(10, 30); const stale = count(); markers.querySelector('button').click();
         result.staleButton = difference(stale);
         // A real connected grouped menu can outlive its current display window.
         model.events.push({ id: '1002.75:resumed', at: 1002.75, type: 'resumed', label: 'Print resumed' });
-        freeze(0, 30); markers.render(); markers.querySelector('button').click();
+        freeze(0, 30); markers.renderMarkers(); markers.querySelector('button').click();
         const menu = markers.querySelector('[data-event]');
         freeze(10, 30); const staleMenu = count(); menu.click(); result.staleMenu = difference(staleMenu);
-        markers.closeMenu(); markers.render(); result.offscreen = { groups: markers.groups.length, summaries: model.events.length };
-        freeze(0, 30); markers.render(); result.revealed = markers.groups.flatMap(group => group.events.map(event => event.id));
+        markers.closeMenu(); markers.renderMarkers(); result.offscreen = { groups: markers.groups.length, summaries: model.events.length };
+        freeze(0, 30); markers.renderMarkers(); result.revealed = markers.groups.flatMap(group => group.events.map(event => event.id));
         // Inclusive actual bounds; these are model summaries, not extra inferred transitions.
         model.events = [{ id: 'lower', at: 1000, type: 'started', label: 'Lower' }, { id: 'upper', at: 1030, type: 'finished', label: 'Upper' }];
-        freeze(0, 30); markers.render(); result.inclusive = markers.groups.flatMap(group => group.events.map(event => event.position));
+        freeze(0, 30); markers.renderMarkers(); result.inclusive = markers.groups.flatMap(group => group.events.map(event => event.position));
         // An older raw descriptor must not override the accepted sequence guard.
         replay.jpegDescriptor(); const accepted = replay.imageDescriptor;
         replay.session = { ...owner, jpeg_frame: { ...owner.jpeg_frame, sequence: 0, position: 1 } };
@@ -898,7 +898,7 @@ async function preciseJpegEvents(engine, name) {
           if (mode === 'invalid') replay.session.jpeg_frame.sequence = -1;
           if (mode === 'hls' || mode === 'file') replay.session.kind = mode;
           if (mode === 'remote') replay.remote = {};
-          freeze(0, 30); markers.render();
+          freeze(0, 30); markers.renderMarkers();
           const legacyEvent = markers.groups.flatMap(group => group.events)[0];
           freeze(10, 30);
           const seek = replay.seek; let target = null; replay.seek = value => { target = value; };
@@ -906,8 +906,8 @@ async function preciseJpegEvents(engine, name) {
           result[mode] = { local: markers.localJpegEvents(replay, slider) === null, target };
           replay.remote = null; replay.session = owner;
         }
-        freeze(0, 30); markers.render(); slider.disabled = true;
-        const disabled = count(); markers.seek({ id: originalEvents[0].id, position: 2.5 }); markers.render();
+        freeze(0, 30); markers.renderMarkers(); slider.disabled = true;
+        const disabled = count(); markers.seek({ id: originalEvents[0].id, position: 2.5 }); markers.renderMarkers();
         result.disabled = { difference: difference(disabled), groups: markers.groups.length };
         slider.disabled = false;
         result.identity = owner === replay.session && modelOwner === model.session && original === JSON.stringify(owner);
@@ -937,7 +937,7 @@ async function preciseJpegEvents(engine, name) {
         assert.equal(before.groups[0].events[0].position, data.target);
         const identity = await v.page.evaluate(({ app }) => {
           const markers = document.querySelector('#timeline-events'), owner = app.pageReplay.session, modelOwner = markers.history.session, original = JSON.stringify(owner);
-          markers.render();
+          markers.renderMarkers();
           return owner === app.pageReplay.session && modelOwner === markers.history.session && original === JSON.stringify(owner);
         }, { app: v.app });
         assert.equal(identity, true);

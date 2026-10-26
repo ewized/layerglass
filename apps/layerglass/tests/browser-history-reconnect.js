@@ -6,7 +6,7 @@ import { chromium, webkit } from 'playwright';
 import { installCastFixture } from './cast-fixture.js';
 
 const fixture = JSON.parse(await fs.readFile(new URL('./fixtures/history-reconnect.json', import.meta.url), 'utf8'));
-const source = new URL('../src/', import.meta.url);
+const source = new URL('../../../dist/browser/apps/layerglass/src/', import.meta.url);
 
 async function until(predicate) {
   const deadline = Date.now() + 5000;

@@ -8,8 +8,8 @@ import { chromium, webkit } from 'playwright';
 const root = new URL('../../../', import.meta.url);
 const screenshots = resolve(process.env.LAYERGLASS_SITE_TEST_RESULTS || fileURLToPath(new URL('test-results/', root)));
 await mkdir(screenshots, { recursive: true });
-const server = spawn(process.execPath, ['scripts/serve-static.mjs', 'layerglass-site', '8102'], { cwd: root, stdio: 'pipe' });
-const playerServer = spawn(process.execPath, ['scripts/serve-static.mjs', 'layerglass', '8101'], { cwd: root, stdio: 'pipe' });
+const server = spawn(process.execPath, ['scripts/serve-static.ts', 'layerglass-site', '8102'], { cwd: root, stdio: 'pipe' });
+const playerServer = spawn(process.execPath, ['scripts/serve-static.ts', 'layerglass', '8101'], { cwd: root, stdio: 'pipe' });
 let output = '';
 playerServer.stderr.on('data', chunk => { output += chunk; });
 server.stderr.on('data', chunk => { output += chunk; });
@@ -33,7 +33,7 @@ try {
   const worker = await readFile(new URL('dist/apps/layerglass/service-worker.js', root), 'utf8');
   assert(!worker.includes('__APP_SHELL_REVISION__'));
   assert(!worker.includes('__PWA_CACHE_ENABLED__'));
-  assert(worker.includes('const cacheEnabled = false;'));
+  assert.match(worker, /(?:const|let|var) cacheEnabled = false;/);
 
   for (const [name, engine] of Object.entries({ chromium, webkit })) {
     const browser = await engine.launch({ headless: true });

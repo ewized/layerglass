@@ -19,7 +19,7 @@
       ],
       "cache": false,
       "options": {
-        "command": "node scripts/cloudflare.mjs prepare all"
+        "command": "node scripts/cloudflare.ts prepare all"
       }
     },
     "test": {
@@ -36,7 +36,7 @@
       ],
       "cache": false,
       "options": {
-        "command": "node scripts/cloudflare.mjs check all"
+        "command": "node scripts/cloudflare.ts check all"
       }
     },
     "dry-run": {
@@ -46,7 +46,7 @@
       ],
       "cache": false,
       "options": {
-        "command": "node scripts/cloudflare.mjs dry-run all"
+        "command": "node scripts/cloudflare.ts dry-run all"
       }
     },
     "deploy": {
@@ -56,14 +56,14 @@
       ],
       "cache": false,
       "options": {
-        "command": "node scripts/cloudflare.mjs deploy all"
+        "command": "node scripts/cloudflare.ts deploy all"
       }
     },
     "verify": {
       "executor": "nx:run-commands",
       "cache": false,
       "options": {
-        "command": "node scripts/cloudflare.mjs verify all"
+        "command": "node scripts/cloudflare.ts verify all"
       }
     }
   }

@@ -59,18 +59,18 @@ jobs:
             -e LAYERGLASS_REVISION="$GITHUB_SHA" -e WRANGLER_SEND_METRICS=false \
             -v "$PWD:/app" -w /app node:24-bookworm sh -ec '
               npm --prefix infra/cloudflare ci
-              node scripts/delivery.mjs verify "$LAYERGLASS_REVISION"
-              node scripts/cloudflare.mjs check all
-              node scripts/cloudflare.mjs deploy all
-              node scripts/delivery.mjs verify "$LAYERGLASS_REVISION"
+              node scripts/delivery.ts verify "$LAYERGLASS_REVISION"
+              node scripts/cloudflare.ts check all
+              node scripts/cloudflare.ts deploy all
+              node scripts/delivery.ts verify "$LAYERGLASS_REVISION"
             '
       - name: Verify deployed HTTPS, headers and exact asset bytes
         run: |
           docker run --rm --init --name codex__layerglass_cf_verify__${{ github.run_id }} \
             --user "$(id -u):$(id -g)" -e LAYERGLASS_REVISION="$GITHUB_SHA" \
             -v "$PWD:/app:ro" -w /app node:24-bookworm sh -ec '
-              node scripts/cloudflare.mjs verify all
-              node scripts/delivery.mjs published "$LAYERGLASS_REVISION"
+              node scripts/cloudflare.ts verify all
+              node scripts/delivery.ts published "$LAYERGLASS_REVISION"
             '
       - name: Record deployment
         env:

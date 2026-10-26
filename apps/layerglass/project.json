@@ -14,13 +14,17 @@
       "inputs": [
         "default",
         "^default",
-        "{workspaceRoot}/scripts/build-static.mjs"
+        "{workspaceRoot}/scripts/build-static.ts",
+        "{workspaceRoot}/scripts/compile-browser.ts",
+        "{workspaceRoot}/infra/cloudflare/src/**/*.ts"
       ],
       "outputs": [
-        "{workspaceRoot}/dist/apps/layerglass"
+        "{workspaceRoot}/dist/apps/layerglass",
+        "{workspaceRoot}/dist/apps/.edge/layerglass.mjs",
+        "{workspaceRoot}/dist/browser/apps/layerglass/src"
       ],
       "options": {
-        "command": "node scripts/build-static.mjs layerglass"
+        "command": "node scripts/build-static.ts layerglass"
       },
       "dependsOn": [
         "^build"
@@ -35,7 +39,7 @@
       ],
       "outputs": [],
       "options": {
-        "command": "node --experimental-vm-modules --test apps/layerglass/tests/*.test.js"
+        "command": "node --import tsx --experimental-vm-modules --test apps/layerglass/tests/*.test.js"
       }
     },
     "browser": {
@@ -61,12 +65,24 @@
         "build"
       ],
       "options": {
-        "command": "node scripts/serve-static.mjs layerglass 8101"
+        "command": "node scripts/serve-static.ts layerglass 8101"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default"
+      ],
+      "options": {
+        "command": "node scripts/typecheck.ts"
       }
     }
   },
   "implicitDependencies": [
     "demo-backend",
-    "local-backend"
+    "local-backend",
+    "backend-contracts"
   ]
 }

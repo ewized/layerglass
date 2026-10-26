@@ -8,12 +8,13 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
 
 | Task | Read first | Main source |
 | --- | --- | --- |
+| TypeScript, coding conventions, Lit, Emotion, edge rendering | [TypeScript skill](.agents/skills/layerglass-typescript/SKILL.md) | [Canonical coding guide](docs/development/coding-conventions.md) |
 | Player, Web Components, scrubbing, previews, PiP, casting | [Player skill](.agents/skills/layerglass-player/SKILL.md) | `apps/layerglass/src/`, `apps/python-backend/replay.py` |
 | Backend selection, browser mode, hosted frontend connections | [Backend providers](docs/architecture/backend-providers.md), [Player skill](.agents/skills/layerglass-player/SKILL.md) | `apps/layerglass/src/backend/`, `apps/demo-backend/`, `apps/local-backend/`, `apps/python-backend/app.py` |
 | Discovery, manufacturer support, access codes, printer telemetry | [Printer skill](.agents/skills/layerglass-printers/SKILL.md) | `apps/python-backend/`, `apps/python-backend/providers/` |
 | Nx projects, builds, product website | [Workspace map](docs/architecture/workspace.md), [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `apps/*/project.json`, `apps/layerglass-site/`, `nx.json` |
 | Docker, tests, workflows, versions, releases | [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `Dockerfile`, `compose*.yaml`, `scripts/`, `.github/` |
-| Public website/app hosting or Cloudflare delivery | [Hosting guide](docs/operations/cloudflare.md), [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `infra/cloudflare/`, `scripts/cloudflare.mjs` |
+| Public website/app hosting or Cloudflare delivery | [Hosting guide](docs/operations/cloudflare.md), [Delivery skill](.agents/skills/layerglass-delivery/SKILL.md) | `infra/cloudflare/`, `scripts/cloudflare.ts` |
 | Product scope or documentation | [Vision](docs/product/vision.md), [vault home](docs/index.md) | `docs/` |
 
 ## Project guidelines
@@ -35,8 +36,9 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
 - Prefer native ES modules and Web Components. Preserve the single native video
   decoder and existing browser storage keys unless a task includes a migration.
 - Nx manages `python-backend`, `demo-backend`, `local-backend`, `layerglass`
-  and `layerglass-site` targets. Keep the player native
-  ESM; build static hosting outputs without introducing a framework or runtime CDN.
+  and `layerglass-site` targets plus the shared `backend-contracts` library. Keep the player native
+  ESM; use Lit custom elements and the document-scoped Emotion cache described in
+  the [coding guide](docs/development/coding-conventions.md). Bundle dependencies locally.
   Cache only deterministic tasks, never discovery, browser fixtures or runtime state.
 - Use Docker for project runtimes and tests. Run focused checks during development
   and `./scripts/check.sh all` for changes spanning the core parts. The

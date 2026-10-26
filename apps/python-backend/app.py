@@ -26,15 +26,17 @@ from providers import validate_source
 
 LOG = logging.getLogger('printer-camera')
 APPS = Path(__file__).resolve().parent.parent
-STATIC = Path(os.environ.get('LAYERGLASS_STATIC_DIR', APPS / 'layerglass' / 'src'))
+STATIC = Path(os.environ.get('LAYERGLASS_STATIC_DIR',
+                             APPS.parent / 'dist' / 'browser' / 'apps' / 'layerglass' / 'src'))
 # Only explicitly shipped browser modules are public; Python providers, tests
 # and workspace configuration remain outside every asset root.
-BROWSER_MODULES = {f'/{name}/src/': APPS / name / 'src'
+BROWSER_APPS = Path(os.environ.get('LAYERGLASS_BROWSER_APPS_DIR', STATIC.parent.parent))
+BROWSER_MODULES = {f'/{name}/src/': BROWSER_APPS / name / 'src'
                    for name in json.loads((APPS / 'layerglass' / 'browser-modules.json').read_text())}
 
 
 def app_shell_revision():
-    """Change the worker whenever shipped UI assets change, without a build step."""
+    """Change the worker whenever compiled UI assets change."""
     digest = hashlib.sha256()
     for prefix, directory in [('/static/', STATIC), *BROWSER_MODULES.items()]:
         for file in sorted(directory.rglob('*')):

@@ -14,13 +14,14 @@
       "inputs": [
         "default",
         "^default",
-        "{workspaceRoot}/scripts/build-browser-backend.mjs"
+        "{workspaceRoot}/scripts/build-browser-backend.ts",
+        "{workspaceRoot}/scripts/compile-browser.ts"
       ],
       "outputs": [
         "{workspaceRoot}/dist/backends/local-backend"
       ],
       "options": {
-        "command": "node scripts/build-browser-backend.mjs local-backend"
+        "command": "node scripts/build-browser-backend.ts local-backend"
       }
     },
     "test": {
@@ -32,8 +33,22 @@
       ],
       "outputs": [],
       "options": {
-        "command": "node --test apps/local-backend/tests/*.test.js"
+        "command": "node --import tsx --test apps/local-backend/tests/*.test.js"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default"
+      ],
+      "options": {
+        "command": "tsc -p apps/local-backend/tsconfig.json"
       }
     }
-  }
+  },
+  "implicitDependencies": [
+    "backend-contracts"
+  ]
 }

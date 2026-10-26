@@ -14,7 +14,7 @@ come from `apps/layerglass/src/icons/icon.svg`. The printer/play mark stays insi
 maskable safe area. Safari home-screen metadata and the existing safe-area CSS
 support the iPhone player without adding installation UI to the video.
 
-`apps/layerglass/src/pwa.js` registers the root `/service-worker.js` as a native module after
+`apps/layerglass/src/pwa.ts` registers the root `/service-worker.js` as a native module after
 the page loads, only in secure contexts. Unsupported browsers and plain LAN HTTP
 continue using the player normally. All dependencies are local; there is no new
 package, bundler, CDN or JavaScript video decoder.
@@ -41,9 +41,19 @@ fast scrubbing. This stores compressed media bytes, never app code or responses
 in Cache Storage, and does not make reloads serve stale code. Session cleanup,
 limits and quota fallback are described in [local-previews.md](local-previews.md).
 
+## Browser worker and edge rendering
+
+The browser service worker controls browser requests and the optional offline shell.
+Cloudflare's separate request handler renders the hosted backend chooser at the edge;
+see [rendering decision](decisions/0002-typescript-lit-and-edge.md). Normal development
+navigation goes to that edge renderer because shell caching remains disabled.
+Printer APIs, media and telemetry continue connecting directly to the selected backend.
+The Python Docker image serves the same compiled browser modules without needing Node
+in its runtime. This distinction does not change IndexedDB thumbnail retention.
+
 ## Optional offline storage boundary
 
-`apps/layerglass/src/pwa-shell.js` is the complete, explicit allowlist of public UI files.
+`apps/layerglass/src/pwa-shell.ts` is the complete, explicit allowlist of public UI files.
 The worker answers only GETs for those exact same-origin URLs without a query
 or Range header. It never intercepts commands, API/SSE, streaming video, HLS,
 JPEG frames, other sites or arbitrary static paths. No runtime response cache

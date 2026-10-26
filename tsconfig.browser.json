@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"]
+  },
+  "include": [
+    "apps/layerglass/src/**/*.ts",
+    "apps/demo-backend/src/**/*.ts",
+    "apps/local-backend/src/**/*.ts",
+    "libs/**/*.ts",
+    "types/browser.d.ts",
+    "apps/backend-contracts/src/**/*.ts"
+  ],
+  "exclude": ["apps/layerglass/src/service-worker.ts"]
+}

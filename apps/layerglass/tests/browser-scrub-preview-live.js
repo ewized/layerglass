@@ -67,7 +67,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
       const keys = await caches.keys();
       const requests = (await Promise.all(keys.map(async key => (await (await caches.open(key)).keys())))).flat();
       const worker = await (await fetch('/service-worker.js')).text();
-      if (worker.includes('const cacheEnabled = false;') && requests.length) throw new Error('Development shell caching must stay disabled.');
+      if (/(?:const|let|var) cacheEnabled = false;/.test(worker) && requests.length) throw new Error('Development shell caching must stay disabled.');
       if (requests.some(request => /\/(replay|api)\//.test(new URL(request.url).pathname))) throw new Error('Media entered the PWA cache.');
     });
     await page.mouse.move(10, 10);

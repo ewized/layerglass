@@ -39,7 +39,7 @@ changes and delete their remote branches after integration.
 ## Build once, promote the validated files
 
 The hosting job prepares `dist/apps/layerglass-site` and `dist/apps/layerglass`, including security
-and freshness headers. [The delivery helper](../../scripts/delivery.mjs) writes a
+and freshness headers. [The delivery helper](../../scripts/delivery.ts) writes a
 manifest outside the public directories containing the full Git SHA and every
 asset's SHA-256 and size. It rejects unexpected output directories, private
 configuration and symlinks. The manifest and both builds form one immutable

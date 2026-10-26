@@ -14,13 +14,27 @@
       "{workspaceRoot}/package.json",
       "{workspaceRoot}/package-lock.json",
       "{workspaceRoot}/VERSION",
-      { "runtime": "node --version" }
+      {
+        "runtime": "node --version"
+      },
+      "{workspaceRoot}/tsconfig*.json",
+      "{workspaceRoot}/types/**/*.d.ts",
+      "{workspaceRoot}/eslint.config.ts",
+      "{workspaceRoot}/.prettierrc.json"
     ]
   },
   "targetDefaults": {
-    "build": { "cache": true },
-    "serve": { "cache": false },
-    "preview": { "cache": false },
-    "browser": { "cache": false }
+    "build": {
+      "cache": true
+    },
+    "serve": {
+      "cache": false
+    },
+    "preview": {
+      "cache": false
+    },
+    "browser": {
+      "cache": false
+    }
   }
 }

@@ -1,0 +1,38 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "backend-contracts",
+  "projectType": "library",
+  "sourceRoot": "apps/backend-contracts/src",
+  "tags": [
+    "type:library",
+    "runtime:browser",
+    "scope:protocol"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "{workspaceRoot}/scripts/compile-browser.ts",
+        "{workspaceRoot}/scripts/compile-browser.ts"
+      ],
+      "outputs": [
+        "{workspaceRoot}/dist/backends/backend-contracts"
+      ],
+      "options": {
+        "command": "node scripts/build-browser-backend.ts backend-contracts"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default"
+      ],
+      "options": {
+        "command": "tsc -p apps/backend-contracts/tsconfig.json"
+      }
+    }
+  }
+}
