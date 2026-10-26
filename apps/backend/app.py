@@ -298,6 +298,8 @@ class Relay:
                 self._terminate(process)
             if reader is not None:
                 reader.join(timeout=1)
+            if previous_directory is not None:
+                shutil.rmtree(previous_directory, ignore_errors=True)
             with self.lock:
                 self.state = 'stopped'
 

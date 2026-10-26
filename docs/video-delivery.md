@@ -21,6 +21,12 @@ and renderer through MediaSource, allowing the browser to use its hardware
 decoder when supported by the device and codec. hls.js does not decode the
 video in JavaScript. The main picture stays on the native video element.
 
+Stopping or replacing an HLS relay removes its final temporary live window after
+FFmpeg exits, including reconfiguration and forgetting a printer. Previously
+issued URLs for that window then return 404. Cleanup is limited to the stopped
+relay's generation; other live relays and retained page archives have separate
+ownership.
+
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified

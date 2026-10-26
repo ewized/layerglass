@@ -10,12 +10,14 @@ import tempfile
 import threading
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app import Relay, Settings, ViewerServer, ffmpeg_command, safe_error
+from cameras import CameraRegistry
+from discovery import endpoint
 
 FAKE_SOURCE = 'rtsps://example-user:private-fixture-token@192.0.2.1:322/live'
 
@@ -115,6 +117,69 @@ while True:
     def current_pid(self):
         generation = self.status()['generation']
         return int((self.relay.settings.stream_root / generation / 'pid').read_text())
+
+    def media_paths(self, status):
+        playlist = status['playlist_url']
+        with self.get(playlist) as response:
+            manifest = response.read().decode()
+        segment = next(line for line in manifest.splitlines() if line.endswith('.ts'))
+        return playlist, playlist.replace('live.m3u8', segment)
+
+    def assert_missing_media(self, paths):
+        for path in paths:
+            with self.subTest(path=path), self.assertRaises(HTTPError) as error:
+                self.get(path)
+            self.assertEqual(error.exception.code, 404)
+
+    def test_stop_removes_final_media_and_preserves_sibling_directory(self):
+        paths = self.media_paths(self.status())
+        retired = self.relay.directory
+        sibling = retired.parent / 'unrelated' / 'keep.ts'
+        sibling.parent.mkdir()
+        sibling.write_bytes(b'other relay')
+        self.relay.close()
+        self.assertFalse(retired.exists())
+        self.assert_missing_media(paths)
+        self.assertEqual(sibling.read_bytes(), b'other relay')
+
+    def test_stopping_old_relay_preserves_a_running_replacement(self):
+        paths = self.media_paths(self.status())
+        retired = self.relay.directory
+        replacement = Relay(self.relay.settings)
+        replacement.start()
+        self.addCleanup(replacement.close)
+        self.wait(lambda: replacement.status()['state'] == 'live')
+        replacement_paths = self.media_paths(replacement.status())
+        self.relay.close()
+        self.assertFalse(retired.exists())
+        self.assert_missing_media(paths)
+        self.assertTrue(replacement.directory.is_dir())
+        with self.get(replacement_paths[1]) as response:
+            self.assertEqual(response.read(), b'fixture-media')
+
+    def test_reconfigure_and_forget_remove_retired_live_generations(self):
+        self.relay.close()
+        settings = replace(self.relay.settings, stream_url='', stream_root=Path(self.temp.name) / 'registered')
+        with patch.dict(os.environ, {'CAMERA_DATA_DIR': self.temp.name, 'DISCOVERY_CIDRS': ''}):
+            registry = CameraRegistry(settings, Relay, telemetry_factory=lambda *_args, **_kwargs: Mock())
+            self.addCleanup(registry.close)
+            camera = dict(endpoint('rtsps://192.168.50.2:322/streaming/live/1', provider='bambu'), model='N6')
+            registry.discovery.found = [camera]
+            self.server.registry, self.server.relay = registry, None
+            registry.configure(camera['id'], 'first-fixture-code')
+            first = registry.get_relay(camera['id'])
+            self.wait(lambda: first.status()['state'] == 'live')
+            first_paths = self.media_paths(registry.status(camera['id']))
+            registry.configure(camera['id'], 'second-fixture-code')
+            second = registry.get_relay(camera['id'])
+            self.wait(lambda: second.status()['state'] == 'live')
+            second_paths = self.media_paths(registry.status(camera['id']))
+            self.assertFalse(first.directory.exists())
+            self.assert_missing_media(first_paths)
+            self.assertTrue(second.directory.is_dir())
+            registry.forget(camera['id'])
+            self.assertFalse(second.directory.exists())
+            self.assert_missing_media(second_paths)
 
     def test_http_serves_video_without_disclosing_camera_credentials(self):
         status = self.status()
