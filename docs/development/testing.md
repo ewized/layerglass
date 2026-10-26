@@ -51,6 +51,18 @@ The fixture explicitly trusts only its second loopback origin for the selected
 backend check. This exercises native video, SSE and protected POSTs across
 origins; deployment defaults still trust no hosted origin until configured.
 
+The timeline-events JPEG fixture waits for a complete native image owned by the
+current session, camera, controller version and frame source before preparing
+Pause. It calls the production Pause action only when playback is playing, then
+keeps the original paused/image readiness wait and strict pixel, recorded-clock,
+Stats, marker and single-seek assertions. Playing and already-paused entry
+controls must retain the same image and session; held image bodies and mismatched
+owners must fail setup before Pause or marker assertions. Setup failures include
+bounded controller/image/video snapshots and close their context and HTTP server
+without replacing the original error. All existing wait and suite budgets apply.
+These generated browser controls establish the fixture contract; they do not
+prove the cause of a historical CI timeout or physical device behavior.
+
 The transport regression includes forward seeks that skip just one recorded
 fragment. Those seeks must reposition the paced archive response immediately;
 ordinary consecutive playback keeps the existing response. The browser checks

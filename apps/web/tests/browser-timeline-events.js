@@ -572,7 +572,35 @@ const eventJpegData = {
 };
 const eventJpegColors = JSON.parse(await (await import('node:fs/promises')).readFile(new URL('./fixtures/jpeg-clock.json', import.meta.url), 'utf8')).colors;
 
-async function jpegEventViewer(browser, initial) {
+function jpegEventReady({ app, owner }) {
+  const replay = app.pageReplay, session = replay.session, frame = replay.decodedImage();
+  const image = document.querySelector('#jpeg');
+  if (!session || !frame || replay.attaching || replay.imageLoading || !image.complete ||
+      image.naturalWidth <= 0 || image.naturalHeight <= 0) return false;
+  const source = new URL(frame.source, location.href), expected = new URL(session.frame_url, location.href);
+  return frame.session === owner.session && frame.camera === owner.camera &&
+    frame.session === session.session_id && frame.camera === session.camera_id && frame.version === replay.version &&
+    image === replay.image && image.src === frame.url && source.origin === expected.origin && source.pathname === expected.pathname;
+}
+
+function jpegEventState({ app }) {
+  const replay = app.pageReplay, image = document.querySelector('#jpeg'), video = app.video;
+  const pending = replay.imageRequest;
+  return { paused: replay.paused, followLive: replay.followLive, attaching: replay.attaching,
+    mediaRestore: replay.mediaRestore, position: replay.position, version: replay.version,
+    owner: { session: replay.session?.session_id, camera: replay.session?.camera_id },
+    frame: replay.decodedImage(), storedFrame: replay.imageFrame, imageLoading: replay.imageLoading,
+    pending: pending && { session: pending.session, camera: pending.camera, version: pending.version,
+      position: pending.position, source: pending.source, aborted: pending.controller.signal.aborted },
+    image: { src: image.src, complete: image.complete, width: image.naturalWidth, height: image.naturalHeight },
+    video: { paused: video.paused, currentTime: video.currentTime, readyState: video.readyState,
+      seeking: video.seeking, src: video.src, hidden: video.hidden }, videos: document.querySelectorAll('video').length,
+    nativeOnline: window.fixtureNativeOnline, online: navigator.onLine };
+}
+
+async function jpegEventViewer(browser, initial, { beforePause, holdImage = false, owner = {
+  session: initial.session.session_id, camera: initial.session.camera_id,
+} } = {}) {
   const { createServer } = await import('node:http');
   const { readFile } = await import('node:fs/promises');
   const source = new URL('../src/', import.meta.url), streams = new Set(), requests = [], opens = [];
@@ -617,6 +645,10 @@ async function jpegEventViewer(browser, initial) {
           at !== null && (at < covered[0].position || at > covered.at(-1).position)) { response.writeHead(404).end(); return; }
       const chosen = at === null ? covered.at(-1) : covered.findLast(item => item.position <= at);
       requests.push({ kind: 'image', at, frame, color: chosen.color });
+      if (holdImage) {
+        response.writeHead(200, { 'Content-Type': 'image/jpeg', 'Cache-Control': 'no-store' });
+        response.flushHeaders(); return; // Real pending response body; no image/native state mock.
+      }
       response.writeHead(200, { 'Content-Type': 'image/jpeg', 'Cache-Control': 'no-store' }).end(Buffer.from(eventJpegColors[chosen.color], 'base64')); return;
     }
     if (url.pathname.startsWith('/static/')) {
@@ -628,58 +660,108 @@ async function jpegEventViewer(browser, initial) {
     }
     response.writeHead(404).end();
   });
-  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-  const origin = `http://127.0.0.1:${server.address().port}`;
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
-  await context.addInitScript(() => {
-    window.fixtureNativeOnline = navigator.onLine;
-    Object.defineProperty(navigator, 'onLine', { get: () => true });
-  });
-  const page = await context.newPage(), errors = [], external = [];
-  page.on('pageerror', error => errors.push(error.message));
-  await page.route('**/*', route => {
-    if (new URL(route.request().url()).origin === origin) return route.continue();
-    external.push(route.request().url()); return route.abort();
-  });
-  await page.goto(origin);
-  const app = await page.evaluateHandle(() => import('/static/player.js'));
-  const wait = predicate => page.waitForFunction(predicate, { app }, { timeout: 10000 });
-  await wait(({ app }) => app.pageReplay.decodedImage()?.session === app.pageReplay.session?.session_id && !app.pageReplay.attaching);
-  await page.evaluate(({ app }) => {
-    app.pageReplay.togglePause();
-    app.playerTools.stats.show(true); app.playerChrome.show();
-    window.eventVideo = app.video; window.eventNativeSeeks = 0;
-    app.video.addEventListener('seeking', () => window.eventNativeSeeks++);
-    window.eventCalls = []; window.eventEmits = [];
-    const seek = app.pageReplay.seek.bind(app.pageReplay);
-    app.pageReplay.seek = position => { window.eventCalls.push(position); seek(position); };
-    document.querySelector('#timeline-events').addEventListener('timeline-event-seek', event => window.eventEmits.push(event.detail));
-  }, { app });
-  await wait(({ app }) => app.pageReplay.paused && app.pageReplay.decodedImage() &&
-    document.querySelector('#jpeg').complete && document.querySelector('#jpeg').naturalWidth > 0);
-  const read = () => page.evaluate(async ({ app }) => {
-    const { printerPlaybackTime } = await import('/static/printer-history.js');
-    const image = document.querySelector('#jpeg'), canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 36;
-    canvas.getContext('2d').drawImage(image, 0, 0);
-    const time = printerPlaybackTime(app.video, app.hls, app.pageReplay);
-    app.playerTools.stats.renderStats();
-    const markers = document.querySelector('#timeline-events');
-    return { position: app.pageReplay.position, time, state: app.printerHistory.peek(time)?.print_state,
-      statsState: app.playerTools.stats.querySelector('[data-stat-key="print_state"]')?.textContent,
-      pixel: [...canvas.getContext('2d').getImageData(32, 18, 1, 1).data],
-      naturalSize: [image.naturalWidth, image.naturalHeight], imageLoading: app.pageReplay.imageLoading,
-      frame: app.pageReplay.decodedImage(), session: app.pageReplay.session.session_id,
-      groups: markers.groups.map(group => ({ fraction: group.fraction, events: group.events })), summaries: markers.history.events,
-      calls: window.eventCalls, emits: window.eventEmits, sameVideo: app.video === window.eventVideo,
-      videos: document.querySelectorAll('video').length, nativeSeeks: window.eventNativeSeeks,
-      nativeOnline: window.fixtureNativeOnline, online: navigator.onLine };
-  }, { app });
-  return { page, app, wait, read, requests, opens,
-    publish(value) { current = value; for (const stream of streams) stream.response.write('event: state\ndata: ' + JSON.stringify(state(stream.token)) + '\n\n'); },
-    async close() {
-      await app.dispose(); await context.close(); server.closeAllConnections(); await new Promise(resolve => server.close(resolve));
-      assert.deepEqual(errors, []); assert.deepEqual(external, []);
-    } };
+  let context, page, app, preparation, stage = 'listen';
+  const errors = [], external = [], snapshots = [];
+  const closed = { handle: false, context: false, server: false };
+  const cleanup = async () => {
+    const failures = [];
+    for (const [resource, close] of [
+      ['handle', () => app?.dispose()], ['context', () => context?.close()],
+      ['server', async () => {
+        server.closeAllConnections();
+        if (server.listening) await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+      }],
+    ]) {
+      try { await close(); closed[resource] = true; }
+      catch (error) { failures.push({ resource, name: error.name, message: error.message }); }
+    }
+    return failures;
+  };
+  const capture = async label => {
+    if (snapshots.length < 6) snapshots.push({ label, state: app ? await page.evaluate(jpegEventState, { app }) : null });
+  };
+  try {
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    const origin = `http://127.0.0.1:${server.address().port}`;
+    stage = 'context';
+    context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+    await context.addInitScript(() => {
+      window.fixtureNativeOnline = navigator.onLine;
+      Object.defineProperty(navigator, 'onLine', { get: () => true });
+    });
+    page = await context.newPage();
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('**/*', route => {
+      if (new URL(route.request().url()).origin === origin) return route.continue();
+      external.push(route.request().url()); return route.abort();
+    });
+    stage = 'navigate';
+    await page.goto(origin);
+    app = await page.evaluateHandle(() => import('/static/player.js'));
+    const wait = predicate => page.waitForFunction(predicate, { app }, { timeout: 10000 });
+    stage = 'initial-owned-native';
+    await capture('initial');
+    await page.waitForFunction(jpegEventReady, { app, owner }, { timeout: 10000 });
+    await capture('ready');
+    if (beforePause) await beforePause({ page, app, requests, opens });
+    stage = 'prepare-paused';
+    assert.equal(await page.evaluate(jpegEventReady, { app, owner }), true, 'Pause setup still owns a complete native image');
+    await capture('before-pause');
+    preparation = await page.evaluate(({ app }) => {
+      const replay = app.pageReplay, session = replay.session, frame = replay.decodedImage(), src = replay.image.src;
+      const before = replay.paused;
+      if (!before) app.pageReplay.togglePause();
+      const after = app.pageReplay.paused;
+      app.playerTools.stats.show(true); app.playerChrome.show();
+      window.eventVideo = app.video; window.eventNativeSeeks = 0;
+      app.video.addEventListener('seeking', () => window.eventNativeSeeks++);
+      window.eventCalls = []; window.eventEmits = [];
+      const seek = app.pageReplay.seek.bind(app.pageReplay);
+      app.pageReplay.seek = position => { window.eventCalls.push(position); seek(position); };
+      document.querySelector('#timeline-events').addEventListener('timeline-event-seek', event => window.eventEmits.push(event.detail));
+      return { before, after, toggles: before ? 0 : 1, sameSession: session === replay.session,
+        sameFrame: frame === replay.decodedImage(), sameSource: src === replay.image.src };
+    }, { app });
+    await capture('after-pause');
+    assert.equal(preparation.after, true, 'The single requested Pause action must settle immediately');
+    assert.equal(preparation.sameSession && preparation.sameFrame && preparation.sameSource, true, 'Pause keeps its owned native frame');
+    stage = 'paused-native';
+    await wait(({ app }) => app.pageReplay.paused && app.pageReplay.decodedImage() &&
+      document.querySelector('#jpeg').complete && document.querySelector('#jpeg').naturalWidth > 0);
+    await capture('paused-ready');
+    console.log(JSON.stringify({ fixture: 'jpeg-event-setup', owner, preparation, snapshots }));
+    const read = () => page.evaluate(async ({ app }) => {
+      const { printerPlaybackTime } = await import('/static/printer-history.js');
+      const image = document.querySelector('#jpeg'), canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 36;
+      canvas.getContext('2d').drawImage(image, 0, 0);
+      const time = printerPlaybackTime(app.video, app.hls, app.pageReplay);
+      app.playerTools.stats.renderStats();
+      const markers = document.querySelector('#timeline-events');
+      return { position: app.pageReplay.position, time, state: app.printerHistory.peek(time)?.print_state,
+        statsState: app.playerTools.stats.querySelector('[data-stat-key="print_state"]')?.textContent,
+        pixel: [...canvas.getContext('2d').getImageData(32, 18, 1, 1).data],
+        naturalSize: [image.naturalWidth, image.naturalHeight], imageLoading: app.pageReplay.imageLoading,
+        frame: app.pageReplay.decodedImage(), session: app.pageReplay.session.session_id,
+        groups: markers.groups.map(group => ({ fraction: group.fraction, events: group.events })), summaries: markers.history.events,
+        calls: window.eventCalls, emits: window.eventEmits, sameVideo: app.video === window.eventVideo,
+        videos: document.querySelectorAll('video').length, nativeSeeks: window.eventNativeSeeks,
+        nativeOnline: window.fixtureNativeOnline, online: navigator.onLine };
+    }, { app });
+    return { page, app, wait, read, requests, opens, preparation, snapshots,
+      publish(value) { current = value; for (const stream of streams) stream.response.write('event: state\ndata: ' + JSON.stringify(state(stream.token)) + '\n\n'); },
+      async close() {
+        const failures = await cleanup();
+        assert.deepEqual(failures, [], 'JPEG fixture cleanup');
+        assert.deepEqual(errors, []); assert.deepEqual(external, []);
+      } };
+  } catch (error) {
+    try { await capture('failure'); }
+    catch (snapshotError) { snapshots.push({ label: 'failure-snapshot-error', message: snapshotError.message }); }
+    const failures = await cleanup();
+    error.jpegEventSetup = { stage, owner, preparation, snapshots, closed, cleanupErrors: failures, errors, external };
+    console.error(JSON.stringify({ fixture: 'jpeg-event-setup-failure', error: { name: error.name, message: error.message }, ...error.jpegEventSetup }));
+    throw error;
+  }
 }
 
 function assertEventPixels(value, color) {
@@ -688,6 +770,59 @@ function assertEventPixels(value, color) {
     `Expected ${color} native JPEG pixels: ${JSON.stringify(value)}`);
   assert.equal(value.sameVideo, true); assert.equal(value.videos, 1); assert.equal(value.nativeSeeks, 0);
   assert.equal(value.frame.session, value.session);
+}
+
+async function jpegEventSetupControls(browser, name) {
+  const data = eventJpegData['fractional-origin-mapping'];
+  for (const pausedEntry of [false, true]) {
+    let entry;
+    const v = await jpegEventViewer(browser, data, { beforePause: async ({ page, app }) => {
+      entry = await page.evaluate(({ app, pausedEntry }) => {
+        const replay = app.pageReplay, before = replay.paused, session = replay.session, frame = replay.decodedImage();
+        if (before !== false) throw new Error('Playing-entry control must start playing');
+        if (pausedEntry) replay.togglePause(); // Establish the prestate through one real production action.
+        return { before, after: replay.paused, sameSession: replay.session === session,
+          sameFrame: replay.decodedImage() === frame };
+      }, { app, pausedEntry });
+      assert.equal(entry.after, pausedEntry); assert.equal(entry.sameSession && entry.sameFrame, true);
+    } });
+    try {
+      const value = await v.read(); assertEventPixels(value, 'green');
+      assert.equal(v.preparation.before, pausedEntry); assert.equal(v.preparation.after, true);
+      assert.equal(v.preparation.toggles, pausedEntry ? 0 : 1);
+      assert.equal(v.preparation.sameSession && v.preparation.sameFrame && v.preparation.sameSource, true);
+      assert.deepEqual(value.calls, []); assert.deepEqual(value.emits, []);
+      assert.equal(value.frame.position, data.session.jpeg_frame.position); assert.equal(value.time, 1031.5);
+      assert.equal(v.opens.length, 1); assert.equal(v.requests.filter(request => request.kind === 'image').length, 1);
+      // Mismatched expected ownership must fail the actual guard without modifying any production state.
+      assert.equal(await v.page.evaluate(jpegEventReady, { app: v.app,
+        owner: { session: data.session.session_id, camera: 'wrong-camera' } }), false);
+      console.log(JSON.stringify({ browser: name, case: 'jpeg-setup-entry', pausedEntry, entry, preparation: v.preparation, value }));
+    } finally { await v.close(); }
+  }
+  for (const control of ['held-image', 'wrong-owner']) {
+    let preparationCalls = 0, failure;
+    try {
+      await jpegEventViewer(browser, data, { holdImage: control === 'held-image',
+        owner: { session: control === 'wrong-owner' ? 'f'.repeat(32) : data.session.session_id, camera: data.session.camera_id },
+        beforePause: () => { preparationCalls++; } });
+      assert.fail('Invalid native setup must not complete');
+    } catch (error) { failure = error; }
+    assert.match(failure.message, /Timeout 10000ms exceeded/);
+    const setup = failure.jpegEventSetup;
+    assert.equal(setup.stage, 'initial-owned-native'); assert.equal(preparationCalls, 0);
+    assert.equal(setup.preparation, undefined); assert.deepEqual(setup.closed, { handle: true, context: true, server: true });
+    assert.deepEqual(setup.cleanupErrors, []); assert.deepEqual(setup.errors, []); assert.deepEqual(setup.external, []);
+    const state = setup.snapshots.at(-1).state;
+    if (control === 'held-image') {
+      assert.equal(state.frame, null); assert.equal(state.image.width, 0);
+    } else {
+      assert.equal(state.frame.session, data.session.session_id); assert.notEqual(state.frame.session, setup.owner.session);
+      assert.equal(state.image.complete, true); assert.equal(state.image.width, 64);
+    }
+    console.log(JSON.stringify({ browser: name, case: 'jpeg-setup-guard', control,
+      error: { name: failure.name, message: failure.message }, setup }));
+  }
 }
 
 async function preciseJpegEvents(engine, name) {
@@ -815,6 +950,7 @@ async function preciseJpegEvents(engine, name) {
         console.log(JSON.stringify({ browser: name, case: key, before, after, identity }));
       } finally { await v.close(); }
     }
+    await jpegEventSetupControls(browser, name);
   } finally { await browser.close(); }
 }
 
