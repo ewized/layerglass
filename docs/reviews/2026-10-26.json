@@ -75,7 +75,7 @@
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
@@ -87,7 +87,8 @@
       "ballot_round8": "test-results/review-2026-10-26/r04/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r04/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r04/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r04/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r04/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r04/round12-ballot.json"
     },
     {
       "id": "r05",
@@ -112,7 +113,7 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
@@ -125,7 +126,8 @@
       "ballot_round8": "test-results/review-2026-10-26/r06/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r06/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r06/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r06/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r06/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r06/round12-ballot.json"
     },
     {
       "id": "r07",
@@ -188,7 +190,7 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -201,7 +203,8 @@
       "ballot_round8": "test-results/review-2026-10-26/r10/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r10/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r10/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r10/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r10/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r10/round12-ballot.json"
     }
   ],
   "rounds": [
@@ -533,13 +536,16 @@
         "r01",
         "r02",
         "r03",
+        "r04",
         "r05",
+        "r06",
         "r07",
         "r08",
-        "r09"
+        "r09",
+        "r10"
       ],
       "notes": "One-file native recovery test precondition and diagnostic correction. Original hosted-CI cause remains unproved; all post-error assertions strict.",
-      "decision": "P41rev1 approved by7 explicit reviewers; remaining3 ballots pending. Exact scope unchanged. Commit this threshold before author worktree/edit."
+      "decision": "P41rev1 approved10of10, implementation began only after7explicit approvals committed at3d7d7aa. Exact single-file scope unchanged."
     }
   ],
   "proposals": [
@@ -4823,7 +4829,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/ci-native-pause-finding.json",
       "risk": "Low test-only correction, with a real risk of hiding a restoration race if after-error polling is weakened or setup silently repairs repeated wrong intent. Keep the one explicit transition observable and keep original post-error assertions strict. Additional pre-error readiness is a test precondition, not a product waiver.",
       "validation_plan": "Keep this primary CI log immutable. Compare exact original and candidate assertion/predicate contracts. Use generated native media in both Chromium/WebKit, including held initial/seek readiness and explicit paused/playing intent establishment, proving no recovery error is injected while setup is unsettled. Wrong native/controller setup must fail/log rather than toggle again. Run the focused native cases and existing browser-replay-recovery suite in both engines; preserve all network/Live cases and decoded clock/session/video/one-seek checks. No full combined suite, real device, CI rerun or product-source change is needed for this candidate. Preserve all original after-error readiness predicates and assertions verbatim wherever possible, verify exact contracts explicitly, and obtain independent exact-final READY before integration. A new normal full CI run may occur only after voted implementation/focused validation; no rerun fishing of the unchanged failed source.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r02": {
           "vote": "APPROVE",
@@ -4873,7 +4879,35 @@
           "revision": 1,
           "recorded_at": "2026-10-26T11:51:27Z",
           "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Pinned d6075b0 native setup reads before without asserting or reporting native/controller pause agreement or settled attachment/restore state; unlike its network cases, it injects the error without that established intent contract. The preserved CI log proves WebKit failed the strict paused postcondition, while its later catch snapshot cannot establish the missing pre-error state or cause. The one-file setup/evidence correction is justified on that demonstrated gap alone. Approval requires one observable toggle from known state, explicit wrong-setup failure, unchanged timeout and post-error readiness/pause/clock/time/one-seek/session/node contracts, both-engine held-readiness and wrong-state controls, the existing recovery suite and independent exact-final review. Repeated toggles, expected-pause post-error polling and solved-CI/product-fix claims are excluded. Slate/evidence/source hashes verified; no runtime, author-tree or other-ballot inspection.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:54:19Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Pinned native setup checks neither settled attachment/restore state nor native/controller agreement before its state-dependent toggle; unlike the network branch, it then records but does not assert or report before.paused before injecting error. Original CI confirms the WebKit native paused equality failed at line 171, but its catch performs a later read and cannot establish the missing before state or cause. I verified the CI/evidence hashes and independently read the exact source and reports; local passing controls and unsuitable offline timeouts do not explain or erase that failure. Approve only the one-file setup/evidence improvement: settle initial readiness and one committed seek, establish one explicit toggle transition, then fail/log any wrong native/controller setup before error. Preserve every after-error readiness predicate, timeout, strict pause/time/recorded-clock/session/node/one-seek assertion and later fixed/progress check; never poll for expected pause after recovery or repeat actions until green. Require held-readiness and wrong-setup controls plus both-engine focused/native and existing recovery-suite validation and independent final review. This is not a product fix or a solved-CI claim.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:56:10Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected d6075b0f9364a09cd9188ab3009167af16fc6303 and verified the frozen slate, R02/R07 evidence and primary CI log hashes. In browser-replay-recovery.js:145-164, initial/seek readiness does not establish settled controller intent and attachment/restore state, and the requested pause is neither asserted nor logged before error injection; the failure handler takes a later snapshot instead of preserving the original before/after evidence. The original CI log genuinely fails WebKit after.paused at line171, but cannot distinguish incorrect setup from a later playback/restoration event. Valid isolated and preceding-sequence controls passing do not establish its cause. APPROVE only the closed one-file precondition/diagnostic correction: one observable expected transition from known native/controller state, explicit failure for wrong intent, and no injection while unsettled. All original after-error readiness predicates, timeout budgets, pause/time/recorded-clock/session/node/one-seek and later fixed/progress assertions must remain unchanged; repeated setup repair or pause-aware recovery polling would hide the very failure being tested. Approval includes the required held-readiness and wrong-intent negative controls, both-engine native and existing recovery-suite validation, exact assertion-contract comparison and independent final READY. This is not acceptance of an implementation, a product-policy change, or a claim that the preserved CI failure is solved. No new runtime or JPEG QA changes performed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:58:51Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/native-recovery-preconditions",
+        "branch": "review/native-recovery-preconditions",
+        "baseline": "3d7d7aa",
+        "author": "r02",
+        "authorization": "7explicit approvals committed at3d7d7aa before worktree creation/source edits; eighth ballot subsequently imported. Exact frozen one-file scope unchanged."
       }
     }
   ],
@@ -5980,6 +6014,31 @@
       "at": "2026-10-26T11:51:27Z",
       "type": "decision",
       "message": "P41rev1 meets6-of10 threshold with7 explicit approvals. Only one-file test setup/diagnostics authorized; primary CI cause remains unproved. No P41 source edit has begun."
+    },
+    {
+      "at": "2026-10-26T11:54:19Z",
+      "type": "ballot",
+      "message": "R04 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:54:19Z",
+      "type": "implementation",
+      "message": "P41R02 author assigned exactonefile worktree only after thresholdcommit3d7d7aa. R06 JPEGv4.1 failed pilot preserved and292artifact hashes verified; no further runtime authorized."
+    },
+    {
+      "at": "2026-10-26T11:56:10Z",
+      "type": "ballot",
+      "message": "R10 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:58:51Z",
+      "type": "ballot",
+      "message": "R06 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:58:51Z",
+      "type": "decision",
+      "message": "Round12P41 all10 explicit fresh ballots complete andAPPROVE. R06 assigned ignoredv4.2 QA preparation-only to compare actual range-serialized committed target, retaining all strict native/workflow/storage checks; no runtime authorized."
     }
   ],
   "validation": [
@@ -6355,6 +6414,16 @@
       "summary": "R04 found v4 ignored JPEG sampler lacks expected workflow mode across candidates and steady calls; it could accept a stationary unexpected pause. Explicit caller modes required before any pilot. Other native/clock/Stats/cold/retention/cleanup/TTL assertions remain strict. Source-only reachability, not a reproduced product defect.",
       "evidence": "test-results/review-2026-10-26/r04/jpeg-qa-v4-source-review.json",
       "sha256": "adaee858e88ad9bdb73c9f77b57455048b650d085aec501dde94b3a5bd155b02"
+    },
+    {
+      "status": "INCONCLUSIVE_ABORTED_PILOT",
+      "summary": "Separate JPEGv4.1 pilot at951aafc stopped after55.900 measured seconds on raw-target equality. Observed native slider/request values differ by1.4\u20132.5e-14s. Four strict native byte/pixel/clock/full-Stats samples per engine passed; held preview and exactly1release request observed, committed native proof/Live-return/cold-preview/pruning/endurance not established. Cleanup/nativeURLs/backend resources and privateTTL controls passed. Chromium protocol-body anomalies remain unproved. ReportSHAa24edd19819a89ccd3e6b87040bd670575272842ab730af24bde3bb3651743a1 and292-file manifestSHA1009ef033df8430b3172133987aa4e7ef786160909d5793d22f9a1086d9c1819 root-verified. No retry/hour/product correction claimed.",
+      "evidence": "test-results/review-2026-10-26/r06/jpeg-soak/pilot-report-v4.1.json"
+    },
+    {
+      "status": "RUNNING_PARTIAL",
+      "summary": "Native6h runa5059827 has crossed real3h and observed first DVR pruning in both engines: Chromium10899s bounds12\u201310896, WebKit10931s bounds42\u201310926. One original video/session,0HLS/previewHTTP, compressedRAM\u2264128KiB, continuing actual coldIDB hits. Still running; not6h/retained-pruning workflow pass; source predatesP36/P39/P40/P41.",
+      "evidence": "test-results/review-2026-10-26/root-p37-first-pruning-checkpoint.json"
     }
   ],
   "implementation_worktrees": [
