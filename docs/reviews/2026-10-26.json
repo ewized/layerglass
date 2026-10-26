@@ -86,7 +86,7 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -96,7 +96,8 @@
       "ballot_round6": "test-results/review-2026-10-26/r05/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r05/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r05/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r05/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r05/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r05/round10-ballot.json"
     },
     {
       "id": "r06",
@@ -466,6 +467,7 @@
         "r02",
         "r03",
         "r04",
+        "r05",
         "r06",
         "r07",
         "r08",
@@ -474,7 +476,8 @@
       ],
       "notes": "P39newpolicy: untaggedbuild/runbyimmutableID,noimagecleanup; ordinarycache retained. HeldP38draft and alloriginalvotes/evidence remain immutable. No source/product-doc edits before6freshapprovals.",
       "majority_recorded_at": "2026-10-26T09:41:40Z",
-      "decision": "P39rev1 first7recordedandcommittedbeforeimplementation; now9freshAPPROVE,1pending,root0. Normalbuildcacheretentionexplicit; noP38votestransferred."
+      "decision": "P39rev1 approved10/10; first7savedandcommittedbeforeimplementation,root0. Ordinarybuildcacheretentionexplicit; P38votesnottransferred.",
+      "balloting_completed_at": "2026-10-26T09:50:08Z"
     }
   ],
   "proposals": [
@@ -4191,7 +4194,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/round7-p36-proposed-scope.json",
       "risk": "Moderate JPEG-only lifecycle/data ownership correction. The high-risk mistakes are timestamp-only association, label/clock publication before decode, stale completion after a source switch, incorrect treatment of completed held intervals, rounding across capture boundaries, and increasing request rate. The draft deliberately requires independent regression evidence for those cases before integration.",
       "validation_plan": "Reproduce the frozen full-player negative in Chromium/WebKit with real generated JPEG decoding and actual ReplayBuffer payloads: page opens1020; blue capture1030; Pause; green1030.25; later capture1031.5. Corrected paused clock/position/rendered reading and cached preview must remain associated with blue. Verify normal one-second cadence and positive subsecond cadence, including non-half-second and non-millisecond capture positions. Do not pass the check by relying on rounded timestamps that select the preceding capture accidentally. Check explicit historical targets both inside a completed held interval and beyond the latest proven capture in the provisional tail; verify resulting archive-selected pixels, recorded time and thumbnail label agree. Hold a live image response, advance metadata, then finish the old image; reverse the order with a newer image/older metadata. Only proven owning request/completion may publish the displayed time or capture a thumbnail. Metadata alone is not an image identity. Hold an old JPEG completion across a committed seek, explicit Live, camera/session change, close and same-session reattachment. No stale callback may mutate the new source's display clock or preview history. Keep the same native video node and one page session across recovery. Test pause/play and explicit Live while a JPEG image is pending. Completed-history replay, the original thirty-second held-frame gap, later-page minimum/negative clock anchor and prior-page media exclusion must remain correct. During held pointer/key/wheel preview changes issue no intermediate main-image seeks; one release commits one target. Keep existing request/capture bounds and session-scoped deduplication. Verify optional descriptor/selector rejection and legacy-at compatibility without exposing prior-session footage or changing provider/origin boundaries. Standard no-recording live fallback must remain available without presenting an invented historical clock. Run focused affected units, the new bounded two-engine fixture and docs checks; a final core combined check belongs to integration. No real-device/LAN/external request or repeated stress run is needed.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r03": {
           "vote": "APPROVE",
@@ -4296,6 +4299,15 @@
         "commit": "22b7e8e416facd34f0106a0f41ad3a5772933412",
         "recorded_at": "2026-10-26T09:47:48Z",
         "checks": "Independent103units and ownreallegacyconsumer+completeJPEGfixturebothengines; backendhashesunchanged from22checkREADY; originalsretained."
+      },
+      "integration": {
+        "commit": "76334efe744526b4f4bca6c7e4ceb679855659d8",
+        "author_final": "22b7e8e416facd34f0106a0f41ad3a5772933412",
+        "complete_range_base": "d4528b42100349c47c661a0b1cdb45c51f3fa776",
+        "method": "Apply complete approved range as one canonical diff; original failing93draft not separately published. All16sourcechecks pass:12exactfinalauthorhashes,4exactP35/P37unionfiles. One docsappend conflict keptbothapprovedparagraphs. SavedREADYguard beforemutation.",
+        "verification": "test-results/review-2026-10-26/root-p36-merge/merged-source-verification.json",
+        "recorded_at": "2026-10-26T09:50:08Z",
+        "validation": "Author103JS/35docs/twoenginefixture andindependentR05same+ownlegacycontrols; R06backend22checksapplicableviaunchangedhashes. Finalcombinedall awaitsP39stableintegration."
       }
     },
     {
@@ -4588,6 +4600,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T09:47:48Z",
           "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment of baseline 91a2caa script/workflow, exact scope and named original evidence, independent of the P38 vote. The baseline claims image ownership before build success and deletes a mutable tag; the actual parse-failure canary establishes the defect. Inspected R08's actual Docker wrapper, command log and distinct observed/removal IDs: replacing the tag after inspection deletes the later Node reference despite inspecting the built Python ID. The named R07 response correctly distinguishes that schedule from its passing pre-inspection control. P39 avoids both mutable execution selection and reference deletion: default builds have private IID files, successful full IDs feed every built-runtime consumer, and no image cleanup or named-reference mutation occurs. Retained untagged results/build cache are an explicit acceptable policy change requiring documentation, not an ownership guarantee or automatic prune. Approval includes the existing actual offline build, malformed/missing/partial identity, INT/TERM, concurrent same-run cached-ID, alias replacement, explicit reuse/no-build and all seven P34 container/status/log/temp/options controls. The closed two-file scope preserves production and explicit reused-image contracts. Frozen canonical hash verified; installed CLI supports iidfile. No implementation tree, other ballot or new mutating probe inspected/run.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:50:08Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
         }
       },
       "implementation": {
@@ -4596,6 +4615,14 @@
         "branch": "review/check-built-image-id",
         "authorized_at": "2026-10-26T09:41:40Z",
         "authorization": "7fresh explicit approvals for exactP39rev1 before any source/product-doc edits; priorP38votesnotused; root0."
+      },
+      "independent_final_review": {
+        "status": "READY",
+        "report": "test-results/review-2026-10-26/r08/p39-final-review.json",
+        "sha256": "e10df1dd32e5920f9389892179ce48921f0b76ccead78f523fdb8c6b302da1b1",
+        "commit": "6e029107105881aa3553581fe312cd565566bfe6",
+        "recorded_at": "2026-10-26T10:05:58Z",
+        "limits": "Independent8invocationactualDocker/directedfailedbuild/signal/IID/alias/P34matrix plus source/evidencemanifest; authored20casecoverageinspected, notmiscountedasindependent20rerun."
       }
     }
   ],
@@ -4751,6 +4778,10 @@
     {
       "sha": "25c569f81149f990cfea3519a96db571a804146b",
       "summary": "P37: closest retained preview before RAM/IDB choice, majority before edits and independent READY; full-duration sweep pending."
+    },
+    {
+      "sha": "76334efe744526b4f4bca6c7e4ceb679855659d8",
+      "summary": "P36: decodedJPEGimage/time/thumbnail ownership and precise selector, legacyfallback retained;10priorapprovals, correctedfinalindependentlyREADY, P35/P37unionverified."
     }
   ],
   "activity": [
@@ -5523,6 +5554,21 @@
       "at": "2026-10-26T09:47:48Z",
       "type": "ballot",
       "message": "R02 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:50:08Z",
+      "type": "ballot",
+      "message": "R05 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:50:08Z",
+      "type": "P36integrated",
+      "message": "Canonical76334ef integratescompletecorrectedP36rangeafterexactreportREADYguard; all16sourceidentities/4P35P37unions verified. 37proposalsintegrated. P39all10freshvotescomplete; authorvalidationpending. FullcombinedcheckwillfollowP39finalacceptance."
+    },
+    {
+      "at": "2026-10-26T10:05:58Z",
+      "type": "P39finalacceptanceguard",
+      "message": "SavedR08READY/source2hashes/clean6e0291/exactfrozenbaseblobs/all10freshballotsverifiedBEFOREintegration. NewpolicyuntaggedvalidIID/runtimebyID/noimagecleanup/cacheleft; P38oldnegativeimmutable. Fullcombinedcheckpendingprecisioncorrectionfreshvotes."
     }
   ],
   "validation": [
