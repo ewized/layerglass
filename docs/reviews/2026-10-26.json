@@ -443,6 +443,17 @@
       "majority_recorded_at": "2026-10-26T09:02:30Z",
       "decision": "P38rev1 approved10/10; first6recorded and committed before implementation,root0. Author finala8a27a0 awaiting independent peer.",
       "balloting_completed_at": "2026-10-26T09:20:26Z"
+    },
+    {
+      "id": 10,
+      "revision": 1,
+      "baseline": "91a2caa543f85b3d2703009bf2ed62482b7d4793",
+      "frozen_at": "2026-10-26T09:32:00Z",
+      "slate": "test-results/review-2026-10-26/round-10-slate.json",
+      "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d",
+      "ballots_started": true,
+      "reviewers_completed": [],
+      "notes": "P39newpolicy: untaggedbuild/runbyimmutableID,noimagecleanup; ordinarycache retained. HeldP38draft and alloriginalvotes/evidence remain immutable. No source/product-doc edits before6freshapprovals."
     }
   ],
   "proposals": [
@@ -4159,7 +4170,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/round7-p36-proposed-scope.json",
       "risk": "Moderate JPEG-only lifecycle/data ownership correction. The high-risk mistakes are timestamp-only association, label/clock publication before decode, stale completion after a source switch, incorrect treatment of completed held intervals, rounding across capture boundaries, and increasing request rate. The draft deliberately requires independent regression evidence for those cases before integration.",
       "validation_plan": "Reproduce the frozen full-player negative in Chromium/WebKit with real generated JPEG decoding and actual ReplayBuffer payloads: page opens1020; blue capture1030; Pause; green1030.25; later capture1031.5. Corrected paused clock/position/rendered reading and cached preview must remain associated with blue. Verify normal one-second cadence and positive subsecond cadence, including non-half-second and non-millisecond capture positions. Do not pass the check by relying on rounded timestamps that select the preceding capture accidentally. Check explicit historical targets both inside a completed held interval and beyond the latest proven capture in the provisional tail; verify resulting archive-selected pixels, recorded time and thumbnail label agree. Hold a live image response, advance metadata, then finish the old image; reverse the order with a newer image/older metadata. Only proven owning request/completion may publish the displayed time or capture a thumbnail. Metadata alone is not an image identity. Hold an old JPEG completion across a committed seek, explicit Live, camera/session change, close and same-session reattachment. No stale callback may mutate the new source's display clock or preview history. Keep the same native video node and one page session across recovery. Test pause/play and explicit Live while a JPEG image is pending. Completed-history replay, the original thirty-second held-frame gap, later-page minimum/negative clock anchor and prior-page media exclusion must remain correct. During held pointer/key/wheel preview changes issue no intermediate main-image seeks; one release commits one target. Keep existing request/capture bounds and session-scoped deduplication. Verify optional descriptor/selector rejection and legacy-at compatibility without exposing prior-session footage or changing provider/origin boundaries. Standard no-recording live fallback must remain available without presenting an invented historical clock. Run focused affected units, the new bounded two-engine fixture and docs checks; a final core combined check belongs to integration. No real-device/LAN/external request or repeated stress run is needed.",
-      "status": "implementing",
+      "status": "approved",
       "ballots": {
         "r03": {
           "vote": "APPROVE",
@@ -4236,6 +4247,12 @@
         "status": "implemented awaiting independent exact-final peer",
         "commit": "93b2f9ae553835788c5057a69cbfbe1fa2c52718",
         "recorded_at": "2026-10-26T09:20:05Z"
+      },
+      "implementation_status": "Final backend READY; frontend actual legacy wheel boundary finding holds author draft out of integration pending approved-scope correction.",
+      "backend_final_peer": {
+        "report": "test-results/review-2026-10-26/r06/p36-backend-final-review.json",
+        "status": "READY for backend only",
+        "checks": "22focused backend checks passed, exactsource/reporthashes verified; no frontend acceptance."
       }
     },
     {
@@ -4361,7 +4378,7 @@
       "evidence_path": "test-results/review-2026-10-26/root-image-tag-ownership/finding.json",
       "risk": "Moderate shell lifecycle correction. Removing by image ID can affect aliases; tracking only after docker build returns misses interruption. Private refs plus verified build identity must preserve both boundaries without weakening P34 cleanup. If another actor replaces the private ref, preserve it rather than force-remove shared image IDs.",
       "validation_plan": "Repeat original actual failed-build own-tag canary: old default-named ref/control/shared image survive and build still exits1. Actual successful minimal offline generated build cleans only its created private ref, leaving reused image and other aliases unchanged. Two checks with same run id use distinct owned refs. Controlled interruption after actual successful build/identity recording but before client return cleans owned ref and preserves130/143 status; failed/partial build without owned identity removes no existing image. Foreign replacement of private tag survives; cached-build/shared-ID aliases survive. All7 P34 launch options, conflict/interrupt/name replacement/container log/cleanup contracts remain passing; modes and explicit reused-image path unchanged. Bash/ShellCheck, meaningful focused lifecycle controls and35docs. Saved original negative must remain failing before correction. No full duplicate browser test, real printer or registry/network probe required.",
-      "status": "implementing",
+      "status": "approved",
       "ballots": {
         "r08": {
           "vote": "APPROVE",
@@ -4438,7 +4455,34 @@
         "status": "implemented awaiting independent exact-final peer",
         "commit": "a8a27a03df32a26b9a2938440bfcef13b3c6b2e7",
         "recorded_at": "2026-10-26T09:20:05Z"
+      },
+      "implementation_status": "Draft a8a27a0 held, independent race confirmed; materially different P39 frozen for fresh voting. No P38 integration.",
+      "independent_final_review": {
+        "report": "test-results/review-2026-10-26/r08/p38-final-review.json",
+        "sha256": "ab8f6d396e412978bfe333f4cd6e71a77a153416413f1c9ccac799d72808fa4d",
+        "recorded_at": "2026-10-26T09:26:56Z",
+        "result": "FINDINGS, not READY; named replacement deleted after ownership inspection before rm. Authora8a27a0 held."
       }
+    },
+    {
+      "id": "P39",
+      "round": 10,
+      "revision": 1,
+      "title": "Run default check builds by immutable ID without creating or deleting image references",
+      "author": "root",
+      "source_finding": "ROOT-R10-UNTAGGED-BUILD-ID",
+      "baseline": "91a2caa543f85b3d2703009bf2ed62482b7d4793",
+      "files": [
+        "scripts/check.sh",
+        "docs/development/workflow.md"
+      ],
+      "scope": "Change only default check-image creation, selection and cleanup policy. In modes that already build the runtime, invoke the existing docker build with a private per-invocation --iidfile and existing VERSION build argument/context, without any --tag/-t or named-reference mutation. On successful command completion, require a syntactically valid full sha256 image ID from that private record and pass that exact immutable ID to all existing built-runtime consumers, including metadata, Python/docs and generated fixture containers. Fail before launching those consumers when the successful build has no valid identity; do not infer an image from stdout or a mutable fallback. Failed builds keep their status and confer no destructive ownership. Check cleanup performs no image deletion, untagging, retagging or pruning, by name or ID, on any path. Successful or interrupted untagged build results/cache are left to Docker and the operator. Explicit LAYERGLASS_TEST_IMAGE remains the existing reused reference and is never built over, resolved into a different contract or removed. JavaScript/workspace-only modes keep their Node bootstrap and do not build a runtime. Preserve P34's all7 creation-time container IDs, immutable fixture selectors/logs, conflict/interruption/name-reuse behavior, temp cleanup, original status/signals, launch options, modes, suites and logs. Update only the existing workflow ownership paragraph to describe immutable-ID execution, no named refs created by default checks, retained ordinary build cache and explicit reuse. No engine-wide lock/plugin, production Dockerfile/Compose/runtime, CI/release/Cloudflare policy, package/toolchain/dependency, publication, broad cleanup, extra file or product capability.",
+      "evidence": "Original real failed build at038efc6 deletes a pre-existing own old-default image tag without a successful build. Rejected P38rev1 drafta8a27a0 passes pre-inspection replacement but independent R08 actual Docker after-inspection schedule proves it still deletes the own Node replacement after observing the prior Python build ID. R07 accepts the counterexample and identifies no proven compare-and-delete primitive in installed CLI. A new no-tag/no-image-cleanup contract avoids mutable reference ownership instead of weakening its race test. Original proposal votes do not transfer.",
+      "evidence_path": "test-results/review-2026-10-26/r07/p38-peer-response.json",
+      "risk": "The source runs immutable built IDs instead of private tags, so named-reference replacement cannot redirect a default check or be deleted by its cleanup. Untagged build results/cache can remain on the daemon and consume storage until normal operator/daemon maintenance; do not add an automatic prune. Concurrent builds may correctly share a cached image ID but must have separate IID files. Explicit reuse and unrelated actors' whole-daemon pruning remain existing external contracts, not new ownership guarantees.",
+      "validation_plan": "Retain both baseline parse-failure deletion evidence and exact rejected-draft after-inspection replacement evidence; neither passing pre-inspection checks nor a removed scheduling hook may stand in for the peer counterexample. Run actual minimal offline FROM-only builds from existing cached bases with the real iidfile flag and no tag. Observe the successful full ID and assert every default runtime launch uses it, no build --tag/-t is present and no image mutation/cleanup command occurs. Preserve task-created old-default/other aliases and shared IDs throughout. Repeat actual failed parsing and controlled partial/no/malformed-IID completion paths: original command failures retain status, invalid success records fail before built-runtime consumers, and no reference or image is removed or overwritten. Two same-run-ID invocations build concurrently using distinct private IID files; equal cached image IDs are valid. Retain existing P34 name-conflict behavior or release runtime phases in sequence, without claiming unrelated container-name concurrency was fixed. Hold a real successful build after IID recording but before its wrapper returns, then deliver INT/TERM. Preserve130/143, clean all owned container/private-record resources, leave image/cache and all aliases unchanged and perform no image mutation. Retain a corresponding failed/no-identity interruption control. Use only exact task-created alias canaries to schedule replacement before, across and after the former cleanup inspection interval. Immutable-ID consumers must remain on the built ID and every canary/replacement survives because product cleanup has no image inspection/removal or named-reference mutation path. Preserve the peer's rejected-draft negative as a control. Rerun explicit reused-image and JavaScript/workspace no-build/no-image-cleanup controls, all7 P34 launch-option comparisons and meaningful conflict/foreground/detached interruption/fixture-name replacement/foreign-log/container-ID/temp/status matrix. Adjust only the image-lifecycle assertions for the newly approved retention policy. Run Bash syntax, ShellCheck, diff/scope checks and35-document validation. Use bounded generated offline Docker fixtures and existing images; no duplicate full suite, registry/private/LAN/device/service/account probes, publication, image-ID deletion or broad pruning. Preserve active six-hour fixtures and shared resources.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -5285,6 +5329,21 @@
       "at": "2026-10-26T09:20:25Z",
       "type": "ballot",
       "message": "R02 explicit Round9 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:26:56Z",
+      "type": "independent peer blocks integration",
+      "message": "R08 actual Docker confirms P38 remaining tag check/use race, sourcea8a27a0. Draft stays out of canonical; all10originalvotes immutable. Author asked for no-edit feasibility assessment; material alternative requires freshsixvotes. No product change."
+    },
+    {
+      "at": "2026-10-26T09:28:32Z",
+      "type": "independent frontend peer holds integration",
+      "message": "R05 actual legacy JPEG wheel commits negativeposition/HTTPat in bothengines at93b2f9a; baselinecontrol/freshlegacyLive check pending. Legacycompatibility/clamp is explicitP36 scope; no integration until bounded correction and fresh finalpeer. Backend22checksREADY remains separately scoped."
+    },
+    {
+      "at": "2026-10-26T09:32:00Z",
+      "type": "fresh policy frozen",
+      "message": "P39closed2file no-tag/immutablebuiltID/noimagecleanup policy frozen; P38originalapproveddraft notREADY and notintegrated. OrdinaryDockerbuildcache retention disclosed. Sixfreshvotes required; no rootvote."
     }
   ],
   "validation": [
@@ -5578,6 +5637,14 @@
         "test-results/review-2026-10-26/retention_26fixes_v2-webkit.log"
       ],
       "result": "WebKit failed at11744.298actualseconds: retained preview851.866666 did not paint within4s; no page errors, same video/session and25plannedvideoHTTP/0playlist/0segments/0previewHTTP in last sample. Failfast runner exit1 stopped Chromium after11730sample/replay gesture. This source predates P37. Similar failure is not a proven cause by itself. All3exactownedcontainers absent after runner cleanup."
+    },
+    {
+      "summary": "R10 final documentation consistency pass1",
+      "status": "no additional findings",
+      "source": "91a2caa543f85b3d2703009bf2ed62482b7d4793",
+      "evidence": "test-results/review-2026-10-26/r10/final-docs-consistency-1.json",
+      "recorded_at": "2026-10-26T09:32:00Z",
+      "limits": "Read-only canonical and explicitly separate pendingP36/P38drafts; no fixture/device/endurance success inferred."
     }
   ],
   "implementation_worktrees": [
