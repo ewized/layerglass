@@ -16,12 +16,13 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 4 ballot complete",
+      "status": "round 5 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r01/ballot-round3.json",
-      "ballot_round4": "test-results/review-2026-10-26/r01/ballot-round4.json"
+      "ballot_round4": "test-results/review-2026-10-26/r01/ballot-round4.json",
+      "ballot_round5": "test-results/review-2026-10-26/r01/ballot-round5.json"
     },
     {
       "id": "r02",
@@ -3352,10 +3353,11 @@
       },
       "implementation_review": {
         "peer": "r04",
-        "decision": "BLOCKED pending approved atomicity correction",
-        "reviewed_head": "01a1245e3799d6278b6cce0590e028b7dd6b119e",
-        "evidence": "test-results/review-2026-10-26/r04/p29-p30-diff-review.json",
-        "next": "R06 corrects append/stat failure consistency within existing exact P29 scope; independent re-review before integration."
+        "decision": "READY",
+        "reviewed_head": "02285f6a5feff32cbfe744002fb0d03b1db57613",
+        "evidence": "test-results/review-2026-10-26/r04/p29-p30-followup-review.json",
+        "previous_review_retained": "test-results/review-2026-10-26/r04/p29-p30-diff-review.json",
+        "source_sha256": "c72400bcf5511e003759f7daab9486a8608b28865269c2cf8abfd85255bb2936"
       }
     },
     {
@@ -3473,9 +3475,11 @@
       },
       "implementation_review": {
         "peer": "r04",
-        "decision": "READY independently; combined branch held for P29 correction",
-        "reviewed_head": "01a1245e3799d6278b6cce0590e028b7dd6b119e",
-        "evidence": "test-results/review-2026-10-26/r04/p29-p30-diff-review.json"
+        "decision": "READY",
+        "reviewed_head": "02285f6a5feff32cbfe744002fb0d03b1db57613",
+        "evidence": "test-results/review-2026-10-26/r04/p29-p30-followup-review.json",
+        "previous_review_retained": "test-results/review-2026-10-26/r04/p29-p30-diff-review.json",
+        "source_sha256": "c72400bcf5511e003759f7daab9486a8608b28865269c2cf8abfd85255bb2936"
       }
     },
     {
@@ -3643,6 +3647,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T07:02:25Z",
           "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Independent5055adf production-recorder payload generation and connected Stats+GoogleCastSender+PlayerUpdates+real EventSource rerun confirm a successful1200-1262 response leaves requested=true after a1339-1370 reconnect payload; receiver1280 remains blank across timer reads with one request and zero local seek events. Explicit local seek fetches80%, then cached1290 renders90% without another request. WebKit's external-clock control independently reproduces while Cast remains unsupported. This is a completed-partial coverage gap, distinct from P23 cancellation. Approval covers only accepted same-session coverage proving an uncovered target is now recorded, one consumed/coalesced owned hydration, and the frozen pending/cancellation/session protections. Advancing SSE must not release genuine HTTP/JSON/timeout suppression: all three independent controls remain at one request until explicit retry. Unchanged coverage, future points, full/cached windows and all required late-callback/bounded-window cases must retain their stated behavior; blanket SSE resets or render polling are outside scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:20:14Z",
+          "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
         }
       },
       "additional_evidence": [
@@ -3676,7 +3687,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/ci-focus/proposed-scope.json",
       "risk": "Low test scheduling change, but taking control after the response or replacing strict node equality could conceal real response-driven focus regression. Both are excluded; injected wrong-focus/reopen controls must still fail.",
       "validation_plan": "Retain original CI/original unchanged-assertion120ms traces. Run corrected actual connected-player suite in Chromium/WebKit with immediate and delayed responses; native settling and snapshot occur while response held, strict equality/hidden/closed editor hold after release. Existing same-editor retry, moved focus, pointer/Settings dismissal, successful setup and request counts remain passing. Disposable fault injection that focuses another visible control after response must fail equality, and reopening closed editor must fail hidden guard; product code unchanged.",
-      "status": "approved",
+      "status": "committed",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -3720,6 +3731,13 @@
           "recorded_at": "2026-10-26T07:08:02Z",
           "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
         }
+      },
+      "implementation": {
+        "author_commit": "d82b668e6c89f8cc321e325b2e679379d9342636",
+        "canonical_commit": "baea461",
+        "peer_review": "test-results/review-2026-10-26/root-p33-peer/diff-review.json",
+        "peer_decision": "READY",
+        "validation": "Only fifth test case changes;16 independent immediate/delayed positive passes and4 intentionally injected failures at strict guards in both engines. Author standard keyboard passes. No production change."
       }
     }
   ],
@@ -3843,6 +3861,10 @@
     {
       "sha": "f4de61d",
       "summary": "P27/P31: preserve failed backend editor ownership and later Copy-feedback keyboard focus; root independently READY."
+    },
+    {
+      "sha": "baea461",
+      "summary": "P33: settle native hidden-editor focus before response snapshot while retaining strict guards; independent20-case matrix READY."
     }
   ],
   "activity": [
@@ -4290,6 +4312,16 @@
       "at": "2026-10-26T07:18:47Z",
       "type": "review",
       "message": "Root independently READY on exact P33d82b668 after separate matrix rerun and byte comparison preserving all other cases/strict assertions. No production focus change. Six approvals were committed181366a before author work. Integration can proceed; GitHub CI still failed on prior source until a new reviewed snapshot is tested."
+    },
+    {
+      "at": "2026-10-26T07:20:14Z",
+      "type": "ballot",
+      "message": "R01 explicit Round5 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:20:14Z",
+      "type": "review",
+      "message": "P29/P30 complete three-commit series independently READY at02285f6; root verified source hash and inspected final source/test/docs diffs. Prior BLOCKED evidence and original failed control remain unchanged. Ten explicit approvals preceded implementation. Integration authorized without scope expansion."
     }
   ],
   "validation": [
@@ -4468,6 +4500,12 @@
       "status": "passed",
       "evidence": "test-results/review-2026-10-26/root-p33-peer/diff-review.json",
       "source": "d82b668"
+    },
+    {
+      "summary": "R04 independent P29/P30 atomic-failure follow-up: unchanged fault proof,64 focused tests,35docs and production clock checks pass; old source remains failing",
+      "status": "passed",
+      "evidence": "test-results/review-2026-10-26/r04/p29-p30-followup-review.json",
+      "source": "02285f6"
     }
   ],
   "implementation_worktrees": [
