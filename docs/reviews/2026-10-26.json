@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "P34/P36/P37 implementing after majority; P35integrated; endurance and independent review continuing",
+  "status": "P34/P35 integrated; P36 implementing; P37 peer review; P38 voting; endurance continuing",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -108,7 +108,7 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 7 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -116,13 +116,14 @@
       "ballot_round4": "test-results/review-2026-10-26/r07/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r07/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r07/ballot-round6.json",
-      "ballot_round7": "test-results/review-2026-10-26/r07/round7-ballot.json"
+      "ballot_round7": "test-results/review-2026-10-26/r07/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r07/round8-ballot.json"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 7 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -130,7 +131,8 @@
       "ballot_round4": "test-results/review-2026-10-26/r08/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r08/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r08/ballot-round6.json",
-      "ballot_round7": "test-results/review-2026-10-26/r08/round7-ballot.json"
+      "ballot_round7": "test-results/review-2026-10-26/r08/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r08/round8-ballot.json"
     },
     {
       "id": "r09",
@@ -395,12 +397,25 @@
         "r03",
         "r04",
         "r05",
+        "r07",
+        "r08",
         "r09",
         "r10"
       ],
       "notes": "P36 full-player JPEG image-clock mismatch and P37 actual45min cold-preview selection failure, with root independent generated controls. Root proposes P37 and contributes no votes.",
       "majority_recorded_at": "2026-10-26T08:31:18Z",
       "decision": "P36/P37 revision1 approved6/10 before any source/test/product-doc edit; root0. Remaining4ballots pending."
+    },
+    {
+      "id": 9,
+      "revision": 1,
+      "baseline": "038efc662c4e4e9b1d84972c400b1723d4e79bfb",
+      "frozen_at": "2026-10-26T08:46:27Z",
+      "slate": "test-results/review-2026-10-26/round-9-slate.json",
+      "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a",
+      "ballots_started": true,
+      "reviewers_completed": [],
+      "notes": "Actual generated failed build deletes pre-existing own image ref. Separate image-ownership scope; no P34 votes inferred."
     }
   ],
   "proposals": [
@@ -3898,7 +3913,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
       "risk": "Moderate shell lifecycle change. Must preserve cleanup when foreground execution is interrupted without treating a name as ownership, and must preserve original status/log/image behavior.",
       "validation_plan": "Actual pre-existing metadata-name canary remains running after failed check exits125; different-name control and reused image unchanged. Later fixture/browser conflict preserves existing conflicting object while cleaning earlier successfully created owned resources. Interrupt successfully created foreground/background checks: only owned immutable IDs removed, signal/failure statuses preserved. Exercise all launch paths with bounded generated fixtures or controlled disposable Docker adapter as appropriate; compare exact diff/options and shell syntax. No duplicate full browser run or real printer/network probe needed.",
-      "status": "validated",
+      "status": "committed",
       "ballots": {
         "r07": {
           "vote": "APPROVE",
@@ -3984,7 +3999,8 @@
             "root-p34-peer/adapter.log",
             "/workspace/layerglass-review/check-container-ownership/test-results/p34/report.json"
           ]
-        }
+        },
+        "canonical_commit": "038efc662c4e4e9b1d84972c400b1723d4e79bfb"
       }
     },
     {
@@ -4166,6 +4182,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:35:25Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Independent actual ReplayBuffer payload/JPEG generation and pinned full-player Chromium/WebKit reruns keep the paused blue pixels and position11 unchanged while time/layer advance1030/30->1030.25/31; the archive at11 is green and the cached blue preview is mislabeled11. Separate connected-consumer controls preserve the completed thirty-second held gap at1005, later-page minimum, preview-only gesture, explicit historical10, same-session recovery, one video and Live. The exact closed JPEG ownership scope addresses the proven mismatch without redefining held-interval clocks or swapping the paused still. Approval requires all frozen normal/subsecond/non-rounded, image/SSE ordering, pending pause/seek/Live/reset/recovery and toBlob ownership regressions. Any optional descriptor/immutable selector must remain on the existing endpoint/session boundary, preserve legacy-at/no-descriptor compatibility and reject prior-page or evicted captures. Metadata/end-minus-one alone is not proof of decoded identity; no new transport, decoder, permission or gap/tail policy is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:46:27Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected pinned a239c0c player, controller, telemetry mapper, preview capture and backend frame/interval selection, plus original two-engine distinct-JPEG full-player evidence and its normal one-second successor control. My original-module VM reproduced paused position11 staying fixed while its recorded clock moved1030 to1030.25 to1031 as metadata advanced; completed target10.125 correctly maps1030.125 and must retain that wall clock. The bounded ownership correction addresses a proven image/time mismatch. Approval includes every frozen validation requirement: exact submillisecond/non-half-second identity, both image/metadata completion orders, pending pause/Live, stale completion across seek/source/session/close/recovery, legacy metadata/at and first-frame/retention restrictions, completed gaps, one decoder/committed seek and existing request bounds. Optional descriptors/selectors are approved only within the stated existing metadata/endpoint and closed file list; changing interval arithmetic or silently replacing paused pixels is outside this vote. Own evidence: r08/round8-controls.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:50:26Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
     },
@@ -4238,8 +4268,42 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:35:25Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Independent production PreviewHistory/scrub-preview with real IndexedDB and decoded red/blue JPEGs reproduces both engines: global nearest25.066666 is cold, get chooses hot20.133333, no frame25 disk read occurs and red remains after resolving stops. Evicting only the warm Blob causes one frame25 read and paints blue with the same video, zero seeks/previewHTTP/pageerrors. All10 existing preview-history units pass, demonstrating the missing adjacent-tier regression. Selecting the global nearest first directly fixes the cache-tier bias while peek remains a labeled placeholder. Preserve nearest distance/deterministic tie behavior, LRU/decoded limits, pending/session/asset ownership and P11 decode/fallback handling. The frozen adjacent/non-exact/bidirectional/contiguous and stale/missing/corrupt controls plus post-integration retained-preview sweep are required; no component or transport expansion is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:46:27Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected pinned PreviewHistory.get/nearest/peek and the actual scrub-preview resolution/paint ownership checks, plus original real IndexedDB red/blue browser evidence. My original-module fixture reproduced globally closest25.066666 cold versus returned20.133333 hot with no target disk read; evicting only the hot Blob caused the correct target read and result. Choosing the retained candidate before its storage tier fixes this conflict while allowing peek to remain a labelled placeholder. Approval includes the exact unit and two-engine Web Component regressions in both directions and a bounded contiguous sweep, unchanged ties/coalescing/session/asset ownership, corrupt/missing/delayed storage and single decode/server fallback behavior, and the post-integration actual45min retained sweep. This does not approve component changes, new fetch loops or storage/capture policy. Own evidence: r08/round8-controls.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:50:26Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
+    },
+    {
+      "id": "P38",
+      "round": 9,
+      "revision": 1,
+      "title": "Keep check-built image references private and proven owned",
+      "author": "root",
+      "source_finding": "ROOT-R9-IMAGE-OWNERSHIP",
+      "baseline": "038efc662c4e4e9b1d84972c400b1723d4e79bfb",
+      "files": [
+        "scripts/check.sh",
+        "docs/development/workflow.md"
+      ],
+      "scope": "Correct only the default temporary check-image build/cleanup lifecycle. Use a private per-invocation temporary image reference so invocations sharing a run id cannot overwrite or remove each other or an existing default-named image. Record immutable successful-build identity at creation/completion time (for example Docker iidfile), including the interval before the build command returns. Cleanup may remove only this invocation's temporary reference while it still resolves to its proven built image; preserve unrelated aliases, pre-existing references and a later foreign replacement. A failed build that created no owned reference must not confer ownership. Explicit LAYERGLASS_TEST_IMAGE remains reused and never removed. Preserve P34 creation-time container IDs, fixture identity/log/status/temp cleanup, existing build args/options and check modes/command contracts. Document temporary ownership/reused-image behavior in the existing workflow note. Only the two listed files may change. No production Dockerfile/Compose/runtime, release/CI/Cloudflare policy, image publication, broad image pruning, package/toolchain/dependency or new product capability.",
+      "evidence": "Actual unchanged check.sh python at038efc6 with invalid generated Dockerfile fails parsing before metadata/container launch. task_image_owned was set before docker build; EXIT removes pre-existing local/layerglass-check:$run_id tag despite no built image. Own separately tagged control and shared Node reference/ID survive. Source and own-tag controls retained; baselinevalidimage and separatealias IDs unchanged. P34 explicitly excluded image ownership, so its prior votes do not approve this proposal.",
+      "evidence_path": "test-results/review-2026-10-26/root-image-tag-ownership/finding.json",
+      "risk": "Moderate shell lifecycle correction. Removing by image ID can affect aliases; tracking only after docker build returns misses interruption. Private refs plus verified build identity must preserve both boundaries without weakening P34 cleanup. If another actor replaces the private ref, preserve it rather than force-remove shared image IDs.",
+      "validation_plan": "Repeat original actual failed-build own-tag canary: old default-named ref/control/shared image survive and build still exits1. Actual successful minimal offline generated build cleans only its created private ref, leaving reused image and other aliases unchanged. Two checks with same run id use distinct owned refs. Controlled interruption after actual successful build/identity recording but before client return cleans owned ref and preserves130/143 status; failed/partial build without owned identity removes no existing image. Foreign replacement of private tag survives; cached-build/shared-ID aliases survive. All7 P34 launch options, conflict/interrupt/name replacement/container log/cleanup contracts remain passing; modes and explicit reused-image path unchanged. Bash/ShellCheck, meaningful focused lifecycle controls and35docs. Saved original negative must remain failing before correction. No full duplicate browser test, real printer or registry/network probe required.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -4386,6 +4450,10 @@
     {
       "sha": "e18167d4a6922a5b57f3def9d79cba0af63d4f1c",
       "summary": "P35: native browser-runner file paths,8prior approvals, independent READY and actual path/failure/timeout controls."
+    },
+    {
+      "sha": "038efc662c4e4e9b1d84972c400b1723d4e79bfb",
+      "summary": "P34: immutable test-container ownership cleanup,10approvals, independent READY/actual Docker plus24adapter cases."
     }
   ],
   "activity": [
@@ -5003,6 +5071,21 @@
       "at": "2026-10-26T08:35:25Z",
       "type": "ballot",
       "message": "R01 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:46:27Z",
+      "type": "ballot",
+      "message": "R07 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:46:27Z",
+      "type": "round9-frozen",
+      "message": "P38 separate two-file temporary image ownership scope frozen after actual own-ref failure proof. Rootproposes/no vote; no implementation until6explicit approvals."
+    },
+    {
+      "at": "2026-10-26T08:50:26Z",
+      "type": "ballot",
+      "message": "R08 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
@@ -5257,6 +5340,13 @@
       "source": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
       "evidence": "test-results/review-2026-10-26/r04/round7-preview-finding-review.json",
       "recorded_at": "2026-10-26T08:21:18Z"
+    },
+    {
+      "summary": "P34 independent exact final script acceptance",
+      "status": "passed",
+      "source": "91e3d2b2c4922857ef6a364e28ddc882522888a1",
+      "evidence": "test-results/review-2026-10-26/root-p34-peer/diff-review.json",
+      "result": "Root direct actual Docker conflict preserves own pre-existing canary;24all7path adapter controls pass after correcting audit mountpoint/noexec setup. Author additional2creationinterval/6actuallifecycle/unmodifiedCLI/options/unwritable/static results inspected. Original audit setup failures retained; no product assertion weakened."
     }
   ],
   "implementation_worktrees": [
