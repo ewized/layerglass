@@ -50,7 +50,7 @@
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
@@ -60,13 +60,14 @@
       "ballot_round6": "test-results/review-2026-10-26/r03/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r03/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r03/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r03/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r03/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r03/round10-ballot.json"
     },
     {
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
@@ -76,7 +77,8 @@
       "ballot_round6": "test-results/review-2026-10-26/r04/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r04/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r04/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r04/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r04/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r04/round10-ballot.json"
     },
     {
       "id": "r05",
@@ -98,7 +100,7 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
@@ -109,13 +111,14 @@
       "round7_findings": "test-results/review-2026-10-26/r06/round7-findings.json",
       "ballot_round7": "test-results/review-2026-10-26/r06/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r06/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r06/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r06/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r06/round10-ballot.json"
     },
     {
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -125,13 +128,14 @@
       "ballot_round6": "test-results/review-2026-10-26/r07/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r07/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r07/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r07/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r07/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r07/round10-ballot.json"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -141,13 +145,14 @@
       "ballot_round6": "test-results/review-2026-10-26/r08/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r08/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r08/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r08/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r08/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r08/round10-ballot.json"
     },
     {
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -157,13 +162,14 @@
       "ballot_round6": "test-results/review-2026-10-26/r09/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r09/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r09/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r09/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r09/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r09/round10-ballot.json"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -174,7 +180,8 @@
       "round7_findings": "test-results/review-2026-10-26/r10/round7-findings.json",
       "ballot_round7": "test-results/review-2026-10-26/r10/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r10/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r10/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r10/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r10/round10-ballot.json"
     }
   ],
   "rounds": [
@@ -416,7 +423,7 @@
       ],
       "notes": "P36 full-player JPEG image-clock mismatch and P37 actual45min cold-preview selection failure, with root independent generated controls. Root proposes P37 and contributes no votes.",
       "majority_recorded_at": "2026-10-26T08:31:18Z",
-      "decision": "P36/P37rev1 approved10/10; first6recorded and committed before all implementation,root0. P37integrated after independent READY; P36author validation pending.",
+      "decision": "P36/P37rev1 approved10/10; first6recordedandcommittedbeforeimplementation,root0. P37integratedandactual45minsweeppass. P36scopedlegacycorrection22b7e8eauthorpassed; freshfinalfrontendpeerpending.",
       "balloting_completed_at": "2026-10-26T08:56:14Z"
     },
     {
@@ -452,8 +459,18 @@
       "slate": "test-results/review-2026-10-26/round-10-slate.json",
       "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d",
       "ballots_started": true,
-      "reviewers_completed": [],
-      "notes": "P39newpolicy: untaggedbuild/runbyimmutableID,noimagecleanup; ordinarycache retained. HeldP38draft and alloriginalvotes/evidence remain immutable. No source/product-doc edits before6freshapprovals."
+      "reviewers_completed": [
+        "r03",
+        "r04",
+        "r06",
+        "r07",
+        "r08",
+        "r09",
+        "r10"
+      ],
+      "notes": "P39newpolicy: untaggedbuild/runbyimmutableID,noimagecleanup; ordinarycache retained. HeldP38draft and alloriginalvotes/evidence remain immutable. No source/product-doc edits before6freshapprovals.",
+      "majority_recorded_at": "2026-10-26T09:41:40Z",
+      "decision": "P39rev1 approved7/10 beforeimplementation,root0;3remainingfreshballots pending. Newpolicyexplicitlyretainsordinarybuildcache, notP38approvaltransfer."
     }
   ],
   "proposals": [
@@ -4248,11 +4265,18 @@
         "commit": "93b2f9ae553835788c5057a69cbfbe1fa2c52718",
         "recorded_at": "2026-10-26T09:20:05Z"
       },
-      "implementation_status": "Final backend READY; frontend actual legacy wheel boundary finding holds author draft out of integration pending approved-scope correction.",
+      "implementation_status": "Author correcting two independent legacy regressions within originally approved16fileP36scope; old93b2f9adraft notintegrated.",
       "backend_final_peer": {
         "report": "test-results/review-2026-10-26/r06/p36-backend-final-review.json",
         "status": "READY for backend only",
         "checks": "22focused backend checks passed, exactsource/reporthashes verified; no frontend acceptance."
+      },
+      "frontend_final_peer": {
+        "report": "test-results/review-2026-10-26/r05/p36-frontend-final-review.json",
+        "sha256": "bf83566871092899d4c5fc9c2cfcf0de22f8b1db8ba9bd7532a20a71180ed5e9",
+        "status": "BLOCKED at93b2f9a",
+        "recorded_at": "2026-10-26T09:34:13Z",
+        "result": "Both legacywheel negativepositions and freshlegacyLive Pause/Play oldfootage regressions reproduce in bothengines; exactparentd4528b4 controls pass. Existing101JS/committedbrowser pass butmisscases; scopedcorrection and new exactfinalpeer required."
       }
     },
     {
@@ -4378,7 +4402,7 @@
       "evidence_path": "test-results/review-2026-10-26/root-image-tag-ownership/finding.json",
       "risk": "Moderate shell lifecycle correction. Removing by image ID can affect aliases; tracking only after docker build returns misses interruption. Private refs plus verified build identity must preserve both boundaries without weakening P34 cleanup. If another actor replaces the private ref, preserve it rather than force-remove shared image IDs.",
       "validation_plan": "Repeat original actual failed-build own-tag canary: old default-named ref/control/shared image survive and build still exits1. Actual successful minimal offline generated build cleans only its created private ref, leaving reused image and other aliases unchanged. Two checks with same run id use distinct owned refs. Controlled interruption after actual successful build/identity recording but before client return cleans owned ref and preserves130/143 status; failed/partial build without owned identity removes no existing image. Foreign replacement of private tag survives; cached-build/shared-ID aliases survive. All7 P34 launch options, conflict/interrupt/name replacement/container log/cleanup contracts remain passing; modes and explicit reused-image path unchanged. Bash/ShellCheck, meaningful focused lifecycle controls and35docs. Saved original negative must remain failing before correction. No full duplicate browser test, real printer or registry/network probe required.",
-      "status": "approved",
+      "status": "superseded",
       "ballots": {
         "r08": {
           "vote": "APPROVE",
@@ -4456,7 +4480,7 @@
         "commit": "a8a27a03df32a26b9a2938440bfcef13b3c6b2e7",
         "recorded_at": "2026-10-26T09:20:05Z"
       },
-      "implementation_status": "Draft a8a27a0 held, independent race confirmed; materially different P39 frozen for fresh voting. No P38 integration.",
+      "implementation_status": "Notintegrated: exactdrafta8a27a0failsindependentactualDockerafterinspectreplacement. SupersededbyfreshP39policyapproved7/10;alloriginal10votes/evidenceretained.",
       "independent_final_review": {
         "report": "test-results/review-2026-10-26/r08/p38-final-review.json",
         "sha256": "ab8f6d396e412978bfe333f4cd6e71a77a153416413f1c9ccac799d72808fa4d",
@@ -4481,8 +4505,65 @@
       "evidence_path": "test-results/review-2026-10-26/r07/p38-peer-response.json",
       "risk": "The source runs immutable built IDs instead of private tags, so named-reference replacement cannot redirect a default check or be deleted by its cleanup. Untagged build results/cache can remain on the daemon and consume storage until normal operator/daemon maintenance; do not add an automatic prune. Concurrent builds may correctly share a cached image ID but must have separate IID files. Explicit reuse and unrelated actors' whole-daemon pruning remain existing external contracts, not new ownership guarantees.",
       "validation_plan": "Retain both baseline parse-failure deletion evidence and exact rejected-draft after-inspection replacement evidence; neither passing pre-inspection checks nor a removed scheduling hook may stand in for the peer counterexample. Run actual minimal offline FROM-only builds from existing cached bases with the real iidfile flag and no tag. Observe the successful full ID and assert every default runtime launch uses it, no build --tag/-t is present and no image mutation/cleanup command occurs. Preserve task-created old-default/other aliases and shared IDs throughout. Repeat actual failed parsing and controlled partial/no/malformed-IID completion paths: original command failures retain status, invalid success records fail before built-runtime consumers, and no reference or image is removed or overwritten. Two same-run-ID invocations build concurrently using distinct private IID files; equal cached image IDs are valid. Retain existing P34 name-conflict behavior or release runtime phases in sequence, without claiming unrelated container-name concurrency was fixed. Hold a real successful build after IID recording but before its wrapper returns, then deliver INT/TERM. Preserve130/143, clean all owned container/private-record resources, leave image/cache and all aliases unchanged and perform no image mutation. Retain a corresponding failed/no-identity interruption control. Use only exact task-created alias canaries to schedule replacement before, across and after the former cleanup inspection interval. Immutable-ID consumers must remain on the built ID and every canary/replacement survives because product cleanup has no image inspection/removal or named-reference mutation path. Preserve the peer's rejected-draft negative as a control. Rerun explicit reused-image and JavaScript/workspace no-build/no-image-cleanup controls, all7 P34 launch-option comparisons and meaningful conflict/foreground/detached interruption/fixture-name replacement/foreign-log/container-ID/temp/status matrix. Adjust only the image-lifecycle assertions for the newly approved retention policy. Run Bash syntax, ShellCheck, diff/scope checks and35-document validation. Use bounded generated offline Docker fixtures and existing images; no duplicate full suite, registry/private/LAN/device/service/account probes, publication, image-ID deletion or broad pruning. Preserve active six-hour fixtures and shared resources.",
-      "status": "voting",
-      "ballots": {}
+      "status": "implementing",
+      "ballots": {
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Fresh decision on the verified frozen Round10 hash and exact 91a2caa source: the canonical script still marks a run-ID tag owned before build completion and removes it by name. My original actual failed-build canary and R08's actual after-inspection replacement counterexample establish both failures; the latter remains a valid blocker for P38 despite its passing before-inspection control. P39 avoids that mutable-reference deletion problem by requesting no named build output, validating the private successful IID, running default consumers by that immutable ID and performing no image cleanup by name or ID. The explicit retained-cache/storage tradeoff is acceptable within this narrow two-file policy and requires truthful documentation; no automatic pruning or broader infrastructure change is authorized. Approval includes all frozen real no-tag/IID launch, failed/partial/missing/malformed identity, same-run-ID concurrency, INT/TERM, alias/replacement and P34 all7 container/log/options/status/temp regression controls, with both original negatives preserved. These remain implementation acceptance work, not claimed executed against a new implementation. Explicit reuse and JavaScript/workspace no-build behavior must remain intact. Earlier P38 votes and my proposal authorship do not supply this vote; no implementation or product-doc/ledger edits were made. Hash evidence is r07/round10-slate-hash.log and the accepted peer assessment is r07/p38-peer-response.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:34:13Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Fresh independent assessment of pinned91a2caa source, exact closed two-file scope and original evidence, including my retained actual P38 after-inspection replacement deletion. Removing all default named-reference creation and image cleanup eliminates that demonstrated ownership gap; passing the validated private IID to metadata, Python/docs and fixture consumers also prevents mutable-tag redirection. Retaining ordinary untagged build results/cache is an explicit, acceptable policy change documented here, not inherited P38 approval. Approval includes the entire frozen validation plan: preserved original negatives, actual offline no-tag builds and exact-ID consumers, failed/partial/missing/malformed IID and no-identity interruption, same-run concurrent distinct records, INT130/TERM143 after real IID creation, replacement schedules around the former inspection interval, zero image mutation, aliases/shared IDs, unchanged explicit reuse and JavaScript/workspace behavior, all7 P34 lifecycle/options/status/log/temp regressions, syntax/ShellCheck/docs and closed-file scope. Whole-daemon pruning remains an external limitation. Canonical Python sorted compact ensure_ascii hash independently matches; no new ownership mutation probes or source edits were performed. Verification: r08/round10-verification.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:35:31Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment of P39rev1, not transferred from P38. Read exact91a2caa check.sh/workflow, original failed-build evidence, R08's actual after-inspection adapter/log/observed and removal IDs, the exact rejected a8a27a0 cleanup and R07 response. Baseline claims ownership before build; rejected draft inspects the Python ID but removes a tag already replaced by Node, so prior inspection cannot authorize deletion. No-tag builds, private IID records, validated full immutable runtime IDs and no image mutation/cleanup remove that race by construction; malformed-success records must fail before consumers. Retaining ordinary build results/cache is an explicit acceptable policy tradeoff here, without automatic pruning or changing explicit reuse. Two-file scope and mandatory real-IID, failed/partial/INT/TERM, same-run/cache, alias/replacement and complete P34 preservation controls are appropriate safeguards before integration. Installed CLI help confirms iidfile and no compare-and-delete option on image rm; no new mutating lifecycle probe run. Slate hash independently verified with compact sorted Python JSON.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:37:03Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Canonical 91a2caa still sets ownership before a tagged build and removes that mutable reference on EXIT; my earlier actual parse-failure negative applies to the same script blob. I independently read the rejected P38 after-inspection adapter and logs: the observed Python ID differs from the Node ID present at image rm, so inspect-then-delete cannot establish its promised ownership. P39 removes that operation entirely: no default tag or image cleanup, successful builds execute only a valid full IID from a private record, and invalid successful records fail before runtime consumers. This is a fresh approval of the exact closed two-file policy, not transferred from P38. Retained untagged results/cache are an accepted storage tradeoff that the workflow must state. Require the specified actual offline build/IID, malformed/missing/failed records, same-run-ID concurrency, pre-return INT/TERM, alias/replacement preservation, explicit reuse and Node-only controls, plus all seven P34 lifecycle/status/options and shell/docs checks. Preserve both original negatives; no automatic pruning, changed explicit-reuse contract or broader runtime behavior is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:38:29Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment on pinned91a2caa: original parsing failure proves premature ownership can delete an old default tag; R08's exact after-inspection Docker schedule separately records a Python ID then a different Node ID at removal, deletes the replacement and exits0. R07 accepts that counterexample; checking a mutable reference before deletion does not bind the mutation. P39 removes that boundary entirely: no default tag creation and no image cleanup/inspection mutation path, with a private IID file and validated full immutable ID selecting every built-runtime consumer only after successful completion. I accept the explicit material retention policy: untagged results/ordinary build cache remain for Docker/operator maintenance, without automatic prune. Approval includes the exact two-file scope and complete negative/actual-build/invalid-IID/concurrency/signal/replacement/alias validation, all seven P34 container/status/log/temp contracts, unchanged explicit reuse and Node-only modes. Existing P38 approval is not transferred; original failed-build and rejected-draft race evidence must remain preserved, and new behavior remains subject to implementation acceptance.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:39:25Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment of91a2caa source, original failed-build evidence, R08 actual after-inspection retag/deletion trace and R07 feasibility assessment supports eliminating mutable-reference ownership. Untagged builds plus a validated private IID and immutable-ID runtime consumers remove the demonstrated selection/deletion race without a compare-and-delete assumption. I explicitly accept the new retained ordinary-build-cache policy and corresponding workflow correction; this is not transferred P38 approval. Approval includes invalid/missing IID fail-before-launch, original build/signal status, separate concurrent IID files, no image mutation on any path, preserved aliases/explicit reuse and every P34 container-ID/log/temp contract. Existing negatives must remain; implementation acceptance controls are still required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:41:40Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment of exact91a2caa script/workflow and full frozen scope, risk and validation. The original failed-build deletion and R08's actual after-inspection schedule establish why inspect-then-delete cannot protect a mutable replacement: the observed Python ID differs from Node at removal. P39 avoids that interval by building without tags, requiring a valid full IID from a private record, running default consumers by that immutable ID and performing no image mutation/cleanup. Retaining ordinary build cache is an explicit acceptable policy change; prior P38 votes do not transfer. Approval includes preserved negatives, real offline IID builds, invalid/partial records, same-run private files, cached IDs, 130/143 interruption, replacement schedules, explicit reuse/no-build modes and all seven P34 CID/log/status/temp contracts. These remain implementation acceptance requirements. Slate hash verified; no other ballots, implementation edits or new image probes.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:41:40Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        }
+      },
+      "implementation": {
+        "author": "r07",
+        "worktree": "/workspace/layerglass-review/check-built-image-id",
+        "branch": "review/check-built-image-id",
+        "authorized_at": "2026-10-26T09:41:40Z",
+        "authorization": "7fresh explicit approvals for exactP39rev1 before any source/product-doc edits; priorP38votesnotused; root0."
+      }
     }
   ],
   "commits": [
@@ -5344,6 +5425,56 @@
       "at": "2026-10-26T09:32:00Z",
       "type": "fresh policy frozen",
       "message": "P39closed2file no-tag/immutablebuiltID/noimagecleanup policy frozen; P38originalapproveddraft notREADY and notintegrated. OrdinaryDockerbuildcache retention disclosed. Sixfreshvotes required; no rootvote."
+    },
+    {
+      "at": "2026-10-26T09:34:13Z",
+      "type": "ballot",
+      "message": "R07 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:34:13Z",
+      "type": "legacy controls confirmed",
+      "message": "R05finalBLOCKEDreportsha verified; exactparentd4528b4 controlspass wheel0/at0 and Livepause31/Play31blue inbothengines. Draftnegativecasesretained; R02correcting scopedlegacybehavior. No integration."
+    },
+    {
+      "at": "2026-10-26T09:35:31Z",
+      "type": "ballot",
+      "message": "R08 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:37:03Z",
+      "type": "ballot",
+      "message": "R06 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:38:29Z",
+      "type": "ballot",
+      "message": "R10 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:39:25Z",
+      "type": "ballot",
+      "message": "R09 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:40:12Z",
+      "type": "actual45minute checkpoint",
+      "message": "CorrectedP37sourcea505:full540/542retainedstillsweep passesChromium/WebKit after2708/2713actualseconds, noextramedia/previewHTTP. Existingoldfailuresretained. Six-hourrun remainsactive; physicalphonebehaviornotclaimed."
+    },
+    {
+      "at": "2026-10-26T09:41:40Z",
+      "type": "ballot",
+      "message": "R03 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:41:40Z",
+      "type": "ballot",
+      "message": "R04 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:41:40Z",
+      "type": "fresh policy authorized",
+      "message": "P39has7explicitfreshAPPROVEbeforeedits; authorR07willstartclosed2fileimplementationinnewworktreefromcommittedauditcheckpoint. P38draftnotintegrated;usernotaskedforpermission. SixhourP37continues."
     }
   ],
   "validation": [
@@ -5624,7 +5755,15 @@
       "runner": "test-results/review-2026-10-26/run-retention-scrub-soak-owned.sh",
       "environment": "Same unchanged failed45min scrub-sweep driver, generated H264 native video,1CPU/384MiB fixture and eachbrowser1CPU/1GiB/256MiBshm; networknone/nohostports,128KiBcompressedRAM forcesIDB, normalstoragebudgets/8MiBdecoded/1GiBDVRtarget. Newignored runner records actualimmutableCID ownership; product sources remain pinned.",
       "limits": "36integratedproposals includingP37; pendingP36JPEG/P38image-ref correction excluded. No actual45min/6h or physicalphone result claimed until measured. Both earlier failedruns retained; oldall26sixhour has nowfailed11744s.",
-      "recorded_at": "2026-10-26T08:54:47Z"
+      "recorded_at": "2026-10-26T08:54:47Z",
+      "checkpoints": [
+        {
+          "after_actual_seconds": 2700,
+          "recorded_at": "2026-10-26T09:40:12Z",
+          "evidence": "test-results/review-2026-10-26/root-p37-45min-checkpoint.json",
+          "result": "BothenginesfullretainedsweepPASS. Chromium540frames p50/p9517/17ms,max24ms;WebKit542framesp50/p9576/98ms,max318ms. 539/541IDBreads,zeroextraHTTP/overlayvisibilitysamples,samevideo,maxdecoded8294400bytes. 6hstillactive."
+        }
+      ]
     },
     {
       "summary": "Older all26 six-hour retention run",
