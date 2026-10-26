@@ -29,24 +29,27 @@
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 5 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r02/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r02/ballot-round4.json",
-      "ballot_round5": "test-results/review-2026-10-26/r02/ballot-round5.json"
+      "ballot_round5": "test-results/review-2026-10-26/r02/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r02/ballot-round6.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 4 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r03/ballot-round3.json",
-      "ballot_round4": "test-results/review-2026-10-26/r03/ballot-round4.json"
+      "ballot_round4": "test-results/review-2026-10-26/r03/ballot-round4.json",
+      "ballot_round5": "test-results/review-2026-10-26/r03/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r03/ballot-round6.json"
     },
     {
       "id": "r04",
@@ -3668,6 +3671,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T07:26:51Z",
           "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Independent pinned-recorder and connected Stats/PlayerUpdates reruns reproduced successful partial coverage through1262, an SSE-only reconnect starting1339, and blank retained1280 with one completed request and no local seek. Chromium used production Cast with a synthetic SDK; WebKit used the external-clock control. Local seek recovered80%, cached1290 rendered90% without refetch, and HTTP/JSON/timeout controls remained suppressed despite advancing SSE. All23 existing history tests passed. The frozen fix ties one coalesced hydration to later accepted same-session recorded evidence and consumes owning eligibility, preserving pending/full/cache/future suppression and P23 ownership; blanket SSE/render retry or automatic failed-request retry is outside approval.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:28:16Z",
+          "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
         }
       },
       "additional_evidence": [
@@ -3750,6 +3760,20 @@
           "rationale": "Independent1d9174e execution of the exact unchanged rejectedSetup function reproduced the dismissal equality failure2/4 held-response Chromium runs and1/4 WebKit runs; immediate controls passed4/4 in each engine. All three failures show the disabled hidden input still active at closeEditor return, then a trusted native blur to body while response5 is still held, with zero application focus calls and unchanged closed-editor revision/editingCamera=null. The production restore guard is already invalidated by closeEditor. A pre-response observable native dismissal barrier therefore corrects the test's causal comparison without changing product policy. Approval retains a snapshot taken while the response remains held, strict cross-response node equality, explicit same-editor closed/hidden guards, all other scenarios/counts and both engines; the required response-driven wrong-focus and reopened-editor injections must still fail. Post-response snapshots, weaker focus assertions, blind sleeps or production focus changes are outside this scope.",
           "revision": 1,
           "recorded_at": "2026-10-26T07:26:51Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Exact unchanged rejectedSetup reproduced two WebKit failures: trusted native blur moved the hidden disabled input to body before the held response, with zero application focus calls; immediate controls passed. Injected post-response visible-focus theft and editor reopening each fail the original equality/hidden guards in both engines. The test-only scope correctly settles and snapshots while response remains held, retaining strict cross-response node equality and same-editor closed/hidden guards; corrected-test negatives remain mandatory.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:34:11Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Sixteen runs of the exact pinned rejectedSetup function reproduced the original dismissal assertion, including two WebKit traces with trusted native blur to body before held response release and zero application focus calls. An independent disposable in-memory test-shape probe settled native dismissal and captured focus while response5 remained held; immediate/delayed runs passed both engines with all7 configure scenarios. Post-response visible-focus injection still failed strict node equality; same-editor reopening with focus unchanged failed the closed/hidden guard. The frozen single-test-file scheduling correction addresses that demonstrated race without weakening ownership or changing production restoration; snapshot-after-response or relaxed assertions remain outside approval.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:34:11Z",
           "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
         }
       },
@@ -4375,6 +4399,21 @@
       "at": "2026-10-26T07:26:51Z",
       "type": "review",
       "message": "P32 author5619dfb now complete and pinned,94focusedconsumerunits/4browsercases/35docs plus unchanged-base negatives. R04 independent peer assigned; no integration until READY. Remaining independent ballots continue R02/R03, P23ABSTAIN preserved. Both model-capacity interruptions recovered on same-agent retry without model changes. Second six-hour32-proposal run has actual initial native samples; first5055adf run continues separately."
+    },
+    {
+      "at": "2026-10-26T07:28:16Z",
+      "type": "ballot",
+      "message": "R03 explicit Round5 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:34:11Z",
+      "type": "ballot",
+      "message": "R02 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:34:11Z",
+      "type": "ballot",
+      "message": "R03 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
