@@ -30,6 +30,7 @@ Pass representative suite names to focus a browser run, for example
 | Local thumbnail retention, storage and loading | `preview-history.test.js`, `browser-preview-storage.js`, `browser-preview-buffer.js`, `browser-preview-loading.js` |
 | Media/platform UI | `media.test.js`, `cast-sender.test.js`, browser fullscreen/Google Cast suites |
 | Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
+| Keyboard focus and pending editors | `browser-keyboard-focus.js` (Chromium/WebKit keyboard navigation, Stats, onboarding cancellation and rejected setup) |
 | Shell/update behavior | `test_pwa.py`, `pwa.test.js`, browser PWA suite |
 
 The selected browser list is maintained in [`apps/web/tests/run-browser.js`](../../apps/web/tests/run-browser.js).

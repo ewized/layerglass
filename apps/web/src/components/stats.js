@@ -47,9 +47,14 @@ export class PrinterStats extends PlayerElement {
     super.disconnectedCallback();
   }
 
-  show(open) {
+  show(open, { focus = false } = {}) {
     const changed = this.hidden === open;
+    const hadFocus = this.contains(this.ownerDocument.activeElement);
     this.hidden = !open;
+    if (changed && open && focus) this.querySelector('#close-stats').focus({ preventScroll: true });
+    else if (changed && !open && (focus || hadFocus)) {
+      this.closest('printer-player')?.focus({ preventScroll: true });
+    }
     if (changed) this.emit('stats-change', { open });
   }
 

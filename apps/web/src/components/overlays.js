@@ -167,11 +167,12 @@ export class PrinterContextMenu extends PlayerElement {
     super.connectedCallback();
     this.listen(this, 'click', event => {
       const button = event.target.closest('[data-player-action]');
-      if (button) this.emit('player-action', { action: button.dataset.playerAction });
+      if (button) this.emit('player-action', { action: button.dataset.playerAction, keyboard: event.detail === 0 });
     });
     this.listen(this, 'keydown', event => {
       if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
-      const buttons = [...this.querySelectorAll('button')];
+      const buttons = this.availableActions();
+      if (!buttons.length) { event.preventDefault(); return; }
       const index = buttons.indexOf(this.ownerDocument.activeElement);
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1 :
         (index + (event.key === 'ArrowUp' ? -1 : 1) + buttons.length) % buttons.length;
@@ -181,6 +182,10 @@ export class PrinterContextMenu extends PlayerElement {
     this.listen(this.ownerDocument, 'click', event => { if (!this.contains(event.target)) this.close(); });
     this.listen(this.ownerDocument.defaultView, 'resize', () => this.close());
     this.listen(this.ownerDocument.defaultView, 'pagehide', () => this.close());
+  }
+
+  availableActions() {
+    return [...this.querySelectorAll('button:not(:disabled)')].filter(button => button.getClientRects().length);
   }
 
   openAt(x, y, player = this.closest('printer-player')) {
@@ -195,7 +200,7 @@ export class PrinterContextMenu extends PlayerElement {
     const size = this.getBoundingClientRect();
     this.style.left = `${Math.max(8, Math.min(x - rect.left, rect.width - size.width - 8))}px`;
     this.style.top = `${Math.max(8, Math.min(y - rect.top, rect.height - size.height - 8))}px`;
-    this.querySelector('button').focus({ preventScroll: true });
+    this.availableActions()[0]?.focus({ preventScroll: true });
   }
 
   close(focus = false) {

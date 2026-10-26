@@ -92,10 +92,12 @@ export class PrinterItem extends PlayerElement {
 export class PrinterList extends PlayerElement {
   rows = new Map();
   editingCamera = null;
+  editorRevision = 0;
 
   connectedCallback() {
     super.connectedCallback();
     this.listen(this, 'printer-edit', event => {
+      this.editorRevision++;
       this.editingCamera = event.detail.cameraId;
       this.renderRows();
       this.rows.get(this.editingCamera)?.input.focus();
@@ -141,6 +143,7 @@ export class PrinterList extends PlayerElement {
   }
 
   closeEditor() {
+    this.editorRevision++;
     this.editingCamera = null;
     for (const row of this.rows.values()) row.error = '';
     this.renderRows();

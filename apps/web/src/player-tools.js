@@ -22,7 +22,7 @@ export class PlayerTools {
       }
       if (event.key !== 'Escape') return;
       if (!this.menu.hidden) { this.closeMenu(true); event.preventDefault(); event.stopPropagation(); }
-      else if (!this.stats.hidden && chrome.panel.hidden) { this.showStats(false); event.preventDefault(); event.stopPropagation(); }
+      else if (!this.stats.hidden && chrome.panel.hidden) { this.showStats(false, { focus: true }); event.preventDefault(); event.stopPropagation(); }
     }, true);
     player.addEventListener('click', event => {
       if (!this.menu.hidden && !this.menu.contains(event.target) && event.target.matches('video, #jpeg, #viewer')) {
@@ -33,9 +33,10 @@ export class PlayerTools {
     }, true);
     player.addEventListener('player-action', event => {
       if (event.detail.action === 'copy-debug') { this.copyDebugInfo(); return; }
+      const focus = Boolean(event.detail.keyboard && this.menu.contains(this.player.ownerDocument.activeElement));
       this.closeMenu();
       chrome.options(false);
-      if (event.detail.action === 'stats') this.showStats(this.stats.hidden);
+      if (event.detail.action === 'stats') this.showStats(this.stats.hidden, { focus });
       else if (event.detail.action === 'mini') this.toggleMini();
     });
     player.addEventListener('playerrestore', () => this.restoreMini());
@@ -154,9 +155,9 @@ export class PlayerTools {
     this.stats.renderActivity();
   }
 
-  showStats(open) {
+  showStats(open, options) {
     const wasHidden = this.stats.hidden;
-    this.stats.show(open);
+    this.stats.show(open, options);
     if (open && wasHidden) console.debug('[LayerGlass] Playback diagnostics opened');
     this.chrome.show();
   }

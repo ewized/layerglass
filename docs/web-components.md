@@ -44,6 +44,11 @@ reattaches playback, Direct refreshes the verified controller/camera connection,
 and Demo reconnects its local player. This does not reload the page or create a
 new recording session.
 
+The first-visit backend chooser locks its address during the bounded connection
+check. Keyboard focus moves to Back so Escape and Back can still cancel; a
+failure or timeout restores editing. A cancelled check cannot select or save a
+backend later.
+
 The camera view samples its existing media into one small decorative canvas for
 the blurred background. Media events and ResizeObserver drive updates without
 another decoder, media request, or timer loop. Hidden documents and a matching
@@ -61,6 +66,16 @@ data properties and `textContent` for server-provided names/IPs. Their inline
 fields and unique labels stay attached across discovery updates. Separate list
 instances keep independent editors. Codes live in input values and action-event
 details until submitted; they are not interpolated into markup or attributes.
+Rejected setup restores a submitted editor's keyboard focus only while that
+same editor remains open on the visible Printers page. Moving focus, dismissing
+the editor or leaving the page cancels that restoration. An editor left open
+keeps its draft and error without reclaiming another control's focus.
+
+The context menu's initial focus and arrow navigation use only visible, enabled
+actions. Keyboard activation of Stats moves focus into the panel, and keyboard
+dismissal returns it to the player. Pointer activation keeps its existing focus
+behavior. These handoffs do not make diagnostics modal or change their sampling
+lifecycle.
 
 UI actions are synchronous bubbling/composed `CustomEvent`s: `printer-select`,
 `printer-save`, `printer-forget`, `printer-scan`, `player-play`, `settings-toggle`,
@@ -85,5 +100,8 @@ controllers keep their existing media, timeline, SSE and orientation behavior.
 safe names, labels, reconnecting editors, one action per gesture, and sampling
 cleanup in Chromium and WebKit. The existing browser suites cover the player
 behavior against generated footage.
+`apps/web/tests/browser-keyboard-focus.js` covers available menu actions,
+keyboard Stats handoffs, held onboarding checks and failed setup focus ownership
+with actual Chromium/WebKit keyboard events and generated responses.
 
 Platform reference: [WHATWG custom elements and lifecycle requirements](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance).

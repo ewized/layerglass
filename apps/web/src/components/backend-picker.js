@@ -86,9 +86,21 @@ export class PrinterBackendPicker extends PlayerElement {
   }
 
   busy(value) {
+    const back = this.querySelector('[data-backend-back]');
+    if (value && this.form.contains(this.ownerDocument.activeElement)) {
+      // Disabling the focused input/submit button otherwise sends keyboard
+      // focus to body, outside the picker's Escape cancellation handler.
+      this.pendingFocus = back;
+      back.focus({ preventScroll: true });
+    }
     this.form.setAttribute('aria-busy', String(value));
+    this.input.disabled = value;
     this.form.querySelector('[type="submit"]').disabled = value;
     this.form.querySelector('.loader').hidden = !value;
+    if (!value) {
+      if (this.pendingFocus === this.ownerDocument.activeElement) this.input.focus({ preventScroll: true });
+      this.pendingFocus = null;
+    }
   }
 
   async connect() {

@@ -672,10 +672,24 @@ cameraList.addEventListener('printer-save', async event => {
   const { cameraId: key, code } = event.detail;
   const row = cameraList.row(key);
   if (!row || settingUp) return;
+  const document = row.ownerDocument;
+  const focusOwner = row.form.contains(document.activeElement) ?
+    { input: row.input, revision: cameraList.editorRevision, moved: false } : null;
+  const focusListeners = new AbortController();
+  let failed = false;
   settingUp = true;
   row.error = '';
   row.saving = true;
   renderCatalog();
+  if (focusOwner) {
+    // Observe deliberate navigation after the busy render has disabled the
+    // editor. Its synchronous focus loss to body still belongs to this request.
+    const moved = event => {
+      if (event.type === 'keydown' ? event.key === 'Tab' : !row.form.contains(event.target)) focusOwner.moved = true;
+    };
+    for (const type of ['focusin', 'pointerdown', 'keydown']) document.addEventListener(type, moved,
+      { capture: true, signal: focusListeners.signal });
+  }
   try {
     await post(`/api/cameras/${key}/configure`, { access_code: code });
     cameraList.closeEditor();
@@ -685,12 +699,20 @@ cameraList.addEventListener('printer-save', async event => {
     await loadStatus();
     playerChrome.options(false);
   } catch (error) {
+    failed = true;
     console.error('[LayerGlass] Printer configuration failed', error.message);
     row.error = 'Could not save this camera connection. Try again.';
   } finally {
+    focusListeners.abort();
     settingUp = false;
     row.saving = false;
     renderCatalog();
+    if (failed && focusOwner && !focusOwner.moved && !document.hidden && document.hasFocus() &&
+        [document.body, document.documentElement].includes(document.activeElement) &&
+        cameraList.row(key) === row && cameraList.editorRevision === focusOwner.revision &&
+        cameraList.editingCamera === key && row.input === focusOwner.input && row.isConnected &&
+        !row.form.hidden && !playerChrome.panel.hidden && playerChrome.settings.page === 'printers' &&
+        row.input.getClientRects().length) row.input.focus({ preventScroll: true });
   }
 });
 

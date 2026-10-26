@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 const available = [
   'browser-esm.js',
   'browser-components.js',
+  'browser-keyboard-focus.js',
   'browser-backends.js',
   'browser-backend-origin.js',
   'browser-direct.js',
