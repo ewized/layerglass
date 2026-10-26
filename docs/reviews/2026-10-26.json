@@ -94,12 +94,13 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 4 ballot complete",
+      "status": "round 5 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r07/ballot-round3.json",
-      "ballot_round4": "test-results/review-2026-10-26/r07/ballot-round4.json"
+      "ballot_round4": "test-results/review-2026-10-26/r07/ballot-round4.json",
+      "ballot_round5": "test-results/review-2026-10-26/r07/ballot-round5.json"
     },
     {
       "id": "r08",
@@ -279,7 +280,7 @@
     },
     {
       "id": 5,
-      "phase": "majority approved; remaining ballots continue",
+      "phase": "all ten ballots recorded; integrated after independent review",
       "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
       "frozen_at": "2026-10-26T06:18:20Z",
       "proposal_ids": [
@@ -291,20 +292,23 @@
       "reviewers_completed": [
         "r01",
         "r02",
+        "r03",
         "r04",
         "r05",
         "r06",
+        "r07",
         "r08",
         "r09",
         "r10"
       ],
       "notes": "Independent R05 successful-partial/SSE reconnect finding arrived after frozen Round4; separate scope and ballots preserve that slate.",
       "majority_recorded_at": "2026-10-26T07:02:25Z",
-      "decision": "P32 revision1 has6 explicit APPROVE fromR08/R10/R04/R06/R09/R05 of10 before implementation. Root0."
+      "decision": "P32revision1 approved10/10; firstsix recorded before implementation, root0.",
+      "balloting_completed_at": "2026-10-26T07:36:55Z"
     },
     {
       "id": 6,
-      "phase": "majority approved; remaining ballots continue",
+      "phase": "integrated after six approvals and independent strict controls; final ballot continues",
       "baseline": "1d9174e393ce47f93aa9006d5076bf70004ee522",
       "frozen_at": "2026-10-26T06:36:56Z",
       "proposal_ids": [
@@ -315,6 +319,8 @@
       "ballots_started": true,
       "reviewers_completed": [
         "r01",
+        "r02",
+        "r03",
         "r04",
         "r05",
         "r06",
@@ -3614,7 +3620,7 @@
       "evidence_path": "test-results/review-2026-10-26/r05/round4-findings.json",
       "risk": "Moderate async state: conflating successful partial and failed attempts could create per-SSE/render retry loops or release a successor request. Recovery must be tied to accepted same-session coverage and consumed owned eligibility.",
       "validation_plan": "Successful partial + later coverage hydrates missing past reading once with pending coalescing; unchanged/identical coverage, cached/full windows and unrecorded future make no requests. HTTP/JSON/timeout remain suppressed through advancing SSE until explicit retry. Preserve all P23 cancellation/A-B-A, late callback, replacement-session and bounded-window cases. Durable real Stats+GoogleCastSender+PlayerUpdates+EventSource reconnect regression recovers right reading without local seek, with local-seek/full-cache controls; WebKit uses only external clock and remains Cast-ineligible. Relevant units/docs and both engines must pass.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r08": {
           "vote": "APPROVE",
@@ -3678,6 +3684,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T07:28:16Z",
           "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Independent 5055adf recorder-payload and connected consumer reruns reproduce successful coverage1200..1262 followed by real EventSource reconnect coverage1339..1370: Chromium production Cast receiver1280 remains blank with one request and no local seek events; WebKit external-clock control matches without enabling Cast. Explicit local seek fetches once and restores80%, then cached1290 renders90% without another request. HTTP/JSON/timeout controls stay suppressed through later SSE and60 reads; all23 existing history tests pass. Approve only the frozen request-owned, consumed eligibility based on valid accepted same-session recorded coverage, preserving future/unchanged/full/cache/pending and P23 late-callback/session ownership. Blanket SSE resets or render retries are excluded; the durable default browser regression and listed negative controls are required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:36:55Z",
+          "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
         }
       },
       "additional_evidence": [
@@ -3688,11 +3701,18 @@
         }
       ],
       "implementation": {
-        "owner": "r05",
-        "worktree": "/workspace/layerglass-review/history-hydration",
-        "branch": "review/history-hydration",
-        "base": "4c845ad",
-        "authorized_after_six_recorded_approvals": true
+        "author_commit": "5619dfbc2fc01593989935d99484203b63244fc1",
+        "canonical_commit": "bfecc99",
+        "peer_review": "test-results/review-2026-10-26/r04/p32-diff-review.json",
+        "peer_decision": "READY",
+        "validation": "Independent94 focused units/35docs/4registered HTTP-SSE consumer cases, old-code negative controls and actual recorder payload match; root verified final six unchanged file hashes plus approved P29/P32 telemetry-doc merge."
+      },
+      "implementation_review": {
+        "peer": "r04",
+        "decision": "READY",
+        "reviewed_head": "5619dfbc2fc01593989935d99484203b63244fc1",
+        "evidence": "test-results/review-2026-10-26/r04/p32-diff-review.json",
+        "report_sha256": "5c971ce6dd80c5925e12bd0daf93f3cd5b6cf36191513f450f20ceb25c97eaaa"
       }
     },
     {
@@ -3922,6 +3942,10 @@
     {
       "sha": "597d2b1",
       "summary": "P29 follow-up: publish capture state only after JPEG file checks; original peer fault and new actual-maintenance negative controls retained."
+    },
+    {
+      "sha": "bfecc99",
+      "summary": "P32: evidence-gated successful-partial historical telemetry hydration; R04 independently READY, integrated hashes verified."
     }
   ],
   "activity": [
@@ -4414,6 +4438,21 @@
       "at": "2026-10-26T07:34:11Z",
       "type": "ballot",
       "message": "R03 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:36:55Z",
+      "type": "ballot",
+      "message": "R07 explicit Round5 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:36:55Z",
+      "type": "process-correction",
+      "message": "Coordinator integration orchestration continued after an assertion found P32 READY report not yet written. R04 explicit READY message had already arrived; no approval or product scope was bypassed, but intended saved-report guard was not respected. No tests/publication started before correction. Saved report now exists and its reportedSHA256, exact canonical source/test hashes and approved P29/P32 doc merge are verified. Future critical dependent exec operations stop on nonzero exit before later mutations. Commit91e5904 contains ballot imports only despite premature acceptance title; bfecc99 is the reviewed approved P32 integration. A subsequent verification initially used the wrong decision field; checked execution stopped before any mutation, then the actual status=READY field was inspected and verified."
+    },
+    {
+      "at": "2026-10-26T07:36:55Z",
+      "type": "integration",
+      "message": "All33 approved proposals now integrated after independent diff reviews. Each had at least6 explicit approvals before implementation; all33 now have at least9 approvals, finalR07P33 ballot continues. Source ready for immutable combined all check; no new full-CI result or deployment claimed."
     }
   ],
   "validation": [
@@ -4620,6 +4659,12 @@
         "codex__layerglass_review_retention_phase2_sweep_v1_20261026_webkit"
       ],
       "exec_session": 55778
+    },
+    {
+      "summary": "R04 independent P32 exact final diff:94consumerunits/35docs/4registered browsercases pass; old module fails and generated fixtures match actual recorder",
+      "status": "passed",
+      "source": "5619dfb",
+      "evidence": "test-results/review-2026-10-26/r04/p32-diff-review.json"
     }
   ],
   "implementation_worktrees": [
