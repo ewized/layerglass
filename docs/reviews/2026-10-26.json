@@ -16,10 +16,11 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 2 ballot complete",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
-      "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json"
+      "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r01/ballot-round3.json"
     },
     {
       "id": "r02",
@@ -42,17 +43,21 @@
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round1 ballot complete; preview implemented; reviewing replay recovery",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r04/",
-      "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r04/ballot-round3.json"
     },
     {
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round1 ballot complete; provider diff review ready after correction",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
-      "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r05/ballot-round3.json"
     },
     {
       "id": "r06",
@@ -82,9 +87,11 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round1 ballot complete; UI implementation reviewed and integrated",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
-      "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r09/ballot-round3.json"
     },
     {
       "id": "r10",
@@ -793,7 +800,8 @@
         "peer_review": {
           "reviewer": "r04",
           "status": "ready",
-          "evidence": "R04 independently reran original hidden-deadline trigger in both engines across two accelerated deadlines plus full browser-replay-suspension suite Chromium/WebKit. Same session/video/transport, exact paused position, one decoder/restore seek; no remaining blocker. Ready message2026-10-26T05:29 UTC; final artifact being saved."
+          "evidence": "R04 independently reran original hidden-deadline trigger in both engines across two accelerated deadlines plus full browser-replay-suspension suite Chromium/WebKit. Same session/video/transport, exact paused position, one decoder/restore seek; no remaining blocker. Ready message2026-10-26T05:29 UTC; final artifact being saved.",
+          "report": "test-results/review-2026-10-26/r04/p06-followup-independent-review.json"
         },
         "validation": "R02 final209 JS/35 docs and3 focused browser suites both engines; old player.js negative control fails at hidden replay. R04 independently reproduced fix and14 lifecycle cases; physical native Safari HLS remains unverified.",
         "followup": "R02 correcting hidden/offline readiness cancellation after R04 reproduction; no P06 commit integrated yet.",
@@ -2499,6 +2507,27 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:25:56Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The slate's online-only/ordinary-local-seek explanation is false: explicit PageReplay.seek dispatches replaypositionchange and Stats retries. However, my frozen-baseline Chromium fixture connects production PrinterStats, PageReplay, PrinterHistory and GoogleCastSender. Synthetic receiver-originated A(1230) -> B(1370) -> A leaves Stats progress empty after multiple real timer reads: only two requests [1230,1370], A requested=true/pending=null, zero replaypositionchange and native seeked events. An explicit sender PageReplay.seek control immediately issues third request1230 and displays11%. Evidence is r05/round2-cast-history.mjs and .log. This establishes the same canceled-window defect in an existing receiver-driven consumer path; the unchanged ownership, pending deduplication, late-result, timeout/outage and bounded-window validation plan adequately constrains its correction. This is synthetic receiver evidence, not physical Cast validation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The original only-online claim is false: Stats retries on local replaypositionchange, seeked and opening, so its direct model reproduction alone did not establish a UI defect. I independently reran the connected production Stats/PageReplay/History/GoogleCastSender fixture at the frozen baseline: receiver A-to-B aborts A, receiver return to A leaves blank Stats over real timer reads with two requests and zero local retry events; a local seek control makes the third request and displays11%. Cast.sync updates/render the receiver clock without those local events. Releasing suppression only for owned superseded/aborted unfinished requests fixes this demonstrated gap within the frozen scope. Approval includes deterministic cancellation/dedupe, stale same-window and replacement-session isolation, genuine failure/timeout suppression, bounded-window regressions and the telemetry note; it does not approve changing Cast or Stats retry policy.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "I reproduced the receiver-driven Cast A/B/A failure with connected production Stats, PageReplay, PrinterHistory and GoogleCastSender at afee31a: cancelled A stays requested with no pending owner, two timer reads produce no third request, and Stats remains blank. The ordinary local-seek explanation is false; my Chromium/WebKit control recovered through existing retry events. The unchanged scope correctly repairs cancellation eligibility in the history model. I approve its request/session ownership, pending deduplication, bounded-cache and genuine-failure/timeout suppression regressions; the documented trigger must reflect the receiver path.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:33:10Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       },
       "additional_evidence": [
@@ -2533,7 +2562,7 @@
       "evidence_path": "test-results/review-2026-10-26/r01/round2-findings.json",
       "risk": "Low; undocumented clients using discovery.found must use the existing camera catalog. Internal identity and pairing must remain untouched.",
       "validation_plan": "Real HTTP Scan with synthetic URL/saved-code name omits found and secrets in queued/cooldown cases, preserves every other progress/queued/retry property, private candidates/serial/model unchanged, catalog stays sanitized, CORS/header rejection/admission and pairing fixtures pass.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r10": {
           "vote": "APPROVE",
@@ -2554,6 +2583,27 @@
           "rationale": "Actual HTTP fixtures confirm clean catalog output but raw saved-code/authenticated-URL names in the Scan body's found list for both queued and cooldown responses. Omitting found from the public status copy closes that separate output path while preserving internal candidates, verified identity, progress fields and existing origin/header controls. The required real HTTP and unchanged-private-state regressions match the exact scope.",
           "revision": 1,
           "recorded_at": "2026-10-26T05:25:56Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the actual HTTP fixture against a git-archive of afee31: catalog is redacted, while both queued and cooldown Scan202 responses expose the synthetic saved code and authenticated URL under found. Omitting found from a status copy matches the existing catalog contract without changing private identity, pairing or scheduling. The planned progress-field, private-candidate, CORS/header and binding regressions are appropriate. Evidence: r05/round2-discovery.log; the reused fixture's printed older baseline label is static, while the executed source archive was the frozen afee31.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Source shows POST/api/discover serializes private Discovery.status().found while the catalog already removes it. My network-none real-HTTP rerun of the supplied fixture against the frozen baseline confirms both queued/cooldown202 responses disclose the synthetic saved code and authenticated URL while catalog output is redacted and private candidates remain unchanged. Removing found only from the status copy is a narrow public projection correction preserving admission, identity and scan scheduling. Required HTTP cases must preserve every other progress/queued/retry field plus exact-origin/header policy, private serial/model/candidates and pairing behavior.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "At afee31a I reproduced real HTTP queued and cooldown Scan responses containing the synthetic saved code and authenticated URL through raw discovery.found, while the camera catalog redacts both. app.py publishes Discovery.status directly. Omitting found from a response copy matches the existing catalog envelope without changing private candidates or scan policy. I approve the exact scope and its HTTP progress-field, CORS/header, pairing and private-identity preservation regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:33:10Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       }
@@ -2576,7 +2626,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round2-findings.json",
       "risk": "Low test-only path change; temporary-source cleanup must not discard screenshots expected in the host collector.",
       "validation_plan": "Actual clean Nx site:test outside /app as non-root passes Chromium/WebKit and writes selected/checkout screenshots, no writes to an unrelated /app. Normal run-js.sh --workspace still exports screenshots to its mounted ignored collector; docs check passes.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r10": {
           "vote": "APPROVE",
@@ -2597,6 +2647,27 @@
           "rationale": "I independently reran the pinned real site browser test outside /app: it fails at the hardcoded /app screenshot destination, while the identical source passes Chromium/WebKit when a separate writable /app is supplied and writes outside its checkout. A configurable checkout-relative default plus explicit run-js.sh collector preserves the existing harness and fixes this test-only portability failure; the planned actual clean Nx and collector checks cover the bounded change.",
           "revision": 1,
           "recorded_at": "2026-10-26T05:25:56Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The frozen-baseline source hardcodes site screenshots to /app although other test paths use the checkout. My non-root, network-disabled Chromium rerun after both actual builds failed at /app/test-results/site-1440.png from /tmp/source. A caller-selected destination with checkout default is a narrow test fix; the scope explicitly preserves the temporary-copy workspace collector. Clean independent Nx and normal workspace artifact regressions cover both invocation contracts. Evidence: r05/round2-site.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "browser-site.js resolves source/build roots from import.meta.url but hardcodes screenshot writes to/app/test-results; run-js.sh runs a temporary copy and relies on that collector. I independently reproduced the screenshot ENOENT after both actual builds in a non-root alternate checkout using locked Playwright with network disabled. A selectable destination with checkout-relative default and explicit temporary-harness collector mapping is the bounded test-only fix. Approval includes clean actual Nx site:test coverage outside/app, both engines/viewports and build prerequisites, no unrelated/app writes, retained standard workspace artifact collection and documentation validation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "At afee31a I independently ran the actual site browser script as UID65534 outside /app: Chromium reaches the hard-coded screenshot write and fails ENOENT. An unrelated writable /app makes unchanged Chromium/WebKit desktop/mobile checks pass and receives the artifacts. The selectable output plus checkout-relative default fixes the test dependency. Explicit run-js.sh collection is necessary because it deletes its temporary checkout. I approve the scoped path change and listed clean Nx, collector and docs validation, preserving every browser assertion.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:33:10Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       }
@@ -2620,7 +2691,36 @@
       "risk": "Low/moderate lock-order change; registry already reads discovery.status under its lock elsewhere, and discovery producers do not call registry. Retired telemetry shutdown must stay outside registry.lock to avoid joining callbacks under it.",
       "validation_plan": "Queue catalog while registry.lock is held, finish new verified B discovery and B setup, release caller; it must read current B only after lock entry and keep B code/serial active both in memory and after reload. No stale source reactivation/quarantine; concurrent unchanged metadata and retired callbacks remain deadlock-free; binding/discovery/history and docs checks pass.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The independent offline rerun confirms that a catalog snapshot captured before registry.lock later reverts persisted serial B to A and quarantines B's newly configured code. The scratch-only status-read move under the existing lock keeps B active and saved without quarantine. Registry-to-discovery locking already occurs in configure/forget, and discovery producers do not call registry methods; retaining client.close outside registry.lock preserves callback shutdown safety. The exact serialized-snapshot scope and required persisted/reloaded binding plus callback-order regressions address this demonstrated race without changing pairing policy or scheduling.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Independently reproduced the deterministic race from the frozen7f2a8cf archive: B is configured with its verified serial before the queued old catalog runs; afterward B becomes unconfigured, its code is quarantined, and A's serial is persisted again. Evidence: r05/round3-catalog-race.log. Acquiring registry.lock before Discovery.status makes snapshot selection share the identity transaction boundary. Registry-to-discovery ordering already exists in configure/forget, and inspected discovery producers do not call registry; keeping retired client close outside registry.lock avoids callback joins under it. The exact queued-catalog, persisted/reloaded binding, unchanged metadata and retired-callback validation plan covers the identified behavior and lock risk without expanding discovery or printer capabilities.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "I inspected _catalog/configure/forget and discovery lock use, then independently reran the deterministic fixture on the frozen baseline: a pre-lock A snapshot quarantines the newly paired B code and persists serialA. The scratch-only move of status() under the existing registry RLock retains active and saved serialB with no quarantine. Registry-to-discovery locking already occurs in configure/forget; discovery producers do not call registry, and retirement close stays outside its lock. The exact snapshot move addresses this ordering defect without changing identity policy. Approval includes queued-catalog versus replacement/setup, persisted/reloaded B retention, unchanged metadata/serial behavior, late callbacks and retirement/deadlock regressions plus the stated focused suites/docs checks.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:31:32Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "At 7f2a8cf I reproduced a queued catalog snapshot A reverting explicitly repaired B to unconfigured A, quarantining B's new code and persisting A's serial. _catalog reads discovery before registry.lock, so the requested ordering correction closes the demonstrated race. Discovery producers do not call registry, and retired client close already occurs outside the registry lock. I approve the exact snapshot-order scope and its persistence/reload, unchanged/offline identity and callback/deadlock regressions; client shutdown must remain outside the lock.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:33:10Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        }
+      }
     }
   ],
   "commits": [
@@ -2891,6 +2991,46 @@
       "at": "2026-10-26T05:30:36Z",
       "type": "integration",
       "message": "All22 all-ten-approved Round1 proposals integrated after independent review. P06 original hidden deadline blocker correctedfeff921, independently ready and integratede6e834c. Preparing immutable source archive for combined full checks. New P23 actual receiver-originated Cast evidence supplements frozen slate without changing scope; normal local seek counterexample preserved. No Round2/3 source implementation yet."
+    },
+    {
+      "at": "2026-10-26T05:31:32Z",
+      "type": "ballot",
+      "message": "R01 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:31:32Z",
+      "type": "ballot",
+      "message": "R05 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:31:32Z",
+      "type": "ballot",
+      "message": "R05 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:31:32Z",
+      "type": "ballot",
+      "message": "R04 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:31:32Z",
+      "type": "ballot",
+      "message": "R04 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:33:10Z",
+      "type": "ballot",
+      "message": "R09 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:33:10Z",
+      "type": "ballot",
+      "message": "R09 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:33:10Z",
+      "type": "quorum",
+      "message": "P24 andP25 each now have6 explicit distinct APPROVE votes and can be implemented. P23 has5 approvals plus1 abstention and remains unapproved; new Cast consumer evidence preserved, local-seek counterexample retained. P26 has4 approvals and remains unapproved. Root0/no votes inferred. All22 Round1 combined checks running on immutable75a0479."
     }
   ],
   "validation": [
@@ -2945,6 +3085,14 @@
       "log": "test-results/review-2026-10-26/retention_pilot_v1-{chromium,webkit}.log",
       "recorded_at": "2026-10-26T05:17:41Z",
       "limitations": "Synthetic media, headless engines and forced memory pressure; no physical-phone performance claim. First cold WebKit paint1286ms, later200/81ms; Chromium23/8/21ms."
+    },
+    {
+      "summary": "Immutable combined first-round check.sh all with build, units, docs, Nx/site and all18 browser suites",
+      "status": "running",
+      "source": "75a0479",
+      "log": "test-results/review-2026-10-26/round1-full.log",
+      "started_at": "2026-10-26T05:30:37Z",
+      "environment": "Archive snapshot, disposable runtime image, optional non-loopback browser HTTP blocked by audit-only Playwright preload; native online behavior and production source unchanged."
     }
   ],
   "implementation_worktrees": [
