@@ -27,6 +27,11 @@ issued URLs for that window then return 404. Cleanup is limited to the stopped
 relay's generation; other live relays and retained page archives have separate
 ownership.
 
+If initial page-history collection or metadata fails, creation releases the
+unreturned page lease and prunes unused archives. A later retry can succeed
+without waiting for lease expiry or consuming the viewer limit. Other pages
+keep their existing shared archive and history.
+
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified

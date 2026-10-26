@@ -130,9 +130,17 @@ class ReplayBuffer:
                 self.archives[camera] = archive
             session = Session(uuid.uuid4().hex, camera, archive.sequence, archive.position, opened_at=time.time())
             self.sessions[session.id] = session
-            self._collect_printer(archive, force=True)
-            self._collect(archive, relay)
-            return self._metadata(session)
+            try:
+                self._collect_printer(archive, force=True)
+                self._collect(archive, relay)
+                return self._metadata(session)
+            except Exception:
+                self.sessions.pop(session.id, None)
+                try:
+                    self._prune()
+                except OSError:
+                    LOG.warning('Could not clean up failed temporary camera history.')
+                raise
 
     def release(self, token):
         with self.lock:
