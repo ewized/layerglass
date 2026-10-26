@@ -51,6 +51,16 @@ actual opening time as origin and can wait for a later first available frame;
 they cannot access an earlier page's frames or printer readings. Finalizing a
 tail preserves completed earlier starts and the same retention/preview bounds.
 
+While pages own an archive, retention drops a fragment from byte accounting only
+after its file has been deleted. If deletion temporarily fails, maintenance keeps the
+worker and page leases alive and reports the existing temporary-buffer error.
+It retries cleanup before copying more media, so an extended unlink failure
+cannot keep growing the archive even when new writes remain possible. Viewer
+metadata and retained media stay available. Successful cleanup allows collection
+to resume with the same page tokens; the next collected media clears the error.
+The ordinary one-current-fragment-per-camera floor remains a retention target,
+including when that current fragment alone exceeds the configured byte value.
+
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified

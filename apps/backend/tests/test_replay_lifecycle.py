@@ -2,9 +2,11 @@
 
 import errno
 import json
+import os
 from pathlib import Path
 import tempfile
 import threading
+import time
 import unittest
 from unittest.mock import patch
 from urllib.error import HTTPError
@@ -30,6 +32,162 @@ class ObservedLock:
 
     def __exit__(self, *args):
         return self.lock.__exit__(*args)
+
+
+class ReplayPruningTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.source = Source(self.root)
+        self.source.publish([1, 2, 3])
+        self.registry = Registry(self.source)
+        self.replay = ReplayBuffer(self.registry, root=self.root / 'buffer', timeout=60)
+        self.worker_errors = []
+        hook = patch('threading.excepthook', side_effect=lambda args: self.worker_errors.append(args.exc_value))
+        hook.start()
+        self.addCleanup(hook.stop)
+        self.replay.start()
+        self.addCleanup(self.replay.close)
+        self.token = self.replay.create(CAMERA)['session_id']
+        self.archive = self.replay.archives[CAMERA]
+        self.server = ViewerServer(('127.0.0.1', 0), registry=self.registry, replay=self.replay)
+        self.addCleanup(self.server.server_close)
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+        self.addCleanup(self.server.shutdown)
+        self.base = f'http://127.0.0.1:{self.server.server_port}'
+
+    def wait_for(self, predicate):
+        deadline = time.monotonic() + 4
+        while time.monotonic() < deadline:
+            self.assertTrue(self.replay.thread.is_alive(), f'DVR worker stopped: {self.worker_errors!r}')
+            with self.replay.lock:
+                if predicate():
+                    return
+            time.sleep(0.01)
+        self.fail('DVR maintenance did not reach the expected state.')
+
+    def http(self, path):
+        with urlopen(self.base + path, timeout=2) as response:
+            return response.read()
+
+    def assert_tracked(self):
+        files = {item.file for item in self.archive.fragments}
+        self.assertEqual(files, set(self.archive.directory.iterdir()))
+        self.assertEqual(sum(item.size for item in self.archive.fragments), sum(file.stat().st_size for file in files))
+        self.assertFalse(self.worker_errors)
+
+    def test_real_cap_unlink_failure_keeps_worker_and_ownership_then_recovers(self):
+        if os.geteuid() == 0:
+            self.skipTest('The real directory permission fault requires a non-root runtime.')
+        with self.replay.lock:
+            self.source.publish([3, 4, 5])
+            self.replay._collect(self.archive, self.source)
+            original = self.archive.fragments[0].file
+            self.replay.max_bytes = 20
+            with patch.object(self.replay, '_sprite', return_value=b'\xff\xd8fixture\xff\xd9'):
+                self.assertIsNotNone(self.replay.preview(self.token, 0))
+            self.assertTrue(self.replay.previews)
+            self.archive.directory.chmod(0o500)
+        try:
+            self.wait_for(lambda: self.archive.error is not None)
+            self.assertIn(original, {item.file for item in self.archive.fragments})
+            self.assertTrue(original.exists())
+            self.assertEqual(json.loads(self.http('/healthz')), {'ok': True})
+            self.assert_tracked()
+        finally:
+            self.archive.directory.chmod(0o700)
+        self.source.publish([5, 6, 7])
+        self.wait_for(lambda: self.replay.status(self.token)['end_seconds'] >= 10)
+        with self.replay.lock:
+            self.assertFalse(original.exists())
+            self.assertFalse(self.replay.previews)
+            self.assertIsNone(self.archive.error)
+            self.assertLessEqual(sum(item.size for item in self.archive.fragments), 20)
+            self.assertTrue(self.replay.status(self.token)['limited'])
+            self.assert_tracked()
+
+    def test_unlink_only_failure_pauses_growth_with_writable_appends_and_recovers(self):
+        later = self.replay.create(CAMERA)['session_id']
+        with self.replay.lock:
+            self.source.publish([3, 4, 5])
+            self.replay._collect(self.archive, self.source)
+            original = self.archive.fragments[0].file
+            self.replay.max_bytes = 20
+        attempts = []
+        unlink = Path.unlink
+
+        def deny_original(path, *args, **kwargs):
+            if path == original:
+                attempts.append(path)
+                raise PermissionError(errno.EACCES, 'Fixture unlink-only failure.')
+            return unlink(path, *args, **kwargs)
+
+        with patch.object(Path, 'unlink', deny_original):
+            self.wait_for(lambda: bool(attempts))
+            with self.replay.lock:
+                files = set(self.archive.directory.iterdir())
+                size = sum(item.size for item in self.archive.fragments)
+                sequence = self.archive.sequence
+            for last in range(6, 14):
+                with self.replay.lock:
+                    count = len(attempts)
+                    self.source.publish(range(last - 2, last + 1))
+                    # Denying only the oldest unlink leaves new writes possible;
+                    # chmod alone would not catch a naive catch-and-append fix.
+                    writable = self.archive.directory / 'writable-probe'
+                    writable.write_bytes(b'new recording writes remain possible')
+                    writable.unlink()
+                self.wait_for(lambda: len(attempts) > count)
+                with self.replay.lock:
+                    self.assertEqual(self.archive.sequence, sequence)
+                    self.assertEqual(set(self.archive.directory.iterdir()), files)
+                    self.assertEqual(sum(item.size for item in self.archive.fragments), size)
+                    self.assert_tracked()
+                began = time.monotonic()
+                metadata = json.loads(self.http(f'/api/sessions/{later}'))
+                self.assertTrue(metadata['ready'])
+                self.assertEqual(self.http(f'/replay/{later}/segment-2.ts'), b'frame-a-5')
+                self.assertEqual(json.loads(self.http('/healthz')), {'ok': True})
+                self.assertLess(time.monotonic() - began, 1)
+        self.wait_for(lambda: self.archive.sequence > sequence)
+        with self.replay.lock:
+            self.assertIsNotNone(self.replay.status(later))
+            self.assertIsNotNone(self.replay.status(self.token))
+            self.assertFalse(original.exists())
+            self.assertIsNone(self.archive.error)
+            self.assertLessEqual(sum(item.size for item in self.archive.fragments), 20)
+            self.assert_tracked()
+
+    def test_failed_old_page_release_keeps_files_tracked_for_worker_retry(self):
+        if os.geteuid() == 0:
+            self.skipTest('The real directory permission fault requires a non-root runtime.')
+        with self.replay.lock:
+            self.source.publish([3, 4, 5])
+            self.replay._collect(self.archive, self.source)
+            later = self.replay.create(CAMERA)['session_id']
+            self.source.publish([5, 6])
+            self.replay._collect(self.archive, self.source)
+            original = self.archive.fragments[0].file
+            self.archive.directory.chmod(0o500)
+        try:
+            with self.assertRaises(PermissionError):
+                self.replay.release(self.token)
+            self.assertIsNone(self.replay.status(self.token))
+            self.assertEqual(self.archive.fragments[0].file, original)
+            self.wait_for(lambda: self.archive.error is not None)
+            self.assertTrue(json.loads(self.http(f'/api/sessions/{later}'))['ready'])
+            self.assert_tracked()
+        finally:
+            self.archive.directory.chmod(0o700)
+        self.source.publish([6, 7])
+        self.wait_for(lambda: self.replay.status(later)['end_seconds'] >= 4)
+        with self.replay.lock:
+            self.assertFalse(original.exists())
+            self.assertFalse(self.replay.status(later)['limited'])
+            self.assertIsNone(self.archive.error)
+            self.assertEqual(self.archive.fragments[0].sequence, self.replay.sessions[later].first)
+            self.assert_tracked()
 
 
 class ReplayLifecycleTests(unittest.TestCase):

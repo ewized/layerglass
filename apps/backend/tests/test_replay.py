@@ -246,6 +246,19 @@ class ReplayTests(unittest.TestCase):
         self.assertIsNone(self.replay.media(token, sequence=0))
         self.assertNotIn('#EXT-X-PLAYLIST-TYPE:EVENT', self.replay.playlist(token).decode())
 
+    def test_current_fragment_larger_than_the_target_keeps_collecting(self):
+        self.replay.max_bytes = 1
+        token = self.replay.create(CAMERA)['session_id']
+        self.source.publish([3, 4, 5])
+        self.wait_duration(token, 6)
+        archive = self.replay.archives[CAMERA]
+        with self.replay.lock:
+            self.assertEqual(len(archive.fragments), 1)
+            self.assertGreater(archive.fragments[0].size, self.replay.max_bytes)
+            self.assertEqual(archive.fragments[0].file.read_bytes(), b'frame-a-5')
+            self.assertIsNone(archive.error)
+        self.assertTrue(self.replay.thread.is_alive())
+
     def test_expired_and_reloaded_pages_get_fresh_buffers(self):
         token = self.replay.create(CAMERA)['session_id']
         with patch('replay.time.monotonic', return_value=time.monotonic() + 11):

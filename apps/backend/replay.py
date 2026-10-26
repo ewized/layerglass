@@ -584,15 +584,17 @@ class ReplayBuffer:
                 del self.archives[camera]
                 continue
             while archive.fragments and archive.fragments[0].sequence < min(active):
-                archive.fragments.popleft().file.unlink(missing_ok=True)
+                archive.fragments[0].file.unlink(missing_ok=True)
+                archive.fragments.popleft()
         total = sum(item.size for archive in self.archives.values() for item in archive.fragments)
         while total > self.max_bytes:
             candidates = [archive for archive in self.archives.values() if len(archive.fragments) > 1]
             if not candidates:
                 break
             archive = min(candidates, key=lambda item: item.fragments[0].created)
-            item = archive.fragments.popleft()
+            item = archive.fragments[0]
             item.file.unlink(missing_ok=True)
+            archive.fragments.popleft()
             total -= item.size
         for archive in self.archives.values():
             if not archive.fragments:
@@ -610,9 +612,24 @@ class ReplayBuffer:
                     not archive.fragments[0].sequence <= key[2][0][0] <= key[2][-1][0] <= archive.fragments[-1].sequence):
                 del self.previews[key]
 
+    def _prune_recording(self):
+        try:
+            self._prune()
+        except OSError:
+            for archive in self.archives.values():
+                archive.error = 'The rewind buffer is temporarily unavailable.'
+            LOG.warning('Could not prune temporary camera history.')
+            return False
+        return True
+
     def _run(self):
         while not self.stop_event.wait(0.5):
             with self.lock:
+                # A failed unlink must be retried before more media is copied.
+                # Keeping its Fragment until success preserves byte accounting
+                # and prevents an extended storage fault from growing history.
+                if not self._prune_recording():
+                    continue
                 for camera, archive in list(self.archives.items()):
                     relay = self.registry.get_relay(camera)
                     if relay:
@@ -622,4 +639,4 @@ class ReplayBuffer:
                         except (OSError, ValueError):
                             archive.error = 'The rewind buffer is temporarily unavailable.'
                             LOG.warning('Could not update temporary camera history.')
-                self._prune()
+                self._prune_recording()
