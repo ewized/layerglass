@@ -11,10 +11,12 @@ const errors = [], messages = [], requests = [];
 page.on('pageerror', error => errors.push(error.message));
 page.on('console', message => messages.push(message.text()));
 page.on('request', request => requests.push(new URL(request.url()).pathname));
-let blocked = false;
-await page.route('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1', route => blocked ?
-  route.abort('blockedbyclient') : route.fulfill({ contentType: 'text/javascript',
-    body: `(${installCastFixture.toString()})(window);` }));
+let blocked = false, sdkRequests = 0;
+await page.route('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1', route => {
+  sdkRequests++;
+  return blocked ? route.abort('blockedbyclient') : route.fulfill({ contentType: 'text/javascript',
+    body: `(${installCastFixture.toString()})(window);` });
+});
 await page.addInitScript(() => {
   window.mediaActions = new Map();
   const register = navigator.mediaSession.setActionHandler.bind(navigator.mediaSession);
@@ -132,9 +134,32 @@ try {
   await waitForPlayer(page, ({ app }) => app.video.readyState >= 3 && !app.video.paused &&
     app.playerMedia.sender.state === 'unavailable', undefined, { timeout: 45000 });
   assert.equal(await cast.isDisabled(), true);
+  const failedLoads = sdkRequests;
+  await page.evaluate(async () => {
+    const app = await import('/static/player.js');
+    window.sdkRecoveryOriginal = { video: app.video, session: app.pageReplay.session.session_id };
+  });
+  assert.equal(await page.locator('script[src*="cast_sender.js"]').count(), 0, 'A failed SDK script is removed.');
+  blocked = false;
+  await page.mouse.move(640, 400);
+  await page.locator('#options-button').click();
+  await page.locator('#refresh-button').click();
+  await waitForPlayer(page, ({ app }) => app.playerMedia.sender.ready && app.video.readyState >= 3 &&
+    !app.video.paused, undefined, { timeout: 45000 });
+  assert.equal(sdkRequests, failedLoads + 1, 'Explicit Refresh retries the failed SDK once without reloading the page.');
+  assert.equal(await page.evaluate(async () => {
+    const app = await import('/static/player.js');
+    return app.video === window.sdkRecoveryOriginal.video &&
+      app.pageReplay.session.session_id === window.sdkRecoveryOriginal.session;
+  }), true);
+  await page.mouse.move(640, 400);
+  await cast.click();
+  await waitForPlayer(page, ({ app }) => app.playerMedia.remoteActive);
+  assert.equal(await page.evaluate(() => window.castFixture.requests[0].activated), true);
+  await page.evaluate(() => window.castFixture.disconnect());
   assert.deepEqual(errors, []);
   assert.equal(messages.some(message => /Content Security Policy/.test(message)), false, 'The SDK must load under the production CSP.');
-  console.log('Chromium: real SDK loader boundary, trusted Cast activation, receiver HLS URL/metadata, cancellation, remote pause/play/scrub/Live and Media Session actions, no local seek requests, background lease, decoder/history restoration, real receiver CORS and blocked-SDK recovery passed.');
+  console.log('Chromium: native SDK boundary, trusted Cast activation, remote controls, receiver CORS, decoder/history restoration and same-page explicit refresh after SDK failure passed.');
 } catch (error) {
   console.error('Google Cast diagnostics', { errors, messages: messages.slice(-12) });
   throw error;

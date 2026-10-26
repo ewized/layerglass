@@ -26,6 +26,81 @@ async function harness() {
   return { sender, sdk, video, replay, view, module, changes: () => changes };
 }
 
+async function loaderHarness() {
+  const scripts = [], timers = new Map();
+  const view = { isSecureContext: true, chrome: {}, PresentationRequest() {},
+    navigator: { presentation: {}, userActivation: { isActive: true } },
+    document: { createElement: () => ({ remove() { this.removed = true; } }),
+      head: { append: script => scripts.push(script) } } };
+  const module = await loadBrowserModule('cast-sender.js', vm.createContext({
+    window: view, location: new URL('https://printer.test/'), URL, DOMException,
+    setTimeout(fn) { const id = {}; timers.set(id, fn); return id; },
+    clearTimeout: id => timers.delete(id), console: { warn() {} },
+  }));
+  const video = { paused: false, currentTime: 0 };
+  const replay = { paused: false, session: { start_seconds: 0 },
+    setRemote() {}, render() {}, bounds: () => ({ start: 0, current: 0, end: 100 }) };
+  const sender = new module.GoogleCastSender(video, replay, () => ({ model: 'Fixture', id: '123' }), () => {});
+  sender.setSource(path);
+  return { scripts, timers, view, module, sender };
+}
+
+test('failed Cast SDK loading releases its callback/script and explicit source refresh retries once', async () => {
+  const { scripts, timers, view, module, sender } = await loaderHarness();
+  const first = sender.initializing;
+  assert.equal(sender.initialize(), first, 'Concurrent initialization shares one attempt.');
+  assert.equal(module.loadCastSDK(view), module.loadCastSDK(view));
+  assert.equal(scripts.length, 1);
+  const oldCallback = view.__onGCastApiAvailable;
+  scripts[0].onerror();
+  await first;
+  assert.equal(sender.state, 'unavailable');
+  assert.equal(sender.initializing, null);
+  assert.equal(scripts[0].removed, true);
+  assert.equal(view.__onGCastApiAvailable, undefined);
+  assert.equal(timers.size, 0, 'Failure cannot leave a timeout or autonomous retry loop.');
+
+  sender.setSource(path);
+  const second = sender.initializing, currentCallback = view.__onGCastApiAvailable;
+  sender.setSource(path);
+  assert.equal(scripts.length, 2, 'An explicit refresh retries exactly once.');
+  oldCallback(false);
+  assert.equal(view.__onGCastApiAvailable, currentCallback, 'A late failed callback cannot remove the newer attempt.');
+  assert.equal(sender.state, 'loading');
+  const sdk = installCastFixture(view);
+  await second;
+  assert.equal(sender.ready, true);
+  assert.equal(timers.size, 0);
+  sender.setSource(path);
+  assert.equal(scripts.length, 2);
+  assert.equal(sdk.controller.listeners.get('change').length, 1);
+  assert.equal(view.cast.framework.CastContext.getInstance().listeners.get('session').length, 1);
+  const pending = sender.request();
+  assert.equal(sdk.requests[0].activated, true, 'The successful retry keeps picker activation synchronous.');
+  await pending;
+});
+
+test('Cast SDK timeout restores a previous callback and leaves loading retryable', async () => {
+  const { scripts, timers, view, module, sender } = await loaderHarness();
+  scripts[0].onerror();
+  await sender.initializing;
+  const previous = () => {};
+  view.__onGCastApiAvailable = previous;
+  const timedOut = module.loadCastSDK(view);
+  const rejected = assert.rejects(timedOut, { name: 'TimeoutError' });
+  [...timers.values()][0]();
+  await rejected;
+  assert.equal(view.__onGCastApiAvailable, previous);
+  assert.equal(scripts[1].removed, true);
+  assert.equal(timers.size, 0);
+  const retry = module.loadCastSDK(view);
+  assert.equal(scripts.length, 3);
+  const currentCallback = view.__onGCastApiAvailable;
+  installCastFixture(view);
+  await retry;
+  assert.equal(view.__onGCastApiAvailable, currentCallback, 'Successful loading keeps the vendor callback behavior.');
+});
+
 test('Google Cast sends the network live playlist and identity, never a decoder blob', async () => {
   const { sender, sdk, replay, video } = await harness();
   assert.equal(sender.ready, true);

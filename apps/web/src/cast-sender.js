@@ -14,20 +14,33 @@ export function loadCastSDK(view = window) {
   if (view.cast?.framework && view.chrome?.cast?.isAvailable) return Promise.resolve();
   if (loading) return loading;
   loading = new Promise((resolve, reject) => {
-    const timer = setTimeout(() => finish(new DOMException('Cast SDK did not initialize.', 'TimeoutError')), 12000);
+    let settled = false;
+    const previous = view.__onGCastApiAvailable;
+    const script = view.document.createElement('script');
+    const available = value => finish(value && view.cast?.framework ? null :
+      new DOMException('Google Cast is unavailable.', 'NotSupportedError'));
     const finish = error => {
+      if (settled) return;
+      settled = true;
       clearTimeout(timer);
-      if (error) reject(error);
+      if (error && view.__onGCastApiAvailable === available) {
+        if (previous === undefined) delete view.__onGCastApiAvailable;
+        else view.__onGCastApiAvailable = previous;
+      }
+      script.onerror = null;
+      if (error) { script.remove(); reject(error); }
       else resolve();
     };
+    const timer = setTimeout(() => finish(new DOMException('Cast SDK did not initialize.', 'TimeoutError')), 12000);
     // This callback is required by Google's vendor API; application code stays ESM.
-    view.__onGCastApiAvailable = available => finish(available && view.cast?.framework ? null :
-      new DOMException('Google Cast is unavailable.', 'NotSupportedError'));
-    const script = view.document.createElement('script');
+    view.__onGCastApiAvailable = available;
     script.src = SDK;
     script.async = true;
     script.onerror = () => finish(new DOMException('Cast SDK could not load.', 'NetworkError'));
-    view.document.head.append(script);
+    try { view.document.head.append(script); } catch (error) { finish(error); }
+  }).catch(error => {
+    loading = null;
+    throw error;
   });
   return loading;
 }
@@ -56,6 +69,7 @@ export class GoogleCastSender {
   }
 
   initialize() {
+    if (this.initializing) return this.initializing;
     this.state = 'loading';
     this.initializing = loadCastSDK().then(() => {
       const framework = window.cast.framework;
@@ -69,11 +83,13 @@ export class GoogleCastSender {
       this.state = 'ready';
       this.changed();
     }).catch(error => {
+      this.initializing = null;
       this.state = 'unavailable';
       console.warn('[LayerGlass] Google Cast unavailable', error.name);
       this.changed();
     });
     this.changed();
+    return this.initializing;
   }
 
   get ready() { return this.state === 'ready' && Boolean(this.source); }

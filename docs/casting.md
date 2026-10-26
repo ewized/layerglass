@@ -19,6 +19,10 @@ secure Chromium browsers with the Presentation API, it loads the vendor SDK
 once when HLS attaches, before a user clicks Cast. Safari is excluded and keeps
 its native AirPlay path. The required `__onGCastApiAvailable` callback and vendor
 globals are confined to this boundary; application code remains ESM.
+If that initial load fails or times out, its script and callback are cleaned up.
+**Refresh viewer** can try loading the SDK again on the same page after
+connectivity returns. Concurrent initialization shares one attempt; there is no
+SDK retry timer. A successfully prepared sender keeps its existing listeners.
 
 The custom Cast button invokes `CastContext.requestSession()` directly in its
 click event. A selected receiver loads the same-origin network HLS URL using
