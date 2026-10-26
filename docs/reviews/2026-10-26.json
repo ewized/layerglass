@@ -478,6 +478,17 @@
       "majority_recorded_at": "2026-10-26T09:41:40Z",
       "decision": "P39rev1 approved10/10; first7savedandcommittedbeforeimplementation,root0. Ordinarybuildcacheretentionexplicit; P38votesnottransferred.",
       "balloting_completed_at": "2026-10-26T09:50:08Z"
+    },
+    {
+      "id": 11,
+      "revision": 1,
+      "baseline": "5b51ab7ffa4034f7428c1b467d056ec592ca8c0c",
+      "frozen_at": "2026-10-26T10:09:22Z",
+      "slate": "test-results/review-2026-10-26/round-11-slate.json",
+      "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c",
+      "ballots_started": true,
+      "reviewers_completed": [],
+      "notes": "P40actualrecorder/bothengineIDB precision/retention finding. OutsideP36scope; sixfreshvotes beforeanycomponent/test/product-docedit. Originalsynthetic/initialattempt andexactprimary/countercontrol retained."
     }
   ],
   "proposals": [
@@ -4536,7 +4547,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/p38-peer-response.json",
       "risk": "The source runs immutable built IDs instead of private tags, so named-reference replacement cannot redirect a default check or be deleted by its cleanup. Untagged build results/cache can remain on the daemon and consume storage until normal operator/daemon maintenance; do not add an automatic prune. Concurrent builds may correctly share a cached image ID but must have separate IID files. Explicit reuse and unrelated actors' whole-daemon pruning remain existing external contracts, not new ownership guarantees.",
       "validation_plan": "Retain both baseline parse-failure deletion evidence and exact rejected-draft after-inspection replacement evidence; neither passing pre-inspection checks nor a removed scheduling hook may stand in for the peer counterexample. Run actual minimal offline FROM-only builds from existing cached bases with the real iidfile flag and no tag. Observe the successful full ID and assert every default runtime launch uses it, no build --tag/-t is present and no image mutation/cleanup command occurs. Preserve task-created old-default/other aliases and shared IDs throughout. Repeat actual failed parsing and controlled partial/no/malformed-IID completion paths: original command failures retain status, invalid success records fail before built-runtime consumers, and no reference or image is removed or overwritten. Two same-run-ID invocations build concurrently using distinct private IID files; equal cached image IDs are valid. Retain existing P34 name-conflict behavior or release runtime phases in sequence, without claiming unrelated container-name concurrency was fixed. Hold a real successful build after IID recording but before its wrapper returns, then deliver INT/TERM. Preserve130/143, clean all owned container/private-record resources, leave image/cache and all aliases unchanged and perform no image mutation. Retain a corresponding failed/no-identity interruption control. Use only exact task-created alias canaries to schedule replacement before, across and after the former cleanup inspection interval. Immutable-ID consumers must remain on the built ID and every canary/replacement survives because product cleanup has no image inspection/removal or named-reference mutation path. Preserve the peer's rejected-draft negative as a control. Rerun explicit reused-image and JavaScript/workspace no-build/no-image-cleanup controls, all7 P34 launch-option comparisons and meaningful conflict/foreground/detached interruption/fixture-name replacement/foreign-log/container-ID/temp/status matrix. Adjust only the image-lifecycle assertions for the newly approved retention policy. Run Bash syntax, ShellCheck, diff/scope checks and35-document validation. Use bounded generated offline Docker fixtures and existing images; no duplicate full suite, registry/private/LAN/device/service/account probes, publication, image-ID deletion or broad pruning. Preserve active six-hour fixtures and shared resources.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r07": {
           "vote": "APPROVE",
@@ -4623,7 +4634,36 @@
         "commit": "6e029107105881aa3553581fe312cd565566bfe6",
         "recorded_at": "2026-10-26T10:05:58Z",
         "limits": "Independent8invocationactualDocker/directedfailedbuild/signal/IID/alias/P34matrix plus source/evidencemanifest; authored20casecoverageinspected, notmiscountedasindependent20rerun."
+      },
+      "integration": {
+        "commit": "5b51ab7ffa4034f7428c1b467d056ec592ca8c0c",
+        "author_commit": "6e029107105881aa3553581fe312cd565566bfe6",
+        "source2hashes_match": true,
+        "p36_merged16hashes_unchanged": true,
+        "recorded_at": "2026-10-26T10:06:22Z",
+        "full_combined_check": "pending stableprecisioncorrection; authorandindependentfrozenlifecyclechecks pass"
       }
+    },
+    {
+      "id": "P40",
+      "round": 11,
+      "revision": 1,
+      "title": "Keep precise owned JPEG previews within their actual retained bounds",
+      "author": "root",
+      "source_finding": "R04-MERGED-PREVIEW-01",
+      "baseline": "5b51ab7ffa4034f7428c1b467d056ec592ca8c0c",
+      "files": [
+        "apps/web/src/components/scrub-preview.js",
+        "apps/web/tests/browser-preview-loading.js",
+        "docs/local-previews.md"
+      ],
+      "scope": "Correct only the scrub-preview consumer boundary for local JPEG replay with a valid precise descriptor. Use PageReplay actual proven retained bounds consistently for preview-point clipping, backup-sheet bounds, local history trimming, clock validity/hiding and acceptance of late fallback results, rather than reintroducing rounded legacy session bounds. Keep descriptor-absent JPEG, H264, file/demo and remote clipping behavior unchanged. Preserve projected timeline/negative label policy, hover/touch/keyboard/wheel and one-commit behavior, closest-before-tier lookup, placeholder/decoded/compressed budgets, page/session/target/visibility ownership, existing fallback pacing/cooldowns and request cancellation. Do not introduce a blanket numeric tolerance or weaken actual page/retention exclusions. Add the focused regression to the existing browser-preview-loading suite and explain the precise JPEG boundary in the existing local-previews note. Only the three listed files may change. No backend/API/header/provider/storage policy, new endpoint/stream/decoder, UI layout/control, dependency, test-runner/CI, native hardware claim or new product feature.",
+      "evidence": "R04 exact76334ef actual native JPEG capture/toBlob/real IndexedDB + production PageReplay descriptor/bounds methods and scrub-preview component. Root independently generated actual ReplayBuffer later-page metadata (opened1020,captures1030.123678/1031.5): start_seconds10.124 vs jpeg_frame.start10.123677999999927. Browser primary consumes that exact later payload unchanged: first captured frame:10 persisted/cold with IDB row, preview opening deletes capture/row, requests one preview.jpg?at=10.124&frames=1 and displays valid server sheet. Both engines reproduce. Countercontrol changes only fixture legacy start to precise, retains capture/row and paints it with zero HTTP. Poster briefly masks loss; no blank/wrong-pixel/main-player failure claimed. Targets/runtime unchanged at5b51ab7 after P39 shell-only integration. Original10.123456 synthetic case and overstrict1byte fallback-budget attempt are preserved/qualified, not claimed actual Python rounding.",
+      "evidence_path": "test-results/review-2026-10-26/r04/merged-preview-review-1.json",
+      "risk": "Moderate client boundary correction across several consumers. A partial fix can still hide/drop the exact first capture or reject a valid fallback, while a global change can weaken other transports or real retention. Gate on valid local JPEG precision and preserve all legacy/remote/other-mode and ownership behavior; source/evidence and tests must cover both rounding directions and genuine retention advancement.",
+      "validation_plan": "Keep the exact old-source actual-recorder primary negative and aligned-fixture diagnostic control immutable. In Chromium and WebKit, real native-decoded JPEG PreviewCapture/toBlob/PreviewHistory/PreviewStorage/actual IDB must retain the precisely owned cold first frame and disk row and paint it with zero preview HTTP; do not merely change fixture session.start_seconds in the corrected primary. Include an actual upward-rounding recorder payload and a downward-rounding case, page/retained-first start, precise end/provisional-tail boundary and valid local-JPEG gating. Verify legacy/no-descriptor JPEG,H264,file/demo and remote behavior remains unchanged. Actual retained-start advancement must still exclude/prune older captures and hide invalid preview points; delayed backup from before the new retained start/session must not repopulate/paint current history, while a valid precise-start backup can be accepted. Retain existing corrupt-sprite cooldown/recovery,500ms delayed-IDB fallback/late-local ownership, adjacent warm/cold and forward/return P37 controls, same native video/zero main seeks and no extra main-media request on hover. Focused relevant JS units, complete existing browser-preview-loading and browser-jpeg-clock suites both engines, Bash/diff/scope as relevant and35docs. No full duplicate suite, physical device/LAN/registry/service or credential probes; root owns final combined check and preserves active native six-hour fixture.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -4782,6 +4822,10 @@
     {
       "sha": "76334efe744526b4f4bca6c7e4ceb679855659d8",
       "summary": "P36: decodedJPEGimage/time/thumbnail ownership and precise selector, legacyfallback retained;10priorapprovals, correctedfinalindependentlyREADY, P35/P37unionverified."
+    },
+    {
+      "sha": "5b51ab7ffa4034f7428c1b467d056ec592ca8c0c",
+      "summary": "P39: untagged builds runbyvalidated immutableID, noimagecleanup and explicitordinarycacheretention;10freshvotes/independentR08READY; P38unintegrateddraft superseded."
     }
   ],
   "activity": [
@@ -5569,6 +5613,16 @@
       "at": "2026-10-26T10:05:58Z",
       "type": "P39finalacceptanceguard",
       "message": "SavedR08READY/source2hashes/clean6e0291/exactfrozenbaseblobs/all10freshballotsverifiedBEFOREintegration. NewpolicyuntaggedvalidIID/runtimebyID/noimagecleanup/cacheleft; P38oldnegativeimmutable. Fullcombinedcheckpendingprecisioncorrectionfreshvotes."
+    },
+    {
+      "at": "2026-10-26T10:06:22Z",
+      "type": "P39integrated",
+      "message": "Canonical5b51ab7 exacttwofilehashes match6e0291; R08reportexactreviewedcommitREADYverified. All16P36mergedsourcehashesunchanged. 38votedcorrectionsintegrated; freshprecisionfindinground notyetfrozen, no componentedits."
+    },
+    {
+      "at": "2026-10-26T10:09:22Z",
+      "type": "P40freshscopefrozen",
+      "message": "SavedR04findinghash andallreviewedruntime10hashesverifiedunchangedafterP39. Actualrecorderpayload/browserIDBproof frozen for3fileP40. No componentedits before6freshvotes; P36/P37votes do nottransfer. Root0."
     }
   ],
   "validation": [
@@ -5878,6 +5932,13 @@
       "evidence": "test-results/review-2026-10-26/r10/final-docs-consistency-1.json",
       "recorded_at": "2026-10-26T09:32:00Z",
       "limits": "Read-only canonical and explicitly separate pendingP36/P38drafts; no fixture/device/endurance success inferred."
+    },
+    {
+      "summary": "R09 integratedP36 UI/focus/mobile source review",
+      "status": "no additional independently demonstrated finding",
+      "source": "76334efe744526b4f4bca6c7e4ceb679855659d8",
+      "evidence": "test-results/review-2026-10-26/r09/merged-player-review-1.json",
+      "limits": "Read-only source/existingevidence; knownprecisionconcern delegatedR04, notcleared; no physicaldevice/browser rerun."
     }
   ],
   "implementation_worktrees": [
