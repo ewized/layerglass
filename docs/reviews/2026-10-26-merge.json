@@ -1,0 +1,36 @@
+{
+  "phase": "User-authorized merge after the completed twelve-hour review",
+  "started_observed_at": "2026-10-26T16:18:55Z",
+  "updated_at": "2026-10-26T16:22:08Z",
+  "user_request": "dont forget to merge this in at the end",
+  "status": "Investigating final CI failure and verifying default-branch integration before actual merge.",
+  "review_result_commit": "ddf84213ed5cc7a5e8732c13e2b1f56c2835a569",
+  "review_outcome_sha256": "84b085edcaf45b243018c6258c7df88c2f6abf8b76742773eb2ba2efb611e44f",
+  "original_window": "2026-10-26T04:03:49Z/2026-10-26T16:03:49Z",
+  "original_review_record": "2026-10-26.json",
+  "original_failed_ci": {
+    "source": "50422151dc6ab7df1510214ea36a9356e5a7ada7",
+    "run_id": 40352944569,
+    "job_id": 121677633044,
+    "log_sha256": "0f57e815b20cc83a90d8ebbbe8f06421fd13210eb1322734319e6697f1add0b5",
+    "cause": "Unproved at end of review. WebKit fractional-origin fixture paused JPEG readiness timed out.",
+    "preserved": true
+  },
+  "decision_rules": [
+    "Preserve original twelve-hour result, ballots and failure evidence; do not rewrite it as a passing review.",
+    "Any substantive correction retains six fresh explicit reviewer approvals from the same ten identities before implementation; root never votes.",
+    "Diagnose with bounded offline Docker controls, preserve failures and require independent exact-final acceptance.",
+    "Validate the actual combined default-branch content before merging. No unchanged-source retry merely to obtain green CI.",
+    "User authorizes actual merge once ready; do not stop at a plan, a branch push or a draft PR.",
+    "Preserve other worktrees/main dependency updates, live Docker backend, credentials and printer state. No live printer probes or new feature scope."
+  ],
+  "proposals": [],
+  "integration": {
+    "default_branch": "main",
+    "remote_observation": "git remote show origin reports main; current cached origin/main has three non-ancestor commits.",
+    "read_only_merge_tree": "0150d3b360dbce62bb2d8011f541227272958984",
+    "read_only_merge_tree_result": "Clean, zero content diff from review HEAD; remote freshness/protection audit pending."
+  },
+  "validation": [],
+  "activity": []
+}
