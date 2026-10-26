@@ -78,6 +78,72 @@ class JpegReplayTests(unittest.TestCase):
         with self.replay.lock:
             self.replay._collect(self.replay.archives[CAMERA], self.source)
 
+    def test_owned_jpeg_descriptor_and_selector_keep_precise_completed_positions(self):
+        self.capture(1030.123456)
+        snapshot = self.replay.status(self.token)
+        frame = snapshot['jpeg_frame']
+        self.assertEqual(frame, {'sequence': 1, 'start': 0, 'position': 1030.123456 - 1000,
+                                 'time': 1030.123456, 'clock': [{'position': 0, 'time': 1000}]})
+        self.assertNotEqual(frame['position'], snapshot['end_seconds'] - 1)
+        self.capture(1030.250789)
+        self.assertEqual(self.replay.image(self.token, frame['sequence']).read_bytes(), b'jpeg-at-1030.123456')
+        self.assertEqual(self.replay.image(self.token, frame['sequence'], frame['position']).read_bytes(), b'jpeg-at-1030.123456')
+        self.assertEqual(self.replay.image(self.token, frame['sequence'], frame['position'] - 0.000001).read_bytes(), b'jpeg-at-1000')
+        self.assertIsNone(self.replay.image(self.token, frame['sequence'], frame['position'] + 0.000001))
+        self.assertIsNone(self.replay.image(self.token, frame['sequence'], -0.1))
+        self.assertIsNone(self.replay.image(self.token, 999))
+        self.assertIsNone(self.replay.image(self.token, True))
+        self.assertIsNone(self.replay.image(self.token, 1, float('nan')))
+        # A selected position in the completed held interval keeps its wall
+        # clock, rather than being moved to the held image's capture start.
+        self.assertEqual(self.replay.image(self.token, 2, 20).read_bytes(), b'jpeg-at-1000')
+
+    def test_owned_selector_excludes_old_pages_and_retained_or_expired_media(self):
+        self.now = 1020.123456
+        later = self.replay.create(CAMERA)['session_id']
+        self.assertIsNone(self.replay.status(later)['jpeg_frame'])
+        self.capture(1030.250789)
+        frame = self.replay.status(later)['jpeg_frame']
+        self.assertEqual(frame['start'], frame['position'])
+        self.assertAlmostEqual(frame['position'], 10.127333)
+        self.assertEqual(frame['clock'][0]['time'], 1000)
+        self.assertAlmostEqual(frame['clock'][0]['position'], -20.123456, places=12)
+        self.assertIsNone(self.replay.image(later, 0))
+        self.assertIsNone(self.replay.image(later, 1, frame['position'] - 0.000001))
+        self.assertEqual(self.replay.image(later, 1, frame['position']).read_bytes(), b'jpeg-at-1030.250789')
+        self.capture(1031.125678)
+        self.replay.max_bytes = 1
+        with self.replay.lock:
+            self.replay._prune()
+        self.assertIsNone(self.replay.image(later, 1))
+        self.assertIsNone(self.replay.image(later, 2, frame['position']))
+        self.assertIsNotNone(self.replay.image(later, 2))
+        self.replay.release(later)
+        self.assertIsNone(self.replay.image(later, 2))
+
+    def test_http_owned_selector_is_optional_and_validates_coverage_and_identity(self):
+        self.capture(1030.123456)
+        server = ViewerServer(('127.0.0.1', 0), registry=self.registry, replay=self.replay)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        path = f'http://127.0.0.1:{server.server_port}/replay/{self.token}/frame.jpg'
+        for query, expected in [('?frame=0', b'jpeg-at-1000'), ('?frame=1', b'jpeg-at-1030.123456'),
+                                ('?frame=1&at=20', b'jpeg-at-1000'), ('?at=20', b'jpeg-at-1000'),
+                                ('?at=20&at=999', b'jpeg-at-1000'), ('?at=', b'jpeg-at-1000')]:
+            with urlopen(path + query, timeout=3) as response:
+                self.assertEqual(response.read(), expected)
+                self.assertEqual(response.headers['Content-Type'], 'image/jpeg')
+        for query in ['?frame=', '?frame=-1', '?frame=0.5', '?frame=0&frame=1', '?frame=01',
+                      '?frame=99999999999999999999', '?frame=0&at=nan', '?frame=0&at=0&at=1']:
+            with self.assertRaises(HTTPError) as error:
+                urlopen(path + query, timeout=3)
+            self.assertEqual(error.exception.code, 400, query)
+        for query in ['?frame=999', '?frame=0&at=0.1', '?frame=1&at=-1']:
+            with self.assertRaises(HTTPError) as error:
+                urlopen(path + query, timeout=3)
+            self.assertEqual(error.exception.code, 404, query)
+
     def worker_tick(self):
         # Run the actual maintenance/error handler for one deterministic tick.
         with patch.object(self.replay.stop_event, 'wait', side_effect=[False, True]):
@@ -286,6 +352,8 @@ class ReplayTests(unittest.TestCase):
         self.assertEqual(list(self.replay.root.iterdir()), [], 'No history should be recorded without an open page.')
         session = self.replay.create(CAMERA)
         token = session['session_id']
+        self.assertNotIn('jpeg_frame', session, 'HLS metadata and delivery are unchanged')
+        self.assertIsNone(self.replay.image(token, 0), 'The optional JPEG selector cannot select HLS media')
         first = self.replay.media(token, sequence=0)
         self.assertEqual(first.read_bytes(), b'frame-a-3', 'Older live-window footage must not be imported.')
         self.source.publish(range(3, 9))

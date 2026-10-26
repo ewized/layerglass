@@ -177,7 +177,7 @@ class ReplayBuffer:
         archive = self.archives[session.camera]
         first = next((item for item in archive.fragments if item.sequence >= session.first), None)
         clocks = self._clocks(archive, first.start if first else session.origin)
-        return {'session_id': session.id, 'camera_id': session.camera, 'kind': archive.kind,
+        metadata = {'session_id': session.id, 'camera_id': session.camera, 'kind': archive.kind,
                 'playlist_url': f'/replay/{session.id}/live.m3u8' if archive.kind == 'hls' else None,
                 'video_url': f'/replay/{session.id}/video' if archive.kind == 'hls' else None,
                 'frame_url': f'/replay/{session.id}/frame.jpg' if archive.kind == 'jpeg' else None,
@@ -189,6 +189,19 @@ class ReplayBuffer:
                              clocks[-1][1] + archive.position - clocks[-1][0] if clocks else None),
                 'ready': first is not None, 'limited': bool(first and first.sequence > session.first),
                 'error': archive.error}
+        if archive.kind == 'jpeg':
+            # The latest tail is provisional, not an image timestamp. Keep this
+            # optional descriptor precise: rounding an `at` boundary can select
+            # the preceding capture. The sequence pins the HTTP request even if
+            # another capture or metadata update arrives before it completes.
+            position = archive.last_jpeg_position - session.origin
+            metadata['jpeg_frame'] = ({'sequence': archive.fragments[-1].sequence,
+                                       'start': max(0, first.start - session.origin),
+                                       'position': position, 'time': archive.last_jpeg_at,
+                                       'clock': [{'position': point - session.origin, 'time': epoch}
+                                                 for point, epoch in clocks]}
+                                      if first and position >= 0 else None)
+        return metadata
 
     @staticmethod
     def _clocks(archive, position):
@@ -356,6 +369,31 @@ class ReplayBuffer:
                     selected = item
                     break
             return selected.file if selected else None
+
+    def image(self, token, frame, at=None):
+        """A JPEG pinned to a capture, or a completed position under that capture.
+
+        Legacy `at` requests retain their existing behavior in media(). An owned
+        request cannot fall forward to a new first frame after retention, or use
+        the provisional tail as proof of a completed historical interval.
+        """
+        if type(frame) is not int or frame < 0 or at is not None and not math.isfinite(at):
+            return None
+        with self.lock:
+            session = self._session(token)
+            if not session:
+                return None
+            archive = self.archives[session.camera]
+            if archive.kind != 'jpeg':
+                return None
+            retained = [item for item in archive.fragments if session.first <= item.sequence <= frame]
+            if not retained or retained[-1].sequence != frame:
+                return None
+            if at is None:
+                return retained[-1].file
+            if not max(0, retained[0].start - session.origin) <= at <= retained[-1].start - session.origin:
+                return None
+            return next(item.file for item in reversed(retained) if item.start - session.origin <= at)
 
     def preview(self, token, at, frames=1):
         """A 3 x 2 sprite of five-second stills from this page's history.

@@ -27,6 +27,7 @@ function latestRecorded(payload, samples) {
 
 export function printerPlaybackTime(video, hls, replay) {
   if (!replay.session) return null;
+  if (!replay.remote && replay.session.kind === 'jpeg') return replay.jpegClock?.() ?? null;
   if (!replay.remote && replay.session.kind !== 'jpeg') {
     const date = hls?.playingDate;
     if (date && Number.isFinite(date.getTime())) return date.getTime() / 1000;

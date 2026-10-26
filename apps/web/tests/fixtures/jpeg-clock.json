@@ -1,0 +1,2495 @@
+{
+  "generated_by": "Actual ReplayBuffer metadata, history, owned image selector and FFmpeg-generated JPEGs; no hardware.",
+  "camera": "1234567890abcdef",
+  "other_camera": "fedcba0987654321",
+  "colors": {
+    "red": "/9j/4AAQSkZJRgABAgAAAQABAAD//gAQTGF2YzYxLjE5LjEwMQD/2wBDAAgEBAQEBAUFBQUFBQYGBgYGBgYGBgYGBgYHBwcICAgHBwcGBgcHCAgICAkJCQgICAgJCQoKCgwMCwsODg4RERT/xABNAAEBAAAAAAAAAAAAAAAAAAAABgEBAQEAAAAAAAAAAAAAAAAAAAYHEAEAAAAAAAAAAAAAAAAAAAAAEQEAAAAAAAAAAAAAAAAAAAAA/8AAEQgAJABAAwEiAAIRAAMRAP/aAAwDAQACEQMRAD8AiwEo38AAAAAAAAAAAAAAAAAAAAAB/9k=",
+    "blue": "/9j/4AAQSkZJRgABAgAAAQABAAD//gAQTGF2YzYxLjE5LjEwMQD/2wBDAAgEBAQEBAUFBQUFBQYGBgYGBgYGBgYGBgYHBwcICAgHBwcGBgcHCAgICAkJCQgICAgJCQoKCgwMCwsODg4RERT/xABNAAEBAAAAAAAAAAAAAAAAAAAABwEBAQEAAAAAAAAAAAAAAAAAAAUHEAEAAAAAAAAAAAAAAAAAAAAAEQEAAAAAAAAAAAAAAAAAAAAA/8AAEQgAJABAAwEiAAIRAAMRAP/aAAwDAQACEQMRAD8AjgDf0sAAAAAAAAAAAAAAAAAAAAAB/9k=",
+    "green": "/9j/4AAQSkZJRgABAgAAAQABAAD//gAQTGF2YzYxLjE5LjEwMQD/2wBDAAgEBAQEBAUFBQUFBQYGBgYGBgYGBgYGBgYHBwcICAgHBwcGBgcHCAgICAkJCQgICAgJCQoKCgwMCwsODg4RERT/xABMAAEBAAAAAAAAAAAAAAAAAAAABgEBAQAAAAAAAAAAAAAAAAAAAAYQAQAAAAAAAAAAAAAAAAAAAAARAQAAAAAAAAAAAAAAAAAAAAD/wAARCAAkAEADASIAAhEAAxEA/9oADAMBAAIRAxEAPwCLASqJAAAAAAAAAAAAAAAAAAAAAAf/2Q==",
+    "yellow": "/9j/4AAQSkZJRgABAgAAAQABAAD//gAQTGF2YzYxLjE5LjEwMQD/2wBDAAgEBAQEBAUFBQUFBQYGBgYGBgYGBgYGBgYHBwcICAgHBwcGBgcHCAgICAkJCQgICAgJCQoKCgwMCwsODg4RERT/xABNAAEBAAAAAAAAAAAAAAAAAAAABwEBAQEAAAAAAAAAAAAAAAAAAAUIEAEAAAAAAAAAAAAAAAAAAAAAEQEAAAAAAAAAAAAAAAAAAAAA/8AAEQgAJABAAwEiAAIRAAMRAP/aAAwDAQACEQMRAD8AsQDP6oAAAAAAAAAAAAAAAAAAAAAA/9k="
+  },
+  "scenarios": {
+    "subsecond": {
+      "waiting": {
+        "session_id": "562497bba8d34ff081abf7790dd4f95d",
+        "camera_id": "1234567890abcdef",
+        "kind": "jpeg",
+        "playlist_url": null,
+        "video_url": null,
+        "frame_url": "/replay/562497bba8d34ff081abf7790dd4f95d/frame.jpg",
+        "start_seconds": 0,
+        "end_seconds": 0,
+        "clock": [
+          {
+            "position": -20,
+            "time": 1000
+          }
+        ],
+        "end_time": 1000,
+        "ready": false,
+        "limited": false,
+        "error": null,
+        "jpeg_frame": null
+      },
+      "phases": {
+        "gap": {
+          "original": {
+            "replay": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/763958c060e04c349d549368df6f8304/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 31,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 1,
+                "start": 0,
+                "position": 30,
+                "time": 1030,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030,
+              "cursor": 3,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 1,
+                "color": "blue"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/562497bba8d34ff081abf7790dd4f95d/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 11,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 1,
+                "start": 10,
+                "position": 10,
+                "time": 1030,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030,
+              "cursor": 3,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/6864b3344f764b459ab2138d791fa582/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 11,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 1,
+                "start": 10,
+                "position": 10,
+                "time": 1030,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030,
+              "cursor": 3,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              }
+            ]
+          }
+        },
+        "next": {
+          "original": {
+            "replay": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/763958c060e04c349d549368df6f8304/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 31.25,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030.25,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 2,
+                "start": 0,
+                "position": 30.25,
+                "time": 1030.25,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030.25,
+              "cursor": 4,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 30.25,
+                "duration": 1,
+                "color": "green"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/562497bba8d34ff081abf7790dd4f95d/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 11.25,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030.25,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 2,
+                "start": 10,
+                "position": 10.25,
+                "time": 1030.25,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030.25,
+              "cursor": 4,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 10.25,
+                "duration": 1,
+                "color": "green"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/6864b3344f764b459ab2138d791fa582/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 11.25,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030.25,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 2,
+                "start": 10,
+                "position": 10.25,
+                "time": 1030.25,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030.25,
+              "cursor": 4,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 10.25,
+                "duration": 1,
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "later": {
+          "original": {
+            "replay": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/763958c060e04c349d549368df6f8304/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 32.5,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031.5,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 3,
+                "start": 0,
+                "position": 31.5,
+                "time": 1031.5,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031.5,
+              "cursor": 5,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 30.25,
+                "duration": 1.25,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 31.5,
+                "duration": 1,
+                "color": "yellow"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/562497bba8d34ff081abf7790dd4f95d/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 12.5,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031.5,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 3,
+                "start": 10,
+                "position": 11.5,
+                "time": 1031.5,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031.5,
+              "cursor": 5,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 10.25,
+                "duration": 1.25,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 1,
+                "color": "yellow"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/6864b3344f764b459ab2138d791fa582/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 12.5,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031.5,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 3,
+                "start": 10,
+                "position": 11.5,
+                "time": 1031.5,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031.5,
+              "cursor": 5,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 10.25,
+                "duration": 1.25,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 1,
+                "color": "yellow"
+              }
+            ]
+          }
+        },
+        "precise": {
+          "original": {
+            "replay": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/763958c060e04c349d549368df6f8304/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 33.123,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1032.123456,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 4,
+                "start": 0,
+                "position": 32.12345600000003,
+                "time": 1032.123456,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "763958c060e04c349d549368df6f8304",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1032.123,
+              "cursor": 6,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1032.123,
+                  "printer": {
+                    "layer": 33,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 30.25,
+                "duration": 1.25,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 31.5,
+                "duration": 0.6234560000000329,
+                "color": "yellow"
+              },
+              {
+                "sequence": 4,
+                "position": 32.12345600000003,
+                "duration": 1,
+                "color": "red"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/562497bba8d34ff081abf7790dd4f95d/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 13.123,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1032.123456,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 4,
+                "start": 10,
+                "position": 12.123456000000033,
+                "time": 1032.123456,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "562497bba8d34ff081abf7790dd4f95d",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1032.123,
+              "cursor": 6,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1032.123,
+                  "printer": {
+                    "layer": 33,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 10.25,
+                "duration": 1.25,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 0.6234560000000329,
+                "color": "yellow"
+              },
+              {
+                "sequence": 4,
+                "position": 12.123456000000033,
+                "duration": 1,
+                "color": "red"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/6864b3344f764b459ab2138d791fa582/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 13.123,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1032.123456,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 4,
+                "start": 10,
+                "position": 12.123456000000033,
+                "time": 1032.123456,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "6864b3344f764b459ab2138d791fa582",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1032.123,
+              "cursor": 6,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030.25,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1032.123,
+                  "printer": {
+                    "layer": 33,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 0.25,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 10.25,
+                "duration": 1.25,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 0.6234560000000329,
+                "color": "yellow"
+              },
+              {
+                "sequence": 4,
+                "position": 12.123456000000033,
+                "duration": 1,
+                "color": "red"
+              }
+            ]
+          }
+        }
+      },
+      "other": {
+        "replay": {
+          "session_id": "741953b13bc347849ec99bbffd58574f",
+          "camera_id": "fedcba0987654321",
+          "kind": "jpeg",
+          "playlist_url": null,
+          "video_url": null,
+          "frame_url": "/replay/741953b13bc347849ec99bbffd58574f/frame.jpg",
+          "start_seconds": 0,
+          "end_seconds": 1,
+          "clock": [
+            {
+              "position": 0,
+              "time": 1040
+            }
+          ],
+          "end_time": 1040,
+          "ready": true,
+          "limited": false,
+          "error": null,
+          "jpeg_frame": {
+            "sequence": 0,
+            "start": 0,
+            "position": 0,
+            "time": 1040,
+            "clock": [
+              {
+                "position": 0,
+                "time": 1040
+              }
+            ]
+          }
+        },
+        "telemetry": {
+          "session_id": "741953b13bc347849ec99bbffd58574f",
+          "camera_id": "fedcba0987654321",
+          "from": 960,
+          "until": 1040,
+          "cursor": 0,
+          "samples": [
+            {
+              "at": 1040,
+              "printer": {
+                "layer": 40,
+                "connection": "connected"
+              }
+            }
+          ]
+        },
+        "frames": [
+          {
+            "sequence": 0,
+            "position": 0,
+            "duration": 1,
+            "color": "red"
+          }
+        ]
+      }
+    },
+    "normal": {
+      "waiting": {
+        "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+        "camera_id": "1234567890abcdef",
+        "kind": "jpeg",
+        "playlist_url": null,
+        "video_url": null,
+        "frame_url": "/replay/019abf7a62414422ab55cb6e56cdf9eb/frame.jpg",
+        "start_seconds": 0,
+        "end_seconds": 0,
+        "clock": [
+          {
+            "position": -20,
+            "time": 1000
+          }
+        ],
+        "end_time": 1000,
+        "ready": false,
+        "limited": false,
+        "error": null,
+        "jpeg_frame": null
+      },
+      "phases": {
+        "gap": {
+          "original": {
+            "replay": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/92a7be7bfd7d44c8baa255e4e6b7ddc8/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 31,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 1,
+                "start": 0,
+                "position": 30,
+                "time": 1030,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030,
+              "cursor": 3,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 1,
+                "color": "blue"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/019abf7a62414422ab55cb6e56cdf9eb/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 11,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 1,
+                "start": 10,
+                "position": 10,
+                "time": 1030,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030,
+              "cursor": 3,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/166c62e22df8473cbf7492631904bc82/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 11,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1030,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 1,
+                "start": 10,
+                "position": 10,
+                "time": 1030,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1030,
+              "cursor": 3,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              }
+            ]
+          }
+        },
+        "next": {
+          "original": {
+            "replay": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/92a7be7bfd7d44c8baa255e4e6b7ddc8/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 32,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 2,
+                "start": 0,
+                "position": 31,
+                "time": 1031,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031,
+              "cursor": 4,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 31,
+                "duration": 1,
+                "color": "green"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/019abf7a62414422ab55cb6e56cdf9eb/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 12,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 2,
+                "start": 10,
+                "position": 11,
+                "time": 1031,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031,
+              "cursor": 4,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 11,
+                "duration": 1,
+                "color": "green"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/166c62e22df8473cbf7492631904bc82/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 12,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 2,
+                "start": 10,
+                "position": 11,
+                "time": 1031,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031,
+              "cursor": 4,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 11,
+                "duration": 1,
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "later": {
+          "original": {
+            "replay": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/92a7be7bfd7d44c8baa255e4e6b7ddc8/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 32.5,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031.5,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 3,
+                "start": 0,
+                "position": 31.5,
+                "time": 1031.5,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031.5,
+              "cursor": 5,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 31,
+                "duration": 0.5,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 31.5,
+                "duration": 1,
+                "color": "yellow"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/019abf7a62414422ab55cb6e56cdf9eb/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 12.5,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031.5,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 3,
+                "start": 10,
+                "position": 11.5,
+                "time": 1031.5,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031.5,
+              "cursor": 5,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 11,
+                "duration": 0.5,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 1,
+                "color": "yellow"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/166c62e22df8473cbf7492631904bc82/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 12.5,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1031.5,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 3,
+                "start": 10,
+                "position": 11.5,
+                "time": 1031.5,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1031.5,
+              "cursor": 5,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 11,
+                "duration": 0.5,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 1,
+                "color": "yellow"
+              }
+            ]
+          }
+        },
+        "precise": {
+          "original": {
+            "replay": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/92a7be7bfd7d44c8baa255e4e6b7ddc8/frame.jpg",
+              "start_seconds": 0,
+              "end_seconds": 33.123,
+              "clock": [
+                {
+                  "position": 0,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1032.123456,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 4,
+                "start": 0,
+                "position": 32.12345600000003,
+                "time": 1032.123456,
+                "clock": [
+                  {
+                    "position": 0,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "92a7be7bfd7d44c8baa255e4e6b7ddc8",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1032.123,
+              "cursor": 6,
+              "samples": [
+                {
+                  "at": 1000,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1032.123,
+                  "printer": {
+                    "layer": 33,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 0,
+                "position": 0,
+                "duration": 30,
+                "color": "red"
+              },
+              {
+                "sequence": 1,
+                "position": 30,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 31,
+                "duration": 0.5,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 31.5,
+                "duration": 0.6234560000000329,
+                "color": "yellow"
+              },
+              {
+                "sequence": 4,
+                "position": 32.12345600000003,
+                "duration": 1,
+                "color": "red"
+              }
+            ]
+          },
+          "later": {
+            "replay": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/019abf7a62414422ab55cb6e56cdf9eb/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 13.123,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1032.123456,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 4,
+                "start": 10,
+                "position": 12.123456000000033,
+                "time": 1032.123456,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "019abf7a62414422ab55cb6e56cdf9eb",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1032.123,
+              "cursor": 6,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1032.123,
+                  "printer": {
+                    "layer": 33,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 11,
+                "duration": 0.5,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 0.6234560000000329,
+                "color": "yellow"
+              },
+              {
+                "sequence": 4,
+                "position": 12.123456000000033,
+                "duration": 1,
+                "color": "red"
+              }
+            ]
+          },
+          "replacement": {
+            "replay": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "kind": "jpeg",
+              "playlist_url": null,
+              "video_url": null,
+              "frame_url": "/replay/166c62e22df8473cbf7492631904bc82/frame.jpg",
+              "start_seconds": 10,
+              "end_seconds": 13.123,
+              "clock": [
+                {
+                  "position": -20,
+                  "time": 1000
+                }
+              ],
+              "end_time": 1032.123456,
+              "ready": true,
+              "limited": false,
+              "error": null,
+              "jpeg_frame": {
+                "sequence": 4,
+                "start": 10,
+                "position": 12.123456000000033,
+                "time": 1032.123456,
+                "clock": [
+                  {
+                    "position": -20,
+                    "time": 1000
+                  }
+                ]
+              }
+            },
+            "telemetry": {
+              "session_id": "166c62e22df8473cbf7492631904bc82",
+              "camera_id": "1234567890abcdef",
+              "from": 960,
+              "until": 1032.123,
+              "cursor": 6,
+              "samples": [
+                {
+                  "at": 1020,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1020.001,
+                  "printer": {
+                    "layer": 0,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1030,
+                  "printer": {
+                    "layer": 30,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031,
+                  "printer": {
+                    "layer": 31,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1031.5,
+                  "printer": {
+                    "layer": 32,
+                    "connection": "connected"
+                  }
+                },
+                {
+                  "at": 1032.123,
+                  "printer": {
+                    "layer": 33,
+                    "connection": "connected"
+                  }
+                }
+              ]
+            },
+            "frames": [
+              {
+                "sequence": 1,
+                "position": 10,
+                "duration": 1,
+                "color": "blue"
+              },
+              {
+                "sequence": 2,
+                "position": 11,
+                "duration": 0.5,
+                "color": "green"
+              },
+              {
+                "sequence": 3,
+                "position": 11.5,
+                "duration": 0.6234560000000329,
+                "color": "yellow"
+              },
+              {
+                "sequence": 4,
+                "position": 12.123456000000033,
+                "duration": 1,
+                "color": "red"
+              }
+            ]
+          }
+        }
+      },
+      "other": {
+        "replay": {
+          "session_id": "9ee08f92c3ce4665814d4a035866334c",
+          "camera_id": "fedcba0987654321",
+          "kind": "jpeg",
+          "playlist_url": null,
+          "video_url": null,
+          "frame_url": "/replay/9ee08f92c3ce4665814d4a035866334c/frame.jpg",
+          "start_seconds": 0,
+          "end_seconds": 1,
+          "clock": [
+            {
+              "position": 0,
+              "time": 1040
+            }
+          ],
+          "end_time": 1040,
+          "ready": true,
+          "limited": false,
+          "error": null,
+          "jpeg_frame": {
+            "sequence": 0,
+            "start": 0,
+            "position": 0,
+            "time": 1040,
+            "clock": [
+              {
+                "position": 0,
+                "time": 1040
+              }
+            ]
+          }
+        },
+        "telemetry": {
+          "session_id": "9ee08f92c3ce4665814d4a035866334c",
+          "camera_id": "fedcba0987654321",
+          "from": 960,
+          "until": 1040,
+          "cursor": 0,
+          "samples": [
+            {
+              "at": 1040,
+              "printer": {
+                "layer": 40,
+                "connection": "connected"
+              }
+            }
+          ]
+        },
+        "frames": [
+          {
+            "sequence": 0,
+            "position": 0,
+            "duration": 1,
+            "color": "red"
+          }
+        ]
+      }
+    }
+  }
+}

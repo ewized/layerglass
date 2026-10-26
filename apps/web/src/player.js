@@ -327,6 +327,7 @@ function detachPlayer() {
   video.removeAttribute('src');
   for (const source of video.querySelectorAll('source')) source.remove();
   video.load();
+  pageReplay.clearImage();
   jpeg.removeAttribute('src');
   jpeg.hidden = true;
   video.hidden = false;
@@ -405,7 +406,7 @@ async function attachPlayer(prepared = null, recovering = false) {
     const version = selectionVersion;
     const next = () => {
       if (version !== selectionVersion) return;
-      if (navigator.onLine && playerVisible() && status?.state === 'live' && !pageReplay.reviewing) jpeg.src = `${url}?t=${Date.now()}`;
+      if (navigator.onLine && playerVisible() && status?.state === 'live' && !pageReplay.reviewing) pageReplay.showLiveImage(`${url}?t=${Date.now()}`);
       jpegTimer = setTimeout(next, 1000);
     };
     next();

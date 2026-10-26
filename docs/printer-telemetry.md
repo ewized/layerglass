@@ -67,6 +67,17 @@ readings, and the latest JPEG clock stays bounded by its last capture time.
 Later pages keep their actual opening-time origin, independent of that tail;
 their first available image can arrive later, and pre-page readings stay hidden.
 
+The JPEG archive endpoint includes a provisional tail, so its end is not the
+decoded still's timestamp. The viewer binds recorded readings to the precise
+position of its current owned image request after native decoding. Live pause
+freezes that image and clock through later captures and metadata. Requests into
+an unproven tail clamp to the latest accepted capture; a completed held interval
+keeps the selected position's wall time rather than jumping to capture start.
+An older metadata snapshot or stale image completion cannot replace this
+ownership. While pixels are unowned, including compatible legacy JPEG playback,
+recorded readings stay unavailable instead of borrowing the current printer
+reading. A temporary same-session reattachment retains its proven paused clock.
+
 The existing SSE subscription sends an initial recent window and then small
 incremental sample batches, scoped to the page's session. A later tab cannot
 receive readings from before it opened. The phone retains at most eight

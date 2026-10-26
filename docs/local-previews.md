@@ -12,6 +12,10 @@ A `timeupdate` gate requests one presented-frame callback, uses its `mediaTime`,
 draws the existing decoded frame to a detached canvas, and calls asynchronous
 `toBlob('image/jpeg', 0.6)`. This avoids another network stream/decoder and a
 per-frame JavaScript loop. JPEG image mode can capture its existing image too.
+JPEG capture waits for a page/camera/request-owned native decode and labels that
+still with its precise selected position. A newer metadata tail or pending seek
+cannot supply a timestamp for older pixels. Unowned/legacy images are not locally
+captured, and stale JPEG encodes cannot populate a changed image or session.
 Capture pauses when the page/player is hidden or playing remotely. It cannot
 reconstruct video the browser has not decoded while paused or in the background.
 
@@ -100,3 +104,8 @@ delayed IndexedDB reads with current-target, session and visibility ownership.
 It also checks adjacent warm/cold images in both directions and a short contiguous
 forward/return sweep with real IndexedDB under a one-image compressed RAM budget.
 These bounded regressions do not replace a measured full-duration retention run.
+
+`browser-jpeg-clock.js` checks real JPEG decoding, fixed paused readings and
+thumbnail timestamps, precise/completed/provisional positions, delayed image and
+metadata ordering, source/session changes, reattachment and legacy/no-recording
+fallback in Chromium and WebKit using generated loopback fixtures.

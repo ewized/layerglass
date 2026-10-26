@@ -533,14 +533,25 @@ class ViewerHandler(BaseHTTPRequestHandler):
                     self.wfile.write(data)
                 return
             at = None
+            frame = None
             if name == 'frame.jpg':
                 try:
-                    at = float(parse_qs(parsed.query).get('at', ['0'])[0])
-                    if not math.isfinite(at):
-                        raise ValueError
+                    query = parse_qs(parsed.query, keep_blank_values=True)
+                    if 'frame' in query:
+                        if len(query['frame']) != 1 or not re.fullmatch(r'0|[1-9][0-9]{0,18}', query['frame'][0]):
+                            raise ValueError
+                        frame = int(query['frame'][0])
+                    values = parse_qs(parsed.query).get('at', ['0']) if frame is None else query.get('at')
+                    if values is not None:
+                        if frame is not None and len(values) != 1:
+                            raise ValueError
+                        at = float(values[0])
+                        if not math.isfinite(at):
+                            raise ValueError
                 except ValueError:
                     return self._json(400, {'error': 'Invalid playback position.'}, head)
-            replay_file = self.server.replay.media(token, sequence=int(sequence) if sequence else None, at=at)
+            replay_file = (self.server.replay.image(token, frame, at) if frame is not None else
+                           self.server.replay.media(token, sequence=int(sequence) if sequence else None, at=at))
             if not replay_file:
                 return self._json(404, {'error': 'Buffered footage is unavailable.'}, head)
         frame_match = re.fullmatch(r'/api/cameras/([a-f0-9]{16})/frame\.jpg', path)

@@ -511,7 +511,11 @@ test('media program dates are used in preference to page time and native HLS has
   replay.paused = true; replay.position = 10;
   assert.equal(printerPlaybackTime({}, null, replay), 1010);
   replay.session.kind = 'jpeg'; replay.session.end_time = 1008;
-  assert.equal(printerPlaybackTime({}, null, replay), 1008);
+  assert.equal(printerPlaybackTime({}, null, replay), null, 'Metadata alone does not prove which JPEG decoded');
+  replay.jpegClock = () => 1007.125678;
+  assert.equal(printerPlaybackTime({}, null, replay), 1007.125678);
+  replay.session.end_time = 1012;
+  assert.equal(printerPlaybackTime({}, null, replay), 1007.125678, 'New capture metadata cannot advance a paused image clock');
 });
 
 test('cast printer stats follow the receiver clock instead of the paused local decoder', () => {

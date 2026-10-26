@@ -203,6 +203,7 @@ export class PreviewCapture {
     const listen = (target, name, handler) => target.addEventListener(name, handler, { signal: this.events.signal });
     for (const event of ['timeupdate', 'loadeddata', 'seeked', 'pause']) listen(video, event, () => this.sample());
     listen(image, 'load', () => this.sample());
+    listen(image, 'replayimagechange', () => { this.cancel(); this.sample(); });
     listen(video, 'emptied', () => this.cancel());
     listen(video.ownerDocument, 'visibilitychange', () => { if (!playerVisible()) this.cancel(); else this.sample(); });
     listen(video.ownerDocument.defaultView, 'pagehide', () => { this.cancel(); history.disk?.suspend?.(); });
@@ -215,9 +216,10 @@ export class PreviewCapture {
     if (!session?.ready || session.session_id !== this.history.token || replay.remote || !playerVisible() ||
         this.pending || this.unavailable || performance.now() - (this.lastAttempt ?? -Infinity) < 1000) return;
     const source = this.image.hidden ? this.video : this.image;
-    const time = source === this.video ? this.video.currentTime : replay.bounds().current;
+    const imageFrame = source === this.image ? replay.decodedImage?.() : null;
+    const time = source === this.video ? this.video.currentTime : imageFrame?.position;
     const bucket = Math.floor(time / PREVIEW_INTERVAL) * PREVIEW_INTERVAL;
-    if (!Number.isFinite(time) || time < session.start_seconds || this.history.frames.get(bucket)?.capture ||
+    if (!Number.isFinite(time) || time < (imageFrame ? replay.jpegDescriptor?.()?.start ?? session.start_seconds : session.start_seconds) || this.history.frames.get(bucket)?.capture ||
         source === this.video && (this.video.seeking || this.video.readyState < 2) ||
         !(source === this.video ? source.videoWidth : source.naturalWidth)) return;
     this.lastAttempt = performance.now();
@@ -230,16 +232,17 @@ export class PreviewCapture {
         this.save(source, metadata.mediaTime, session.session_id, version, job);
       });
       this.deadline = setTimeout(() => this.cancel(), 700);
-    } else this.save(source, time, session.session_id, version, job);
+    } else this.save(source, time, session.session_id, version, job, imageFrame);
   }
 
-  save(source, time, token, version, job) {
+  save(source, time, token, version, job, imageFrame = null) {
     if (job !== this.job) return;
     clearTimeout(this.deadline);
     try {
-      const session = this.readReplay().session;
+      const replay = this.readReplay(), session = replay.session;
       if (token !== this.history.token || version !== this.history.version || !session ||
-          !Number.isFinite(time) || time < session.start_seconds || !playerVisible() ||
+          !Number.isFinite(time) || time < (imageFrame ? replay.jpegDescriptor?.()?.start ?? session.start_seconds : session.start_seconds) || !playerVisible() ||
+          source === this.image && (!imageFrame || replay.decodedImage?.() !== imageFrame) ||
           source === this.video && (this.video.seeking || this.video.readyState < 2)) { this.pending = false; return; }
       this.canvas ??= this.video.ownerDocument.createElement('canvas');
       this.canvas.width = PREVIEW_WIDTH;
@@ -257,7 +260,8 @@ export class PreviewCapture {
       this.canvas.toBlob(blob => {
         if (job !== this.job) return;
         this.pending = false;
-        if (blob && token === this.history.token && version === this.history.version) this.history.addFrame(time, blob);
+        if (blob && token === this.history.token && version === this.history.version &&
+            (source !== this.image || this.readReplay().decodedImage?.() === imageFrame)) this.history.addFrame(time, blob);
       }, 'image/jpeg', 0.6);
     } catch (error) {
       this.pending = false;

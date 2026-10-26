@@ -76,6 +76,7 @@ export class PageReplay {
     this.detail = document.getElementById('replay-detail');
     this.caption = document.getElementById('caption-label');
     this.session = null;
+    this.imageDescriptor = null;
     this.opening = null;
     this.version = 0;
     this.followLive = true;
@@ -85,6 +86,11 @@ export class PageReplay {
     this.position = 0;
     this.lastTick = performance.now();
     this.lastImagePosition = null;
+    this.imageRevision = 0;
+    this.imageRequest = null;
+    this.imageFrame = null;
+    this.imageLoading = false;
+    this.lastImageRequestAt = -Infinity;
     this.ignoreSeekingUntil = 0;
     this.timeline = new ReplayTimeline();
     this.scrubbing = false;
@@ -190,6 +196,7 @@ export class PageReplay {
     const hadSession = Boolean(this.session);
     if (this.session) this.release(this.session.session_id);
     this.session = null;
+    this.imageDescriptor = null;
     this.opening = null;
     this.controls.hidden = true;
     this.pauseButton.disabled = true;
@@ -203,7 +210,7 @@ export class PageReplay {
     this.attaching = false;
     this.mediaRestore = null;
     this.position = 0;
-    this.lastImagePosition = null;
+    this.clearImage();
     this.timeline.reset();
     this.eventMarkers?.reset?.();
     this.scrubbing = false;
@@ -227,7 +234,12 @@ export class PageReplay {
     const previous = this.mediaRestore;
     const position = previous && previous.session === this.session?.session_id ? previous.position :
       this.paused ? this.position : this.bounds().current;
+    const jpegTime = this.session?.kind === 'jpeg' ? this.jpegClock() : null;
     this.mediaRestore = preserve && this.session ? { session: this.session.session_id, position } : null;
+    if (this.session?.kind === 'jpeg') {
+      if (this.mediaRestore) this.mediaRestore.jpegTime = jpegTime;
+      this.clearImage();
+    }
     if (this.mediaRestore) {
       this.position = Math.max(this.session.start_seconds, Math.min(this.session.end_seconds - 0.05, this.mediaRestore.position));
       this.mediaRestore.position = this.position;
@@ -255,12 +267,20 @@ export class PageReplay {
 
   mediaReady() {
     const restore = this.mediaRestore;
+    if (this.session?.kind === 'jpeg') {
+      if (restore && restore.session !== this.session.session_id) { this.mediaRestore = null; return false; }
+      if (restore && !this.followLive && this.decodedImage()?.position !== restore.position) this.showImage(this.position);
+      // Old backends can still deliver JPEGs, but cannot prove their decoded
+      // clock. A descriptor-capable attachment finishes after native decoding.
+      if (this.jpegDescriptor() && !this.decodedImage()) return false;
+      this.mediaRestore = null;
+      this.attaching = false;
+      this.render();
+      return Boolean(restore && !this.paused);
+    }
     if (restore) {
       if (restore.session !== this.session?.session_id) { this.mediaRestore = null; return false; }
-      else if (this.session.kind === 'jpeg') {
-        if (!this.followLive) this.showImage(this.position);
-        this.mediaRestore = null;
-      } else {
+      else {
         // A manifest is not a decoded frame. In particular, keep the paused
         // position through teardown's pause/load events and an in-flight seek.
         if (this.video.readyState < 2 || this.video.seeking) return false;
@@ -278,8 +298,10 @@ export class PageReplay {
     if (!session) return { start: 0, end: 0, current: 0 };
     if (this.remote) return this.remote.bounds();
     if (session.kind === 'jpeg') {
-      return { start: session.start_seconds, end: session.end_seconds,
-        current: this.followLive ? session.end_seconds : this.position };
+      const frame = this.jpegDescriptor();
+      const current = frame ? this.decodedImage()?.position ?? this.position : session.end_seconds;
+      return { start: frame?.start ?? session.start_seconds, end: frame?.position ?? session.end_seconds,
+        current: this.followLive ? current : this.position };
     }
     const current = this.attaching && this.mediaRestore?.session === session.session_id ?
       this.mediaRestore.position : this.video.currentTime || 0;
@@ -311,7 +333,7 @@ export class PageReplay {
     if (!this.scrubbing || !Number.isFinite(target)) return;
     const { start, end } = this.bounds();
     if (end <= start) return;
-    this.previewPosition = Math.max(start, Math.min(end - 0.05, target));
+    this.previewPosition = this.session.kind === 'jpeg' ? this.jpegTarget(target) : Math.max(start, Math.min(end - 0.05, target));
     this.previewChanged = true;
     this.slider.value = this.previewPosition;
     this.render();
@@ -359,12 +381,13 @@ export class PageReplay {
   seek(target) {
     this.finishScrub(false);
     const { start, end } = this.bounds();
-    if (end <= start) return;
+    if (end <= start && !this.jpegDescriptor()) return;
     this.followLive = false;
-    this.position = Math.max(start, Math.min(end - 0.05, target));
+    this.position = this.session.kind === 'jpeg' && !this.remote ? this.jpegTarget(target) : Math.max(start, Math.min(end - 0.05, target));
     if (this.mediaRestore) {
       this.mediaRestore.position = this.position;
       this.mediaRestore.nativeSeeked = true;
+      delete this.mediaRestore.jpegTime;
     }
     if (!this.scrubbing) this.timeline.fit();
     if (this.remote) this.remote.seek(this.position);
@@ -374,11 +397,147 @@ export class PageReplay {
     window.dispatchEvent(new Event('replaypositionchange'));
   }
 
-  showImage(position) {
-    const rounded = Math.floor(position * 2) / 2;
-    if (this.lastImagePosition === rounded) return;
-    this.lastImagePosition = rounded;
-    this.image.src = `${this.session.frame_url}?at=${rounded}`;
+  jpegDescriptor() {
+    const frame = this.session?.kind === 'jpeg' && this.session.jpeg_frame;
+    const valid = frame && Number.isSafeInteger(frame.sequence) && frame.sequence >= 0 &&
+      [frame.start, frame.position, frame.time].every(Number.isFinite) && frame.start >= 0 && frame.position >= frame.start &&
+      Array.isArray(frame.clock) && frame.clock.length && frame.clock.every(clock =>
+        Number.isFinite(clock.position) && Number.isFinite(clock.time));
+    if (!valid) return null;
+    const previous = this.imageDescriptor;
+    if (previous?.session === this.session.session_id && previous.camera === this.session.camera_id &&
+        previous.version === this.version && previous.frame.sequence > frame.sequence) return previous.frame;
+    this.imageDescriptor = { session: this.session.session_id, camera: this.session.camera_id, version: this.version, frame };
+    return frame;
+  }
+
+  jpegTarget(position) {
+    const frame = this.jpegDescriptor();
+    return frame ? Math.max(frame.start, Math.min(frame.position, position)) :
+      Math.max(this.session.start_seconds, Math.min(this.session.end_seconds - 0.05, position));
+  }
+
+  decodedImage() {
+    const frame = this.imageFrame;
+    return frame && frame.session === this.session?.session_id && frame.camera === this.session.camera_id &&
+      frame.version === this.version && !this.imageLoading && this.image.src === frame.url ? frame : null;
+  }
+
+  jpegClock() {
+    return this.decodedImage()?.time ?? (this.attaching ? this.mediaRestore?.jpegTime : null) ?? null;
+  }
+
+  cancelImage({ restore = false } = {}) {
+    this.imageRevision++;
+    const request = this.imageRequest;
+    this.imageRequest = null;
+    request?.controller.abort();
+    if (request?.url && request.url !== this.imageFrame?.url) URL.revokeObjectURL(request.url);
+    const frame = this.imageFrame;
+    if (restore && frame && (this.image.src !== frame.url || this.imageLoading)) {
+      const revision = this.imageRevision;
+      this.imageLoading = true;
+      this.image.src = frame.url;
+      this.decodeImage().then(() => {
+        if (revision !== this.imageRevision || this.image.src !== frame.url || frame !== this.imageFrame) return;
+        this.imageLoading = false;
+        this.image.dispatchEvent(new Event('replayimagechange'));
+        this.render();
+      }).catch(() => {});
+    }
+  }
+
+  clearImage() {
+    this.cancelImage();
+    if (this.imageFrame) URL.revokeObjectURL(this.imageFrame.url);
+    this.imageFrame = null;
+    this.imageLoading = false;
+    this.lastImagePosition = null;
+    this.lastImageRequestAt = -Infinity;
+    this.image.dispatchEvent(new Event('replayimagechange'));
+  }
+
+  decodeImage() {
+    if (this.image.decode) return this.image.decode();
+    return new Promise((resolve, reject) => {
+      const done = event => {
+        this.image.removeEventListener('load', done);
+        this.image.removeEventListener('error', done);
+        event.type === 'load' ? resolve() : reject(new Error('JPEG unavailable'));
+      };
+      this.image.addEventListener('load', done, { once: true });
+      this.image.addEventListener('error', done, { once: true });
+    });
+  }
+
+  showLiveImage(url) {
+    if (this.jpegDescriptor()) this.showImage(this.session.jpeg_frame.position, { live: true, automatic: true });
+    else {
+      this.clearImage();
+      this.image.src = url; // Live remains available without an owned recording.
+    }
+  }
+
+  showImage(position, { live = false, automatic = false } = {}) {
+    if (!this.session?.frame_url) return;
+    const descriptor = this.jpegDescriptor();
+    if (!descriptor) {
+      // Compatible legacy playback has no proven image clock or local capture.
+      const rounded = Math.floor(position * 2) / 2;
+      const key = `legacy:${rounded}`;
+      if (this.lastImagePosition === key) return;
+      this.clearImage();
+      this.lastImagePosition = key;
+      this.image.src = `${this.session.frame_url}?at=${rounded}`;
+      return;
+    }
+    position = live ? descriptor.position : this.jpegTarget(position);
+    const clock = descriptor.clock.findLast(clock => clock.position <= position);
+    if (!clock) return;
+    const time = position === descriptor.position ? descriptor.time : clock.time + position - clock.position;
+    const source = `${this.session.frame_url}?frame=${descriptor.sequence}${position === descriptor.position ? '' : `&at=${position}`}`;
+    if (source === this.lastImagePosition && (this.imageRequest?.source === source || this.decodedImage()?.source === source)) return;
+    // Playback ticks at 4 Hz, but JPEG requests remain at most 2 Hz and one in
+    // flight. Explicit committed seeks are independent of that automatic gate.
+    const now = performance.now();
+    if (automatic && (this.imageRequest || now - this.lastImageRequestAt < 500)) return;
+    this.cancelImage({ restore: true });
+    const request = this.imageRequest = { revision: this.imageRevision, version: this.version,
+      session: this.session.session_id, camera: this.session.camera_id, position, time, source, controller: new AbortController() };
+    const owns = () => this.imageRequest === request && request.revision === this.imageRevision &&
+      request.version === this.version && request.session === this.session?.session_id && request.camera === this.session.camera_id;
+    this.lastImagePosition = source;
+    this.lastImageRequestAt = now;
+    const deadline = setTimeout(() => request.controller.abort(), 6000);
+    this.imageTask = (async () => {
+      try {
+        const response = await this.fetcher(source, { signal: request.controller.signal, cache: 'no-store' });
+        if (!response.ok || !response.headers?.get('Content-Type')?.startsWith('image/jpeg')) throw new Error('JPEG unavailable');
+        const blob = await response.blob();
+        if (!owns()) return;
+        request.url = URL.createObjectURL(blob);
+        this.imageLoading = true;
+        this.image.src = request.url;
+        await this.decodeImage();
+        if (!owns() || this.image.src !== request.url) return;
+        const previous = this.imageFrame;
+        this.imageFrame = { session: request.session, camera: request.camera, version: request.version,
+          position, time, url: request.url, source };
+        this.imageLoading = false;
+        this.imageRequest = null;
+        if (previous) URL.revokeObjectURL(previous.url);
+        if (this.paused || this.followLive) this.position = position;
+        this.mediaReady();
+        this.image.dispatchEvent(new Event('replayimagechange'));
+        this.render();
+      } catch (_) {
+        if (owns()) { this.lastImagePosition = null; this.cancelImage({ restore: true }); }
+      } finally {
+        clearTimeout(deadline);
+        if (request.url && this.imageFrame?.url !== request.url) URL.revokeObjectURL(request.url);
+      }
+    })();
+    return this.imageTask;
   }
 
   togglePause() {
@@ -389,7 +548,14 @@ export class PageReplay {
       this.video.autoplay = !this.paused;
       if (this.paused) { this.followLive = false; this.video.pause(); }
     } else if (this.session.kind === 'jpeg') {
-      if (!this.paused) { this.position = this.bounds().current; this.followLive = false; }
+      if (!this.paused) {
+        const frame = this.imageFrame;
+        // Freeze the proven still, not a provisional tail or a pending target.
+        if (frame) { this.position = frame.position; this.cancelImage({ restore: true }); }
+        else if (this.jpegDescriptor()) this.position = this.imageRequest?.position ?? this.jpegTarget(this.position);
+        else this.position = this.bounds().current;
+        this.followLive = false;
+      }
       this.paused = !this.paused;
     } else if (this.video.paused) {
       this.video.play().catch(() => {});
@@ -412,9 +578,14 @@ export class PageReplay {
     this.lastImagePosition = null;
     if (this.remote) this.remote.goLive();
     else if (this.session.kind === 'jpeg') {
-      this.position = this.session.end_seconds;
+      if (!this.jpegDescriptor()) this.position = this.session.end_seconds;
       const path = `/api/cameras/${this.session.camera_id}/frame.jpg?t=${Date.now()}`;
-      this.image.src = this.backend.resolve ? this.backend.resolve(path) : path;
+      // Explicit Live supersedes a pending replay request, including when it
+      // targets the same descriptor as an already displayed historical still.
+      this.cancelImage({ restore: true });
+      this.lastImagePosition = null;
+      this.lastImageRequestAt = -Infinity;
+      this.showLiveImage(this.backend.resolve ? this.backend.resolve(path) : path);
     } else {
       const { start, end } = this.bounds();
       if (end > start) {
@@ -506,8 +677,9 @@ export class PageReplay {
     this.lastTick = now;
     if (!this.session) return;
     if (this.session.kind === 'jpeg' && !this.followLive && !this.paused && playerVisible()) {
-      this.position = Math.max(this.session.start_seconds, Math.min(this.session.end_seconds, this.position + elapsed));
-      this.showImage(this.position);
+      const position = Math.max(this.bounds().start, Math.min(this.session.end_seconds, this.position + elapsed));
+      this.position = this.jpegDescriptor() ? this.jpegTarget(position) : position;
+      this.showImage(this.position, { automatic: true });
     }
     this.render();
   }

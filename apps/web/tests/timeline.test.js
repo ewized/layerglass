@@ -36,7 +36,7 @@ async function player({ end = 100, current = 98, kind = 'hls', duration = Infini
     return nodes.get(id);
   } });
   const window = new EventTarget();
-  const context = vm.createContext({ document, window, Event, CustomEvent, performance: { now: () => milliseconds },
+  const context = vm.createContext({ document, window, Event, CustomEvent, URL, AbortController, performance: { now: () => milliseconds },
     setInterval() {}, setTimeout(fn, delay) { timers.set(++timerId, { at: milliseconds + delay, fn }); return timerId; },
     clearTimeout(id) { timers.delete(id); },
     fetch() { throw new Error('A timeline unit test must not use the network.'); } });
@@ -85,6 +85,162 @@ function close(actual, expected, message) {
   assert(Math.abs(actual - expected) < 1e-9, `${message}: expected ${expected}, got ${actual}`);
 }
 
+async function ownedJpeg({ start = 10, position = 10, time = 1030, sequence = 1 } = {}) {
+  const p = await player({ kind: 'jpeg', end: position + 1 });
+  const requests = [];
+  const template = { ...p.replay.session };
+  p.replay.image.decode = async () => {};
+  p.replay.fetcher = (url, init) => new Promise(resolve => requests.push({ url, init, resolve }));
+  const metadata = (position, sequence, time = 1020 + position) => ({ ...template, start_seconds: start,
+    end_seconds: position + 1, end_time: time, jpeg_frame: { start, position, time, sequence,
+      clock: [{ position: -20, time: 1000 }] } });
+  p.replay.session = metadata(position, sequence, time);
+  p.replay.render();
+  const respond = index => requests[index].resolve({ ok: true, headers: new Headers({ 'Content-Type': 'image/jpeg' }),
+    blob: async () => new Blob(['generated fixture']) });
+  const live = () => p.replay.showLiveImage('/live-fixture.jpg');
+  const decoded = async index => { const task = p.replay.imageTask; respond(index); await task; };
+  return { ...p, requests, metadata, respond, live, decoded };
+}
+
+test('owned JPEG Live pause and recovery keep the decoded capture rather than the provisional end', async () => {
+  const p = await ownedJpeg();
+  p.live(); await p.decoded(0);
+  close(p.replay.bounds().current, 10, 'The decoded capture is not the end11 tail');
+  p.replay.togglePause();
+  const original = p.replay.decodedImage();
+  p.replay.updateMetadata(p.replay.session.session_id, p.metadata(10.25, 2));
+  close(p.replay.position, 10, 'Paused capture position');
+  close(p.replay.jpegClock(), 1030, 'New metadata cannot move the paused recorded clock');
+  assert.equal(p.replay.decodedImage(), original);
+  p.replay.attachMedia({ preserve: true });
+  p.replay.attachMedia({ preserve: true });
+  close(p.replay.jpegClock(), 1030, 'Repeated attachment keeps the same proven loading clock');
+  p.replay.image.src = '';
+  p.replay.clearImage(); // The ordinary player detaches the image too.
+  p.replay.mediaReady();
+  assert.equal(p.replay.attaching, true);
+  close(p.replay.jpegClock(), 1030, 'Restoration keeps its proven clock while loading');
+  await p.decoded(1);
+  assert.equal(p.replay.attaching, false);
+  assert.equal(p.replay.mediaRestore, null);
+  assert.equal(p.replay.paused, true);
+  close(p.replay.decodedImage().position, 10, 'Restored selected position');
+  close(p.replay.jpegClock(), 1030, 'Restored decoded clock');
+  assert.equal(p.requests.length, 2, 'Exactly one owned restoration request');
+  p.replay.close();
+});
+
+test('JPEG provisional targets clamp precisely and completed held intervals retain their requested wall clock', async () => {
+  const p = await ownedJpeg({ start: 0, position: 10.123456, time: 1030.123456 });
+  p.replay.seek(11);
+  assert.match(p.requests[0].url, /\?frame=1$/);
+  await p.decoded(0);
+  close(p.replay.position, 10.123456, 'No half-second or millisecond rounding at a capture');
+  close(p.replay.jpegClock(), 1030.123456, 'The precise capture epoch owns its pixels');
+  p.replay.seek(5.234567);
+  assert.match(p.requests[1].url, /\?frame=1&at=5\.234567$/);
+  await p.decoded(1);
+  close(p.replay.jpegClock(), 1025.234567, 'A completed hold progresses through its wall-clock interval');
+  p.replay.seek(5.234567);
+  assert.equal(p.requests.length, 2, 'Identical owned positions still deduplicate');
+  p.replay.close();
+});
+
+test('JPEG metadata cannot relabel an in-flight image and an older snapshot cannot rewind Live', async () => {
+  const p = await ownedJpeg();
+  p.live(); await p.decoded(0);
+  p.elapse(1000);
+  const old = { ...p.replay.session };
+  p.replay.updateMetadata(old.session_id, p.metadata(10.25, 2));
+  p.live();
+  p.replay.updateMetadata(old.session_id, p.metadata(11.5, 3));
+  close(p.replay.jpegClock(), 1030, 'The old decoded image remains the current clock during fetch');
+  await p.decoded(1);
+  close(p.replay.jpegClock(), 1030.25, 'Only the requested green capture decoded, not later metadata');
+  p.replay.updateMetadata(old.session_id, old);
+  assert.equal(p.replay.jpegDescriptor().sequence, 3, 'A proven newer same-session snapshot remains available');
+  p.elapse(1000); p.live();
+  assert.match(p.requests[2].url, /\?frame=3$/);
+  await p.decoded(2);
+  close(p.replay.jpegClock(), 1031.5, 'The next actual capture can advance Live');
+  p.replay.close();
+});
+
+test('automatic JPEG requests stay coalesced and at most twice per second', async () => {
+  const p = await ownedJpeg();
+  p.live();
+  p.replay.updateMetadata(p.replay.session.session_id, p.metadata(10.25, 2));
+  for (let tick = 0; tick < 100; tick++) p.replay.showImage(10.25, { automatic: true });
+  assert.equal(p.requests.length, 1, 'A slow body cannot create a queue of main-image requests');
+  await p.decoded(0);
+  p.elapse(499); p.replay.showImage(10.25, { automatic: true });
+  assert.equal(p.requests.length, 1);
+  p.elapse(1); p.replay.showImage(10.25, { automatic: true });
+  assert.equal(p.requests.length, 2);
+  await p.decoded(1);
+  p.replay.close();
+});
+
+test('pause cancels a pending JPEG fetch and stale decoding cannot replace the frozen owned image', async () => {
+  const p = await ownedJpeg();
+  p.live(); await p.decoded(0);
+  const blue = p.replay.imageFrame;
+  p.elapse(1000); p.replay.updateMetadata(p.replay.session.session_id, p.metadata(10.25, 2));
+  const decodes = [];
+  p.replay.image.decode = () => new Promise(resolve => decodes.push(resolve));
+  p.live(); const greenTask = p.replay.imageTask; p.respond(1);
+  await new Promise(setImmediate);
+  assert.equal(decodes.length, 1);
+  p.replay.togglePause();
+  assert.equal(p.requests[1].init.signal.aborted, true);
+  assert.equal(p.replay.image.src, blue.url, 'The existing Blob restores without another HTTP request');
+  assert.equal(decodes.length, 2);
+  decodes[1](); await new Promise(setImmediate);
+  close(p.replay.jpegClock(), 1030, 'Pause owns blue again after its native decode');
+  decodes[0](); await greenTask;
+  assert.equal(p.replay.imageFrame, blue);
+  assert.equal(p.replay.paused, true);
+  assert.equal(p.requests.length, 2);
+  p.replay.image.decode = async () => {};
+  p.replay.seek(10.25);
+  await p.decoded(2);
+  close(p.replay.jpegClock(), 1030.25, 'A cancelled target can be explicitly selected again');
+  p.replay.close();
+});
+
+test('pause before the first owned JPEG waits for that request without inventing a clock', async () => {
+  const p = await ownedJpeg();
+  p.live(); p.replay.togglePause();
+  assert.equal(p.replay.jpegClock(), null);
+  p.replay.updateMetadata(p.replay.session.session_id, p.metadata(10.25, 2));
+  await p.decoded(0);
+  assert.equal(p.replay.paused, true);
+  close(p.replay.position, 10, 'The first request remains the paused selected capture');
+  close(p.replay.jpegClock(), 1030, 'Later metadata does not relabel its first decoded still');
+  p.replay.close();
+});
+
+test('JPEG source/session changes reject old responses and Live supersedes a committed pending seek', async () => {
+  const p = await ownedJpeg({ start: 0 });
+  p.replay.seek(5); const oldTask = p.replay.imageTask;
+  p.replay.goLive(); await p.decoded(1);
+  p.respond(0); await oldTask;
+  close(p.replay.jpegClock(), 1030, 'A late historical body cannot replace explicit Live');
+  p.elapse(1000); p.replay.updateMetadata(p.replay.session.session_id, p.metadata(10.25, 2));
+  p.live(); const cancelled = p.replay.imageTask;
+  p.replay.release = () => {};
+  p.replay.close();
+  p.replay.session = { ...p.metadata(10.25, 2), session_id: 'new-page', camera_id: 'new-camera' };
+  p.live(); await p.decoded(3);
+  const current = p.replay.imageFrame;
+  p.respond(2); await cancelled;
+  assert.equal(p.replay.imageFrame, current);
+  assert.equal(current.session, 'new-page');
+  assert.equal(current.camera, 'new-camera');
+  p.replay.close();
+});
+
 test('at Live, adding and playing one second keeps the thumb at the right edge', async () => {
   const p = await player();
   for (let second = 0; second < 120; second++) {
@@ -125,6 +281,47 @@ test('JPEG replay has the same 1× live-relative position as HLS', async () => {
     p.advance();
     close(p.fraction(), fraction, 'JPEG replay position');
     close(p.replay.position, 50 + second, 'JPEG playback time');
+  }
+});
+
+test('fresh legacy JPEG Pause and Play retain the Live archive position without claiming a decoded clock', async () => {
+  const p = await player({ kind: 'jpeg', end: 31, current: 0 });
+  close(p.replay.bounds().current, 31, 'Legacy Live still uses its archive edge');
+  p.replay.image.src = '/legacy-live.jpg';
+  p.replay.togglePause();
+  close(p.replay.position, 31, 'Pause must not reset the still to the uninitialized position zero');
+  assert.equal(p.replay.image.src, '/legacy-live.jpg');
+  assert.equal(p.replay.jpegClock(), null);
+  assert.equal(p.replay.decodedImage(), null);
+  p.replay.togglePause(); p.advance(1, 0, 0);
+  close(p.replay.position, 31, 'Legacy playback keeps its original archive-edge cap');
+  assert.equal(p.replay.image.src, '/fixture.jpg?at=31', 'Play requests the paused latest still, not the first historical frame');
+  p.replay.seek(5.125); p.replay.togglePause();
+  p.advance(1, 0, 0);
+  close(p.replay.position, 5.125, 'Pausing playing legacy history keeps its selected past');
+  p.replay.togglePause(); p.advance(1, 0, 0);
+  close(p.replay.position, 6.125, 'Historical legacy Play resumes from that past');
+  p.replay.goLive();
+  close(p.replay.position, 31, 'Explicit legacy Live retains its prior position contract');
+  assert.equal(p.replay.jpegClock(), null);
+});
+
+test('legacy JPEG wheel previews and committed targets stay within archive bounds', async () => {
+  for (const [start, direction, expected] of [[2, -1, 0], [29, 1, 30.95]]) {
+    const p = await player({ kind: 'jpeg', end: 31, current: start });
+    p.replay.seek(start);
+    let requests = 0, commits = 0;
+    let source = p.replay.image.src;
+    Object.defineProperty(p.replay.image, 'src', { get: () => source, set: value => { source = value; requests++; } });
+    p.window.addEventListener('replaypositionchange', () => commits++);
+    for (let repeat = 0; repeat < 3; repeat++) p.slider.dispatchEvent(event('wheel', { deltaX: direction * 100000, deltaY: 0 }));
+    close(p.replay.previewPosition, expected, 'Overshooting wheel preview clamps to the legacy archive');
+    assert.equal(requests, 0); assert.equal(commits, 0);
+    p.elapse(250);
+    close(p.replay.position, expected, 'One released target remains bounded');
+    assert.equal(requests, 1); assert.equal(commits, 1);
+    assert.equal(source, `/fixture.jpg?at=${Math.floor(expected * 2) / 2}`);
+    assert.equal(p.replay.jpegClock(), null); assert.equal(p.replay.decodedImage(), null);
   }
 });
 

@@ -54,6 +54,26 @@ JPEG writes and file-metadata checks finish before publishing a new capture's
 tail, position and clock. A temporary file error leaves those values at the
 previous accepted capture, so retrying cannot count the same interval twice.
 
+The optional `jpeg_frame` session descriptor identifies the latest accepted
+capture by sequence, precise position and epoch, with precise clock anchors.
+It does not replace or change the provisional archive tail. On the existing
+`frame.jpg` endpoint, `frame=<sequence>` pins a capture; adding `at=<position>`
+selects a completed position covered by that capture. These owned requests reject
+trimmed, pre-page and provisional positions rather than falling forward to a
+different image. Legacy `at` requests retain their existing behavior.
+
+The JPEG viewer fetches those existing images into bounded temporary Blob URLs
+on the same image element. Only its current page/camera/request can publish the
+position after native decoding. It keeps at most the displayed and pending
+image, revokes their URLs on replacement/reset, and limits automatic replay
+requests to two per second with one in flight. Live retains its one-second poll.
+Pause retains the owned still and clock; metadata alone cannot relabel it.
+Pending requests can be cancelled without refetching a different capture.
+Legacy or unavailable recording still permits live images, but an unowned image
+has no invented recorded clock or local thumbnail timestamp.
+Without the optional descriptor, legacy controls keep their archive bounds and
+Live pause/play position; this fallback does not prove decoded-image identity.
+
 While pages own an archive, retention drops a fragment from byte accounting only
 after its file has been deleted. If deletion temporarily fails, maintenance keeps the
 worker and page leases alive and reports the existing temporary-buffer error.

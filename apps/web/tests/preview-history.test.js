@@ -217,9 +217,55 @@ function captureFixture() {
   const replay = { session: { session_id: 'page', ready: true, start_seconds: 0 } };
   const history = new PreviewHistory({ disk: null }); history.setSession(replay.session);
   const capture = new PreviewCapture(history, video, image, () => replay);
-  return { doc, video, replay, history, capture, callbacks, encodes, draws,
+  return { doc, video, image, replay, history, capture, callbacks, encodes, draws,
     close() { capture.close(); if (previous === undefined) delete globalThis.document; else globalThis.document = previous; } };
 }
+
+test('JPEG capture waits for owned decoded pixels and ignores later metadata when labelling them', () => {
+  const f = captureFixture();
+  try {
+    Object.assign(f.image, { hidden: false, naturalWidth: 64, naturalHeight: 36 });
+    f.replay.session.start_seconds = 10.124;
+    f.replay.jpegDescriptor = () => ({ start: 10.123456 });
+    let owned = null;
+    f.replay.decodedImage = () => owned;
+    f.image.dispatchEvent(new Event('load'));
+    assert.equal(f.encodes.length, 0, 'A raw/pending image has no proven capture timestamp');
+    owned = { position: 10.123456, time: 1030.123456 };
+    f.image.dispatchEvent(new Event('replayimagechange'));
+    assert.equal(f.encodes.length, 1);
+    f.replay.session.end_seconds = 40;
+    f.encodes[0](blob(1));
+    assert.equal(f.history.frames.get(10).time, 10.123456, 'Image time stays precise despite newer metadata and rounded legacy bounds');
+  } finally { f.close(); }
+});
+
+test('an old JPEG encoding cannot populate history or unlock a newer decoded capture', () => {
+  const f = captureFixture();
+  try {
+    Object.assign(f.image, { hidden: false, naturalWidth: 64, naturalHeight: 36 });
+    let owned = { position: 1.125678 };
+    f.replay.decodedImage = () => owned;
+    f.image.dispatchEvent(new Event('replayimagechange'));
+    assert.equal(f.encodes.length, 1);
+    owned = { position: 5.234567 };
+    f.capture.lastAttempt = -Infinity;
+    f.image.dispatchEvent(new Event('replayimagechange'));
+    assert.equal(f.encodes.length, 2);
+    f.encodes[0](blob(1));
+    assert.equal(f.capture.pending, true);
+    assert.equal(f.history.frames.size, 0);
+    f.encodes[1](blob(2));
+    assert.equal(f.capture.pending, false);
+    assert.equal(f.history.frames.get(5).time, 5.234567);
+    f.capture.lastAttempt = -Infinity;
+    owned = { position: 10.345678 };
+    f.image.dispatchEvent(new Event('replayimagechange'));
+    owned = null;
+    f.encodes[2](blob(3));
+    assert.equal(f.history.frames.size, 1, 'Unowned/cleared pixels cannot acquire a thumbnail timestamp');
+  } finally { f.close(); }
+});
 
 test('capture reads the existing decoder once per five-second bucket and uses the presented frame timestamp', () => {
   const f = captureFixture();

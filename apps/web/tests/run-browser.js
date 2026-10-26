@@ -13,6 +13,7 @@ const available = [
   'browser-stream-recovery.js',
   'browser-replay-recovery.js',
   'browser-replay-suspension.js',
+  'browser-jpeg-clock.js',
   'browser-preview-storage.js',
   'browser-preview-buffer.js',
   'browser-preview-loading.js',
