@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active until 2026-10-26 16:03:49 UTC:43 accepted improvements integrated from45proposals/15rounds;450explicitballots449APPROVE1ABSTAIN;P38/P42superseded. Final normal CI40352944569running on5042215, hosting40352944680PASS. Earlierall41fullCI and a505native6hPASS remain source-specific; longJPEGstress incomplete. No deployment or future completion claim.",
+  "status": "COMPLETE time-boxed review with FAILED FINAL CI SAFE CHECKPOINT: twelve-hour window ended16:03:49UTC; only already-started validation/reporting finished afterward.43 reviewed improvements committed,45 frozen proposals/15rounds/450 explicit votes449APPROVE1ABSTAIN/root0. Current43-source CI40352944569FAILED atWebKit pausedJPEGreadiness wait658,causeUNPROVED; fourbrowser suites unrun. Hostingpassed; prior41CI/earliernative6h source-qualified. No postdeadline product edits/test/rerun/merge/deploy. Final records ready for audit-only publication.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -39,7 +39,7 @@
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
@@ -62,7 +62,7 @@
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
@@ -84,7 +84,7 @@
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
@@ -106,7 +106,7 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -128,7 +128,7 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
@@ -151,7 +151,7 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -173,7 +173,7 @@
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -195,7 +195,7 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -217,7 +217,7 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 15 ballot complete",
+      "status": "review complete; all Round15 ballots retained",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -643,7 +643,7 @@
         "r09",
         "r10"
       ],
-      "decision": "All10 fresh APPROVE each; initial6committedf065 beforeworktrees; exact independent R05P44READY/R03P45READY acceptance committed087b before2ce88b5+7ee5ad8 integration. All11finalfiles equal reviewed authors. NewnormalcombinedCI pending.",
+      "decision": "All10freshAPPROVEeach;sixcommittedf065 beforeworktrees;exactpeeracceptance087b BEFORE2ce/7eeintegration. Individualfocused/independentchecksPASS; finalcombined43-sourceCI40352944569FAILS atWebKit timelineevents readiness afterdeadline. Retain safeunmerged/undeployed checkpoint with causeunproved;nofix/rerun.",
       "notes": "Two independently reproduced final-hour ownership findings; exact closed scopes and deadline-safe validation/checkpoint policy."
     }
   ],
@@ -5346,7 +5346,7 @@
         "integration_commit": "2ce88b5147873d42eb4becfc3c3313674b9df96a",
         "acceptance_commit": "087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
         "integrated_at": "2026-10-26T15:48:17Z",
-        "combined_ci": "New normal combined CI40352944569 running on50422151dc6ab7df1510214ea36a9356e5a7ada7; result pending.",
+        "combined_ci": "Final combined43-source CI40352944569FAILS atWebKit timeline-events readiness timeout;individualfocused andpeerchecks passed. No newsourcefix/rerun; safe unmerged branch;causeunproved.",
         "acceptance_time_checkpoint": "PENDING; acceptance committed before cherry-pick"
       }
     },
@@ -5460,7 +5460,7 @@
         "integration_commit": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
         "acceptance_commit": "087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
         "integrated_at": "2026-10-26T15:48:17Z",
-        "combined_ci": "New normal combined CI40352944569 running on50422151dc6ab7df1510214ea36a9356e5a7ada7; result pending.",
+        "combined_ci": "Final combined43-source CI40352944569FAILS atWebKit timeline-events readiness timeout;individualfocused andpeerchecks passed. No newsourcefix/rerun; safe unmerged branch;causeunproved.",
         "acceptance_time_checkpoint": "PENDING; acceptance committed before cherry-pick"
       }
     }
@@ -6940,6 +6940,21 @@
       "at": "2026-10-26T15:54:38Z",
       "type": "read-only-final-operations-check",
       "message": "Exactly18 recordedP44/P45author/peer/earliernative6h CIDs re-inspected absent, root-final18-owned-cid-absence.json SHA3e73f86d870b7d012ffe720ae73b1b3490b037b6411ea44074c75a3413bef355. Exact liveprinter-camera-viewer metadata-only15:53 snapshot SHA77c830d7c6ac860ae901a77060db986fb9eea14f5c5c2378ae982f3b47ff6998: originald401image/Oct25start,runninghealthy,restart_count0. No mutation,Env/credential/HTTP/media/printer/LAN inspection."
+    },
+    {
+      "at": "2026-10-26T16:04:05Z",
+      "type": "review-window-closed",
+      "message": "ActualUTC now is at/after16:03:49 deadline. Twelve-hour review window complete; no new product/source reviews, proposals, author edits or runtimes are to start. Final normalCI40352944569 was launched15:48:29 and its independent evidence audit/R10closingreport validation were started beforedeadline; finish only that boundedvalidation, audit-note closure and publication. Do not infer missing CI pass or goal completion yet."
+    },
+    {
+      "at": "2026-10-26T16:09:22Z",
+      "type": "final-ci-failure-checkpoint",
+      "message": "CI completed16:04:31 afterwindowdeadline. Root saved official failedlog once, exactBOM/LF bytes/hash andclassified preciseWebKitpausedJPEGreadiness timeout only;causeUNPROVED. Preserve successfulindividualchecks/previous41CI andallfailed evidence separately. No newsource fix/test/rerun/merge/deploy; finish already-startedR07/R10reportvalidation and finaldocscheck only."
+    },
+    {
+      "at": "2026-10-26T16:17:16Z",
+      "type": "timeboxed-review-complete",
+      "message": "All requested12hreview work stopped bydeadline; already-started finalCI evidence/docs checks now complete. R07officialfailureverified/R10exactclosingtextNO_FINDINGS. Finalstate43committed/2superseded/450ballots. UnresolvedWebKit readiness timeout and JPEGlongstresslimits remain clearly parked; no new fix/rerun/productreview, mainmerge or deployment. Publish only auditnotes; keepCIbranch504 as exact failed-source checkpoint; no independent scheduler configured. Initial closingguard metadata-hash mistake preserved in root-closing-guard-first-failure.json; no product test or source effect."
     }
   ],
   "validation": [
@@ -7490,6 +7505,22 @@
     {
       "summary": "R08 final43 source/voting integrity report6a68eb3d and separate captured-correction READYbfc14de0: actual087b acceptance precedes2ce/7ee integration; root verified33source-at-commit guards+3snapshot hashes+captured correctedledger. Stale acceptance-timePENDINGstrings preservedhistorically and currentintegrationfields corrected. No other non-audit delta since862;450votes/root0/frozen45scopes intact. Reports remain dated snapshots; newnormalCIpending.",
       "status": "NO_FINDINGS after current bookkeeping correction"
+    },
+    {
+      "summary": "Final normal43-source CI40352944569 on504 FAILED atWebKit fractional-origin-mapping paused/nativeJPEGreadywaitline658 timeout10000ms;causeUNPROVED.227Python269JS36docs/Nxbuild+3of3cache and15browser suites completed;4remainingunrun.8P44nativecases+bothstorageengines andstrictP41passed. Rawlog0f57e815/314785bytes;finalsnapshot1835f4e1;artifact12665418405. Hosting40352944680PASS. No fix/rerun afterdeadline; R07 independent evidence audit underway.",
+      "status": "FAILED\u2014SAFE CHECKPOINT"
+    },
+    {
+      "summary": "R07 independent officialCI audit FAILURE_CONFIRMED ef35faae: exact314785UTF8bytes/314180UTF16/BOM/LF compared12contiguouschunks;run/jobs/artifact/source504match;227Python269JS36docs/Nx+15suitesPASS,failingWebKitpausedJPEGready658causeUNPROVED,4unrun.8P44cases/all9P45newtests/strictP41PASS. Root verified3frozenreceipts+11sources+2peerhashes. No fix/rerun or passclaim.",
+      "status": "FAILURE_CONFIRMED"
+    },
+    {
+      "summary": "Previously planned final closing-vault check after actualdeadline PASS36docs, exactownedCID absent; root-outcome-docs-v3.json85e27920, outcomeSHA84b085ed. This checks documentation only and doesnot change failed combinedCI.",
+      "status": "PASS"
+    },
+    {
+      "summary": "R10 exact closingoutcome84b085ed NO_FINDINGS report36baffbe: failed43-sourceCI/unprovedcause/4unrunsuites/deadline/source-limits honest; docsv3PASS36. Root verified6immutable/exact-note hashes and2validator-time JSON/MD hashes against unchangedreceipt (later evidence bookkeeping advances those notes), all15slateSHA/45scopes/450ballots/43committed>=6approvals and audit-only sourceguard. This is not merge-readiness approval.",
+      "status": "CLOSING_TEXT_VERIFIED"
     }
   ],
   "implementation_worktrees": [
@@ -7673,7 +7704,7 @@
     "pushed_commit": "50422151dc6ab7df1510214ea36a9356e5a7ada7",
     "ci_branch": "codex/review-ci-2026-10-26",
     "ci_run": "https://github.com/ewized/layerglass/actions/runs/40352944569",
-    "ci_status": "in_progress on new43-source5042215; hosting40352944680SUCCESS observed15:51UTC; no current fullCI pass yet.",
+    "ci_status": "failure on final43source5042215;WebKittimelineevent pausedJPEGreadytimeout,causeUNPROVED. Previousall41PASSsource862 doesnottransfer. HostingPASS;safeunmergedreviewbranch.",
     "pull_request": "not created",
     "pr_creation_limit": "GitHub connector integration403 for create pull request; gh not signed in. Read-only API and SSH push work.",
     "deployment": "none; configured deploy workflow is main-only and release is v-tag-only",
@@ -7727,7 +7758,7 @@
       "artifact_id": 12659236048
     },
     "publication_policy": "Primary review branch may advance for audit-only notes. CI branch remains on50422151dc6ab7df1510214ea36a9356e5a7ada7, the new43-source workflow input. Do not trigger redundant fullCI for unchanged non-audit source.",
-    "pending_all43": {
+    "all43_ci_initial_checkpoint": {
       "code_commit": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
       "status": "Author/focused and independent exact-final validation passed; publishing one new normal combined fullCI now. No new fullCI result yet.",
       "changed_files_verified": 11,
@@ -7739,7 +7770,45 @@
       "hosting_run_id": 40352944680,
       "hosting_status": "success",
       "hosting_updated_at": "2026-10-26T15:49:11Z"
+    },
+    "all43_ci": {
+      "source": "50422151dc6ab7df1510214ea36a9356e5a7ada7",
+      "code_integration_head": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
+      "run_id": 40352944569,
+      "url": "https://github.com/ewized/layerglass/actions/runs/40352944569",
+      "job_id": 121677633044,
+      "status": "completed",
+      "conclusion": "failure",
+      "completed_at": "2026-10-26T16:04:31Z",
+      "run_updated_at": "2026-10-26T16:04:32Z",
+      "raw_log_sha256": "0f57e815b20cc83a90d8ebbbe8f06421fd13210eb1322734319e6697f1add0b5",
+      "raw_log_utf8_bytes": 314785,
+      "final_snapshot": "test-results/review-2026-10-26/root-all43-ci-final.json",
+      "final_snapshot_sha256": "1835f4e1f8c8236b30112650682bef07ef4e724d82c46bacd7032eb48ed07d16",
+      "passed": "227Python/269JS/36docs/Nx3build+3of3cache/15completedbrowser suites;P44eightnativeIDBcasesbothengines andstoragepassed;strictP41bothenginespassed.",
+      "failure": "WebKit fractional-origin-mapping jpegEventViewer paused/owned-decoded-native-JPEG readiness timeout10000ms atbrowser-timeline-events.js:658; no causalevidence beyondtimeout.",
+      "not_run": [
+        "browser-fullscreen.js",
+        "browser-google-cast.js",
+        "browser-history-reconnect.js",
+        "browser-pwa.js"
+      ],
+      "artifact_id": 12665418405,
+      "artifact_digest": "067b2d7ac0f9032646994f145670a08f5adcdeba1bb1501b9731a25b0947b737",
+      "hosting_run_id": 40352944680,
+      "hosting_status": "success",
+      "independent_evidence_audit": "R07 FAILURE_CONFIRMED: exact official log/API/artifact/source verified, no cause claim or rerun.",
+      "independent_report": "test-results/review-2026-10-26/r07/all43-ci-evidence-review.json",
+      "independent_report_sha256": "ef35faae967f3c1147d01aef5ea79006a7a9104083d9ba1118c3776f71b7d31f"
     }
   },
-  "outcome_note": "docs/reviews/2026-10-26-outcome.md"
+  "outcome_note": {
+    "path": "docs/reviews/2026-10-26-outcome.md",
+    "final_text_sha256": "84b085edcaf45b243018c6258c7df88c2f6abf8b76742773eb2ba2efb611e44f",
+    "final_review": "test-results/review-2026-10-26/r10/outcome43-final-closing-review.json",
+    "final_review_sha256": "36baffbede4188ca989a6a98aca7c98264a307525001298f2a3d3b869973d0ae",
+    "validation": "Closing text and36-doc vault check passed. Final combined CIFAILED, not merge-ready; see report."
+  },
+  "review_window_closed_at": "2026-10-26T16:04:05Z",
+  "completed_at": "2026-10-26T16:17:16Z"
 }
