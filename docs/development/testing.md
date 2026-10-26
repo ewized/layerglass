@@ -49,6 +49,9 @@ served. Keep fixture scripts in checked TypeScript modules instead of untyped
 JavaScript embedded in HTML strings. Playwright callbacks are checked as part of
 their enclosing TypeScript suite; use its existing module-state helpers when
 passing application handles into browser predicates.
+Browser entrypoints use Node 24's native type stripping so serialized Playwright
+callbacks do not depend on transpiler helpers. Source-importing unit tests keep
+the `tsx` loader to resolve emitted `.js` specifiers to their TypeScript sources.
 
 | Change | Focused coverage |
 | --- | --- |

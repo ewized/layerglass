@@ -31,5 +31,8 @@ elif [ "$1" = "--workspace" ]; then
   npm run check:docs
   LAYERGLASS_SITE_TEST_RESULTS="${LAYERGLASS_SITE_TEST_RESULTS:-/app/test-results}" npx nx test layerglass-site
 else
-  node --import tsx "$@"
+  case "$1" in
+    *browser-*.ts|*run-browser.ts|*measure-network.ts) node "$@" ;;
+    *) node --import tsx "$@" ;;
+  esac
 fi

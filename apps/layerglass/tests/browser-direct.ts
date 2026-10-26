@@ -232,7 +232,7 @@ try {
           page,
           ({ app }) =>
             app.directStream &&
-            !app.directStream!['failed'] &&
+            !app.directStream?.['failed'] &&
             document.querySelector<HTMLImageElement>('#jpeg')!.naturalWidth === 320 &&
             document.querySelector<HTMLElementTagNameMap['printer-loading']>('#overlay')!.hidden,
           null,
@@ -249,11 +249,11 @@ try {
             const image = document.querySelector<HTMLImageElement>('#jpeg');
             return {
               status: app.status,
-              failed: app.directStream!['failed'],
+              failed: app.directStream?.['failed'],
               failure: app.directStream?.failure,
               contentType: app.directStream?.contentType,
-              pending: app.directStream!['pending'],
-              current: app.directStream!['current'],
+              pending: app.directStream?.['pending'],
+              current: app.directStream?.['current'],
               src: image!.src,
               width: image!.naturalWidth,
               overlay: document.querySelector<HTMLElementTagNameMap['printer-loading']>('#overlay')!.hidden,
@@ -296,7 +296,7 @@ try {
         ({ app }) =>
           app.directStream &&
           app.directStream !== window.previousDirectStream &&
-          !app.directStream!['failed'] &&
+          !app.directStream?.['failed'] &&
           document.querySelector<HTMLImageElement>('#jpeg')!.naturalWidth === 320 &&
           document.querySelector<HTMLElementTagNameMap['printer-loading']>('#overlay')!.hidden,
       );
@@ -351,7 +351,7 @@ try {
       await waitForPlayer(
         page,
         ({ app }) =>
-          !app.directStream!['failed'] &&
+          !app.directStream?.['failed'] &&
           document.querySelector<HTMLElementTagNameMap['printer-loading']>('#overlay')!.hidden,
       );
       assert.equal(requests.filter((path) => path === '/webcam/toolhead').length, beforeRetry + 1);
@@ -408,7 +408,7 @@ try {
       await redirectCase.page.locator('#backend-connect-url').fill(controllerOrigin);
       await redirectCase.page.locator('.backend-connect-form [type="submit"]').click();
       await redirectCase.page.locator('#backend-picker').waitFor({ state: 'detached' });
-      await waitForPlayer(redirectCase.page, ({ app }) => app.directStream!['failed']);
+      await waitForPlayer(redirectCase.page, ({ app }) => app.directStream?.['failed']);
       assert.equal(requests.filter((path) => path === '/must-not-follow').length, 0);
       assert.equal(await redirectCase.page.locator('#overlay').isVisible(), true);
       assert.deepEqual(redirectCase.forbidden, []);
