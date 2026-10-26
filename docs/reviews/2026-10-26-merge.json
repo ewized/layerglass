@@ -1,7 +1,7 @@
 {
   "phase": "User-authorized merge after the completed twelve-hour review",
   "started_observed_at": "2026-10-26T16:18:55Z",
-  "updated_at": "2026-10-26T16:39:48.176128+00:00",
+  "updated_at": "2026-10-26T16:46:28.790105+00:00",
   "user_request": "dont forget to merge this in at the end",
   "status": "Investigating final CI failure and verifying default-branch integration before actual merge.",
   "review_result_commit": "ddf84213ed5cc7a5e8732c13e2b1f56c2835a569",
@@ -36,7 +36,7 @@
         "apps/web/tests/browser-timeline-events.js",
         "docs/development/testing.md"
       ],
-      "status": "implementing",
+      "status": "author validated; independent exact-final acceptance pending",
       "ballots": [
         {
           "reviewer": "r01",
@@ -209,7 +209,186 @@
       "approval_commit": "e1e3db7d7666b76cbaa067f2965b640cafc6ce37",
       "author_worktree": "/workspace/layerglass-review/p46-jpeg-fixture",
       "author": "r02",
-      "author_parent": "e1e3db7d7666b76cbaa067f2965b640cafc6ce37"
+      "author_parent": "e1e3db7d7666b76cbaa067f2965b640cafc6ce37",
+      "author_commit": "b71f7f6a0cd8d94bc24e6d6dadbc3a7d104193d2",
+      "author_report": {
+        "path": "test-results/review-2026-10-26/merge/r02-p46-implementation.json",
+        "sha256": "f5f3ee5021a449b02a24a784c3bfb8ccbf63463670a753241c22826dd2161589"
+      },
+      "final_file_sha256": {
+        "apps/web/tests/browser-timeline-events.js": "fac07f5d7d183b4d222798f7142f93932a6d6ed3916995d1f9d2a93e0bc4955e",
+        "docs/development/testing.md": "729d50e058606756793fce72df965ebcdacf50540f8022204f7c72341b5f3a23"
+      },
+      "focused_validation": {
+        "registered_suite": {
+          "command": "node apps/web/tests/run-browser.js browser-timeline-events.js",
+          "result": "PASS/exit0; both Chromium and WebKit, one registered suite with original240000ms child budget",
+          "log": "/workspace/layerglass/test-results/review-2026-10-26/merge/r02-p46/registered-suite.log",
+          "sha256": "08bc55bb02c8443234447b1fa862df10fff90041a6ff88a7eaeb03cdd2677538",
+          "native_case_results": "/workspace/layerglass/test-results/review-2026-10-26/merge/r02-p46/native-cases.json"
+        },
+        "original_primary_cases": "Both original H264 gesture/event suites and all six primary JPEG upper-tail/fractional-origin/fractional-anchor cases passed. Original primary JPEG assertions/cases remain whitespace-equivalent; the original H264 prefix and recorder metadata are byte-identical.",
+        "entry_controls": [
+          {
+            "browser": "chromium",
+            "pausedEntry": false,
+            "preparation": {
+              "before": false,
+              "after": true,
+              "toggles": 1,
+              "sameSession": true,
+              "sameFrame": true,
+              "sameSource": true
+            },
+            "pixel": [
+              0,
+              129,
+              2,
+              255
+            ],
+            "time": 1031.5,
+            "calls": [],
+            "emits": [],
+            "session": "cfd2aedbd1954d92b52c4ed9d3b9642f"
+          },
+          {
+            "browser": "chromium",
+            "pausedEntry": true,
+            "preparation": {
+              "before": true,
+              "after": true,
+              "toggles": 0,
+              "sameSession": true,
+              "sameFrame": true,
+              "sameSource": true
+            },
+            "pixel": [
+              0,
+              129,
+              2,
+              255
+            ],
+            "time": 1031.5,
+            "calls": [],
+            "emits": [],
+            "session": "cfd2aedbd1954d92b52c4ed9d3b9642f"
+          },
+          {
+            "browser": "webkit",
+            "pausedEntry": false,
+            "preparation": {
+              "before": false,
+              "after": true,
+              "toggles": 1,
+              "sameSession": true,
+              "sameFrame": true,
+              "sameSource": true
+            },
+            "pixel": [
+              0,
+              129,
+              2,
+              255
+            ],
+            "time": 1031.5,
+            "calls": [],
+            "emits": [],
+            "session": "cfd2aedbd1954d92b52c4ed9d3b9642f"
+          },
+          {
+            "browser": "webkit",
+            "pausedEntry": true,
+            "preparation": {
+              "before": true,
+              "after": true,
+              "toggles": 0,
+              "sameSession": true,
+              "sameFrame": true,
+              "sameSource": true
+            },
+            "pixel": [
+              0,
+              129,
+              2,
+              255
+            ],
+            "time": 1031.5,
+            "calls": [],
+            "emits": [],
+            "session": "cfd2aedbd1954d92b52c4ed9d3b9642f"
+          }
+        ],
+        "guard_controls": [
+          {
+            "browser": "chromium",
+            "control": "held-image",
+            "error": {
+              "name": "TimeoutError",
+              "message": "page.waitForFunction: Timeout 10000ms exceeded."
+            },
+            "stage": "initial-owned-native",
+            "closed": {
+              "handle": true,
+              "context": true,
+              "server": true
+            },
+            "cleanupErrors": []
+          },
+          {
+            "browser": "chromium",
+            "control": "wrong-owner",
+            "error": {
+              "name": "TimeoutError",
+              "message": "page.waitForFunction: Timeout 10000ms exceeded."
+            },
+            "stage": "initial-owned-native",
+            "closed": {
+              "handle": true,
+              "context": true,
+              "server": true
+            },
+            "cleanupErrors": []
+          },
+          {
+            "browser": "webkit",
+            "control": "held-image",
+            "error": {
+              "name": "TimeoutError",
+              "message": "page.waitForFunction: Timeout 10000ms exceeded."
+            },
+            "stage": "initial-owned-native",
+            "closed": {
+              "handle": true,
+              "context": true,
+              "server": true
+            },
+            "cleanupErrors": []
+          },
+          {
+            "browser": "webkit",
+            "control": "wrong-owner",
+            "error": {
+              "name": "TimeoutError",
+              "message": "page.waitForFunction: Timeout 10000ms exceeded."
+            },
+            "stage": "initial-owned-native",
+            "closed": {
+              "handle": true,
+              "context": true,
+              "server": true
+            },
+            "cleanupErrors": []
+          }
+        ],
+        "guards_result": "All four invalid cases retain the exact original10000ms TimeoutError, fail at initial-owned-native before Pause preparation/marker assertions, preserve bounded snapshots, and close all allocated handle/context/server resources. Held bodies produce no decoded native frame; mismatched expected owner rejects a complete otherwise valid native frame.",
+        "docs": {
+          "result": "PASS:37 linked Markdown documents, Obsidian settings, version0.1.0",
+          "log": "/workspace/layerglass/test-results/review-2026-10-26/merge/r02-p46/docs.log"
+        },
+        "diff_check": "PASS",
+        "scope_check": "Exactly the two approved files; app/src, backend and runner trees identical to author base.",
+        "offline_fixture": "Cached Playwright v1.64.1 and runtime0.1.0-2cd61bf, generated loopback H264/JPEG/telemetry only, network-none fixture and shared namespace browser, no published ports or external requests. Original native onLine=false is recorded before existing fixture-only true override. Read-only locked dependencies; no installs."
+      }
     }
   ],
   "integration": {
@@ -223,7 +402,13 @@
     "branch_policy": "Official main branch response protected=false, rulesets=[]; detailed admin view inaccessible.",
     "cloudflare": "Merge may trigger existing gated public deployment; user authorized merge and prior Cloudflare delivery. No gate changes or credential access required."
   },
-  "validation": [],
+  "validation": [
+    {
+      "phase": "P46 author",
+      "result": "Focused both-engine registered timeline suite and 37-note docs PASS; native valid/invalid controls retain original outcomes/budgets. Independent review and new combined CI pending.",
+      "author_commit": "b71f7f6a0cd8d94bc24e6d6dadbc3a7d104193d2"
+    }
+  ],
   "activity": [
     {
       "at": "2026-10-26T16:31:29.988829+00:00",
