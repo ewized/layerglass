@@ -100,6 +100,10 @@ The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified
 upstream package; their hashes are recorded in `apps/layerglass/src/vendor/VERSION.json`.
+The [browser compiler](../scripts/compile-browser.ts) copies these dependency
+outputs from the lockfile-installed `hls.js` package into the build's `vendor/`
+directory. No JavaScript bundle or source map is checked in as application source.
+Keep the provenance metadata aligned when updating the pinned package.
 
 ## Wire format and flow control
 
@@ -258,11 +262,11 @@ with zero additional media requests after its one video connection opened.
 The browser integration suite asserts the same behavior in Chromium and WebKit,
 including old footage after cache eviction, streaming 1× replay, Live, paused
 reconnection, visibility changes and compatibility fallback.
-`apps/layerglass/tests/browser-replay-recovery.js` additionally checks paused and playing
+`apps/layerglass/tests/browser-replay-recovery.ts` additionally checks paused and playing
 replay through decoder rebuilds, continuous-to-HLS failure recovery and native
 file reattachment. It verifies recorded telemetry clocks, one restoration seek
 and explicit Live during loading.
-`apps/layerglass/tests/browser-replay-suspension.js` holds initial media through an
+`apps/layerglass/tests/browser-replay-suspension.ts` holds initial media through an
 accelerated readiness deadline, then verifies real decoded paused/playing replay
 after visibility and offline lifecycle restoration. It also checks explicit Live,
 session replacement and camera cancellation. Visibility/network flags and the
@@ -291,7 +295,7 @@ player controls. WebKit testing uses its desktop test engine with a mobile
 viewport; it does not substitute for testing a physical iPhone.
 
 Artifacts are in `test-results/video-stream/`. The reproducible measurement
-script is `apps/layerglass/tests/measure-network.js`; it counts real browser requests while
+script is `apps/layerglass/tests/measure-network.ts`; it counts real browser requests while
 also measuring video clock advancement.
 
 The mobile performance update was checked against the live 1920 × 1080 H.264

@@ -68,7 +68,7 @@ npx nx run docs:check
 Use the [Docker workflow](../development/workflow.md) for project runtimes.
 `npm test` runs the player and both browser-backend test targets.
 `python-backend:test` and `layerglass:browser` delegate to disposable Docker checks.
-`./scripts/check.sh all` runs Python/JavaScript tests, all fixture browser suites,
+`./scripts/check.sh all` runs Python/TypeScript tests, all fixture browser suites,
 documentation and workspace packaging. Its `workspace` mode builds all six
 projects twice to verify cache restoration and exports the project graph.
 `layerglass-site:test` builds the player and website first, then renders desktop
@@ -98,7 +98,7 @@ continue to reject unexpected public directories, private files and symlinks.
 Cloudflare Worker identities and public domains are deployment identifiers and
 remain stable even though their Nx projects and build paths have been renamed.
 
-Only deterministic source/static builds and JavaScript units are cached. Their
+Only deterministic source/static builds and TypeScript units are cached. Their
 inputs include provider dependencies, build helpers, version metadata and the
 locked Node toolchain. Browser fixtures, discovery, servers and Python socket/
 FFmpeg tests are uncached. Nx Cloud is disabled. `.nx/`, generated outputs,

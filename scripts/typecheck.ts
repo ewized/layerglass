@@ -1,7 +1,10 @@
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { checkTypeScriptOnly } from './check-typescript-only.ts';
 
-for (const configuration of ['browser', 'service-worker', 'node', 'edge']) {
+await checkTypeScriptOnly(fileURLToPath(new URL('..', import.meta.url)));
+
+for (const configuration of ['browser', 'service-worker', 'node', 'edge', 'tests']) {
   const result = spawnSync(
     process.execPath,
     [

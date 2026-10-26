@@ -36,7 +36,7 @@
       ],
       "outputs": [],
       "options": {
-        "command": "node --import tsx --test apps/demo-backend/tests/*.test.js"
+        "command": "node --import tsx --test apps/demo-backend/tests/*.test.ts"
       }
     },
     "typecheck": {

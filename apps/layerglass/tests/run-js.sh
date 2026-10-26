@@ -11,7 +11,7 @@ cp /app/tsconfig*.json /app/.prettierrc.json /app/.prettierignore "$task_js_dir/
 cp -R /app/types "$task_js_dir/"
 cp /app/eslint.config.ts "$task_js_dir/"
 cp /app/.gitignore /app/.nxignore "$task_js_dir/"
-cp -R /app/apps /app/infra /app/scripts /app/docs /app/.agents /app/.github "$task_js_dir/"
+cp -R /app/apps /app/infra /app/scripts /app/docs /app/tests /app/.agents /app/.github "$task_js_dir/"
 cd "$task_js_dir"
 # Worktree .git points outside the child container. Nx does not need Git to run
 # explicit projects; ignore Git and never start a long-running background daemon.

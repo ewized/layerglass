@@ -101,7 +101,7 @@ release and a failed deployment while the player remains open. Start that fixtur
 with `FIXTURE_PWA=1` and `PWA_CACHE_ENABLED=1`. The same tests then disable caching,
 verify immediate migration without interrupting playback, preserve an unrelated
 cache, and check that consecutive reloads fetch the latest HTML and CSS directly.
-For a network-only deployment, run `apps/layerglass/tests/browser-pwa.js` with
+For a network-only deployment, run `apps/layerglass/tests/browser-pwa.ts` with
 `PWA_CACHE_ENABLED=0` in the browser test container; it checks a fresh install,
 empty app caches, network responses on reload, and native video playback.
 

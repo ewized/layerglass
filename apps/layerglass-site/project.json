@@ -35,7 +35,7 @@
         }
       ],
       "options": {
-        "command": "node --import tsx apps/layerglass-site/tests/browser-site.js"
+        "command": "node apps/layerglass-site/tests/browser-site.ts"
       }
     },
     "preview": {

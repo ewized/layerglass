@@ -269,7 +269,7 @@ export class PreviewStorage {
   removeSession(session: string) {
     return this.removeWhere({ session });
   }
-  remove(session: string, key: string, owner: string) {
+  remove(session: string, key: string, owner?: string) {
     return this.removeWhere({ session, key, owner });
   }
 }

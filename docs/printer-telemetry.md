@@ -118,14 +118,14 @@ the printer report cadence and camera transport timing.
 `apps/python-backend/tests/test_printer_history.py` covers immutable nested samples, compression,
 byte/count limits, program
 clocks and reconnect gaps, incremental updates, session isolation, pruning,
-bounds, uncached HTTP responses and expiration. `apps/layerglass/tests/printer-history.test.js`
+bounds, uncached HTTP responses and expiration. `apps/layerglass/tests/printer-history.test.ts`
 checks playhead lookup, pause, zero/future values, cache limits, cancellation,
 same-window/session ownership, timeout suppression, gaps and recovery without
-polling. `apps/layerglass/tests/browser-printer-history.js` uses
+polling. `apps/layerglass/tests/browser-printer-history.ts` uses
 `apps/python-backend/tests/fixture_server.py` with `FIXTURE_TELEMETRY=1` to check changing readings
 through real Chromium/WebKit video playback, pause, rewind, forward replay and
 Live. Set `TRANSPORT=hls` to exercise HLS fallback.
-The default `browser-history-reconnect.js` fixture connects the actual Stats,
+The default `browser-history-reconnect.ts` fixture connects the actual Stats,
 PageReplay, PrinterHistory, Cast sender and metadata-update consumers. Generated
 HTTP/SSE payloads check receiver-originated recovery after a partial success,
 with future-point, pending-read, full-cache and local-seek controls. Chromium

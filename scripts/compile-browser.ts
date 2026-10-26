@@ -45,6 +45,10 @@ export async function compileBrowser(name: BrowserProject, output: string) {
   }
   await visit(source, output);
   if (name === 'layerglass') {
+    // Locked dependencies supply generated JavaScript; authored source stays TypeScript.
+    for (const name of ['hls.min.mjs', 'hls.min.mjs.map', 'hls.worker.js', 'hls.worker.js.map']) {
+      await cp(join(root, 'node_modules/hls.js/dist', name), join(output, 'vendor', name));
+    }
     const platform = await build({
       metafile: true,
       entryPoints: [join(source, 'platform.ts')],

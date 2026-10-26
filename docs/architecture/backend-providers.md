@@ -186,14 +186,14 @@ redirect behavior; it carries no setup POST body.
 
 ## Validation
 
-`backend.test.js` checks selection, invalid/blocked storage, URL restrictions,
+`backend.test.ts` checks selection, invalid/blocked storage, URL restrictions,
 payload routing, browser history and subscription cleanup. `test_backend_cors.py`
 uses real HTTP sockets to check exact-origin policy, protected POSTs and CSP.
-`browser-backends.js` runs native playback, scrubbing, settings and local files
+`browser-backends.ts` runs native playback, scrubbing, settings and local files
 in Chromium and WebKit with every `/api/` and `/replay/` request blocked in demo
 mode, then verifies the self-hosted Python default.
 
-`browser-backend-origin.js` tests two distinct loopback origins with the fixture
+`browser-backend-origin.ts` tests two distinct loopback origins with the fixture
 configured to allow `http://localhost:8080` and to connect to
 `http://127.0.0.1:8080`. It verifies real SSE, session creation, binary streaming
 and a protected CORS POST. These are browser/fixture checks; physical iPhone
