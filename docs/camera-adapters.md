@@ -112,10 +112,31 @@ come from the adapter's identity mapping without a default physical model.
 ## Compatibility and verification
 
 Camera IDs still hash host, port, and transport. Settings version 3 retains
-server-side access codes, identities, adapter IDs, and forgotten entries.
+server-side access codes, identities, adapter IDs, forgotten entries and an
+optional private `quarantined` map.
 Approved saved sources with cached model identity resume immediately. Older
 sources without identity wait for discovery. Legacy generic records remain
 private and inactive, so upgrading does not delete stored credentials.
+
+A verified serial is the saved code's printer binding. If discovery verifies a
+different serial at that host, the server closes the old relay/telemetry clients
+and makes the replacement require setup. The old source, serial/model identity
+and adapter stay together in the private quarantine; they are never used to
+authenticate the replacement or sent to the browser. The quarantine survives a
+restart and prevents `STREAM_URL` from restoring the old pairing. Even if the
+original printer returns, setup is explicit after a detected replacement.
+
+Entering the replacement's code atomically replaces the quarantine with its new
+pairing. Forgetting removes both the current candidate and its quarantined
+binding. Setup also clears quarantined camera profiles for that same host;
+unrelated printers retain their codes and clients. Repeated scans of the same
+verified serial, name/firmware updates, and ordinary offline startup retain the
+existing pairing.
+
+If saving a quarantine fails, the running server still makes the endpoint
+inactive while retaining the previous atomic settings file and the old code in
+memory. A later explicit scan or successful setup/forget retries persistence.
+Restarting before a successful save reloads the prior settings file.
 
 `apps/backend/tests/test_identification.py` verifies MQTT responses, manufacturer/model
 validation, concurrent races, per-host caching, and model/protocol admission.
@@ -123,3 +144,6 @@ validation, concurrent races, per-host caching, and model/protocol admission.
 approved URL enforcement, explicit adapter approval, migration, and internal
 transport reuse. `apps/web/tests/browser-providers.js` verifies the code-only printer
 list and API rejection in Chromium and WebKit.
+`apps/backend/tests/test_printer_bindings.py` covers verified replacements,
+quarantine/reload/re-pair/forget, failed persistence, shutdown lock ownership,
+late callbacks, different camera profiles and unchanged/legacy pairing.

@@ -45,6 +45,10 @@ redaction of a public label never changes that authentication identity.
 TLS verifies the bundled Bambu CA chain. Bambu certificates use their serial as
 the certificate name. A Paho socket-open callback validates that identity before
 MQTT CONNECT sends credentials; later connections must match the saved serial.
+Discovery of a different verified serial quarantines the previous code/identity
+binding and closes its clients, rather than changing the serial expected by an
+existing code. The replacement requires explicit setup; see
+[pairing compatibility](../camera-adapters.md#compatibility-and-verification).
 Certificate hostname checks against the IP are disabled, while CA verification
 remains required. Python's strict key-usage check is relaxed for legacy BBL roots.
 Forgetting a printer closes its telemetry connection and deletes its saved name,
