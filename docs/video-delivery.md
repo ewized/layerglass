@@ -43,6 +43,14 @@ manifest, so this bookkeeping stays bounded even during a long uninterrupted
 recording. A new relay generation resets those names while preserving retained
 page history, discontinuities and each page's starting boundary.
 
+JPEG recording attributes the elapsed capture interval to the preceding held
+still. A successor starts at its own capture time with a provisional one-second
+tail, which the next capture can extend or shorten. Reconnect gaps keep their
+wall duration without inventing intermediate images. Later pages use their
+actual opening time as origin and can wait for a later first available frame;
+they cannot access an earlier page's frames or printer readings. Finalizing a
+tail preserves completed earlier starts and the same retention/preview bounds.
+
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified

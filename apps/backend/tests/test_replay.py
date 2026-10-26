@@ -45,6 +45,112 @@ class Registry:
         return True
 
 
+class JpegSource:
+    def __init__(self, timestamp=1000):
+        self.lock = threading.Lock()
+        self.publish(timestamp)
+
+    def publish(self, timestamp):
+        with self.lock:
+            self.state = 'live'
+            self.last_segment_at = timestamp
+            self.frame = f'jpeg-at-{timestamp}'.encode()
+
+
+class JpegReplayTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.source = JpegSource()
+        self.registry = Registry(self.source)
+        self.replay = ReplayBuffer(self.registry, root=Path(temporary.name), timeout=10)
+        self.addCleanup(self.replay.close)
+        self.now = 1000
+        clock = patch('replay.time.time', side_effect=lambda: self.now)
+        clock.start()
+        self.addCleanup(clock.stop)
+        self.token = self.replay.create(CAMERA)['session_id']
+
+    def capture(self, timestamp):
+        self.now = timestamp
+        self.source.publish(timestamp)
+        with self.replay.lock:
+            self.replay._collect(self.replay.archives[CAMERA], self.source)
+
+    def test_positive_capture_intervals_finalize_only_the_preceding_still(self):
+        for timestamp in (1000.25, 1001.75, 1030, 1031):
+            self.capture(timestamp)
+        fragments = self.replay.archives[CAMERA].fragments
+        self.assertEqual([item.start for item in fragments], [0, 0.25, 1.75, 30, 31])
+        self.assertEqual([item.duration for item in fragments], [0.25, 1.5, 28.25, 1, 1])
+        self.assertEqual(self.replay.media(self.token, at=0.1).read_bytes(), b'jpeg-at-1000')
+        self.assertEqual(self.replay.media(self.token, at=29.9).read_bytes(), b'jpeg-at-1001.75')
+        self.assertEqual(self.replay.media(self.token, at=30.5).read_bytes(), b'jpeg-at-1030')
+        self.assertEqual(self.replay.media(self.token, at=31.1).read_bytes(), b'jpeg-at-1031')
+        metadata = self.replay.status(self.token)
+        self.assertEqual(metadata['clock'], [{'position': 0, 'time': 1000}])
+        self.assertEqual((metadata['end_seconds'], metadata['end_time']), (32, 1031))
+        self.capture(1031)
+        self.assertEqual(len(fragments), 5, 'An unchanged capture timestamp must not duplicate a frame.')
+
+    def test_waiting_page_origin_survives_a_subsecond_tail_shrink(self):
+        self.now = 1000.2
+        later = self.replay.create(CAMERA)['session_id']
+        self.assertFalse(self.replay.status(later)['ready'])
+        self.capture(1000.35)
+        metadata = self.replay.status(later)
+        self.assertAlmostEqual(self.replay.sessions[later].origin, 0.2)
+        self.assertEqual(metadata['start_seconds'], 0.15)
+        self.assertEqual(metadata['clock'], [{'position': -0.2, 'time': 1000}])
+        self.assertAlmostEqual(metadata['clock'][0]['time'] + metadata['start_seconds'] -
+                               metadata['clock'][0]['position'], 1000.35)
+        self.assertEqual(self.replay.media(later, at=0.15).read_bytes(), b'jpeg-at-1000.35')
+        self.assertIsNone(self.replay.media(later, sequence=0))
+        self.capture(1000.5)
+        self.assertEqual(self.replay.status(later)['start_seconds'], 0.15)
+        self.assertAlmostEqual(self.replay.sessions[later].origin, 0.2)
+
+    def test_positive_intervals_below_a_tenth_second_are_not_padded(self):
+        for timestamp in (1000.025, 1000.05, 1000.075):
+            self.capture(timestamp)
+        fragments = list(self.replay.archives[CAMERA].fragments)
+        for item, expected in zip(fragments, (0, 0.025, 0.05, 0.075)):
+            self.assertAlmostEqual(item.start, expected)
+        for item in fragments[:-1]:
+            self.assertAlmostEqual(item.duration, 0.025)
+        self.assertEqual(self.replay.status(self.token)['clock'], [{'position': 0, 'time': 1000}])
+        self.assertEqual(self.replay.media(self.token, at=0.06).read_bytes(), b'jpeg-at-1000.05')
+
+    def test_gap_waiting_page_keeps_its_open_clock_after_the_earlier_page_leaves(self):
+        self.now = 1020
+        later = self.replay.create(CAMERA)['session_id']
+        self.assertEqual(self.replay.sessions[later].opened_at, 1020)
+        self.assertEqual(self.replay.sessions[later].origin, 20)
+        self.assertFalse(self.replay.status(later)['ready'])
+        self.replay.release(self.token)
+        self.assertFalse(self.replay.archives[CAMERA].fragments)
+        self.capture(1030)
+        metadata = self.replay.status(later)
+        self.assertEqual((metadata['start_seconds'], metadata['end_seconds']), (10, 11))
+        self.assertEqual(metadata['clock'], [{'position': -20, 'time': 1000}])
+        self.assertEqual(self.replay.media(later, at=10).read_bytes(), b'jpeg-at-1030')
+        self.assertIsNone(self.replay.media(later, sequence=0))
+        self.assertIsNone(self.replay.preview(later, 0))
+
+    def test_page_opened_after_the_gap_starts_at_its_actual_wall_time(self):
+        self.capture(1030)
+        self.now = 1030.2
+        later = self.replay.create(CAMERA)['session_id']
+        self.capture(1030.4)
+        metadata = self.replay.status(later)
+        self.assertAlmostEqual(self.replay.sessions[later].origin, 30.2)
+        self.assertEqual(metadata['start_seconds'], 0.2)
+        self.assertEqual(metadata['clock'], [{'position': -30.2, 'time': 1000}])
+        self.assertEqual(self.replay.media(later, at=0.2).read_bytes(), b'jpeg-at-1030.4')
+        self.assertIsNone(self.replay.media(later, sequence=1))
+        self.assertEqual(self.replay.status(self.token)['clock'], [{'position': 0, 'time': 1000}])
+
+
 class ReplayTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

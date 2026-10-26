@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 
 from app import ViewerServer
 from replay import PreviewBusy, ReplayBuffer
-from test_replay import CAMERA, Registry, Source
+from test_replay import CAMERA, JpegSource, Registry, Source
 
 
 JPEG = b'\xff\xd8thumbnail\xff\xd9'
@@ -60,6 +60,43 @@ class ScrubPreviewTests(unittest.TestCase):
         with patch.object(self.replay, '_sprite', return_value=JPEG) as decode:
             self.assertEqual(self.replay.preview(self.token, 1.999), JPEG)
             self.assertLessEqual(decode.call_args.args[0][0][1], 1.9)
+
+    def test_jpeg_gap_sprites_use_the_held_image_then_the_successor_and_trim_normally(self):
+        self.replay.release(self.token)
+        self.registry.source = source = JpegSource()
+        with patch('replay.time.time', return_value=1000):
+            token = self.replay.create(CAMERA)['session_id']
+        source.publish(1030)
+        self.replay._collect(self.replay.archives[CAMERA], source)
+        decoded = []
+
+        def decode(sources):
+            decoded.append([(file.read(), offset) for file, offset in sources])
+            return JPEG
+
+        with patch.object(self.replay, '_sprite', side_effect=decode):
+            self.assertEqual(self.replay.preview(token, 25, 2), JPEG)
+            self.assertEqual(decoded[-1], [(b'jpeg-at-1000', 0), (b'jpeg-at-1030', 0)])
+            self.replay.max_bytes = 1
+            self.replay._prune()
+            self.assertFalse(self.replay.previews)
+            self.assertIsNone(self.replay.preview(token, 25))
+            self.assertEqual(self.replay.preview(token, 30), JPEG)
+            self.assertEqual(decoded[-1], [(b'jpeg-at-1030', 0)])
+            self.assertIsNone(self.replay.preview(token, 31))
+
+    def test_jpeg_subsecond_successor_replaces_a_cached_provisional_tail_sample(self):
+        self.replay.release(self.token)
+        self.registry.source = source = JpegSource()
+        with patch('replay.time.time', return_value=1000):
+            token = self.replay.create(CAMERA)['session_id']
+        with patch.object(self.replay, '_sprite', return_value=JPEG) as decode:
+            self.assertEqual(self.replay.preview(token, 0.75), JPEG)
+            source.publish(1000.5)
+            self.replay._collect(self.replay.archives[CAMERA], source)
+            self.assertEqual(self.replay.preview(token, 0.75), JPEG)
+            self.assertEqual(decode.call_count, 2)
+            self.assertEqual([item.start for item in self.replay.archives[CAMERA].fragments], [0, 0.5])
 
     def test_later_pages_cannot_preview_earlier_pages_history(self):
         self.collect(range(3, 7))

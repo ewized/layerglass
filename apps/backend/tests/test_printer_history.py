@@ -10,7 +10,7 @@ from urllib.request import urlopen
 
 from app import ViewerServer
 from replay import ReplayBuffer
-from test_replay import CAMERA, Registry, Source
+from test_replay import CAMERA, JpegSource, Registry, Source
 
 
 class Telemetry:
@@ -115,6 +115,59 @@ class PrinterHistoryTests(unittest.TestCase):
         self.replay._collect(self.replay.archives[CAMERA], self.source)
         self.assertEqual(self.replay.status(self.token)['clock'],
                          [{'position': 0, 'time': 100}, {'position': 4, 'time': 200}])
+
+    def test_jpeg_gap_http_frames_and_recorded_readings_share_a_forward_clock(self):
+        self.replay.release(self.token)
+        self.registry.source = source = JpegSource()
+        self.telemetry.values = {'layer': 0}
+        with patch('replay.time.time', return_value=1000):
+            token = self.replay.create(CAMERA)['session_id']
+        archive = self.replay.archives[CAMERA]
+        for epoch in range(1001, 1066):
+            self.telemetry.values = {'layer': epoch - 1000}
+            with patch('replay.time.time', return_value=epoch), self.replay.lock:
+                self.replay._collect_printer(archive, force=True)
+                if epoch >= 1030:
+                    source.publish(epoch)
+                    self.replay._collect(archive, source)
+        server = ViewerServer(('127.0.0.1', 0), registry=self.registry, replay=self.replay)
+        self.addCleanup(server.server_close)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.shutdown)
+        base = f'http://127.0.0.1:{server.server_port}'
+        with urlopen(f'{base}/api/sessions/{token}', timeout=3) as response:
+            metadata = json.load(response)
+        with urlopen(f'{base}/api/sessions/{token}/printer?at=1030', timeout=3) as response:
+            samples = json.load(response)['samples']
+        self.assertEqual(metadata['clock'], [{'position': 0, 'time': 1000}])
+        for position, expected_image, expected_layer in ((29.5, 1000, 29), (30.5, 1030, 30), (31.1, 1031, 31)):
+            with self.subTest(position=position):
+                with urlopen(f'{base}/replay/{token}/frame.jpg?at={position}', timeout=3) as response:
+                    self.assertEqual(response.read(), f'jpeg-at-{expected_image}'.encode())
+                clock = min(1000 + position, metadata['end_time'])
+                selected = next(sample for sample in reversed(samples) if sample['at'] <= clock)
+                self.assertEqual(selected['printer']['layer'], expected_layer)
+
+    def test_jpeg_waiting_page_never_receives_pre_open_printer_samples(self):
+        self.replay.release(self.token)
+        self.registry.source = source = JpegSource()
+        with patch('replay.time.time', return_value=1000):
+            earlier = self.replay.create(CAMERA)['session_id']
+        self.sample(1010, layer=10)
+        with patch('replay.time.time', return_value=1020):
+            later = self.replay.create(CAMERA)['session_id']
+        self.replay.release(earlier)
+        self.sample(1030, layer=30)
+        source.publish(1030)
+        self.replay._collect(self.replay.archives[CAMERA], source)
+        self.replay._prune()
+        metadata = self.replay.status(later)
+        self.assertEqual(metadata['start_seconds'], 10)
+        self.assertEqual(metadata['clock'], [{'position': -20, 'time': 1000}])
+        for payload in (self.replay.printer_history(later, 1010), self.replay.printer_updates(later)):
+            self.assertTrue(payload['samples'])
+            self.assertTrue(all(sample['at'] >= 1020 for sample in payload['samples']))
+        self.assertIsNone(self.replay.media(later, sequence=0))
 
     def test_sse_updates_send_a_small_initial_window_then_only_new_samples_and_baseline(self):
         for at in range(101, 160):

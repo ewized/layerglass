@@ -61,6 +61,7 @@ class Archive:
     pending_discontinuity: bool = False
     primed: bool = False
     last_jpeg_at: float | None = None
+    last_jpeg_position: float = 0
     error: str | None = None
     clocks: deque = field(default_factory=deque)
     printer_samples: deque = field(default_factory=deque)
@@ -130,7 +131,13 @@ class ReplayBuffer:
                 directory.mkdir(parents=True)
                 archive = Archive(camera, directory, 'jpeg' if hasattr(relay, 'frame') else 'hls')
                 self.archives[camera] = archive
-            session = Session(uuid.uuid4().hex, camera, archive.sequence, archive.position, opened_at=time.time())
+            opened_at = time.time()
+            origin = archive.position
+            if archive.kind == 'jpeg' and archive.last_jpeg_at is not None:
+                # The provisional latest-frame tail can extend past, or stop
+                # before, this page's actual opening time. It is not an origin.
+                origin = archive.last_jpeg_position + opened_at - archive.last_jpeg_at
+            session = Session(uuid.uuid4().hex, camera, archive.sequence, origin, opened_at=opened_at)
             self.sessions[session.id] = session
             try:
                 self._collect_printer(archive, force=True)
@@ -491,10 +498,21 @@ class ReplayBuffer:
                 frame = relay.frame if relay.state == 'live' else None
                 timestamp = relay.last_segment_at
             if frame and timestamp != archive.last_jpeg_at:
-                duration = max(0.1, timestamp - archive.last_jpeg_at) if archive.last_jpeg_at else 1
                 path = archive.directory / f'frame-{archive.sequence}.jpg'
                 path.write_bytes(frame)
-                self._append(archive, path, duration, epoch=timestamp)
+                if archive.last_jpeg_at is not None:
+                    duration = timestamp - archive.last_jpeg_at
+                    # Preserve the existing fallback for a backwards clock;
+                    # positive subsecond captures retain their exact interval.
+                    duration = duration if duration > 0 else 0.1
+                    archive.position = archive.last_jpeg_position + duration
+                    if archive.fragments:
+                        archive.fragments[-1].duration = duration
+                # Hold the preceding still until this capture, then give the
+                # new still a provisional tail. Keep its start even if a later
+                # page's first-frame boundary prunes that still while waiting.
+                archive.last_jpeg_position = archive.position
+                self._append(archive, path, 1, epoch=timestamp)
                 archive.last_jpeg_at = timestamp
                 archive.error = None
             return

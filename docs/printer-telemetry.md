@@ -59,7 +59,13 @@ adapter's complete public object at approximately 1 Hz. Samples use the
 server's wall clock, matching the HLS program-date-time clock. hls.js exposes
 the playing frame's date through `playingDate`; native HLS can use its start
 date, with recorded clock anchors as a fallback. Anchors preserve relay restart
-gaps. JPEG replay uses its recorded frame timestamps.
+gaps. JPEG replay uses its recorded frame timestamps. Each still holds until the
+next capture, including a reconnect gap; the recorded clock and printer readings
+advance through that hold. A new capture finalizes the preceding interval and
+starts its own provisional one-second tail. This does not interpolate images or
+readings, and the latest JPEG clock stays bounded by its last capture time.
+Later pages keep their actual opening-time origin, independent of that tail;
+their first available image can arrive later, and pre-page readings stay hidden.
 
 The existing SSE subscription sends an initial recent window and then small
 incremental sample batches, scoped to the page's session. A later tab cannot
