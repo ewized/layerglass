@@ -6,6 +6,24 @@ const session = { session_id: 'a'.repeat(32), camera_id: 'b'.repeat(16) };
 const payload = (samples, from, until, extra = {}) => ({ ...session, from, until,
   samples: samples.map(([at, layer]) => ({ at, printer: { layer, progress: layer, nozzle: 200 + layer } })), ...extra });
 const quiet = () => new PrinterHistory(() => {}, { fetcher: () => { throw new Error('Unexpected history fetch'); } });
+const settled = () => new Promise(resolve => setImmediate(resolve));
+
+function deferredHistory(t, { onChange = () => {}, maxWindows = 8, abortAware = false } = {}) {
+  const requests = [];
+  const history = new PrinterHistory(onChange, { maxWindows, fetcher: (url, init) => new Promise((resolve, reject) => {
+    requests.push({ url, signal: init.signal, resolve, reject });
+    if (abortAware) init.signal.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')), { once: true });
+  }) });
+  history.setSession(session);
+  t.after(async () => {
+    history.setSession(null);
+    for (const request of requests) request.reject(new DOMException('Fixture finished', 'AbortError'));
+    await settled();
+  });
+  return { history, requests, respond(index, body) {
+    requests[index].resolve({ ok: true, json: async () => body });
+  } };
+}
 
 test('printer readings follow the playhead and stay fixed while new live reports arrive', () => {
   const history = quiet(); history.setSession(session);
@@ -82,6 +100,158 @@ test('a history outage does not cause polling; explicit retry can recover', asyn
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(history.read(103).layer, 7);
   assert.equal(requests, 2);
+});
+
+test('a superseded window can load again without an explicit retry and pending reads still coalesce', async t => {
+  const { history, requests, respond } = deferredHistory(t, { maxWindows: 2, abortAware: true });
+  history.read(103);
+  history.read(130);
+  assert.equal(requests[0].signal.aborted, true);
+  respond(1, payload([[125, 2]], 120, 239));
+  await settled();
+  assert.equal(history.read(130).layer, 2);
+  assert.equal(history.read(103), null);
+  assert.equal(requests.length, 3, 'Returning to a canceled window must not require a sender seek or online event.');
+  for (let frame = 0; frame < 60; frame++) assert.equal(history.read(103), null);
+  assert.equal(requests.length, 3);
+  respond(2, payload([[101, 7]], 0, 119));
+  await settled();
+  assert.equal(history.read(103).layer, 7);
+  assert(history.windows.size <= 2);
+});
+
+test('late canceled success or abort cannot release a newer request for the same window', async t => {
+  for (const outcome of ['success', 'abort']) await t.test(outcome, async t => {
+    const { history, requests, respond } = deferredHistory(t);
+    history.read(103);
+    history.read(130);
+    history.read(103);
+    assert.equal(requests.length, 3, 'Canceled requests need not settle before a later read can return to their window.');
+    const currentSignal = requests[2].signal;
+    if (outcome === 'success') respond(0, payload([[101, 1]], 0, 119));
+    else requests[0].reject(new DOMException('Late abort', 'AbortError'));
+    respond(1, payload([[125, 2]], 120, 239));
+    await settled();
+    assert.equal(history.peek(103), null, 'Late canceled readings must not become current.');
+    assert.equal(history.pending, 0);
+    assert.equal(history.controller.signal, currentSignal);
+    assert.equal(history.windows.get(0).requested, true);
+    for (let frame = 0; frame < 60; frame++) history.read(103);
+    assert.equal(requests.length, 3);
+    respond(2, payload([[101, 7]], 0, 119));
+    await settled();
+    assert.equal(history.read(103).layer, 7);
+  });
+});
+
+test('explicit retry still coalesces reads while the current window request is pending', async t => {
+  const { history, requests, respond } = deferredHistory(t);
+  history.read(103);
+  history.retry();
+  for (let frame = 0; frame < 60; frame++) history.read(103);
+  assert.equal(requests.length, 1);
+  respond(0, payload([[101, 7]], 0, 119));
+  await settled();
+  assert.equal(history.read(103).layer, 7);
+});
+
+test('late cancellation cannot reset a replacement session at the same window', async t => {
+  const { history, requests, respond } = deferredHistory(t);
+  const replacement = { session_id: 'c'.repeat(32), camera_id: 'd'.repeat(16) };
+  history.read(103);
+  history.setSession(replacement);
+  history.read(103);
+  assert.equal(requests[0].signal.aborted, true);
+  const currentSignal = requests[1].signal;
+  respond(0, payload([[101, 1]], 0, 119));
+  await settled();
+  assert.equal(history.peek(103), null);
+  assert.equal(history.pending, 0);
+  assert.equal(history.controller.signal, currentSignal);
+  assert.equal(history.windows.get(0).requested, true);
+  for (let frame = 0; frame < 60; frame++) history.read(103);
+  assert.equal(requests.length, 2);
+  respond(1, payload([[101, 7]], 0, 119, replacement));
+  await settled();
+  assert.equal(history.read(103).layer, 7);
+});
+
+test('an explicitly aborted unfinished request releases only its own suppression', async t => {
+  const { history, requests, respond } = deferredHistory(t, { abortAware: true });
+  history.read(103);
+  history.controller.abort();
+  await settled();
+  assert.equal(history.pending, null);
+  history.read(103);
+  assert.equal(requests.length, 2);
+  respond(1, payload([[101, 7]], 0, 119));
+  await settled();
+  assert.equal(history.read(103).layer, 7);
+});
+
+test('completed windows stay suppressed when their notification starts another read', async t => {
+  let history;
+  const fixture = deferredHistory(t, { onChange: () => history.read(130) });
+  ({ history } = fixture);
+  history.read(103);
+  fixture.respond(0, payload([[101, 7]], 100, 105));
+  await settled();
+  assert.equal(fixture.requests.length, 2);
+  assert.equal(history.windows.get(0).requested, true);
+  history.read(110);
+  assert.equal(fixture.requests.length, 2, 'A successful partial window is not an unfinished cancellation.');
+  fixture.respond(1, payload([[125, 2]], 120, 239));
+  await settled();
+});
+
+test('HTTP and JSON failures stay suppressed across other reads until explicit retry', async t => {
+  t.mock.method(console, 'warn', () => {});
+  for (const failure of [
+    { ok: false },
+    { ok: true, json: async () => { throw new SyntaxError('Synthetic malformed response'); } },
+  ]) await t.test(failure.ok ? 'invalid JSON' : 'HTTP failure', async t => {
+    const { history, requests, respond } = deferredHistory(t);
+    history.read(103);
+    requests[0].resolve(failure);
+    await settled();
+    history.read(130);
+    respond(1, payload([[125, 2]], 120, 239));
+    await settled();
+    for (let frame = 0; frame < 60; frame++) assert.equal(history.read(103), null);
+    assert.equal(requests.length, 2);
+    history.retry();
+    history.read(103);
+    assert.equal(requests.length, 3);
+    respond(2, payload([[101, 7]], 0, 119));
+    await settled();
+    assert.equal(history.read(103).layer, 7);
+  });
+});
+
+test('timeouts remain suppressed when a slow aborted fetch settles after a newer request', async t => {
+  t.mock.method(console, 'warn', () => {});
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const { history, requests, respond } = deferredHistory(t);
+  history.read(103);
+  t.mock.timers.tick(6000);
+  assert.equal(requests[0].signal.aborted, true);
+  history.read(130);
+  respond(1, payload([[125, 2]], 120, 239));
+  await settled();
+  for (let frame = 0; frame < 60; frame++) assert.equal(history.read(103), null);
+  assert.equal(requests.length, 2, 'Superseding a timed-out request must not turn render reads into retries.');
+  history.retry();
+  history.read(103);
+  assert.equal(requests.length, 3);
+  const currentSignal = requests[2].signal;
+  respond(0, payload([[101, 1]], 0, 119));
+  await settled();
+  assert.equal(history.pending, 0);
+  assert.equal(history.controller.signal, currentSignal);
+  assert.equal(history.peek(103), null);
+  respond(2, payload([[101, 7]], 0, 119));
+  await settled();
+  assert.equal(history.read(103).layer, 7);
 });
 
 test('a reconnect gap can be hydrated without changing the paused reading', async () => {

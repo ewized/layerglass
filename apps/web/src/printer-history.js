@@ -46,12 +46,14 @@ export class PrinterHistory {
     this.windows = new Map();
     this.session = null;
     this.version = 0;
+    this.request = null;
   }
 
   setSession(session) {
     if (session?.session_id === this.session?.session_id) return;
     this.version++;
-    this.controller?.abort();
+    this.request?.cancel();
+    this.request = null;
     this.controller = null;
     this.pending = null;
     this.windows.clear();
@@ -117,15 +119,23 @@ export class PrinterHistory {
   }
 
   async load(key, time) {
-    this.controller?.abort();
+    this.request?.cancel();
     const controller = this.controller = new AbortController();
     const version = this.version;
     const session = this.session;
     this.pending = key;
     const window = this.window(key);
     window.requested = true;
-    let timedOut = false;
-    const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, 6000);
+    let timedOut = false, finished = false, timeout;
+    const request = this.request = { cancel: () => {
+      clearTimeout(timeout);
+      // Superseded reads may return to this window before the aborted fetch
+      // settles. A real failure/timeout keeps its explicit-retry suppression.
+      if (this.request === request && !finished && !timedOut && version === this.version &&
+          this.windows.get(key) === window) window.requested = false;
+      controller.abort();
+    } };
+    timeout = setTimeout(() => { timedOut = true; controller.abort(); }, 6000);
     try {
       const response = await this.fetcher(`/api/sessions/${session.session_id}/printer?at=${encodeURIComponent(time)}`, {
         cache: 'no-store', signal: controller.signal,
@@ -133,14 +143,19 @@ export class PrinterHistory {
       if (!response.ok) throw new Error('Printer history unavailable');
       const payload = await response.json();
       if (version !== this.version || controller.signal.aborted) return;
+      finished = true;
       this.apply(payload);
     } catch (error) {
       if (version !== this.version || controller.signal.aborted && !timedOut) return;
+      finished = true;
       if (!this.warned) console.warn('[LayerGlass] Recorded printer readings unavailable', error.name);
       this.warned = true;
     } finally {
       clearTimeout(timeout);
-      if (this.controller === controller) { this.controller = null; this.pending = null; }
+      if (this.request === request) {
+        if (controller.signal.aborted) request.cancel();
+        this.request = this.controller = this.pending = null;
+      }
     }
   }
 }

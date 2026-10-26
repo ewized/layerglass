@@ -70,6 +70,16 @@ does not poll this endpoint. Reconnect gaps can be hydrated on demand. Historica
 values use the latest sample at or before the displayed time, without inventing
 intermediate progress or counting down old estimates.
 
+Superseding an unfinished history request releases that window for a later read,
+without waiting for the aborted response to settle. This also lets receiver-side
+Cast position changes return to a canceled window and recover its readings.
+Concurrent reads of the current window still share one request. Late canceled
+responses cannot change a newer request or another session. HTTP failures and
+timeouts stay suppressed until an explicit retry, so rendering does not become
+an outage polling loop. Local seeks already trigger that retry through the
+Stats replay/seek handlers, as do opening Stats and reconnecting the network;
+receiver-side clock changes do not emit those local seek events.
+
 Telemetry is pruned with discarded footage and deleted when its archive loses
 its last page lease or the printer is forgotten. Snapshots are compressed in
 server memory, then expanded to ordinary JSON for HTTP/SSE. A 43,200-sample limit
@@ -84,7 +94,8 @@ byte/count limits, program
 clocks and reconnect gaps, incremental updates, session isolation, pruning,
 bounds, uncached HTTP responses and expiration. `apps/web/tests/printer-history.test.js`
 checks playhead lookup, pause, zero/future values, cache limits, cancellation,
-gaps and recovery without polling. `apps/web/tests/browser-printer-history.js` uses
+same-window/session ownership, timeout suppression, gaps and recovery without
+polling. `apps/web/tests/browser-printer-history.js` uses
 `apps/backend/tests/fixture_server.py` with `FIXTURE_TELEMETRY=1` to check changing readings
 through real Chromium/WebKit video playback, pause, rewind, forward replay and
 Live. Set `TRANSPORT=hls` to exercise HLS fallback.
