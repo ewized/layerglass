@@ -138,6 +138,11 @@ unrelated printers retain their codes and clients. Repeated scans of the same
 verified serial, name/firmware updates, and ordinary offline startup retain the
 existing pairing.
 
+Catalog discovery snapshots are selected inside the pairing mutation lock, so
+a queued reader cannot undo a newer verified replacement setup with an older
+snapshot. Retired clients close after that lock is released, allowing their
+final callbacks to finish without blocking the pairing transaction.
+
 If saving a quarantine fails, the running server still makes the endpoint
 inactive while retaining the previous atomic settings file and the old code in
 memory. A later explicit scan or successful setup/forget retries persistence.

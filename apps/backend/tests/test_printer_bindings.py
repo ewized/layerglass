@@ -105,6 +105,92 @@ class PrinterBindingTests(unittest.TestCase):
         self.assertNotIn(self.key, self.registry.sources)
         self.assertIsNone(self.registry.get_relay(self.key))
 
+    def test_queued_catalog_reads_current_discovery_after_replacement_setup(self):
+        other = self.printer(SOURCE.replace('.2:', '.3:'), serial='20P000000000003')
+        self.discover(self.printer(), other)
+        self.registry.configure(other['id'], 'other-code')
+        other_client = self.registry.get_telemetry(other['id'])
+        old_client = self.registry.get_telemetry(self.key)
+        retired_callbacks = []
+
+        def close_old_client():
+            callback = threading.Thread(target=lambda: (
+                old_client.on_identity({'serial': SERIAL_A, 'name': 'Late old printer'}),
+                retired_callbacks.append(True)), daemon=True)
+            callback.start()
+            callback.join(2)
+            self.assertFalse(callback.is_alive(), 'Retirement must release the registry callback lock.')
+            old_client.closed = True
+
+        old_client.close = close_old_client
+        queued, resume = threading.Event(), threading.Event()
+        lock = self.registry.lock
+        snapshots, results, errors = [], [], []
+        status = self.registry.discovery.status
+        worker = None
+
+        class OrderedLock:
+            def __enter__(inner):
+                if threading.current_thread() is worker:
+                    queued.set()
+                    if not resume.wait(3):
+                        raise AssertionError('Queued catalog was not released.')
+                lock.acquire()
+
+            def __exit__(inner, *_args):
+                lock.release()
+
+        def observed_status():
+            snapshot = status()
+            if threading.current_thread() is worker:
+                snapshots.append(next(item['serial'] for item in snapshot['found'] if item['id'] == self.key))
+            return snapshot
+
+        def catalog():
+            try:
+                results.append(self.registry.catalog())
+            except Exception as error:
+                errors.append(error)
+
+        self.registry.lock = OrderedLock()
+        with patch.object(self.registry.discovery, 'status', side_effect=observed_status):
+            try:
+                with self.registry.lock:
+                    worker = threading.Thread(target=catalog, daemon=True)
+                    worker.start()
+                    self.assertTrue(queued.wait(2))
+                # Keep the first caller queued while normal requests, each
+                # owning their own lock lifetime, finish replacement and setup.
+                self.discover(self.printer(serial=SERIAL_B, name='Replacement'), other)
+                self.registry.configure(self.key, 'code-b')
+                current = self.registry.get_telemetry(self.key)
+                current.on_identity({'firmware': '01.02.03.04'})
+                self.discover(self.printer(serial=SERIAL_B, name='Renamed replacement'), other)
+                self.assertEqual(retired_callbacks, [True])
+            finally:
+                resume.set()
+                if worker:
+                    worker.join(3)
+        self.assertFalse(worker.is_alive())
+        self.assertEqual(errors, [])
+        self.assertIsNotNone(self.registry._source_camera(self.key), 'A stale catalog must not undo B setup.')
+        self.assertEqual(snapshots, [SERIAL_B])
+        self.assertNotIn(self.key, self.registry.quarantined)
+        self.assertEqual(self.registry.sources[self.key], SOURCE.replace('code-a', 'code-b'))
+        self.assertEqual(self.registry.identities[self.key]['serial'], SERIAL_B)
+        self.assertEqual(self.registry.identities[self.key]['name'], 'Renamed replacement')
+        self.assertEqual(self.registry.identities[self.key]['firmware'], '01.02.03.04')
+        self.assertIs(self.registry.get_telemetry(other['id']), other_client)
+        self.assertFalse(other_client.closed)
+        camera = next(item for item in results[0]['cameras'] if item['id'] == self.key)
+        self.assertTrue(camera['configured'])
+        self.assertEqual(camera['serial'], SERIAL_B)
+        self.assertEqual(self.stored()['identities'][self.key]['serial'], SERIAL_B)
+        reloaded = self.registry_for()
+        self.assertEqual(reloaded.sources[self.key], SOURCE.replace('code-a', 'code-b'))
+        self.assertEqual(reloaded.get_telemetry(self.key).saved['serial'], SERIAL_B)
+        self.assertNotIn(self.key, reloaded.quarantined)
+
     def test_forgetting_a_quarantine_removes_only_its_private_binding(self):
         second = self.printer(source=SOURCE.replace('.2:', '.3:'), serial='20P000000000003')
         self.discover(self.printer(), second)

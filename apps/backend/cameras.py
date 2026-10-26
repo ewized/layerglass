@@ -122,8 +122,10 @@ class CameraRegistry:
                 client.close()
 
     def _catalog(self, retired):
-        discovery = self.discovery.status()
         with self.lock:
+            # Snapshot selection shares the pairing mutation order. A queued
+            # reader must not apply an older identity after replacement setup.
+            discovery = self.discovery.status()
             update_identity = self.identity_scan != discovery['finished_at']
             if self.quarantine_unsaved and update_identity:
                 try:
