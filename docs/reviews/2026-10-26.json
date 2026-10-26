@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -29,13 +29,14 @@
       "ballot_round8": "test-results/review-2026-10-26/r01/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r01/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r01/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r01/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r01/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r01/round12-ballot.json"
     },
     {
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
@@ -48,13 +49,14 @@
       "ballot_round8": "test-results/review-2026-10-26/r02/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r02/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r02/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r02/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r02/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r02/round12-ballot.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
@@ -66,7 +68,8 @@
       "ballot_round8": "test-results/review-2026-10-26/r03/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r03/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r03/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r03/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r03/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r03/round12-ballot.json"
     },
     {
       "id": "r04",
@@ -90,7 +93,7 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -102,7 +105,8 @@
       "ballot_round8": "test-results/review-2026-10-26/r05/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r05/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r05/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r05/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r05/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r05/round12-ballot.json"
     },
     {
       "id": "r06",
@@ -127,7 +131,7 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -139,13 +143,14 @@
       "ballot_round8": "test-results/review-2026-10-26/r07/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r07/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r07/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r07/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r07/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r07/round12-ballot.json"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -157,13 +162,14 @@
       "ballot_round8": "test-results/review-2026-10-26/r08/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r08/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r08/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r08/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r08/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r08/round12-ballot.json"
     },
     {
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 11 ballot complete",
+      "status": "round 12 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -175,7 +181,8 @@
       "ballot_round8": "test-results/review-2026-10-26/r09/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r09/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r09/round10-ballot.json",
-      "ballot_round11": "test-results/review-2026-10-26/r09/round11-ballot.json"
+      "ballot_round11": "test-results/review-2026-10-26/r09/round11-ballot.json",
+      "ballot_round12": "test-results/review-2026-10-26/r09/round12-ballot.json"
     },
     {
       "id": "r10",
@@ -521,9 +528,18 @@
       "frozen_at": "2026-10-26T11:36:27Z",
       "slate": "test-results/review-2026-10-26/round-12-slate.json",
       "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc",
-      "ballots_started": false,
-      "reviewers_completed": [],
-      "notes": "One-file native recovery test precondition and diagnostic correction. Original hosted-CI cause remains unproved; all post-error assertions strict."
+      "ballots_started": true,
+      "reviewers_completed": [
+        "r01",
+        "r02",
+        "r03",
+        "r05",
+        "r07",
+        "r08",
+        "r09"
+      ],
+      "notes": "One-file native recovery test precondition and diagnostic correction. Original hosted-CI cause remains unproved; all post-error assertions strict.",
+      "decision": "P41rev1 approved by7 explicit reviewers; remaining3 ballots pending. Exact scope unchanged. Commit this threshold before author worktree/edit."
     }
   ],
   "proposals": [
@@ -4807,8 +4823,58 @@
       "evidence_path": "test-results/review-2026-10-26/r02/ci-native-pause-finding.json",
       "risk": "Low test-only correction, with a real risk of hiding a restoration race if after-error polling is weakened or setup silently repairs repeated wrong intent. Keep the one explicit transition observable and keep original post-error assertions strict. Additional pre-error readiness is a test precondition, not a product waiver.",
       "validation_plan": "Keep this primary CI log immutable. Compare exact original and candidate assertion/predicate contracts. Use generated native media in both Chromium/WebKit, including held initial/seek readiness and explicit paused/playing intent establishment, proving no recovery error is injected while setup is unsettled. Wrong native/controller setup must fail/log rather than toggle again. Run the focused native cases and existing browser-replay-recovery suite in both engines; preserve all network/Live cases and decoded clock/session/video/one-seek checks. No full combined suite, real device, CI rerun or product-source change is needed for this candidate. Preserve all original after-error readiness predicates and assertions verbatim wherever possible, verify exact contracts explicitly, and obtain independent exact-final READY before integration. A new normal full CI run may occur only after voted implementation/focused validation; no rerun fishing of the unchanged failed source.",
-      "status": "voting",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "I rechecked exactd6075b0 native setup: startup/seek predicates omit attachment/controller settlement, the toggle occurs later, and before.paused/controller intent is neither asserted nor reported before error injection. The saved CI catch cannot recover that state. My bounded native/context controls and R07 source review establish no causal product fix. This one-file proposal is nevertheless justified as test setup and diagnostic quality: establish one observable requested transition and fail/log wrong before state, while preserving all post-error predicates, budgets, pause/clock/seek/session/node checks and the primary failure. Required held-readiness and wrong-setup negatives plus both-engine recovery validation remain acceptance work; approval does not claim CI cause solved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:38:47Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The pinned native-file setup checks native playback and a seek window but omits attachment/restore settlement and controller pause agreement; after its conditional toggle it reads before without asserting or logging the requested pause state (browser-replay-recovery.js:145-164). Native and controller pause are distinct until their event handlers run, and togglePause takes a different branch during restoration (replay.js:146-151,543-565). The saved CI log proves the strict WebKit after.paused equality failed, but its catch snapshot cannot establish the pre-error state or a causal recovery bug. A single observable expected transition from a known settled state, explicit native/controller before assertions and preserved failure diagnostics address this demonstrated test-contract gap. Approval is limited to the frozen one-file setup/diagnostic scope: wrong setup must fail rather than retry toggles/seeks, all budgets and original after-error readiness, pause/time/recorded-clock/one-seek/session/node and later fixed/progress checks remain strict. No expected-pause condition may be added to post-error polling. The required held-readiness and wrong-state controls plus both-engine focused/full recovery-suite validation are necessary; this is not approval of a product change or a claim that the CI cause is solved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:40:44Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Fresh decision on the verified frozen Round12 hash and exact d6075b0 source. The native branch demonstrably omits settled attachment/controller setup and before.paused verification that the earlier stream/HLS branch already has, and its catch rereads rather than retains the failed before state. My independent source review found this gap without establishing the old CI cause. I now separately verified R02's frozen report SHA11645d3b65c2b1b696bbe119590781a4cace4d2fc25e399b4b80780711447993 and relevant saved artifacts: four valid isolated native controls pass both engines, one WebKit preceding-sequence control passes, all30 original assertion lines and the native after-error readiness predicate remain in that diagnostic source. The two offline harness timeouts are qualified separately and supply no causal reproduction. P41's single-file precondition/snapshot scope is justified as test quality: settle initial/committed seek readiness, observe exactly one expected Pause/Play transition from known agreeing native/controller state, fail a wrong setup and preserve the original after-error contract and budgets. Approval includes held initial/seek and wrong-native/controller negative controls, strict unchanged post-error pause/clock/time/seek/session/node and later progression checks, both-engine focused cases/full existing recovery suite and independent exact-final review. No repeated corrective toggle, desired-pause post-error polling, tolerance change, product event-policy alteration or solved-CI claim is authorized. Required candidate validation remains future work; no runtime, implementation or other ballots were consulted for this fresh vote. Verification is r07/round12-verification.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:42:39Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Fresh independent source/evidence-only assessment of exact d6075b0 test/controller/helper, immutable CI40312023690 failure, R02 native outcomes/context evidence and R07 source review. The native block omits settled attachment/restore and controller-state setup, then reads before without asserting/logging native/controller pause agreement before error; the preceding network loop does assert native pause. CI's failed after.paused equality and later catch snapshot cannot establish the missing before state or a product cause. Isolated two-engine intent controls and the one WebKit sequence pass support only their stated bounded observations. A single observable toggle from a known settled state, explicit pre-error intent assertions and diagnostic identity/readiness snapshots correct this demonstrated test contract gap. Approval includes all frozen held-initial/seek and wrong-state failure controls, focused native/full recovery-suite validation in both engines, exact original post-error predicates and paused/time/clock/one-seek/session/node/later checks and budgets, retained network/Live cases, immutable CI evidence and independent final READY. No expected-pause post-error polling, repeated repair toggles/seeks, tolerances or causal solved-CI/product claim is approved. Only the one listed test file may change. Exact source/CI/evidence hashes match and canonical sorted compact ensure_ascii slate hash is verified; no implementation tree or runtime probe was used.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:43:26Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Fresh pinned-source and preserved CI inspection confirms the native branch lacks settled attachment/controller preconditions and never asserts/logs before.paused before injecting error, unlike the network branch. CI proves the postcondition failed, while R02's both-engine native and single WebKit context controls pass without establishing its cause; R07's source assessment agrees with that evidentiary limit. The single-file scope adds a known single transition, strict native/controller before-state checks and useful failure snapshots without a product fix. Approval requires explicit failure of wrong setup, unchanged budgets and every original post-error readiness/pause/time/recorded-clock/one-seek/session/video/later-progress assertion; repeated toggles or expected-pause polling would exceed it. No solved-CI claim or prior-vote transfer is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:51:27Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Pinned d6075b0 native-file setup omits settled attachment/restore/controller readiness, then reads before without asserting or logging native/controller pause agreement before error injection. The primary CI genuinely fails WebKit after.paused at171, but its later catch snapshot cannot supply that missing before state or establish cause. R02's isolated both-engine and one preceding-sequence WebKit passes are valid countercases, not causal reproductions; R07 independently confirms the source-level gap. Approve only the frozen one-file setup/evidence correction: settled native/demo and committed30-second seek, one observable expected transition from known native/controller state, explicit before-state assertion/log and wrong-setup failure without repeated toggles/seeks. Preserve every after-error predicate and strict pause/clock/time/one-seek/session/node/later check, network/Live cases and existing budgets. No expected-pause recovery polling, tolerance relaxation, product/helper/runner change or solved-CI claim. Approval includes the held-readiness/wrong-state controls, both-engine focused suite and exact-final independent review.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:51:27Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Fresh source/evidence assessment at d6075b0. The native block's initial/seek waits omit attachment/controller settlement, and unlike the network loop it neither asserts nor logs requested before.paused before injecting error. read() also omits controller pause/source/seeking context. The preserved CI log proves the WebKit after.paused failure, but its catch snapshot cannot recover the missing pre-error intent. R02's four valid isolated native controls and single preceding-sequence WebKit control pass strict original recovery checks; the offline harness timeouts and source-only R07 hypotheses do not establish a CI cause. This justifies the narrow test-precondition/diagnostic correction, not a product fix. Approval includes the frozen single observable expected Pause/Play transition, explicit wrong-state failure without repeat toggles/seeks, held-startup/seek controls, both-engine focused recovery validation and unchanged original post-error predicates/assertions/tolerances/budgets. Expected pause must never be added to recovery polling. Only the listed test may change; no solved-CI or flaky-test claim is authorized. Canonical slate hash and original log/source hashes verified. No runtime/probe, implementation tree, other ballot, product or ledger edit.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T11:51:27Z",
+          "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc"
+        }
+      }
     }
   ],
   "commits": [
@@ -5874,6 +5940,46 @@
       "at": "2026-10-26T11:36:27Z",
       "type": "slate-frozen",
       "message": "Round12 P41 frozen from independently confirmed native recovery fixture setup/evidence gap, not a causal app fix. R02 source8/evidence21 hashes and R07 source report preserved. Fresh ten-reviewer ballot required, first six before edits; root zero."
+    },
+    {
+      "at": "2026-10-26T11:38:47Z",
+      "type": "ballot",
+      "message": "R02 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:40:44Z",
+      "type": "ballot",
+      "message": "R01 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:42:39Z",
+      "type": "ballot",
+      "message": "R07 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:43:26Z",
+      "type": "ballot",
+      "message": "R08 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:51:27Z",
+      "type": "ballot",
+      "message": "R03 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:51:27Z",
+      "type": "ballot",
+      "message": "R09 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:51:27Z",
+      "type": "ballot",
+      "message": "R05 explicit Round12 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T11:51:27Z",
+      "type": "decision",
+      "message": "P41rev1 meets6-of10 threshold with7 explicit approvals. Only one-file test setup/diagnostics authorized; primary CI cause remains unproved. No P41 source edit has begun."
     }
   ],
   "validation": [
