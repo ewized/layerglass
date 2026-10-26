@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "P34/P35 implementing after majority; P36/P37 voting; endurance and independent review continuing",
+  "status": "P34/P36/P37 implementing after majority; P35integrated; endurance and independent review continuing",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 6 ballot complete",
+      "status": "round 7 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -24,7 +24,8 @@
       "ballot_round4": "test-results/review-2026-10-26/r01/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r01/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r01/ballot-round6.json",
-      "round7_findings": "test-results/review-2026-10-26/r01/round7-findings.json"
+      "round7_findings": "test-results/review-2026-10-26/r01/round7-findings.json",
+      "ballot_round7": "test-results/review-2026-10-26/r01/round7-ballot.json"
     },
     {
       "id": "r02",
@@ -134,20 +135,22 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 6 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r09/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r09/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r09/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r09/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r09/ballot-round6.json",
+      "ballot_round7": "test-results/review-2026-10-26/r09/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r09/round8-ballot.json"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 7 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -156,7 +159,8 @@
       "ballot_round5": "test-results/review-2026-10-26/r10/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r10/ballot-round6.json",
       "round7_findings": "test-results/review-2026-10-26/r10/round7-findings.json",
-      "ballot_round7": "test-results/review-2026-10-26/r10/round7-ballot.json"
+      "ballot_round7": "test-results/review-2026-10-26/r10/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r10/round8-ballot.json"
     }
   ],
   "rounds": [
@@ -360,6 +364,7 @@
       "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6",
       "ballots_started": true,
       "reviewers_completed": [
+        "r01",
         "r02",
         "r03",
         "r04",
@@ -367,11 +372,13 @@
         "r06",
         "r07",
         "r08",
+        "r09",
         "r10"
       ],
       "notes": "Two independently reproduced delivery defects; actual controls are negative baseline evidence, not implementation. No votes inferred from findings.",
       "majority_recorded_at": "2026-10-26T08:16:45Z",
-      "decision": "P34/P35 revision1 approved8/10 before source edits; root0. Remaining2 ballots pending."
+      "decision": "P34/P35 revision1 approved10/10. First8recorded before edits; root0.",
+      "balloting_completed_at": "2026-10-26T08:31:18Z"
     },
     {
       "id": 8,
@@ -385,9 +392,13 @@
         "r02",
         "r03",
         "r04",
-        "r05"
+        "r05",
+        "r09",
+        "r10"
       ],
-      "notes": "P36 full-player JPEG image-clock mismatch and P37 actual45min cold-preview selection failure, with root independent generated controls. Root proposes P37 and contributes no votes."
+      "notes": "P36 full-player JPEG image-clock mismatch and P37 actual45min cold-preview selection failure, with root independent generated controls. Root proposes P37 and contributes no votes.",
+      "majority_recorded_at": "2026-10-26T08:31:18Z",
+      "decision": "P36/P37 revision1 approved6/10 before any source/test/product-doc edit; root0. Remaining4ballots pending."
     }
   ],
   "proposals": [
@@ -3942,6 +3953,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:16:45Z",
           "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "At pinned a239, every launch path records a planned name before creation, and EXIT cleanup removes those names unconditionally. A Docker name-conflict therefore grants cleanup authority over a pre-existing object; the original actual-check canary evidence shows exit125 and loss of the conflicting running canary while a separate control and reused image survive. The exact scripts/check.sh-only scope addresses that demonstrated lifecycle defect with immutable creation-time ownership, including interruption before foreground completion and later name reuse. Approve the full bounded validation plan across all launch paths, later-stage conflict, replacement identity and failure/signal statuses. Recording only successful foreground completion would be insufficient, and broad prefix/name or image-ownership expansion is excluded. No duplicate full browser run is necessary for this shell ownership correction.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:28:21Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Pinned scripts/check.sh records the intended metadata name before docker run, and EXIT cleanup removes every recorded name. Saved unchanged-script evidence shows Docker refusing creation with125 followed by deletion of the pre-existing conflicting canary, while the different-name canary and reused image survive. Immutable creation-time ownership is the appropriate bounded correction across all existing launch paths. Approval requires the frozen foreground-interruption coverage, failure/signal status preservation, later name-replacement survival and existing log/image behavior; planned-name tracking or recording only after foreground completion would not satisfy it. No image-tag ownership expansion or production change is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:31:18Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
         }
       }
     },
@@ -3961,7 +3986,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
       "risk": "Low subprocess path conversion. Use fileURLToPath rather than ad hoc substitution; preserve existing child failures/timeouts and suite selection.",
       "validation_plan": "Actual registered self-contained history reconnect suite passes in plain, spaced and literal-percent checkout paths in both engines. Unknown suite still exits2. Ordinary child failure and timeout/error propagation remain intact; inspect unchanged default list, environment, inherited stdio and240000ms timeout. Use ignored isolated generated fixture controls, not production devices.",
-      "status": "validated",
+      "status": "committed",
       "ballots": {
         "r07": {
           "vote": "APPROVE",
@@ -4018,6 +4043,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:16:45Z",
           "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "The pinned subprocess argument uses URL.pathname, which leaves checkout spaces and literal percent signs URL-encoded. Original production-runner evidence distinguishes passing plain and direct-spaced actual history consumers from MODULE_NOT_FOUND in the same spaced runner, while the standard temporary-copy wrapper remains unaffected. Approve only native fileURLToPath conversion at this one boundary and its frozen regressions: real registered suite in plain/spaced/percent paths, unknown-suite2, unchanged list/order/environment/stdio/240000ms timeout and child failure/error propagation. The exact one-file scope is low risk and does not require fixture or production changes; ad hoc percent replacement would not satisfy it.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:28:21Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Pinned run-browser.js passes URL.pathname directly to spawnSync, retaining percent escapes where Node expects a native path. Saved controls isolate this boundary: the registered runner succeeds from a plain checkout, fails at Layer%20Glass from a spaced checkout, and the identical suite succeeds when invoked directly there. fileURLToPath is a narrow native-ESM conversion that preserves suite selection and subprocess policy. Approval includes literal-percent, unknown-suite, child failure and timeout/error controls; normal check.sh's unspaced temporary copy is a valid unaffected counter-case, so this does not claim standard CI is broken.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:31:18Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
         }
       },
       "implementation": {
@@ -4025,7 +4064,8 @@
         "peer_review": "test-results/review-2026-10-26/r02/p35-diff-review.json",
         "peer_decision": "READY",
         "source_sha256": "e4b14d276d13ce00dcb769a5b88cf33c18632009ec8b5964c2c9938895c8d5f0",
-        "validation": "Actual registered history suite plain/spaced/percent paths passes both engines; direct control passes, unknown2, realchild7, actual240000ms ETIMEDOUT preserved; exec3300exit0, owned container removed."
+        "validation": "Actual registered history suite plain/spaced/percent paths passes both engines; direct control passes, unknown2, realchild7, actual240000ms ETIMEDOUT preserved; exec3300exit0, owned container removed.",
+        "canonical_commit": "e18167d4a6922a5b57f3def9d79cba0af63d4f1c"
       }
     },
     {
@@ -4059,7 +4099,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/round7-p36-proposed-scope.json",
       "risk": "Moderate JPEG-only lifecycle/data ownership correction. The high-risk mistakes are timestamp-only association, label/clock publication before decode, stale completion after a source switch, incorrect treatment of completed held intervals, rounding across capture boundaries, and increasing request rate. The draft deliberately requires independent regression evidence for those cases before integration.",
       "validation_plan": "Reproduce the frozen full-player negative in Chromium/WebKit with real generated JPEG decoding and actual ReplayBuffer payloads: page opens1020; blue capture1030; Pause; green1030.25; later capture1031.5. Corrected paused clock/position/rendered reading and cached preview must remain associated with blue. Verify normal one-second cadence and positive subsecond cadence, including non-half-second and non-millisecond capture positions. Do not pass the check by relying on rounded timestamps that select the preceding capture accidentally. Check explicit historical targets both inside a completed held interval and beyond the latest proven capture in the provisional tail; verify resulting archive-selected pixels, recorded time and thumbnail label agree. Hold a live image response, advance metadata, then finish the old image; reverse the order with a newer image/older metadata. Only proven owning request/completion may publish the displayed time or capture a thumbnail. Metadata alone is not an image identity. Hold an old JPEG completion across a committed seek, explicit Live, camera/session change, close and same-session reattachment. No stale callback may mutate the new source's display clock or preview history. Keep the same native video node and one page session across recovery. Test pause/play and explicit Live while a JPEG image is pending. Completed-history replay, the original thirty-second held-frame gap, later-page minimum/negative clock anchor and prior-page media exclusion must remain correct. During held pointer/key/wheel preview changes issue no intermediate main-image seeks; one release commits one target. Keep existing request/capture bounds and session-scoped deduplication. Verify optional descriptor/selector rejection and legacy-at compatibility without exposing prior-session footage or changing provider/origin boundaries. Standard no-recording live fallback must remain available without presenting an invented historical clock. Run focused affected units, the new bounded two-engine fixture and docs checks; a final core combined check belongs to integration. No real-device/LAN/external request or repeated stress run is needed.",
-      "status": "voting",
+      "status": "implementing",
       "ballots": {
         "r03": {
           "vote": "APPROVE",
@@ -4088,6 +4128,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:24:03Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "My independent rerun of the original full-player negative on pinned a239 reproduces in both engines: paused blue remains unchanged at position11 while SSE advances recorded time1030 to1030.25 and rendered layer30 to31; the archive at11 is green, but the local preview labels blue11. Explicit Live advances pixels correctly, with one session/video and zero pageerrors. Source tracing confirms the provisional archive endpoint, moving end_time clamp and metadata-based capture label are separate from decoded-image ownership. Approve the exact JPEG-only closed-file scope and mandatory lifecycle/precision regressions, including pending decode across seek/Live/session/recovery, normal and irregular cadence, stable completed held intervals and the thirty-second gap. Optional descriptor/immutable selection must stay on existing metadata/frame URL with legacy compatibility, original first-frame/opened_at/origin/retention bounds and no permission/provider/rate expansion. Asynchronous race correctness remains an implementation acceptance requirement; global capture-start clocks, future labels or swapping a paused still would violate this approval.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:28:21Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Frozen bounds/current and Pause use the provisional archive end, while player.js polls the live image independently; printerPlaybackTime and PreviewCapture then label those pixels from mutable metadata. I regenerated actual ReplayBuffer payloads and reran the unchanged full-player normal-cadence negative in both engines: blue pixels stayed paused at position 11 while time changed 1030 to 1031 and layer 30 to 31; archive position 11 was green, with one session/video and working explicit Live. Supplied subsecond evidence shows the same error at 1030.25. Approve the exact closed 16-file JPEG ownership correction, including optional immutable descriptor/selector on the existing endpoint and legacy compatibility. Moderate lifecycle risk requires all stated delayed/reordered completion, source/session/recovery, precise boundary, provisional-tail, completed held-gap, later-page isolation, capture cancellation, request bounds and single-gesture-commit controls before integration. Completed historical hold targets must retain their progressing wall clock, and paused pixels must retain their owned position. This approves the bounded scope and validation plan, not an unproven asynchronous algorithm.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:31:18Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
     },
@@ -4110,7 +4164,7 @@
       "evidence_path": "test-results/review-2026-10-26/root-preview-adjacent/finding.json",
       "risk": "Low/moderate cache selection correction. Preserving only a nearby warm placeholder without resolving the true target would hide the bug; rejecting a late read or reintroducing duplicate decode/HTTP work could regress P11. Keep compressed and decoded limits and session ownership.",
       "validation_plan": "Deterministic units: exact cold vs nearby hot, closer non-exact cold vs farther hot, tie behavior unchanged, coalesced identical disk reads, missing asset and session reset. Actual Chromium/WebKit Web Component+real IndexedDB with distinct decoded colors must replace warm placeholder with correct nearest cold image without additional pointer event, seek/video creation/server preview HTTP. Both directions and a contiguous retained-still sweep under bounded RAM; delayed IDB, stale session/target and corrupt/sprite fallback regressions remain passing. Independently rerun original adjacent-color negative against old module and corrected source. After integration repeat actual45min full retained-preview sweep under resource caps and preserve original failure; do not claim physical-phone or unmeasured zero-latency guarantees.",
-      "status": "voting",
+      "status": "implementing",
       "ballots": {
         "r03": {
           "vote": "APPROVE",
@@ -4138,6 +4192,20 @@
           "rationale": "Pinned PreviewHistory.get at158 returns memory-only peek before asking nearest across retained assets; scrub-preview then refuses that farther asset because the globally nearest asset differs and resolution stops. I independently reran the frozen component/real-IndexedDB negative against my pinned a239c0c source in both engines: exact cold25.066666 stays blue on disk while warm20.133333 red remains displayed, with only frame20 read; evicting the warm Blob makes the same target read frame25 once and paint blue, preserving the same video with0seeks/HTTP/pageerrors. Selecting the closest eligible asset first is a bounded correction within get; keep peek/nearest as placeholders and preserve coalescing, session/asset guards, late IDB/P11, cache limits and server fallback. The four-file scope and both-direction/contiguous-sweep validation are appropriate. Evidence: r02/round8/results.json and preview-adjacent.log.",
           "revision": 1,
           "recorded_at": "2026-10-26T08:24:03Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Pinned get() returns any eligible RAM peek before consulting global nearest. My independent actual Web Component/IndexedDB rerun in Chromium/WebKit confirms cold exact25.066666 loses to hot20.133333 within5s: resolve finishes without reading frame25 and stale red remains. Evicting only the warm Blob makes the same target read frame25 once and paint blue, with identical video, zero seeks/previewHTTP/pageerrors. The component's existing asset-identity guard correctly rejects the farther result; no component edit is required. Approve global eligible-frame selection before choosing RAM/IDB within the four listed files, preserving tie behavior, placeholder labels, bounds/coalescing/session ownership, one decode lane and existing missing/corrupt/late-read fallback. Units and both-direction contiguous cold/warm browser cases plus original-module negative control and integration's later45min sweep are required; approval does not claim a completed WebKit endurance run or physical-phone latency.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:28:21Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "At frozen PreviewHistory.get:158, peek returns a farther RAM neighbor before nearest can select the closer persisted asset; the component correctly refuses to paint the mismatched target and then stops resolving. My production Web Component plus real IndexedDB rerun reproduced both engines: cold exact 25.066666 lost to warm 20.133333, leaving red pixels and no frame:25 read; evicting only the warm Blob made the same target read once and paint blue, with the same video, zero seeks/preview HTTP/page errors. Approve only the closed four-file nearest-before-storage-tier correction. The validation plan must retain tie behavior, coalesced reads, session/version/asset ownership, bounded compressed/decoded caches, delayed-IDB completion, single decode lane and existing failure/server fallback, while testing both directions and a contiguous forced-eviction sweep. Risk is low/moderate cache selection; merely retaining a warm placeholder without resolving the true target is insufficient. The later 45-minute integrated sweep remains required and does not certify physical-phone behavior.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:31:18Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
@@ -4283,6 +4351,10 @@
     {
       "sha": "bfecc99",
       "summary": "P32: evidence-gated successful-partial historical telemetry hydration; R04 independently READY, integrated hashes verified."
+    },
+    {
+      "sha": "e18167d4a6922a5b57f3def9d79cba0af63d4f1c",
+      "summary": "P35: native browser-runner file paths,8prior approvals, independent READY and actual path/failure/timeout controls."
     }
   ],
   "activity": [
@@ -4875,6 +4947,26 @@
       "at": "2026-10-26T08:24:03Z",
       "type": "ballot",
       "message": "R02 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:28:21Z",
+      "type": "ballot",
+      "message": "R09 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:28:21Z",
+      "type": "ballot",
+      "message": "R09 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:31:18Z",
+      "type": "ballot",
+      "message": "R01 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:31:18Z",
+      "type": "ballot",
+      "message": "R10 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
