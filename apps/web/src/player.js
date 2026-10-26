@@ -103,7 +103,7 @@ const playerMedia = new PlayerMedia(player, video, pageReplay, {
     // Restore local decoding if Safari kept the network HLS alternative after
     // AirPlay. A cancelled picker with the original blob needs no reattachment.
     else if (playerMedia.webkitPicker && hls && video.currentSrc && !video.currentSrc.startsWith('blob:') &&
-      attachedGeneration && status?.state === 'live') attachPlayer();
+      attachedGeneration && status?.state === 'live') attachPlayer(null, true);
   },
 });
 selectedCamera = readCamera();
@@ -154,6 +154,7 @@ $('local-media').addEventListener('change', async event => {
 });
 video.addEventListener('loadedmetadata', () => {
   backend.setDuration?.(video.duration);
+  if (!hls) pageReplay.restoreNativePosition();
   // A demo can already have retained footage. Start this native file at its
   // simulated live edge instead of labelling the first historical frame Live.
   if (pageReplay.session?.kind === 'file' && pageReplay.followLive) pageReplay.goLive();
@@ -221,7 +222,7 @@ function scheduleRefresh(delay = 3000) {
   if (refreshTimer || playerMedia.remoteActive) return;
   refreshTimer = setTimeout(() => {
     refreshTimer = null;
-    if (navigator.onLine && status?.state === 'live') attachPlayer();
+    if (navigator.onLine && status?.state === 'live') attachPlayer(null, true);
   }, delay);
 }
 
@@ -271,7 +272,7 @@ async function retryContinuous() {
       streamRetryAttempts = 0;
       adopted = true;
       console.info('[LayerGlass] Continuous video recovered');
-      await attachPlayer(probe);
+      await attachPlayer(probe, true);
     }
   } catch (_) { /* Keep the working HLS player and retry after the cooldown. */ }
   finally {
@@ -309,7 +310,7 @@ function detachPlayer() {
   lastDecodedFrames = null;
 }
 
-async function attachPlayer(prepared = null) {
+async function attachPlayer(prepared = null, recovering = false) {
   if (!networkAvailable() || pageHidden || !playerVisible() || playerMedia.remoteActive ||
       status?.state !== 'live' || (!status.playlist_url && !status.jpeg_url && !status.media_url && !status.mjpeg_url) || pageReplay.opening) {
     prepared?.destroy();
@@ -317,13 +318,14 @@ async function attachPlayer(prepared = null) {
   }
   const version = selectionVersion;
   const camera = selectedCamera;
+  const priorSession = pageReplay.session?.session_id;
   attachedGeneration = status.generation;
   try { await pageReplay.open(camera); } catch (_) { /* Live playback remains available if temporary storage is unavailable. */ }
   if (version !== selectionVersion || !networkAvailable() || pageHidden || !playerVisible() || playerMedia.remoteActive) {
     prepared?.destroy();
     return;
   }
-  pageReplay.attachMedia();
+  pageReplay.attachMedia({ preserve: recovering && priorSession && priorSession === pageReplay.session?.session_id });
   detachPlayer();
   attachedGeneration = pageReplay.session?.session_id || status.generation;
   lastAttachAt = Date.now();
@@ -358,7 +360,7 @@ async function attachPlayer(prepared = null) {
       if (pageHidden || !playerVisible()) { attachedGeneration = null; pageReplay.mediaReady(); return; }
       video.src = source;
       video.disableRemotePlayback = true;
-      play();
+      if (!pageReplay.paused) play();
     } catch (error) {
       if (version !== selectionVersion) return;
       pageReplay.mediaReady();
@@ -392,7 +394,7 @@ async function attachPlayer(prepared = null) {
       (typeof video.webkitEnterFullscreen === 'function' || !hlsSupported)) {
     video.src = source;
     playerMedia.setSource(source);
-    play();
+    if (!pageReplay.paused) play();
   } else if (hlsSupported) {
     if (continuous) {
       const transport = videoStream = prepared || new PlayerVideoStream(pageReplay.session, () => {}, { backend });
@@ -401,11 +403,22 @@ async function attachPlayer(prepared = null) {
       transport.onFailure = () => {
         if (transport !== videoStream || playerMedia.remoteActive) return;
         streamFallback = true;
-        attachPlayer();
+        attachPlayer(null, true);
       };
+      if (pageReplay.mediaRestore && !pageReplay.followLive) {
+        // The initial index arrives before its live media burst. Let that burst
+        // establish the loader's next sequence before asking it for old footage.
+        try { await transport.waitFor(() => transport.nextSequence !== null ? true : null, AbortSignal.timeout(45000)); }
+        catch (_) {
+          if (transport === videoStream && networkAvailable() && !pageHidden && playerVisible()) transport.onFailure();
+          return;
+        }
+        if (transport !== videoStream || version !== selectionVersion) return;
+      }
     }
-    hls = new Hls({ enableWorker: true, preferManagedMediaSource: true, liveDurationInfinity: true,
+    const decoder = hls = new Hls({ enableWorker: true, preferManagedMediaSource: true, liveDurationInfinity: true,
       lowLatencyMode: false, liveSyncDurationCount: 2,
+      ...(pageReplay.mediaRestore && !pageReplay.followLive ? { startPosition: pageReplay.position } : {}),
       workerPath: new URL('./vendor/hls.worker.js', import.meta.url).href,
       // Keep playback memory bounded on phones. Full page history remains on
       // the server and can be fetched again when seeking outside this buffer.
@@ -415,7 +428,11 @@ async function attachPlayer(prepared = null) {
     PlayerLog.changed('info', 'Video delivery', { transport: videoStream ? 'Continuous HTTP stream' : 'HLS' });
     hls.on(Hls.Events.MEDIA_ATTACHING, () => playerMedia.setSource(source));
     hls.on(Hls.Events.MEDIA_ATTACHED, (_event, data) => playerMedia.setMediaSource(hls, data.mediaSource));
-    hls.on(Hls.Events.MANIFEST_PARSED, () => { pageReplay.mediaReady(); play(); });
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      if (hls !== decoder) return;
+      pageReplay.mediaReady();
+      if (!pageReplay.paused) play();
+    });
     hls.on(Hls.Events.BUFFER_CODECS, (_event, tracks) => {
       videoCodec = tracks.video?.codec || tracks.audiovideo?.codec || null;
     });
@@ -794,7 +811,9 @@ playerChrome.addEventListener('player-play', play);
 playerChrome.addEventListener('printer-scan-open', () => { playerChrome.options(true, 'printers'); scanPrinters(); });
 video.addEventListener('pause', () => { playerChrome.show(); renderStatus(); });
 video.addEventListener('play', () => { playerChrome.show(); renderStatus(); });
-video.addEventListener('loadeddata', () => pageReplay.mediaReady());
+for (const event of ['loadeddata', 'seeked']) video.addEventListener(event, () => {
+  if (pageReplay.mediaReady() && video.paused && !video.hidden) play();
+});
 // Reload state carries intent, not a browser activation grant. Retry once media
 // is ready after an interrupted initial play; permission denial keeps the tap fallback.
 video.addEventListener('canplay', () => {
@@ -834,7 +853,7 @@ setInterval(() => {
   if (restartDeadline && Date.now() > restartDeadline) finishRestart();
   if (!playerVisible() || playerMedia.remoteActive || status?.state !== 'live' || pageReplay.reviewing || video.paused) return;
   const reference = lastFrameAt || lastAttachAt;
-  if (reference && Date.now() - reference > 18000 && Date.now() - lastAttachAt > 18000 && playButton.hidden) attachPlayer();
+  if (reference && Date.now() - reference > 18000 && Date.now() - lastAttachAt > 18000 && playButton.hidden) attachPlayer(null, true);
 }, 3000);
 function syncPlaybackVisibility() {
   if (pageHidden || !playerVisible()) {
@@ -847,7 +866,7 @@ function syncPlaybackVisibility() {
     hls?.stopLoad();
     loadingSuspended = Boolean(hls);
   } else if (!playerMedia.remoteActive) {
-    if (status?.state === 'live' && !pageReplay.reviewing && Date.now() - lastFrameAt > 10000) attachPlayer();
+    if (status?.state === 'live' && !pageReplay.reviewing && Date.now() - lastFrameAt > 10000) attachPlayer(null, true);
     else if (loadingSuspended) { loadingSuspended = false; hls?.startLoad(video.currentTime || -1); }
     scheduleStreamRetry();
   }

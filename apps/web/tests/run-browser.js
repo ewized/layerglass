@@ -10,6 +10,7 @@ const available = [
   'browser-direct.js',
   'browser-video-stream.js',
   'browser-stream-recovery.js',
+  'browser-replay-recovery.js',
   'browser-preview-storage.js',
   'browser-preview-buffer.js',
   'browser-preview-loading.js',

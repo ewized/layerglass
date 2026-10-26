@@ -22,7 +22,7 @@ Pass representative suite names to focus a browser run, for example
 | --- | --- |
 | Approved devices, discovery/backoff, credentials | `test_providers.py`, `test_identification.py`, `test_discovery_cache.py`, `test_cameras.py`, `test_printer_bindings.py` |
 | MQTT data and replay time | `test_printer.py`, `test_public_telemetry.py`, `test_printer_history.py`, `printer-history.test.js`, `printer-stats.test.js` |
-| Video transport and DVR | `test_video_stream.py`, `test_replay.py`, `video-stream.test.js`, browser video-stream/recovery suites |
+| Video transport and DVR | `test_video_stream.py`, `test_replay.py`, `video-stream.test.js`, browser video-stream/stream-recovery/replay-recovery suites |
 | Live-relative timeline and gesture commits | `timeline.test.js`, `scrub-preview.test.js`, browser scrub-commit suite |
 | Observed print-event markers | `timeline-events.test.js`, browser timeline-events suite |
 | Backend selection and CORS | `backend.test.js`, `test_backend_cors.py`, browser backends/backend-origin suites |

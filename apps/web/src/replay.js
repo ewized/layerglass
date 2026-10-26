@@ -81,6 +81,7 @@ export class PageReplay {
     this.followLive = true;
     this.paused = false;
     this.attaching = false;
+    this.mediaRestore = null;
     this.position = 0;
     this.lastTick = performance.now();
     this.lastImagePosition = null;
@@ -199,6 +200,8 @@ export class PageReplay {
     this.detail.hidden = true;
     this.followLive = true;
     this.paused = false;
+    this.attaching = false;
+    this.mediaRestore = null;
     this.position = 0;
     this.lastImagePosition = null;
     this.timeline.reset();
@@ -219,17 +222,56 @@ export class PageReplay {
     this.render();
   }
 
-  attachMedia() {
+  attachMedia({ preserve = false } = {}) {
     this.finishScrub(false);
+    const previous = this.mediaRestore;
+    const position = previous && previous.session === this.session?.session_id ? previous.position :
+      this.paused ? this.position : this.bounds().current;
+    this.mediaRestore = preserve && this.session ? { session: this.session.session_id, position } : null;
+    if (this.mediaRestore) {
+      this.position = Math.max(this.session.start_seconds, Math.min(this.session.end_seconds - 0.05, this.mediaRestore.position));
+      this.mediaRestore.position = this.position;
+      if (this.session.kind === 'jpeg') this.lastImagePosition = null;
+    } else {
+      this.followLive = true;
+      this.paused = false;
+      this.timeline.fit();
+    }
+    this.video.autoplay = !this.paused;
     this.attaching = true;
-    this.followLive = true;
-    this.paused = false;
-    this.timeline.fit();
     this.scrubbing = false;
     this.ignoreSeekingUntil = Date.now() + 3000;
   }
 
-  mediaReady() { this.attaching = false; this.render(); }
+  restoreNativePosition() {
+    const restore = this.mediaRestore;
+    if (!restore || restore.session !== this.session?.session_id || this.followLive || restore.nativeSeeked) return;
+    const { start, end } = this.bounds();
+    if (end > start) {
+      restore.nativeSeeked = true;
+      this.video.currentTime = Math.max(start, Math.min(end - 0.05, restore.position));
+    }
+  }
+
+  mediaReady() {
+    const restore = this.mediaRestore;
+    if (restore) {
+      if (restore.session !== this.session?.session_id) { this.mediaRestore = null; return false; }
+      else if (this.session.kind === 'jpeg') {
+        if (!this.followLive) this.showImage(this.position);
+        this.mediaRestore = null;
+      } else {
+        // A manifest is not a decoded frame. In particular, keep the paused
+        // position through teardown's pause/load events and an in-flight seek.
+        if (this.video.readyState < 2 || this.video.seeking) return false;
+        if (this.paused) this.position = this.video.currentTime;
+        this.mediaRestore = null;
+      }
+    }
+    this.attaching = false;
+    this.render();
+    return Boolean(restore && !this.paused);
+  }
 
   bounds() {
     const session = this.session;
@@ -239,14 +281,16 @@ export class PageReplay {
       return { start: session.start_seconds, end: session.end_seconds,
         current: this.followLive ? session.end_seconds : this.position };
     }
+    const current = this.attaching && this.mediaRestore?.session === session.session_id ?
+      this.mediaRestore.position : this.video.currentTime || 0;
     if (session.kind === 'file') {
       const end = Math.max(0, Math.min(Number.isFinite(this.video.duration) ? this.video.duration : Infinity, session.end_seconds));
-      return { start: 0, end, current: Math.min(end, this.video.currentTime || 0) };
+      return { start: 0, end, current: Math.min(end, current) };
     }
     const ranges = this.video.seekable;
     const start = Math.max(session.start_seconds, ranges.length ? ranges.start(0) : session.start_seconds);
     const end = ranges.length ? ranges.end(ranges.length - 1) : session.end_seconds;
-    return { start, end, current: this.video.currentTime || 0 };
+    return { start, end, current };
   }
 
   beginScrub(kind) {
@@ -318,6 +362,10 @@ export class PageReplay {
     if (end <= start) return;
     this.followLive = false;
     this.position = Math.max(start, Math.min(end - 0.05, target));
+    if (this.mediaRestore) {
+      this.mediaRestore.position = this.position;
+      this.mediaRestore.nativeSeeked = true;
+    }
     if (!this.scrubbing) this.timeline.fit();
     if (this.remote) this.remote.seek(this.position);
     else if (this.session.kind === 'jpeg') this.showImage(this.position);
@@ -336,7 +384,11 @@ export class PageReplay {
   togglePause() {
     if (!this.session) return;
     if (this.remote) { this.remote.togglePause(); return; }
-    if (this.session.kind === 'jpeg') {
+    if (this.mediaRestore && this.session.kind !== 'jpeg') {
+      this.paused = !this.paused;
+      this.video.autoplay = !this.paused;
+      if (this.paused) { this.followLive = false; this.video.pause(); }
+    } else if (this.session.kind === 'jpeg') {
       if (!this.paused) { this.position = this.bounds().current; this.followLive = false; }
       this.paused = !this.paused;
     } else if (this.video.paused) {
@@ -352,8 +404,10 @@ export class PageReplay {
   goLive() {
     this.finishScrub(false);
     if (!this.session) return;
+    this.mediaRestore = null;
     this.followLive = true;
     this.paused = false;
+    this.video.autoplay = true;
     this.ignoreSeekingUntil = Date.now() + 1000;
     this.lastImagePosition = null;
     if (this.remote) this.remote.goLive();

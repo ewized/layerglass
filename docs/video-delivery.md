@@ -157,7 +157,17 @@ temporarily fall back to HLS; a valid media record resets that failure count so
 separate short interruptions cannot accumulate into permanent fallback. A
 first-byte watchdog detects buffering proxies; ongoing responses allow the
 heartbeat interval. Fatal decoder/playback errors rebuild continuous playback
-without changing its protocol. Hidden pages stop hls.js loading and cancel loader
+without changing its protocol. Automatic rebuilds of the same recording keep a
+paused replay frame paused, or resume playing replay from its selected position.
+hls.js starts loading that recorded position after the continuous response's
+initial media burst; native playback restores it after metadata. A manifest alone
+does not complete restoration: the selected frame must be decoded and its seek
+finished. Paused restoration suppresses native autoplay. Retention can clamp an
+expired position to the earliest available frame; explicit Live or a new session
+supersedes a pending historical restoration. While media loads, the displayed
+replay clock holds its selected position instead of resetting to zero.
+
+Hidden pages stop hls.js loading and cancel loader
 deadlines as well as the fetch reader; intentional suspension must not become a
 fatal fragment timeout. Visibility restoration resumes paused/replayed footage
 with its original recording session. Native PiP and Cast keep their existing
@@ -189,7 +199,13 @@ video. The initial continuous-stream fixture measurement played 20 seconds
 with zero additional media requests after its one video connection opened.
 The browser integration suite asserts the same behavior in Chromium and WebKit,
 including old footage after cache eviction, streaming 1× replay, Live, paused
-reconnection, visibility changes and compatibility fallback. Unit/HTTP tests
+reconnection, visibility changes and compatibility fallback.
+`apps/web/tests/browser-replay-recovery.js` additionally checks paused and playing
+replay through decoder rebuilds, continuous-to-HLS failure recovery and native
+file reattachment. It verifies recorded telemetry clocks, one restoration seek
+and explicit Live during loading.
+These are generated-media checks in headless Chromium/WebKit; native Safari HLS
+and physical-device recovery remain device checks. Unit/HTTP tests
 exercise record parsing, memory limits, decoder buffer transfer, retention,
 page isolation, reconnects, pacing, aborts and shutdown.
 

@@ -48,7 +48,7 @@ async function player({ end = 100, current = 98, kind = 'hls', duration = Infini
   video.pause = () => { video.paused = true; video.dispatchEvent(new Event('pause')); };
   video.play = () => { video.paused = false; video.dispatchEvent(new Event('play')); return Promise.resolve(); };
   const replay = new PageReplay(video, new Element(), () => replay.session.end_seconds - 2);
-  replay.session = { camera_id: 'fixture', kind, ready: true, start_seconds: 0, end_seconds: end,
+  replay.session = { session_id: 'page-fixture', camera_id: 'fixture', kind, ready: true, start_seconds: 0, end_seconds: end,
     frame_url: '/fixture.jpg', error: null, limited: false };
   replay.position = current;
   video.seekable = { length: kind === 'hls' ? 1 : 0, start: () => replay.session.start_seconds,
@@ -531,4 +531,136 @@ test('closing a page session resets the live clock and view for the next session
   p.video.currentTime = 0;
   p.replay.render();
   assert.deepEqual(p.snapshot(), { min: 0, max: 2, value: 2 });
+});
+
+test('same-session paused recovery waits for the restored decoded frame and seeks native media once', async () => {
+  const p = await player();
+  p.replay.seek(30);
+  p.video.pause();
+  p.replay.attachMedia({ preserve: true });
+  assert.equal(p.video.autoplay, false, 'Native autoplay must not resume a restored paused frame');
+  p.video.currentTime = 0;
+  p.video.readyState = 0;
+  p.video.pause(); // Teardown is not a new user pause at time zero.
+  assert.equal(p.replay.mediaReady(), false, 'A manifest alone cannot finish restoration');
+  assert.equal(p.replay.attaching, true);
+  assert.equal(p.replay.followLive, false);
+  assert.equal(p.replay.paused, true);
+  close(p.replay.position, 30, 'The paused recorded reading survives teardown');
+  let seeks = 0, current = 0;
+  Object.defineProperty(p.video, 'currentTime', { get: () => current, set: value => { current = value; seeks++; } });
+  p.video.readyState = 1;
+  p.replay.restoreNativePosition();
+  p.replay.restoreNativePosition();
+  assert.equal(seeks, 1, 'Repeated metadata must not repeat the native restoration seek');
+  p.video.readyState = 2;
+  p.video.seeking = true;
+  assert.equal(p.replay.mediaReady(), false, 'An in-flight seek is not the restored frame');
+  p.video.seeking = false;
+  assert.equal(p.replay.mediaReady(), false, 'Paused recovery does not request play');
+  assert.equal(p.replay.attaching, false);
+  assert.equal(p.replay.mediaRestore, null);
+  close(p.video.currentTime, 30, 'Restored paused media time');
+});
+
+test('playing replay recovery retains the current clock through repeated attachments and resumes once', async () => {
+  const p = await player();
+  p.replay.seek(30);
+  p.advance(3);
+  p.replay.attachMedia({ preserve: true });
+  p.video.currentTime = 0;
+  p.video.readyState = 0;
+  p.video.pause();
+  p.replay.attachMedia({ preserve: true });
+  close(p.replay.position, 33, 'A second failed attachment retains the original recovery position');
+  close(p.replay.bounds().current, 33, 'Loading holds the displayed timeline and fallback telemetry clock instead of time zero');
+  assert.equal(p.video.autoplay, true);
+  assert.equal(p.replay.paused, false, 'Programmatic teardown does not change playback intent');
+  p.replay.restoreNativePosition();
+  p.video.readyState = 2;
+  p.video.seeking = false;
+  assert.equal(p.replay.mediaReady(), true, 'A decoded restored frame can resume playing replay');
+  assert.equal(p.replay.mediaReady(), false, 'Later media events cannot request a second resume');
+  assert.equal(p.replay.followLive, false);
+  close(p.video.currentTime, 33, 'Restored playing media time');
+});
+
+test('Live and replacement sessions supersede pending historical restoration', async () => {
+  const p = await player();
+  p.replay.seek(30);
+  p.video.pause();
+  p.replay.attachMedia({ preserve: true });
+  p.video.currentTime = 0;
+  p.replay.goLive();
+  const live = p.video.currentTime;
+  p.replay.restoreNativePosition();
+  close(p.video.currentTime, live, 'Late metadata cannot restore the old replay after explicit Live');
+  assert.equal(p.replay.followLive, true);
+  assert.equal(p.replay.paused, false);
+  p.replay.seek(30);
+  p.replay.attachMedia({ preserve: true });
+  const previous = p.replay.session;
+  p.replay.release = () => {};
+  p.replay.close();
+  p.replay.session = { ...previous, session_id: 'replacement', camera_id: 'fixture', kind: 'hls',
+    ready: true, start_seconds: 0, end_seconds: 2 };
+  p.video.currentTime = 0;
+  p.replay.attachMedia();
+  p.replay.restoreNativePosition();
+  close(p.video.currentTime, 0, 'A new session cannot inherit the old seek');
+  assert.equal(p.replay.mediaRestore, null);
+  assert.equal(p.replay.followLive, true);
+  assert.equal(p.replay.paused, false);
+});
+
+test('recovery clamps a paused frame to retained history and honors a newer committed seek', async () => {
+  const p = await player();
+  p.replay.seek(30);
+  p.video.pause();
+  p.replay.session.start_seconds = 40;
+  p.replay.attachMedia({ preserve: true });
+  close(p.replay.position, 40, 'Trimmed footage cannot be restored');
+  p.video.currentTime = 0;
+  p.replay.seek(70);
+  p.replay.restoreNativePosition();
+  close(p.video.currentTime, 70, 'A new explicit seek supersedes the captured position');
+  assert.equal(p.replay.paused, true);
+});
+
+test('a live-only attachment without a recording has no historical recovery state', async () => {
+  const p = await player();
+  p.replay.release = () => {};
+  p.replay.close();
+  p.replay.attachMedia({ preserve: true });
+  assert.equal(p.replay.mediaRestore, null);
+  assert.equal(p.replay.followLive, true);
+  assert.equal(p.replay.paused, false);
+  assert.equal(p.video.autoplay, true);
+  p.replay.mediaReady();
+  assert.equal(p.replay.attaching, false);
+});
+
+test('same-session JPEG recovery requests its paused frame after the image source is detached', async () => {
+  const p = await player({ kind: 'jpeg' });
+  p.replay.seek(30);
+  p.replay.togglePause();
+  p.replay.attachMedia({ preserve: true });
+  p.replay.image.src = '';
+  p.replay.mediaReady();
+  assert.equal(p.replay.image.src, '/fixture.jpg?at=30');
+  assert.equal(p.replay.paused, true);
+  assert.equal(p.replay.followLive, false);
+  close(p.replay.position, 30, 'JPEG recovery keeps its selected recorded time');
+});
+
+test('a deliberate native play during paused recovery supersedes the captured pause', async () => {
+  const p = await player();
+  p.replay.seek(30);
+  p.video.pause();
+  p.replay.attachMedia({ preserve: true });
+  await p.video.play();
+  p.video.readyState = 2;
+  assert.equal(p.replay.paused, false);
+  assert.equal(p.replay.mediaReady(), true);
+  assert.equal(p.replay.followLive, false);
 });
