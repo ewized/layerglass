@@ -1,9 +1,9 @@
 {
   "phase": "User-authorized merge after the completed twelve-hour review",
   "started_observed_at": "2026-10-26T16:18:55Z",
-  "updated_at": "2026-10-26T16:51:36.649336+00:00",
+  "updated_at": "2026-10-26T17:17:31.546178+00:00",
   "user_request": "dont forget to merge this in at the end",
-  "status": "Independent fixture acceptance complete; combined source ready for normal CI before actual main merge.",
+  "status": "Complete upon publication of this audited closing commit to main",
   "review_result_commit": "ddf84213ed5cc7a5e8732c13e2b1f56c2835a569",
   "review_outcome_sha256": "84b085edcaf45b243018c6258c7df88c2f6abf8b76742773eb2ba2efb611e44f",
   "original_window": "2026-10-26T04:03:49Z/2026-10-26T16:03:49Z",
@@ -36,7 +36,7 @@
         "apps/web/tests/browser-timeline-events.js",
         "docs/development/testing.md"
       ],
-      "status": "integrated; normal combined CI pending",
+      "status": "committed; independent final review and combined-source CI passed",
       "ballots": [
         {
           "reviewer": "r01",
@@ -411,16 +411,101 @@
     "read_only_merge_tree_result": "Clean, zero content diff from review HEAD; remote freshness/protection audit pending.",
     "remote_main": "8a4e540431791eb43a28ece258670398a4896575",
     "reconciled_commit": "c64445551082157cc6b916a9cfcc0fda097e6bf9",
-    "result": "Main dependency history retained by merge; no file/tree changes from prior review head.",
+    "result": "The containing closing commit integrates the reviewed changes into main while preserving prior main dependency commits.",
     "branch_policy": "Official main branch response protected=false, rulesets=[]; detailed admin view inaccessible.",
     "cloudflare": "Merge may trigger existing gated public deployment; user authorized merge and prior Cloudflare delivery. No gate changes or credential access required.",
-    "main_is_ancestor": true
+    "main_is_ancestor": true,
+    "method": "Non-force fast-forward; expected prior main checked immediately before atomic main/review publication.",
+    "expected_previous_main": "8a4e540431791eb43a28ece258670398a4896575",
+    "passing_combined_source": "48426753842faa5b2f69f4da9dc887bcfda9ae43",
+    "closing_paths": [
+      "docs/reviews/2026-10-26-merge.json",
+      "docs/reviews/2026-10-26-merge.md"
+    ],
+    "prepublication_checks": [
+      "Only the two audit closing paths differ from the passing CI input; all production, tests, workflow, dependency and existing review bytes remain identical.",
+      "Exact closing Markdown accepted independently, then all37 documentation notes checked in an owned disposable Docker container.",
+      "Fresh main/review remote refs match expected ancestors; reject unexpected movement; publish without force.",
+      "After publication, verify exact remote main/review refs and capture local backend image/state without modifying it."
+    ],
+    "publication_receipt": "The containing commit on refs/heads/main is the durable Git receipt. A separate ignored local publication report records post-push ref observations.",
+    "pr_creation": "GitHub integration returned403 Resource not accessible by integration; existing authorized Git SSH path used without changing credentials.",
+    "local_backend_deployment": false,
+    "release_tag_or_image_publication": false,
+    "existing_cloudflare_gate_changed": false
   },
   "validation": [
     {
       "phase": "P46 author",
       "result": "Focused both-engine registered timeline suite and 37-note docs PASS; native valid/invalid controls retain original outcomes/budgets. Independent review and new combined CI pending.",
       "author_commit": "b71f7f6a0cd8d94bc24e6d6dadbc3a7d104193d2"
+    },
+    {
+      "phase": "Normal combined-source CI",
+      "status": "PASS independently confirmed",
+      "source": "48426753842faa5b2f69f4da9dc887bcfda9ae43",
+      "ci": {
+        "run_id": 40363234534,
+        "job_id": 121713944169,
+        "url": "https://github.com/ewized/layerglass/actions/runs/40363234534",
+        "head_sha": "48426753842faa5b2f69f4da9dc887bcfda9ae43",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "job_completed_at": "2026-10-26T17:09:03Z",
+        "run_updated_at": "2026-10-26T17:09:04Z",
+        "all_eight_steps_success": true,
+        "no_hidden_failed_or_skipped_stage": true
+      },
+      "hosting": {
+        "run_id": 40363234389,
+        "job_id": 121713948417,
+        "head_sha": "48426753842faa5b2f69f4da9dc887bcfda9ae43",
+        "status": "completed",
+        "conclusion": "success",
+        "all_five_steps_success": true,
+        "qualification": "Static hosting validation without credentials; no deployment."
+      },
+      "counts": {
+        "python": 227,
+        "javascript": 269,
+        "docs": 37,
+        "browser_suites": 20,
+        "nx_build_projects": 3,
+        "nx_second_build_cached_projects": 3
+      },
+      "raw_log": {
+        "fetches": 1,
+        "independent_copy": "test-results/review-2026-10-26/merge/r07-official-job-121713944169.log",
+        "root_copy": "test-results/review-2026-10-26/merge/github-ci-40363234534.log",
+        "exact_byte_cmp_exit": 0,
+        "sha256": "cb53ac253fcbf89cc47c57237121bb99b8d65fe1aebce15ae10b61c2bc9a0cd9",
+        "utf8_bytes": 390262,
+        "utf16_units": 389657,
+        "bom": true,
+        "final_lf": true,
+        "carriage_returns": false,
+        "error_annotations": 0,
+        "unhandled_nonzero_completion_found": false
+      },
+      "artifact": {
+        "id": 12670860646,
+        "name": "check-results",
+        "size_in_bytes": 1482016,
+        "digest": "sha256:3cc162f9712044bd2228cd58e66393f1723ff4ec08b76f9453a9f151aec93e06",
+        "exact_head_sha": "48426753842faa5b2f69f4da9dc887bcfda9ae43",
+        "api_inventory_matches_successful_upload_log": true,
+        "downloaded_or_unpacked_by_r07": false
+      },
+      "independent_review": {
+        "path": "test-results/review-2026-10-26/merge/r07-combined-ci-final.json",
+        "sha256": "02b5e63050a465be789d053875ebf2169d56b99097d79aa249db13301228da8e"
+      },
+      "root_receipt": {
+        "path": "test-results/review-2026-10-26/merge/root-combined-ci-final.json",
+        "sha256": "6fc82f57715ddd56dca0722bacd7965a46af73187e58234aa9120ba79bc1df4c"
+      },
+      "limits": "Generated fixtures only; no new endurance or physical-device claim; historical failed CI cause remains unproved."
     }
   ],
   "activity": [
@@ -439,6 +524,25 @@
     {
       "at": "2026-10-26T16:51:36.649336+00:00",
       "event": "Approved exact-final P46 cherry-picked after independent acceptance. Canonical test/guide hashes match peer; production source matches author, old outcome and failed raw log unchanged."
+    },
+    {
+      "at": "2026-10-26T17:17:31.546178+00:00",
+      "event": "Combined-source normal CI and hosting success independently verified; preparing two audit-only closing notes for the user-authorized main fast-forward. Publication is conditional on closing docs/source/ref guards."
     }
-  ]
+  ],
+  "closing_prepared_at": "2026-10-26T17:17:31.546178+00:00",
+  "closing_note_review": {
+    "reviewer": "r10",
+    "path": "test-results/review-2026-10-26/merge/r10-closing-note-review.json",
+    "sha256": "c2c0e16d020372b0a0ab37c3f8df9722771a689f35bf7a10d4e441290bddb1e0",
+    "draft_sha256": "037677c39a41bb2b911ce695b5d047487ef0fabaa49ba2d35cd8f00ade95c6b3",
+    "decision": "ACCEPT / NO_FINDINGS",
+    "preconditions": [
+      "Freeze/record R07's completed independent CI/hosting evidence acceptance; no pending verification may be represented as complete.",
+      "Apply this exact draft and update only docs/reviews/2026-10-26-merge.md and .json after tested484.",
+      "Run the planned focused Docker37-document closing-tree validator after those audit-note edits and record exact text/ledger/cleanup evidence.",
+      "Verify the final candidate differs from484 only in those two audit records: production, browser tests, dependencies and workflows remain byte-identical. Original three completed twelve-hour records and failed logs remain unchanged.",
+      "Complete the planned atomic main+review publication with appropriate reference freshness checks; present integrated wording to the user only after that transaction actually succeeds."
+    ]
+  }
 }
