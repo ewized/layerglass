@@ -126,9 +126,16 @@ export class DirectPrinterBackend {
   }
 
   ready() {
-    this.promise ||= probeDirectPrinter(this.origin, this.options).then(identity => {
-      this.identity = identity; this.error = null; return identity;
-    }).catch(error => { this.error = error.message; throw error; });
+    if (!this.promise) {
+      const pending = probeDirectPrinter(this.origin, this.options).then(identity => {
+        if (this.promise === pending) { this.identity = identity; this.error = null; }
+        return identity;
+      }).catch(error => {
+        if (this.promise === pending) this.error = error.message;
+        throw error;
+      });
+      this.promise = pending;
+    }
     return this.promise;
   }
 

@@ -117,6 +117,9 @@ After identity is checked on selection and once for the page, in-memory
 state/heartbeats keep the
 existing player subscription contract without network polling. One HTTP webcam
 response supplies multipart frames.
+**Refresh viewer** starts a new identity check. If an earlier check finishes
+later, it cannot restore an old webcam configuration or replace the current
+connection error.
 [`direct-stream.js`](../../apps/web/src/direct-stream.js) only separates JPEG
 bytes; the existing native image element decodes them. It bounds frames to
 2 MiB, headers to 8 KiB, and pending rendering to the newest frame. Object URLs

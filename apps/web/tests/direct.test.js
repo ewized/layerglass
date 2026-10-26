@@ -125,6 +125,53 @@ test('a rejected direct profile remains unsupported rather than silently becomin
   assert.equal(count, 1);
 });
 
+test('a late Direct probe success cannot replace a completed refresh or its current error', async () => {
+  for (const currentFails of [false, true]) {
+    let release; let serverRequests = 0; let stale = false;
+    const first = new Promise(resolve => { release = resolve; });
+    const backend = new DirectPrinterBackend(origin, { fetcher: async url => {
+      const path = new URL(url).pathname;
+      if (path === '/server/info' && ++serverRequests === 1) return first;
+      const data = fixtures({ '/server/webcams/list': { webcams: [{ ...camera,
+        name: stale ? 'Old configuration' : 'Refreshed configuration',
+        stream_url: stale ? '/old-stream' : '/new-stream' }] } });
+      return Response.json({ result: path === '/server/info' && currentFails ? {} : data[path] });
+    } });
+    const old = backend.ready();
+    assert.equal(backend.ready(), old, 'Concurrent reads share the current probe.');
+    const current = backend.refresh();
+    const currentProbe = backend.ready();
+    if (currentFails) await assert.rejects(current);
+    else await current;
+    const identity = backend.identity, error = backend.error;
+    stale = true;
+    release(Response.json({ result: server }));
+    await old;
+    assert.equal(backend.identity, identity, 'The old response cannot replace the latest identity or failure.');
+    assert.equal(backend.error, error);
+    if (!currentFails) assert.equal(backend.status().mjpeg_url, origin + '/new-stream');
+    assert.equal(backend.ready(), currentProbe, 'Completing the older caller does not restore its cached promise.');
+  }
+});
+
+test('a late Direct probe failure cannot mark the refreshed controller unavailable', async () => {
+  let reject; let calls = 0;
+  const first = new Promise((_resolve, fail) => { reject = fail; });
+  const fetcher = fixtureFetcher();
+  const backend = new DirectPrinterBackend(origin, { fetcher: (...args) => ++calls === 1 ? first : fetcher(...args) });
+  const old = backend.ready();
+  const current = backend.refresh();
+  const currentProbe = backend.ready();
+  await current;
+  const identity = backend.identity;
+  reject(new TypeError('An old probe lost its connection.'));
+  await assert.rejects(old);
+  assert.equal(backend.identity, identity);
+  assert.equal(backend.error, null);
+  assert.equal(backend.ready(), currentProbe);
+  assert.equal(calls, 4, 'The stale failure does not start another identity probe.');
+});
+
 const jpeg = new Uint8Array([255, 216, 1, 2, 3, 255, 217]);
 function multipart({ length = true, data = jpeg } = {}) {
   const prefix = new TextEncoder().encode(`--camera\r\nContent-Type: image/jpeg\r\n${length ? `Content-Length: ${data.length}\r\n` : ''}\r\n`);
