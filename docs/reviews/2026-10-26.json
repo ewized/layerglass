@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active:43frozenproposals/40integrated/P38+P42superseded; P43exactauthorcommit implemented and awaiting independent finalREADY. Currentall40CI+hostingPASS. Older-pin native6h beyond5h, finalpending; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
+  "status": "Active:43frozenproposals/41integrated/P38+P42superseded. P43exactintegration405f846 and peer/sourceguardsPASS; new normalall41CI pending publication. Earlierall40CI+hostingPASS. Native6h earlierpinongoing beyond5h; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -5097,7 +5097,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/p42-scope-stop-report.json",
       "risk": "A coverage-only gate hides legitimate events because legacy anchors are rounded; a render-only fix leaves stale activation and destructive retention. A broad model change risks legacy modes. Consumer-only precise views must use the accepted descriptor rather than raw metadata, preserve original session identity and pending summaries, and recompute activation position. Connected native/browser proof remains required; original stopped proposal approvals do not transfer.",
       "validation_plan": "Connected production timeline component in Chromium/WebKit with actual production-recorder-derived metadata/history and real native decoded JPEGs: initial proven0..2/display0..3 hides stored2.5PAUSE; stale rendered/menu actions outside current intersection make0seek/0unfulfilledemit; successor1030 admits the SAME2.5event, pointer/keyboard each commit exactly1seek2.5 with same session/image ownership, correct held pixels and PAUSE at1002.5. Add BOTH exact fractional-origin/anchor payloads from STOP report; assert current precise event mapping, no deletion of valid retained summaries, unchanged original model/controller sessions and exactly mapped seek/emit. Coverage-gate removal must recover upper-tail clamped marker mismatch; precise-view removal must recover fractional hidden/deleted-event negatives. Test inclusive actual bounds, real pruning, offscreen hide/reveal, frozen original display/group placement, pending summaries and stale cached-position activation. Preserve descriptorless/invalid JPEG, H264/file, remote and disabled behavior;0additional telemetry/media requests on render/hover. Run relevantJS units, registered browser-timeline-events, browser-jpeg-clock and browser-preview-loading both engines, docslinks. Obtain independent exact-final READY before integration, then one new normal fullCI on the tested source. No real printer/device/prod/cloud probes, deploy, relaxed assertions or unchanged-source rerun. Preserve all original failed controls and P42STOP reports.",
-      "status": "validated",
+      "status": "committed",
       "ballots": {
         "r02": {
           "vote": "APPROVE",
@@ -5170,7 +5170,7 @@
           "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
         }
       },
-      "implementation_status": "Exact e596587 READY from independentR03 native/full diff and R09source NO_FINDINGS; all exact reports/manifests/source guarded. Integration authorized by10fresh votes, original6inparent1eaa; acceptance committed BEFORE cherry-pick.",
+      "implementation_status": "Integrated exact reviewed e596587 as405f846; all3postmergehashes identical, no other non-audit delta to greenall40sourcee652. IndependentR03nativeREADY/R09sourceNO_FINDINGS and authorchecks passed. New normal combined-sourceCI next; longnative6h remains earlierpin.",
       "implementation": {
         "author_head": "e5965875f3a55954908b786d0f4e910256e46933",
         "author_base": "1eaa2b4393dc8133b0f17bff0973ee3dbd96d96e",
@@ -5194,7 +5194,12 @@
           "r09_sha256": "d25a7580ff6e96610c3327dbdc76aa5899f407686a78b670e28a495a6a05a9ea",
           "r09_status": "NO_FINDINGS"
         },
-        "integration": "NOT YET"
+        "integration": "405f846fa29912d4925fe1a181f5dccdd5b87746",
+        "postmerge_source_sha256": {
+          "apps/web/src/components/timeline-events.js": "bac7d6457acb86ea7f257323f0af7e1bec4416f6377f698df569e70f6eb0249c",
+          "apps/web/tests/browser-timeline-events.js": "be8757f3579753c6eab0a6cbc15eff0cc7e35ccf580f4c2668266af1cace6713",
+          "docs/timeline-events.md": "4ca8b37fe5983310eda7531fc27c359ba1313458e3798ff33c4d53d29e0c1162"
+        }
       }
     }
   ],
@@ -5366,6 +5371,10 @@
     {
       "sha": "0835f88dbb6604b778afbfa4174fb9efad7e18f7",
       "summary": "P41 test(player): establish and log native/controller recovery intent, preserving every original post-error contract;10fresh approvals plus exact independentREADY."
+    },
+    {
+      "sha": "405f846fa29912d4925fe1a181f5dccdd5b87746",
+      "summary": "P43: precise valid-owned JPEG event view at both component calls, fresh mapped-ID activation; exact3files, independently READY before integration."
     }
   ],
   "activity": [
@@ -6525,6 +6534,11 @@
       "at": "2026-10-26T14:14:34Z",
       "type": "preintegration-acceptance",
       "message": "P43 exacte596587 source/clean/3files,parent1eaa6freshcommittedvotes,current10freshvotes,canonicalcodee652guarded. R03exactREADY58e15b48.../35hashes andR09NO_FINDINGSd25a7580.../6Gitsourcehashes verified; authorreport0b921923.../53manifestentries verified. Committing acceptance before guarded cherry-pick. No frozen scope expansion/other-source delta."
+    },
+    {
+      "at": "2026-10-26T14:15:01Z",
+      "type": "integration",
+      "message": "Guarded P43cherry-pick405f846 after committed exactpeer acceptance3ca0655. Exact3filehashes preserved, allotherapp/test/build/productdocs unchanged vsall40CIe652.41corrections integrated;2superseded drafts unintegrated. Preparing one normalCI on newtestedcombinedsource, not rerunningunchangedsource."
     }
   ],
   "validation": [
@@ -7003,6 +7017,10 @@
     {
       "status": "INDEPENDENT_SOURCE_NO_FINDINGS",
       "summary": "R09 exactP43e596587 source/test/docs reviewd25a7580... NO_FINDINGS; rootverified6Git-source hashes. Complete712-line browser addition/provenance/readiness/offset/focus/fallback assessment, original112-lineH264body unchanged, author53artifacts verified. No runtime; complements independentR03 nativeREADY, original failed adapters and unknown transparent-pixel cause qualified."
+    },
+    {
+      "status": "POSTINTEGRATION_EXACT_SOURCE_PASS",
+      "summary": "P43 integrated as405f846 only after acceptancecommit3ca0655. Root verifies all3final file hashes equal author/peer exact source and only those3files plus2audit-ledger files differ from greenall40e652. Author118JS/35docs/3browser suites bothengines/nativepositive+negative and independentR03/R09 checks recorded; new normalCI to validate fullcombined41source."
     }
   ],
   "implementation_worktrees": [
