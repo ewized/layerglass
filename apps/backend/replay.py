@@ -499,7 +499,11 @@ class ReplayBuffer:
                 timestamp = relay.last_segment_at
             if frame and timestamp != archive.last_jpeg_at:
                 path = archive.directory / f'frame-{archive.sequence}.jpg'
+                # Finish fallible file IO before publishing a capture's tail,
+                # position or clock. A caught storage error must retry from the
+                # previous capture, including when the new file was written.
                 path.write_bytes(frame)
+                size = path.stat().st_size
                 if archive.last_jpeg_at is not None:
                     duration = timestamp - archive.last_jpeg_at
                     # Preserve the existing fallback for a backwards clock;
@@ -511,8 +515,9 @@ class ReplayBuffer:
                 # Hold the preceding still until this capture, then give the
                 # new still a provisional tail. Keep its start even if a later
                 # page's first-frame boundary prunes that still while waiting.
-                archive.last_jpeg_position = archive.position
-                self._append(archive, path, 1, epoch=timestamp)
+                position = archive.position
+                self._append(archive, path, 1, epoch=timestamp, size=size)
+                archive.last_jpeg_position = position
                 archive.last_jpeg_at = timestamp
                 archive.error = None
             return
@@ -553,7 +558,7 @@ class ReplayBuffer:
             archive.error = None
 
     @staticmethod
-    def _append(archive, path, duration, discontinuity=False, date=None, epoch=None):
+    def _append(archive, path, duration, discontinuity=False, date=None, epoch=None, *, size=None):
         if date:
             try:
                 epoch = datetime.fromisoformat(date.replace('Z', '+00:00')).timestamp()
@@ -567,7 +572,7 @@ class ReplayBuffer:
         if discontinuity:
             archive.discontinuities += 1
         archive.fragments.append(Fragment(archive.sequence, archive.position, duration,
-                                         path, path.stat().st_size, discontinuity,
+                                         path, path.stat().st_size if size is None else size, discontinuity,
                                          archive.discontinuities, date))
         archive.sequence += 1
         archive.position += duration

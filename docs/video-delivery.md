@@ -50,6 +50,9 @@ wall duration without inventing intermediate images. Later pages use their
 actual opening time as origin and can wait for a later first available frame;
 they cannot access an earlier page's frames or printer readings. Finalizing a
 tail preserves completed earlier starts and the same retention/preview bounds.
+JPEG writes and file-metadata checks finish before publishing a new capture's
+tail, position and clock. A temporary file error leaves those values at the
+previous accepted capture, so retrying cannot count the same interval twice.
 
 While pages own an archive, retention drops a fragment from byte accounting only
 after its file has been deleted. If deletion temporarily fails, maintenance keeps the

@@ -1,3 +1,4 @@
+import errno
 import json
 from pathlib import Path
 import tempfile
@@ -76,6 +77,101 @@ class JpegReplayTests(unittest.TestCase):
         self.source.publish(timestamp)
         with self.replay.lock:
             self.replay._collect(self.replay.archives[CAMERA], self.source)
+
+    def worker_tick(self):
+        # Run the actual maintenance/error handler for one deterministic tick.
+        with patch.object(self.replay.stop_event, 'wait', side_effect=[False, True]):
+            self.replay._run()
+
+    def capture_state(self, archive):
+        return (archive.position, archive.last_jpeg_position, archive.last_jpeg_at, archive.sequence,
+                [(item.sequence, item.start, item.duration) for item in archive.fragments], list(archive.clocks))
+
+    def fail_written_frame_stat(self, archive):
+        successor = archive.directory / f'frame-{archive.sequence}.jpg'
+        stat = Path.stat
+        self.stat_failures = []
+
+        def fail(path, *args, **kwargs):
+            if path == successor:
+                self.assertEqual(path.read_bytes(), self.source.frame, 'Inject only after the actual frame write.')
+                self.stat_failures.append(path)
+                raise OSError(errno.EIO, 'Fixture post-write JPEG metadata failure.')
+            return stat(path, *args, **kwargs)
+
+        return patch.object(Path, 'stat', fail)
+
+    def test_caught_stat_failure_preserves_tail_and_same_capture_retry(self):
+        self.now = 1020
+        later = self.replay.create(CAMERA)['session_id']
+        archive = self.replay.archives[CAMERA]
+        before = self.capture_state(archive)
+        self.now = 1030
+        self.source.publish(1030)
+        with self.fail_written_frame_stat(archive), self.assertLogs('printer-camera', level='WARNING'):
+            self.worker_tick()
+        self.assertEqual(len(self.stat_failures), 1)
+        self.assertEqual(self.capture_state(archive), before)
+        self.assertEqual(self.replay.sessions[later].origin, 20)
+        self.assertEqual(archive.error, 'The rewind buffer is temporarily unavailable.')
+        self.worker_tick()  # Retry the exact same captured frame through the caught-error path.
+        self.assertIsNone(archive.error)
+        self.assertEqual(self.replay.status(later)['start_seconds'], 10)
+        for epoch in range(1031, 1066):
+            self.capture(epoch)
+        self.assertEqual([item.start for item in list(archive.fragments)[:3]], [0, 30, 31])
+        self.assertEqual(self.replay.media(self.token, at=30.5).read_bytes(), b'jpeg-at-1030')
+        self.assertEqual(self.replay.media(self.token, at=31.1).read_bytes(), b'jpeg-at-1031')
+        self.assertEqual(self.replay.status(self.token)['clock'], [{'position': 0, 'time': 1000}])
+
+    def test_skipping_failed_capture_preserves_new_page_origin_and_retention(self):
+        archive = self.replay.archives[CAMERA]
+        before = self.capture_state(archive)
+        self.now = 1030
+        self.source.publish(1030)
+        with self.fail_written_frame_stat(archive), self.assertLogs('printer-camera', level='WARNING'):
+            self.worker_tick()
+        self.assertEqual(self.capture_state(archive), before)
+        self.source.state = 'reconnecting'
+        self.now = 1030.2
+        later = self.replay.create(CAMERA)['session_id']
+        self.assertAlmostEqual(self.replay.sessions[later].origin, 30.2)
+        self.assertFalse(self.replay.status(later)['ready'])
+        self.capture(1031)  # The failed 1030 capture is no longer the live image.
+        self.assertEqual([item.start for item in archive.fragments], [0, 31])
+        self.assertEqual(self.replay.status(later)['start_seconds'], 0.8)
+        self.assertEqual(self.replay.status(later)['clock'], [{'position': -30.2, 'time': 1000}])
+        self.assertIsNone(self.replay.media(later, sequence=0))
+        self.assertEqual(self.replay.media(later, at=0.8).read_bytes(), b'jpeg-at-1031')
+        self.replay.release(self.token)
+        self.replay.max_bytes = 1
+        self.now = 1031.025
+        self.source.publish(self.now)
+        self.worker_tick()
+        self.assertEqual(len(archive.fragments), 1)
+        self.assertAlmostEqual(archive.fragments[0].start, 31.025)
+        self.assertAlmostEqual(archive.last_jpeg_position, 31.025)
+        self.assertEqual(archive.last_jpeg_at, 1031.025)
+        self.assertEqual(self.replay.status(later)['start_seconds'], 0.825)
+        self.assertTrue(self.replay.status(later)['limited'])
+
+    def test_first_jpeg_stat_failure_leaves_no_unpublished_clock_anchor(self):
+        self.replay.release(self.token)
+        self.source.state = 'reconnecting'
+        self.now = 1020
+        token = self.replay.create(CAMERA)['session_id']
+        archive = self.replay.archives[CAMERA]
+        before = self.capture_state(archive)
+        self.now = 1030
+        self.source.publish(1030)
+        with self.fail_written_frame_stat(archive), self.assertLogs('printer-camera', level='WARNING'):
+            self.worker_tick()
+        self.assertEqual(len(self.stat_failures), 1)
+        self.assertEqual(self.capture_state(archive), before)
+        self.assertFalse(self.replay.status(token)['ready'])
+        self.worker_tick()
+        self.assertTrue(self.replay.status(token)['ready'])
+        self.assertEqual(self.replay.status(token)['clock'], [{'position': 0, 'time': 1030}])
 
     def test_positive_capture_intervals_finalize_only_the_preceding_still(self):
         for timestamp in (1000.25, 1001.75, 1030, 1031):
