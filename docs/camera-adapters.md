@@ -56,6 +56,11 @@ empty results; Bambu's bounded SSDP lookup listens for two seconds. No cache
 timer initiates discovery or stores credentials. Unexpected scan-level errors
 apply a 10–120-second exponential cooldown before another requested scan.
 
+`POST /api/discover` returns queue/retry information and scan progress without
+the raw `found` candidates. Public printer results come from the sanitized
+`/api/cameras` catalog. Private candidates and their verified model/serial remain
+available for admission and saved-pairing checks.
+
 Only the winning model's approved camera protocol/port can be listed. A generic
 broker, unverified certificate, SSDP name, open port, or generic video response
 is insufficient. SSDP enriches a verified printer's name without overwriting

@@ -794,9 +794,11 @@ class ViewerHandler(BaseHTTPRequestHandler):
             if not registry:
                 return self._json(404, {'error': 'Discovery is unavailable.'})
             queued = registry.discovery.start()
+            progress = registry.discovery.status()
+            progress.pop('found', None)  # Public printer identities come from the sanitized catalog.
             return self._json(202, {'ok': True, 'queued': queued,
                                     'retry_after_seconds': registry.discovery.retry_after(),
-                                    'discovery': registry.discovery.status()})
+                                    'discovery': progress})
         if configure_match:
             if not registry:
                 return self._json(404, {'error': 'Printer is unavailable.'})

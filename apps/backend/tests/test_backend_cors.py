@@ -1,10 +1,17 @@
 """Opted-in hosted frontends use real CORS requests without opening other origins."""
+from copy import deepcopy
 from http.client import HTTPConnection
 import json
+import os
+import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 
-from app import ViewerServer, configured_origins
+from app import Settings, ViewerServer, configured_origins
+from cameras import CameraRegistry
+from providers import endpoint
+from test_cameras import FakeRelay, FakeTelemetry
 from test_events import Registry, Replay, CAMERA, TOKEN
 
 
@@ -61,6 +68,83 @@ class BackendCorsTests(unittest.TestCase):
         response = self.request(f'/api/snapshot?camera={CAMERA}&session={TOKEN}')
         self.assertEqual(response.status, 200)
         self.assertEqual(json.loads(response.read())['replay']['session_id'], TOKEN)
+
+    def scan_registry(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        environment = patch.dict(os.environ, {'CAMERA_DATA_DIR': temporary.name, 'DISCOVERY_CIDRS': ''})
+        environment.start()
+        self.addCleanup(environment.stop)
+        code = 'fixture-scan-code'
+        source = f'rtsps://bblp:{code}@192.0.2.1:322/streaming/live/1'
+        registry = CameraRegistry(Settings(source), FakeRelay, telemetry_factory=FakeTelemetry)
+        self.addCleanup(registry.close)
+        discovery = registry.discovery
+        item = dict(endpoint(source, provider='bambu'), model='N6', serial='20P000000000001',
+                    identification='mqtt', name=f'Printer {code} {source}')
+        discovery.found = [item]
+        discovery.cache.put((item['host'], item['port'], item['kind']), item, 100)
+        discovery.clock = lambda: 100
+        discovery.state = 'done'
+        discovery.started = discovery.completed = 100
+        discovery.finished_at = 1
+        discovery.checked, discovery.total, discovery.cached, discovery.probed = 5, 6, 2, 3
+        discovery.names_cached = True
+        self.server.registry = registry
+        response = self.request('/api/cameras')
+        self.assertEqual(response.status, 200)
+        catalog = json.loads(response.read())
+        self.assertNotIn(code, json.dumps(catalog))
+        self.assertNotIn(source, json.dumps(catalog))
+        self.assertTrue(catalog['cameras'][0]['configured'])
+        return registry, code, source
+
+    def assert_public_scan(self, registry, code, source, queued):
+        discovery = registry.discovery
+        candidates = deepcopy(discovery.found)
+        cache = deepcopy(discovery.cache.entries)
+        binding = deepcopy((registry.sources, registry.identities, registry.quarantined))
+        for origin, headers in (('https://untrusted.test', {'X-Viewer-Request': '1'}),
+                                ('https://app.layer.glass', {})):
+            response = self.request('/api/discover', 'POST', origin=origin, headers=headers, body='{}')
+            self.assertEqual(response.status, 403)
+            response.read()
+        response = self.request('/api/discover', 'POST', headers={'X-Viewer-Request': '1'}, body='{}')
+        self.assertEqual(response.status, 202)
+        self.assertEqual(response.getheader('Access-Control-Allow-Origin'), 'https://app.layer.glass')
+        self.assertIsNone(response.getheader('Access-Control-Allow-Credentials'))
+        result = json.loads(response.read())
+        progress = {key: value for key, value in discovery.status().items() if key != 'found'}
+        self.assertEqual(result, {'ok': True, 'queued': queued,
+                                  'retry_after_seconds': discovery.retry_after(), 'discovery': progress})
+        self.assertNotIn('found', result['discovery'])
+        self.assertNotIn(code, json.dumps(result))
+        self.assertNotIn(source, json.dumps(result))
+        self.assertEqual(discovery.found, candidates)
+        self.assertEqual(discovery.cache.entries, cache)
+        self.assertEqual((registry.sources, registry.identities, registry.quarantined), binding)
+        camera = registry._source_camera(candidates[0]['id'])
+        self.assertEqual((camera['model'], camera['serial']), ('N6', '20P000000000001'))
+
+    def test_scan_cooldown_returns_only_public_progress(self):
+        registry, code, source = self.scan_registry()
+        self.assert_public_scan(registry, code, source, queued=False)
+        self.assertIsNone(registry.discovery.thread)
+
+    def test_queued_scan_keeps_prior_candidates_private(self):
+        registry, code, source = self.scan_registry()
+        registry.discovery.started = registry.discovery.completed = 89
+        finish = threading.Event()
+        # Exercise actual queueing without starting network probes or name lookup.
+        with patch.object(registry.discovery, '_targets', return_value=[]), \
+                patch.object(registry.discovery, '_run', side_effect=finish.wait):
+            try:
+                self.assert_public_scan(registry, code, source, queued=True)
+            finally:
+                finish.set()
+                if registry.discovery.thread:
+                    registry.discovery.thread.join(timeout=2)
+        self.assertFalse(registry.discovery.thread.is_alive())
 
     def test_backend_only_mode_disables_shell_but_keeps_hosted_apis(self):
         self.server.serve_ui = False
