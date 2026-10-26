@@ -7,8 +7,8 @@ import { tmpdir } from 'node:os';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const targets = Object.freeze({
-  site: { name: 'layerglass-site', domain: 'layer.glass' },
-  web: { name: 'layerglass-web', domain: 'app.layer.glass' },
+  'layerglass-site': { name: 'layerglass-site', domain: 'layer.glass' },
+  layerglass: { name: 'layerglass-web', domain: 'app.layer.glass' },
 });
 
 function target(name) {
@@ -35,7 +35,7 @@ export async function checkBuild(name, project = root) {
       ['data', 'recordings', 'buffer', 'app.py', 'cameras.py'].includes(entry))) {
     throw new Error(`Unexpected private/backend file in ${name} output`);
   }
-  if (name === 'web') {
+  if (name === 'layerglass') {
     if (!/<meta\s+name="layerglass-backend"\s+content="choose"\s*\/?\s*>/.test(html)) {
       throw new Error('Hosted web build must require a backend choice');
     }
@@ -47,7 +47,9 @@ export async function checkBuild(name, project = root) {
     await access(join(directory, 'static/backend/index.js'));
     await access(join(directory, 'static/bootstrap.js'));
     await access(join(directory, 'static/components/backend-picker.js'));
-    await access(join(directory, 'static/demo/printer.mp4'));
+    await access(join(directory, 'demo-backend/src/index.js'));
+    await access(join(directory, 'local-backend/src/index.js'));
+    await access(join(directory, 'demo-backend/src/demo/printer.mp4'));
   }
   return { configPath, directory };
 }
@@ -61,7 +63,8 @@ export async function prepare(name, project = root) {
 export async function verify(name, { fetchImpl = fetch, origin } = {}) {
   const selected = target(name);
   const base = origin || `https://${selected.domain}`;
-  const paths = name === 'web' ? ['/', '/static/bootstrap.js', '/static/player.js', '/service-worker.js', '/manifest.webmanifest'] : ['/'];
+  const paths = name === 'layerglass' ? ['/', '/static/bootstrap.js', '/static/player.js', '/service-worker.js', '/manifest.webmanifest',
+    '/demo-backend/src/index.js', '/local-backend/src/index.js'] : ['/'];
   for (const path of paths) {
     const response = await fetchImpl(new URL(path, base), { redirect: 'error', signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error(`${selected.domain}${path} returned ${response.status}`);
@@ -69,12 +72,12 @@ export async function verify(name, { fetchImpl = fetch, origin } = {}) {
     if (!policy.includes("frame-ancestors 'none'") || response.headers.get('x-content-type-options') !== 'nosniff') {
       throw new Error(`Security headers missing on ${selected.domain}${path}`);
     }
-    if (name === 'web' && response.headers.get('cache-control') !== 'no-store') {
+    if (name === 'layerglass' && response.headers.get('cache-control') !== 'no-store') {
       throw new Error(`Hosted app caching unexpectedly enabled on ${path}`);
     }
     if (path === '/') {
       const html = await response.text();
-      if (name === 'web' && !/<meta\s+name="layerglass-backend"\s+content="choose"/.test(html)) {
+      if (name === 'layerglass' && !/<meta\s+name="layerglass-backend"\s+content="choose"/.test(html)) {
         throw new Error('Deployed app does not require a backend choice');
       }
     } else if (path.endsWith('.js')) {

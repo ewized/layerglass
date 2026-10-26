@@ -12,10 +12,10 @@ unit tests, validates documentation/version metadata, starts a generated-camera
 fixture, and runs representative Chromium/WebKit regressions. It needs Docker,
 not a printer or host-installed language toolchains. `unit` and `browser` modes
 run the corresponding portion. Logs and screenshots go to ignored `test-results/`.
-The complete run also builds the Nx backend/web/site projects twice to verify
+The complete run also builds all five Nx application/backend projects twice to verify
 cache restoration and exports `test-results/project-graph.json`. `workspace`
 mode runs that packaging/graph/documentation check by itself.
-The independent `site:test` target writes screenshots into its checkout's
+The independent `layerglass-site:test` target writes screenshots into its checkout's
 `test-results/` directory. `LAYERGLASS_SITE_TEST_RESULTS` selects another output
 directory; the temporary-copy workspace harness defaults it to the mounted
 artifact collector so those screenshots survive container cleanup.
@@ -30,7 +30,8 @@ Pass representative suite names to focus a browser run, for example
 | Live-relative timeline and gesture commits | `timeline.test.js`, `scrub-preview.test.js`, browser scrub-commit suite |
 | Observed print-event markers | `timeline-events.test.js`, browser timeline-events suite |
 | Backend selection and CORS | `backend.test.js`, `test_backend_cors.py`, browser backends/backend-origin suites |
-| Direct printer admission and live-only MJPEG | `direct.test.js`, browser direct suite (generated HTTP multipart media, no printer) |
+| Direct printer admission and live-only MJPEG | `apps/local-backend/tests/direct.test.js`, browser direct suite (generated HTTP multipart media, no printer) |
+| Browser backend modules and public roots | `apps/demo-backend/tests/demo.test.js`, `apps/local-backend/tests/file.test.js`, `test_browser_modules.py`, static player smoke checks |
 | Local thumbnail retention, storage and loading | `preview-history.test.js`, `browser-preview-storage.js`, `browser-preview-buffer.js`, `browser-preview-loading.js` |
 | Media/platform UI | `media.test.js`, `cast-sender.test.js`, browser fullscreen/Google Cast suites |
 | Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
@@ -38,7 +39,7 @@ Pass representative suite names to focus a browser run, for example
 | Delivery artifacts and public routing | `infra/cloudflare/tests/delivery.test.mjs`, `hosting.test.mjs`, local Wrangler checks |
 | Shell/update behavior | `test_pwa.py`, `pwa.test.js`, browser PWA suite |
 
-The selected browser list is maintained in [`apps/web/tests/run-browser.js`](../../apps/web/tests/run-browser.js).
+The selected browser list is maintained in [`apps/layerglass/tests/run-browser.js`](../../apps/layerglass/tests/run-browser.js).
 GitHub CI also runs the independent hosting workflow: it tests artifact source
 identity, tampered/missing/extra files, private output and symlink rejection,
 public-byte verification, headers and real 404 routing before publication.
@@ -91,15 +92,15 @@ read-only (substitute the daemon-visible path if different):
 ```sh
 docker build -t local/layerglass-test .
 docker run --rm --init --name codex__layerglass_python_focus \
-  -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/app/apps/backend \
-  -v "$PWD:/app:ro" -w /app/apps/backend \
+  -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/app/apps/python-backend \
+  -v "$PWD:/app:ro" -w /app/apps/python-backend \
   local/layerglass-test python -B -m unittest discover -s tests -p test_discovery_cache.py -v
 docker image rm local/layerglass-test
 ```
 
-`apps/web/tests/run-js.sh` copies sources into a temporary directory, installs locked npm
+`apps/layerglass/tests/run-js.sh` copies sources into a temporary directory, installs locked npm
 dependencies there, and runs `npm test` by default. Append a script such as
-`apps/web/tests/browser-esm.js` for a focused browser run. Use the pinned Playwright image
+`apps/layerglass/tests/browser-esm.js` for a focused browser run. Use the pinned Playwright image
 from `scripts/check.sh`. Point `VIEWER_URL` at the generated fixture, ideally
 `http://127.0.0.1:8080` in its shared Docker network namespace for secure-context
 storage/service-worker checks. No `node_modules` directory is written to the checkout.

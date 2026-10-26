@@ -1,13 +1,13 @@
 {
-  "name": "layerglass",
+  "name": "layerglass-workspace",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "nx test web",
-    "test:python": "nx test backend",
-    "test:browser": "nx run web:browser",
-    "build": "nx run-many -t build --projects=backend,web,site",
+    "test": "nx run-many -t test --projects=layerglass,demo-backend,local-backend",
+    "test:python": "nx test python-backend",
+    "test:browser": "nx run layerglass:browser",
+    "build": "nx run-many -t build --projects=python-backend,layerglass,demo-backend,local-backend,layerglass-site",
     "check:docs": "nx run docs:check",
     "graph": "nx graph"
   },

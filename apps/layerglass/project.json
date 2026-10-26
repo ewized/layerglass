@@ -1,0 +1,72 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "layerglass",
+  "projectType": "application",
+  "sourceRoot": "apps/layerglass/src",
+  "tags": [
+    "type:application",
+    "runtime:browser",
+    "scope:player"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/scripts/build-static.mjs"
+      ],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/layerglass"
+      ],
+      "options": {
+        "command": "node scripts/build-static.mjs layerglass"
+      },
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default"
+      ],
+      "outputs": [],
+      "options": {
+        "command": "node --experimental-vm-modules --test apps/layerglass/tests/*.test.js"
+      }
+    },
+    "browser": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "./scripts/check.sh browser"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "options": {
+        "command": "docker compose -f compose.dev.yaml up --build viewer"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "continuous": true,
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "node scripts/serve-static.mjs layerglass 8101"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "demo-backend",
+    "local-backend"
+  ]
+}

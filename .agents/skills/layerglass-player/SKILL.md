@@ -32,7 +32,7 @@ Use [Web Component interfaces](../../../docs/web-components.md) for UI work and
 
 Use the relevant unit and fixture browser suites listed in
 [testing](../../../docs/development/testing.md). For Playwright module state,
-use `apps/web/tests/player-page.js` and synchronous readiness predicates; an async
+use `apps/layerglass/tests/player-page.js` and synchronous readiness predicates; an async
 `waitForFunction` predicate can accidentally succeed on the Promise itself.
 Physical PiP, AirPlay and hardware-decoder behavior need device verification;
 fixture coverage should be reported separately.

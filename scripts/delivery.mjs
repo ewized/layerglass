@@ -17,10 +17,10 @@ function revision(value) {
 async function assets(project) {
   const directory = join(project, 'dist/apps'), files = [];
   const entries = await readdir(directory, { withFileTypes: true });
-  if (entries.some(entry => !['site', 'web', manifestName].includes(entry.name) ||
+  if (entries.some(entry => !['layerglass-site', 'layerglass', manifestName].includes(entry.name) ||
         entry.name === manifestName && !entry.isFile()) ||
-      !['site', 'web'].every(name => entries.some(entry => entry.name === name && entry.isDirectory()))) {
-    throw new Error('Delivery output must contain only the site and web builds');
+      !['layerglass-site', 'layerglass'].every(name => entries.some(entry => entry.name === name && entry.isDirectory()))) {
+    throw new Error('Delivery output must contain only layerglass and layerglass-site builds');
   }
   async function walk(relative) {
     for (const entry of await readdir(join(directory, relative), { withFileTypes: true })) {
@@ -35,8 +35,8 @@ async function assets(project) {
       } else throw new Error(`Unsupported delivery entry: ${path}`);
     }
   }
-  for (const name of ['site', 'web']) await walk(name);
-  if (!['site/index.html', 'web/index.html'].every(path => files.some(file => file.path === path))) {
+  for (const name of ['layerglass-site', 'layerglass']) await walk(name);
+  if (!['layerglass-site/index.html', 'layerglass/index.html'].every(path => files.some(file => file.path === path))) {
     throw new Error('Delivery needs both application entrypoints');
   }
   return files.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
@@ -62,7 +62,7 @@ export async function verifyDelivery(source, project = root) {
 
 export async function verifyPublished(source, { project = root, fetchImpl = fetch } = {}) {
   const manifest = await verifyDelivery(source, project);
-  const selected = { site: ['index.html'], web: ['index.html', 'static/bootstrap.js', 'service-worker.js'] };
+  const selected = { 'layerglass-site': ['index.html'], layerglass: ['index.html', 'static/bootstrap.js', 'service-worker.js'] };
   for (const [name, paths] of Object.entries(selected)) {
     for (const path of paths) {
       const expected = manifest.files.find(file => file.path === `${name}/${path}`);

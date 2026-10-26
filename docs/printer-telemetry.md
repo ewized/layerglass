@@ -115,14 +115,14 @@ Older missing readings stay unknown. This history is temporary server/browser me
 settings or the service worker's offline cache. Synchronization is limited by
 the printer report cadence and camera transport timing.
 
-`apps/backend/tests/test_printer_history.py` covers immutable nested samples, compression,
+`apps/python-backend/tests/test_printer_history.py` covers immutable nested samples, compression,
 byte/count limits, program
 clocks and reconnect gaps, incremental updates, session isolation, pruning,
-bounds, uncached HTTP responses and expiration. `apps/web/tests/printer-history.test.js`
+bounds, uncached HTTP responses and expiration. `apps/layerglass/tests/printer-history.test.js`
 checks playhead lookup, pause, zero/future values, cache limits, cancellation,
 same-window/session ownership, timeout suppression, gaps and recovery without
-polling. `apps/web/tests/browser-printer-history.js` uses
-`apps/backend/tests/fixture_server.py` with `FIXTURE_TELEMETRY=1` to check changing readings
+polling. `apps/layerglass/tests/browser-printer-history.js` uses
+`apps/python-backend/tests/fixture_server.py` with `FIXTURE_TELEMETRY=1` to check changing readings
 through real Chromium/WebKit video playback, pause, rewind, forward replay and
 Live. Set `TRANSPORT=hls` to exercise HLS fallback.
 The default `browser-history-reconnect.js` fixture connects the actual Stats,

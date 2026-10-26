@@ -54,8 +54,8 @@ IDs or tags. It writes ignored logs/artifacts to `test-results/`. To reuse an
 already built runtime image, set `LAYERGLASS_TEST_IMAGE`; the script will not
 build over or remove that image.
 With the project Node dependencies installed in a development environment,
-`npx nx show projects`, `npx nx test web`, and `npx nx build site` address the
-independent modules. `npx nx test backend` and `npx nx run web:browser` delegate
+`npx nx show projects`, `npx nx test layerglass`, and `npx nx build layerglass-site` address the
+independent modules. `npx nx test python-backend` and `npx nx run layerglass:browser` delegate
 to Docker fixture checks. See the [workspace map](../architecture/workspace.md)
 for all targets and static preview commands.
 

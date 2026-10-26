@@ -18,10 +18,12 @@ targets, paths and static-hosting outputs.
   remains portable and stores persistent printer settings separately from footage.
 - The runtime image contains no test toolchain. Node/Playwright dependencies are
   installed in disposable containers from the lockfile, not into the host workspace.
-- Python and printer providers live in `apps/backend/`; native browser ESM and
-  their tests live in `apps/web/`. The product website is independent in `apps/site/`.
+- Python and printer providers live in `apps/python-backend/`; native browser ESM and
+  their tests live in `apps/layerglass/`. The product website is independent in `apps/layerglass-site/`.
+  The browser providers live in `apps/demo-backend/` and `apps/local-backend/`,
+  with independent build/test targets and explicit player dependencies.
   `/static/*` is a public URL and does not change when source directories move.
-- `nx build web` emits `dist/apps/web` with an explicit backend chooser.
+- `nx build layerglass` emits `dist/apps/layerglass` with an explicit backend chooser.
   Python-served source keeps its Python default. Never let a public static host
   silently probe a visitor's LAN or proxy private printer feeds.
 - Nx remote caching is not configured. Cache static/source builds and deterministic

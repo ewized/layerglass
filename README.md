@@ -57,7 +57,7 @@ docker compose -f compose.dev.yaml up --build
 - [Documentation home](docs/index.md) — open `docs/` as an Obsidian vault, or read it on GitHub.
 - [Development workflow](docs/development/workflow.md) · [Testing](docs/development/testing.md) · [CI/CD](docs/development/ci-cd.md)
 - [Architecture](docs/architecture/overview.md) · [Approved printer adapters](docs/camera-adapters.md)
-- [Nx workspace and targets](docs/architecture/workspace.md) — Python backend, native web app and product website.
+- [Nx workspace and targets](docs/architecture/workspace.md) — `python-backend`, `demo-backend`, `local-backend`, `layerglass` and `layerglass-site`.
 - [Backend providers](docs/architecture/backend-providers.md) · [Timeline events](docs/timeline-events.md) · [Cloudflare hosting](docs/operations/cloudflare.md)
 - [GitHub deployment settings](docs/operations/github-deployment.md) — the two secrets needed for automatic site and app deployment.
 - [AGENTS.md](AGENTS.md) — project guidelines and task-specific skill router.
@@ -71,4 +71,4 @@ publish versioned images in the separate `stable` channel. Local installation
 operators choose when to pull and apply an image; see [CI/CD](docs/development/ci-cd.md).
 
 Project home: [layer.glass](https://layer.glass). A project license has not yet
-been selected. Bundled third-party code retains its [license notices](apps/web/src/vendor/LICENSE).
+been selected. Bundled third-party code retains its [license notices](apps/layerglass/src/vendor/LICENSE).

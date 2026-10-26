@@ -8,8 +8,8 @@ tags: [architecture]
 [Vault home](../index.md)
 
 LayerGlass keeps its established Python modules and native ES modules inside
-an [Nx workspace](workspace.md). The Python backend, browser application and
-product website have independent targets. The backend can still serve the
+an [Nx workspace](workspace.md). The Python backend, demo backend, local backend, player and marketing site have
+independent Nx targets. The backend can still serve the
 browser application together in one Docker container.
 An explicit [backend provider](backend-providers.md) selects that service or an
 entirely browser-run demo/local video. Standalone hosting first asks for a backend;
@@ -17,17 +17,18 @@ the Python-served viewer defaults to its own backend.
 
 | Part | Source | Responsibility |
 | --- | --- | --- |
-| HTTP application | [`app.py`](../../apps/backend/app.py) | Configuration, routes, relay lifecycle, SSE and static shell |
-| Printer registry | [`cameras.py`](../../apps/backend/cameras.py), [`identity.py`](../../apps/backend/identity.py) | Known printers, per-printer credentials, identity and relay ownership |
-| Discovery | [`discovery.py`](../../apps/backend/discovery.py) | Bounded camera-port scans, identity races, caching and backoff |
-| Manufacturer adapters | [`apps/backend/providers/`](../../apps/backend/providers/) | Approved profiles, transport setup, identity and read-only telemetry |
-| Session DVR | [`replay.py`](../../apps/backend/replay.py) | Retained video segments, time mapping, telemetry history and preview backup |
-| Player controller | [`apps/web/src/player.js`](../../apps/web/src/player.js), [`apps/web/src/replay.js`](../../apps/web/src/replay.js) | One media element, playback state and live-relative timeline |
-| UI elements | [`apps/web/src/components/`](../../apps/web/src/components/) | Light-DOM Web Components and accessible player interactions |
-| Transport and lifecycle | [`apps/web/src/video-stream.js`](../../apps/web/src/video-stream.js), [`apps/web/src/updates.js`](../../apps/web/src/updates.js) | Continuous video response, SSE metadata, recovery and fallback |
-| Backend providers | [`apps/web/src/backend/`](../../apps/web/src/backend/) | Selected-origin Python transport or browser-only media and simulated demo data |
-| Print events | [`apps/web/src/timeline-events.js`](../../apps/web/src/timeline-events.js) | Observed state transitions mapped onto retained video time |
-| Local previews | [`apps/web/src/preview-history.js`](../../apps/web/src/preview-history.js), [`apps/web/src/preview-storage.js`](../../apps/web/src/preview-storage.js) | Sample decoded frames, bounded RAM/IndexedDB and session cleanup |
+| HTTP application | [`app.py`](../../apps/python-backend/app.py) | Configuration, routes, relay lifecycle, SSE and static shell |
+| Printer registry | [`cameras.py`](../../apps/python-backend/cameras.py), [`identity.py`](../../apps/python-backend/identity.py) | Known printers, per-printer credentials, identity and relay ownership |
+| Discovery | [`discovery.py`](../../apps/python-backend/discovery.py) | Bounded camera-port scans, identity races, caching and backoff |
+| Manufacturer adapters | [`apps/python-backend/providers/`](../../apps/python-backend/providers/) | Approved profiles, transport setup, identity and read-only telemetry |
+| Session DVR | [`replay.py`](../../apps/python-backend/replay.py) | Retained video segments, time mapping, telemetry history and preview backup |
+| Player controller | [`apps/layerglass/src/player.js`](../../apps/layerglass/src/player.js), [`apps/layerglass/src/replay.js`](../../apps/layerglass/src/replay.js) | One media element, playback state and live-relative timeline |
+| UI elements | [`apps/layerglass/src/components/`](../../apps/layerglass/src/components/) | Light-DOM Web Components and accessible player interactions |
+| Transport and lifecycle | [`apps/layerglass/src/video-stream.js`](../../apps/layerglass/src/video-stream.js), [`apps/layerglass/src/updates.js`](../../apps/layerglass/src/updates.js) | Continuous video response, SSE metadata, recovery and fallback |
+| Backend selection | [`apps/layerglass/src/backend/`](../../apps/layerglass/src/backend/) | Provider choice and the selected-origin Python HTTP client |
+| Browser backends | [`demo-backend`](../../apps/demo-backend/), [`local-backend`](../../apps/local-backend/) | Independent simulated and direct/local browser transports |
+| Print events | [`apps/layerglass/src/timeline-events.js`](../../apps/layerglass/src/timeline-events.js) | Observed state transitions mapped onto retained video time |
+| Local previews | [`apps/layerglass/src/preview-history.js`](../../apps/layerglass/src/preview-history.js), [`apps/layerglass/src/preview-storage.js`](../../apps/layerglass/src/preview-storage.js) | Sample decoded frames, bounded RAM/IndexedDB and session cleanup |
 
 ## Data flow
 

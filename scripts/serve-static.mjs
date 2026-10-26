@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const [app, portText = '8101'] = process.argv.slice(2);
-if (!['web', 'site'].includes(app)) throw new Error('Choose web or site.');
+if (!['layerglass', 'layerglass-site'].includes(app)) throw new Error('Choose layerglass or layerglass-site.');
 const port = Number(portText);
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid port.');
 const root = fileURLToPath(new URL(`../dist/apps/${app}/`, import.meta.url));

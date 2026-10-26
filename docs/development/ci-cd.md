@@ -38,7 +38,7 @@ changes and delete their remote branches after integration.
 
 ## Build once, promote the validated files
 
-The hosting job prepares `dist/apps/site` and `dist/apps/web`, including security
+The hosting job prepares `dist/apps/layerglass-site` and `dist/apps/layerglass`, including security
 and freshness headers. [The delivery helper](../../scripts/delivery.mjs) writes a
 manifest outside the public directories containing the full Git SHA and every
 asset's SHA-256 and size. It rejects unexpected output directories, private

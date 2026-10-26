@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { prepare, verify } from '../../../scripts/cloudflare.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
-for (const [index, name] of ['site', 'web'].entries()) {
+for (const [index, name] of ['layerglass-site', 'layerglass'].entries()) {
   await prepare(name);
   const port = 8789 + index;
   const origin = `http://127.0.0.1:${port}`;
@@ -42,15 +42,15 @@ for (const [index, name] of ['site', 'web'].entries()) {
     }
     assert.ok(ready, `Local ${name} did not become ready: ${output}`);
     await verify(name, { origin });
-    if (name === 'web') {
-      const response = await fetch(`${origin}/static/demo/printer.mp4`, {
+    if (name === 'layerglass') {
+      const response = await fetch(`${origin}/demo-backend/src/demo/printer.mp4`, {
         headers: { Range: 'bytes=0-127', 'Accept-Encoding': 'identity' },
       });
       // Miniflare's asset worker returns the complete body for Range requests.
       // The public CDN can serve 206 at its outer cache layer; do not pretend
       // local 200 responses prove edge range behavior.
       assert.ok([200, 206].includes(response.status));
-      const source = await readFile(join(root, 'dist/apps/web/static/demo/printer.mp4'));
+      const source = await readFile(join(root, 'dist/apps/layerglass/demo-backend/src/demo/printer.mp4'));
       assert.deepEqual(Buffer.from(await response.arrayBuffer()), response.status === 206 ? source.subarray(0, 128) : source);
       if (response.status === 206) assert.match(response.headers.get('content-range') || '', /^bytes 0-127\//);
       assert.match(response.headers.get('content-type') || '', /video\/mp4/);

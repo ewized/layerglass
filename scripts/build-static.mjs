@@ -4,14 +4,14 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const app = process.argv[2];
-if (!['web', 'site'].includes(app)) throw new Error('Choose web or site.');
+if (!['layerglass', 'layerglass-site'].includes(app)) throw new Error('Choose layerglass or layerglass-site.');
 const root = fileURLToPath(new URL('../', import.meta.url));
 const source = path.join(root, 'apps', app, 'src');
 const output = path.join(root, 'dist/apps', app);
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 
-if (app === 'site') {
+if (app === 'layerglass-site') {
   await cp(source, output, { recursive: true });
 } else {
   const rootFiles = new Set(['index.html', 'manifest.webmanifest', 'service-worker.js']);
@@ -19,6 +19,10 @@ if (app === 'site') {
   for (const entry of await readdir(source, { withFileTypes: true })) {
     if (rootFiles.has(entry.name)) continue;
     await cp(path.join(source, entry.name), path.join(output, 'static', entry.name), { recursive: true });
+  }
+  const modules = JSON.parse(await readFile(path.join(root, 'apps/layerglass/browser-modules.json'), 'utf8'));
+  for (const name of modules) {
+    await cp(path.join(root, 'dist/backends', name), path.join(output, name), { recursive: true });
   }
   let html = await readFile(path.join(source, 'index.html'), 'utf8');
   // Source served by Python knows its own backend. Standalone hosting requires
