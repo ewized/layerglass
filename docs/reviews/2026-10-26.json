@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "P01-P35 and P37 integrated; P36/P38 implementing after majority; two endurance runs active",
+  "status": "Active:41proposals,40integrated corrections, P38superseded; currentall40CI/hosting PASS. One older-pin native6h run active; JPEGendurance incomplete and causal-diagnostic preparation only. Review deadline16:03:49UTC.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -4342,7 +4342,7 @@
         "commit": "93b2f9ae553835788c5057a69cbfbe1fa2c52718",
         "recorded_at": "2026-10-26T09:20:05Z"
       },
-      "implementation_status": "Author correcting two independent legacy regressions within originally approved16fileP36scope; old93b2f9adraft notintegrated.",
+      "implementation_status": "Corrected finalauthor22b7e8e integrated as76334ef after exact independentREADY within approved16file scope. Two legacy regressions corrected before integration; original93b2f9adraft and blocked review remain historical evidence. Current combinedCI PASS on all40e6527f1.",
       "backend_final_peer": {
         "report": "test-results/review-2026-10-26/r06/p36-backend-final-review.json",
         "status": "READY for backend only",
@@ -4804,7 +4804,7 @@
         "worktree": "/workspace/layerglass-review/jpeg-preview-bounds",
         "author_report": "test-results/review-2026-10-26/r04/p40-implementation-report.json",
         "author_report_sha256": "08f1ff465fb07fd3e4c36a0ed7a124828a22c5ac074c46d058ed2c9951d7c1c6",
-        "status": "Integrated exact independently READY source; combined check pending.",
+        "status": "Integrated exact independently READY source as38b8124. All39local combined check PASS on951aafc; currentall40normalCI40322511914 PASS one6527f1. Original failures/limits retained.",
         "peer_report": "test-results/review-2026-10-26/r05/p40-final-review.json",
         "peer_report_sha256": "85e0278c34c249559e1329c27ca29b0d97a3db8620475ad2211948ea0a376543",
         "peer_reviewed_commit": "f4c8ce4206604b24ec9612f421109d32959ffa51",
@@ -6068,6 +6068,21 @@
       "at": "2026-10-26T12:25:54Z",
       "type": "integration",
       "message": "P41 exacta9917ec source integrated as0835f88dbb6604b778afbfa4174fb9efad7e18f7 only after all10fresh approvals, committed acceptance8413393 and complete independent R07READY.40corrections now integrated; P38superseded. Initial guard schema mismatch stopped before mutation; correctednested24filepeer manifest thenpassed. No production source altered byP41."
+    },
+    {
+      "at": "2026-10-26T12:26:52.663006+00:00",
+      "type": "publication",
+      "message": "Published40correctionse6527f1to existingreview/2026-10-26-twelve-hour andcodex/review-ci-2026-10-26; newnormalCI40322511914 andcredential-freehosting40322511869 inprogress. Meaningful approved one-fileP41 test change; no unchanged-source rerun, release/deploy/mainmerge."
+    },
+    {
+      "at": "2026-10-26T12:31:19Z",
+      "type": "validation",
+      "message": "Publichosting40322511869PASS on40correctionse6527f1; normalCI40322511914stillinprogress. No deployment. JPEGdiagnostic preparation-only assigned after independent sourceevidence assessment, not a retry/pass/hourgating waiver."
+    },
+    {
+      "at": "2026-10-26T12:53:13Z",
+      "type": "audit_correction",
+      "message": "Refreshed only mutable current-status prose identified by R08 after its original snapshot/hashes frozen. Record currentall40normalCI+hostinggreen sourcee6527f1. Voting history/frozen scopes/source/failed evidence unchanged; request exact bookkeeping recheck next."
     }
   ],
   "validation": [
@@ -6488,6 +6503,21 @@
       "status": "INCONCLUSIVE_ABORTED_PILOT",
       "summary": "JPEGv4.2 at951aafc failed30.807of90s: WebKit fullStats layerdash vs37/10000 after bothengines completed1strict Pause/preview/exactnativecommit/Live cycle. Sameownednativeframe/Blob/hash/clock showed37/10000 in one37ms-later diagnostic; receivedhistorycoverage/render causality unknown. Two-cycle/certifiedcold/pruning gates unmet; native/backend cleanup and privateTTL controls PASS. Root verified309artifact hashes and reportSHAf68cf0efc417e5f8e3dc06cc16d3925fe6a5871915f45903b69e3106c669ef5d /manifestSHAe915a5cfabf65451a5c07994ffa8c95452a3a02b43ec390d0b408568db3eeea6. No retry/patch/hour authorized; R05 independent source/evidence diagnosis pending.",
       "evidence": "test-results/review-2026-10-26/r06/jpeg-soak/pilot-report-v4.2.json"
+    },
+    {
+      "status": "SOURCE_EVIDENCE_REVIEW_CAUSE_UNPROVEN",
+      "summary": "R05 independently traced JPEGv4.2 Statsdash\u219237in37ms with identical native ownership. Existing forced render rules out a simple timer-only explanation. Source permits unknown uncoveredhistory\u2192async hydration/render, but actual ranges/readresult/pending/SSE/caller state missing, so productbug or harmlessness remains unproved. Root verified9pinned source+7raw evidence hashes; reportSHA2948199280357de4358de7fe03550b813c6d4282ff313869b88f3f30cd440f21. Only bounded passive causal-diagnostic preparation authorized, preserving all exactproofs/failedcore; no new acceptance rule/runtime/hour.",
+      "evidence": "test-results/review-2026-10-26/r05/jpeg-v42-timing-source-review.json"
+    },
+    {
+      "status": "PASS_CURRENT_NORMAL_CI",
+      "summary": "All40current revisione6527f1 normalCI40322511914/job121570742755 andcredential-freehosting40322511869 SUCCESS. Preserved CIlog302210bytes/BOM/LF SHA256d8aed849ef827d340192ba62a492d81274555d7931bab7037e1c7651b5e2db25 confirms218Python263JavaScript35linkedMarkdown,Nxbuild/3of3repeatcache,20browser suites andnativepaused/playingrecoverybothengines. Artifact12649843164. NewP41source, no unchanged-source rerun/deploy/mainmerge. Original40312023690failure cause unproved and unchanged; endurance/source-only results remain separate.",
+      "evidence": "test-results/review-2026-10-26/root-all40-ci-final.json"
+    },
+    {
+      "status": "PASS_METADATA_WITH_BOOKKEEPING_FINDING",
+      "summary": "R08bounded independent voting audit verified12frozen slates/120raw files/410explicitvotes409APPROVE1ABSTAIN/10reviewerpaths/root0. All40canonicalintegration parents have>=6exact approvals;38recorded authorparents do too; P34/P35older authorbases limit first-edit timing visibility without proving a violation.97Gitcommits/46source-at-commit hashguards/33peerreferences21reports inspected. No voting discrepancy; oneP3stale-status prosefinding addressed in current topstatus/P36implementation_status/P40implementation.status. Original e93b0bcfledger/96974ea5Markdown snapshots and frozenreportSHA8be3496e54feeb4a9c235a46687f98ea9b44390c4b8a9323fa565e38f2135e39 retained. No votes/frozen contracts/original failures rewritten.",
+      "evidence": "test-results/review-2026-10-26/r08/final-vote-integrity-review.json"
     }
   ],
   "implementation_worktrees": [
@@ -6638,6 +6668,20 @@
     "ci_status": "failure at keyboard-focus programmatic-dismissal assertion; under investigation",
     "pull_request": "not created",
     "pr_creation_limit": "GitHub connector integration403 for create pull request; gh not signed in. Read-only API and SSH push work.",
-    "deployment": "none; configured deploy workflow is main-only and release is v-tag-only"
+    "deployment": "none; configured deploy workflow is main-only and release is v-tag-only",
+    "published_review_head": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a",
+    "all40_ci": {
+      "CI": 40322511914,
+      "hosting": 40322511869,
+      "status": "success",
+      "source": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a",
+      "hosting_status": "success",
+      "CI_status": "success",
+      "job": 121570742755,
+      "summary": "test-results/review-2026-10-26/root-all40-ci-final.json",
+      "log": "test-results/review-2026-10-26/github-ci-40322511914.log",
+      "log_sha256": "d8aed849ef827d340192ba62a492d81274555d7931bab7037e1c7651b5e2db25",
+      "artifact_id": 12649843164
+    }
   }
 }
