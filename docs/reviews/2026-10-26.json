@@ -4829,7 +4829,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/ci-native-pause-finding.json",
       "risk": "Low test-only correction, with a real risk of hiding a restoration race if after-error polling is weakened or setup silently repairs repeated wrong intent. Keep the one explicit transition observable and keep original post-error assertions strict. Additional pre-error readiness is a test precondition, not a product waiver.",
       "validation_plan": "Keep this primary CI log immutable. Compare exact original and candidate assertion/predicate contracts. Use generated native media in both Chromium/WebKit, including held initial/seek readiness and explicit paused/playing intent establishment, proving no recovery error is injected while setup is unsettled. Wrong native/controller setup must fail/log rather than toggle again. Run the focused native cases and existing browser-replay-recovery suite in both engines; preserve all network/Live cases and decoded clock/session/video/one-seek checks. No full combined suite, real device, CI rerun or product-source change is needed for this candidate. Preserve all original after-error readiness predicates and assertions verbatim wherever possible, verify exact contracts explicitly, and obtain independent exact-final READY before integration. A new normal full CI run may occur only after voted implementation/focused validation; no rerun fishing of the unchanged failed source.",
-      "status": "implementing",
+      "status": "validated",
       "ballots": {
         "r02": {
           "vote": "APPROVE",
@@ -4907,7 +4907,14 @@
         "branch": "review/native-recovery-preconditions",
         "baseline": "3d7d7aa",
         "author": "r02",
-        "authorization": "7explicit approvals committed at3d7d7aa before worktree creation/source edits; eighth ballot subsequently imported. Exact frozen one-file scope unchanged."
+        "authorization": "7explicit approvals committed at3d7d7aa before worktree creation/source edits; eighth ballot subsequently imported. Exact frozen one-file scope unchanged.",
+        "author_commit": "a9917ec8af5cb78cc4baa2cd77772e386738b119",
+        "report": "test-results/review-2026-10-26/r02/p41/implementation-report.json",
+        "report_sha256": "ff7a095ac3376f8ef006cb041cf120fa093cd999de209385ef3ea8fa793b0262",
+        "source_sha256": "9a7f6845f5ddab1bf6ee53890bc70952813b2adc1244f0c0315cd5be757516c8",
+        "independent_review": "test-results/review-2026-10-26/r07/p41-final-review.json",
+        "independent_report_sha256": "6ffe740882acd668f204eaf1cc8d4d1300817028019f5586a57d148fba6932a5",
+        "acceptance": "Exacta9917ec READY. Root verified author/peer evidence, sole-file source and clean identity, prior7approval threshold commit, all10final approvals and preserved primary CI. Integration authorized only exactonecommit."
       }
     }
   ],
@@ -6044,6 +6051,11 @@
       "at": "2026-10-26T12:04:04Z",
       "type": "checkpoint",
       "message": "Eight-hour checkpoint:39integrated improvements,41proposals/410explicit ballots409APPROVE1ABSTAIN0REJECT; P38superseded andP41test-only implementing after committed threshold. All39local combined PASS; normal hostedCI native-pause failure remains causeunproved. Native6h ongoing beyond3h with realpruning and JPEGQA remains partial/aborted. About4h remain to16:03:49deadline; no early completion."
+    },
+    {
+      "at": "2026-10-26T12:15:47Z",
+      "type": "validation",
+      "message": "Ignored JPEGv4.2 source READY R04cfebeec3 verified with5current source hashes+41frozen artifacts. Exactlyone90s pilot authorized at951aafc; no retry/hour. Actual>=2cycles bothengines/allstrictproofs+observedpressure/coldstatus required before any hour promotion; prior failures unchanged."
     }
   ],
   "validation": [
@@ -6444,6 +6456,16 @@
       "status": "RUNNING_PARTIAL",
       "summary": "Currenta5059827native buffer run passed prior11744s elapsed failure point in both engines with successful old/middle/recent local previews during retention pruning and replay/Live controls. Exact current/preview line hashes saved. This is not6h completion or cause proof; current run includes36corrections and predatesP36/P39/P40/P41.",
       "evidence": "test-results/review-2026-10-26/root-p37-post-old-failure-checkpoint.json"
+    },
+    {
+      "status": "AUTHOR_PASS_AWAITING_INDEPENDENT_REVIEW",
+      "summary": "P41author a9917ec changes only voted native recovery test. Focused/native readiness/wrong-state controls and full existing recovery suite PASS bothengines;30originalassertions and native post-error/network/Live bodies preserve exact contracts/budgets. Root verified exact clean source/onefile scope and36artifact manifest entries. R07 independent exact-final review pending; original CI cause remains unproved.",
+      "evidence": "test-results/review-2026-10-26/r02/p41/implementation-report.json"
+    },
+    {
+      "status": "READY_EXACT_FINAL",
+      "summary": "P41a9917ec independently R07READY:10selected controls bothengines,12successful native recoveries+4expected wrong-setup rejections; all30originalassertions and exact post-error/network/Live bodies/budgets retained. Author fullrecovery-suite evidence bothengines verified, not independently rerun. Root verified peer/author manifests, exactclean onefile source, pre-edit committed approvalthreshold and10final votes. Historical CI cause unproved; no product fix claimed.",
+      "evidence": "test-results/review-2026-10-26/r07/p41-final-review.json"
     }
   ],
   "implementation_worktrees": [
