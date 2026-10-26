@@ -62,12 +62,13 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 4 ballot complete",
+      "status": "round 5 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r05/ballot-round3.json",
-      "ballot_round4": "test-results/review-2026-10-26/r05/ballot-round4.json"
+      "ballot_round4": "test-results/review-2026-10-26/r05/ballot-round4.json",
+      "ballot_round5": "test-results/review-2026-10-26/r05/ballot-round5.json"
     },
     {
       "id": "r06",
@@ -269,7 +270,7 @@
     },
     {
       "id": 5,
-      "phase": "voting",
+      "phase": "majority approved; remaining ballots continue",
       "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
       "frozen_at": "2026-10-26T06:18:20Z",
       "proposal_ids": [
@@ -280,11 +281,15 @@
       "ballots_started": true,
       "reviewers_completed": [
         "r04",
+        "r05",
         "r06",
         "r08",
+        "r09",
         "r10"
       ],
-      "notes": "Independent R05 successful-partial/SSE reconnect finding arrived after frozen Round4; separate scope and ballots preserve that slate."
+      "notes": "Independent R05 successful-partial/SSE reconnect finding arrived after frozen Round4; separate scope and ballots preserve that slate.",
+      "majority_recorded_at": "2026-10-26T07:02:25Z",
+      "decision": "P32 revision1 has6 explicit APPROVE fromR08/R10/R04/R06/R09/R05 of10 before implementation. Root0."
     },
     {
       "id": 6,
@@ -299,7 +304,8 @@
       "ballots_started": true,
       "reviewers_completed": [
         "r04",
-        "r06"
+        "r06",
+        "r09"
       ],
       "notes": "Independent read-only native-focus traces explain CI-only timing failure. No test assertion or product source changed before fresh voting."
     }
@@ -3038,7 +3044,7 @@
       "evidence_path": "test-results/review-2026-10-26/r08/round4-findings.json",
       "risk": "Low/moderate async focus ownership; unconditional focus would steal intentional navigation.",
       "validation_plan": "Actual keyboard submit/failure regains same input and explicit retry issues exactly one new check. Cover incompatible response, timeout and supported Direct failure plus intentional focus movement/Settings dismissal/navigation and success behavior; preserve existing onboarding/printer focus checks in both engines.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3113,11 +3119,11 @@
       },
       "approved_at": "2026-10-26T06:25:12Z",
       "implementation": {
-        "owner": "r09",
-        "worktree": "/workspace/layerglass-review/focus-dismissal",
-        "starting_commit": "37f01e9",
-        "integrated": false,
-        "notes": "Only these frozen approved behavior corrections; P33 timing assertion must remain unchanged until its own majority."
+        "author_commit": "6985a1a23dc32b66d17eb833a943f556f064e6d0",
+        "canonical_commit": "f4de61d",
+        "peer_review": "test-results/review-2026-10-26/root-p27-p31-diff-review.json",
+        "peer_decision": "READY",
+        "validation": "Connected actual Chromium/WebKit error/retry/ownership and held-scrub controls pass;226 JS and35 docs author checks. Old P22 unchanged."
       }
     },
     {
@@ -3469,7 +3475,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/round4-findings.json",
       "risk": "Low: guard current menu focus while preserving normal dismissal handoff.",
       "validation_plan": "Trusted Chromium/WebKit Copy->Tab->held-arrow past deadline: menu closes, slider focus/scrub persist, keyup commits once. Menu-owned focus still restores player; unrelated control focus retained. Preserve Escape, failed clipboard retry, late/newer-menu ownership and disconnect cleanup.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3544,11 +3550,11 @@
       },
       "approved_at": "2026-10-26T06:25:12Z",
       "implementation": {
-        "owner": "r09",
-        "worktree": "/workspace/layerglass-review/focus-dismissal",
-        "starting_commit": "37f01e9",
-        "integrated": false,
-        "notes": "Only these frozen approved behavior corrections; P33 timing assertion must remain unchanged until its own majority."
+        "author_commit": "6985a1a23dc32b66d17eb833a943f556f064e6d0",
+        "canonical_commit": "f4de61d",
+        "peer_review": "test-results/review-2026-10-26/root-p27-p31-diff-review.json",
+        "peer_decision": "READY",
+        "validation": "Connected actual Chromium/WebKit error/retry/ownership and held-scrub controls pass;226 JS and35 docs author checks. Old P22 unchanged."
       }
     },
     {
@@ -3573,7 +3579,7 @@
       "evidence_path": "test-results/review-2026-10-26/r05/round4-findings.json",
       "risk": "Moderate async state: conflating successful partial and failed attempts could create per-SSE/render retry loops or release a successor request. Recovery must be tied to accepted same-session coverage and consumed owned eligibility.",
       "validation_plan": "Successful partial + later coverage hydrates missing past reading once with pending coalescing; unchanged/identical coverage, cached/full windows and unrecorded future make no requests. HTTP/JSON/timeout remain suppressed through advancing SSE until explicit retry. Preserve all P23 cancellation/A-B-A, late callback, replacement-session and bounded-window cases. Durable real Stats+GoogleCastSender+PlayerUpdates+EventSource reconnect regression recovers right reading without local seek, with local-seek/full-cache controls; WebKit uses only external clock and remains Cast-ineligible. Relevant units/docs and both engines must pass.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r08": {
           "vote": "APPROVE",
@@ -3608,6 +3614,13 @@
           "rationale": "Pinned 5055adf source leaves requested=true after a valid successful partial HTTP range; later SSE coverage in a different window cannot hydrate its now-recorded gap. My independent offline rerun reproduces blank receiver1280 in connected Chromium GoogleCastSender/Stats/PlayerUpdates/EventSource with one request and no local seek events, while explicit seek recovers80% with a second request and cached1290 stays at two. WebKit external-clock control reproduces without enabling Cast. HTTP/JSON/timeout controls remain suppressed after advancing SSE and60 reads until explicit retry. Approve the exact moderate-risk scope and regression plan: eligibility must derive only from valid accepted same-session later coverage, distinguish successful partial attempts from failures/cancellation, be consumed by one owned coalesced hydration, and preserve future/full/cache suppression plus P23 successor/session/late-callback and bounded-window guarantees. No blanket SSE/render retries or transport changes.",
           "revision": 1,
           "recorded_at": "2026-10-26T07:00:10Z",
+          "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "I separately assessed the frozen scope rather than treating authorship as a vote. Pinned5055adf keeps requested=true after a valid partial success, while new SSE connections send only recent32 readings. Recorder-generated partial1200..1262 then SSE1339..1370 plus actual Chromium GoogleCastSender/Stats/PlayerUpdates leaves receiver1280 blank with one request and zero local seek events. Local seek fetches1280 and renders80%; full cached1290 renders90% without refetch. The immutable evidence also proves unchanged/future suppression and HTTP/JSON/timeout suppression despite advancing SSE. This exact scope requires later valid same-session recorded coverage, consumed request-owned eligibility, pending coalescing, preserved P23 ownership and no render/per-SSE polling. The durable registered production-consumer regression, explicit local/full-cache controls, WebKit Cast-ineligible adapter and stated units/docs plan cover the demonstrated gap without a new capability or transport.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:02:25Z",
           "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
         }
       },
@@ -3777,6 +3790,10 @@
     {
       "sha": "1c5a1b0",
       "summary": "P28: describe replay retained-video target/current-fragment floor accurately; R10 independent diff and runtime controls READY."
+    },
+    {
+      "sha": "f4de61d",
+      "summary": "P27/P31: preserve failed backend editor ownership and later Copy-feedback keyboard focus; root independently READY."
     }
   ],
   "activity": [
@@ -4184,6 +4201,16 @@
       "at": "2026-10-26T07:02:05Z",
       "type": "review",
       "message": "P27/P31 exact6985a1a diff independently READY after root connected Chromium/WebKit checks, including held keyboard scrub and failure focus ownership. First isolated runner reported native offline; actual same-page offline/online control proves harness prerequisite, with original failure retained. P29 remains held: R04 found capture-reference mutation before failed successor stat, violating approved atomicity. R06 correction will require independent re-review; P30 no identified blocker."
+    },
+    {
+      "at": "2026-10-26T07:02:25Z",
+      "type": "ballot",
+      "message": "R05 explicit Round5 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:02:25Z",
+      "type": "majority",
+      "message": "P32 revision1 has six explicit distinct approvals before implementation. R05 completes its separate P33 ballot before implementation assignment; canonical source remains unchanged for P32. P27/P31 integrated only after ten approvals and independent connected-browser review."
     }
   ],
   "validation": [
