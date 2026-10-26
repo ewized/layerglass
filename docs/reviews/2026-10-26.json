@@ -151,7 +151,7 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 14 ballot complete",
+      "status": "round 15 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -166,13 +166,14 @@
       "ballot_round11": "test-results/review-2026-10-26/r07/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r07/round12-ballot.json",
       "ballot_round13": "test-results/review-2026-10-26/r07/round13-ballot.json",
-      "ballot_round14": "test-results/review-2026-10-26/r07/round14-ballot.json"
+      "ballot_round14": "test-results/review-2026-10-26/r07/round14-ballot.json",
+      "ballot_round15": "test-results/review-2026-10-26/r07/round15-ballot.json"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 14 ballot complete",
+      "status": "round 15 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -187,13 +188,14 @@
       "ballot_round11": "test-results/review-2026-10-26/r08/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r08/round12-ballot.json",
       "ballot_round13": "test-results/review-2026-10-26/r08/round13-ballot.json",
-      "ballot_round14": "test-results/review-2026-10-26/r08/round14-ballot.json"
+      "ballot_round14": "test-results/review-2026-10-26/r08/round14-ballot.json",
+      "ballot_round15": "test-results/review-2026-10-26/r08/round15-ballot.json"
     },
     {
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 14 ballot complete",
+      "status": "round 15 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -208,13 +210,14 @@
       "ballot_round11": "test-results/review-2026-10-26/r09/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r09/round12-ballot.json",
       "ballot_round13": "test-results/review-2026-10-26/r09/round13-ballot.json",
-      "ballot_round14": "test-results/review-2026-10-26/r09/round14-ballot.json"
+      "ballot_round14": "test-results/review-2026-10-26/r09/round14-ballot.json",
+      "ballot_round15": "test-results/review-2026-10-26/r09/round15-ballot.json"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 14 ballot complete",
+      "status": "round 15 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -230,7 +233,8 @@
       "ballot_round11": "test-results/review-2026-10-26/r10/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r10/round12-ballot.json",
       "ballot_round13": "test-results/review-2026-10-26/r10/round13-ballot.json",
-      "ballot_round14": "test-results/review-2026-10-26/r10/round14-ballot.json"
+      "ballot_round14": "test-results/review-2026-10-26/r10/round14-ballot.json",
+      "ballot_round15": "test-results/review-2026-10-26/r10/round15-ballot.json"
     }
   ],
   "rounds": [
@@ -633,9 +637,13 @@
         "r03",
         "r04",
         "r05",
-        "r06"
+        "r06",
+        "r07",
+        "r08",
+        "r09",
+        "r10"
       ],
-      "decision": "Initial6fresh explicit APPROVE each (R01/R02/R03/R04/R05/R06) recorded; commit this exact quorum BEFORE any new author worktree or edits. Remaining4reviewers still independently vote.",
+      "decision": "All10fresh explicitAPPROVE P44/P45 exactrev1; initial6committedf065beforebothauthorworktreecreation. Finalauthorcommits97714cf(P44)/e9ba83f(P45)awaitindependentexactfinalREADY, notintegrated.",
       "notes": "Two independently reproduced final-hour ownership findings; exact closed scopes and deadline-safe validation/checkpoint policy."
     }
   ],
@@ -5248,7 +5256,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/final-interaction-review.json",
       "risk": "Guarding only completion or deletion misses stale writes; non-atomic guards may race queued IDB work; retained per-key queues can grow. Failed replacements must not cold-read old pixels under new metadata. Keep optional legacy API behavior and exact usage state. Existing prior approvals do not transfer.",
       "validation_plan": "Keep original failing fixture/control immutable. Add registered meaningful unit and actual-IDB/native JPEG regressions both engines for held conversion after replacement, stale completed-write cleanup after newer row, no replacement, failed replacement, old reads/sessions, repeated replacements/different keys, byte/count agreement and bounded writes. Native cold scrub must paint exact blue11.5 from local disk with0preview HTTP and same session/one video. Include mutation-removal negatives proving both stale overwrite and stale delete protections. Run relevant preview-history units plus registered browser-preview-storage and browser-preview-loading both engines, P37 nearest/coalesced/late reads/P40 precise bounds existing cases, docs links. Independent exact-final peer READY before integration; one new normal combined fullCI after all new corrections, no unchanged-source retry or relaxed assertion. No real printer, cloud, credentials or deployment. Stop starting work16:03:49UTC and safely park incomplete validation/source rather than rush.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -5291,7 +5299,42 @@
           "revision": 1,
           "recorded_at": "2026-10-26T15:30:07Z",
           "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Pinned PreviewHistory starts a logical-key put before checking completion identity, then stale success removes that same session/key; PreviewStorage performs delayed conversion and unguarded independent put/remove transactions. The immutable both-engine native/real-IDB proof shows legitimate blue11.5 replacement persisted and cold, then old completion deletes its1121-byte row and causes one green server fallback; unchanged-order controls retain blue with zero preview HTTP. This proves an admissible forced schedule, not natural frequency or an observed stale-red paint. Approve the closed six-file asset-generation ownership correction for BOTH writes and deletes, checked atomically at IDB mutation, preserving legacy optional-call behavior, schema, accounting, eight-write backpressure and P37/P40 policies. Suppressing cleanup alone is insufficient. Required registered both-engine conversion/transaction/completion-removal negatives, failed/no replacement, same-key reads/session switches/repeated keys, exact bytes/count and boundedness tests plus native zero-HTTP blue cold scrub and independent exact-final READY remain mandatory; old green CI does not validate the new implementation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:32:02Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Fresh approval of exact P44rev1/six-file scope at607cedd after independently recomputing frozen SHA45580c2f..., reading pinned history/storage, existing regression contracts and the original controlled native-IDB fixture. Reporte5d7794f... and all17 declared source/evidence hashes match. PreviewHistory starts key-only disk.put before its RAM-identity check; stale saved completion then removes that same reusable key. PreviewStorage converts bytes before opening independent transactions, so late A can overwrite B before stale cleanup deletes B. The two-engine held-conversion evidence discriminates this: actual trim removes red10.123678, native blue11.5 legitimately reuses frame:10 and persists1121 bytes, then A resumes and removes the row while B still says persisted=true; cold consumer paints one green server fallback. Ordered controls retain blue with one disk hit/zero preview HTTP. Forced scheduling proves admissibility, not natural frequency. The bounded per-asset/write ownership correction must protect BOTH writes and deletes at the actual transaction; suppressing cleanup or checking only before an await is insufficient. Optional guarded mutations/additive row ownership can preserve schema/version/namespaces and legacy unguarded calls. Approval includes all frozen real-IDB/native both-engine delayed-conversion/transaction/completion, trim/forget/session reuse, failed/no replacement, old-read and repeated/different-key controls, mutation-removal negatives, exact bytes/count accounting, eight-write and RAM/queue bounds, genuine quota fallback, existing P37/P40/late-read compatibility, registered suites/docs and independent exact-final READY. No capture/clock/budget/transport or UI policy expansion is authorized. New combined normal CI remains required; incomplete validation must be parked at the deadline. No other ballots, author tree or runtime was used.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:33:59Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Fresh pinned-source review confirms PreviewStorage converts bytes before an independent put transaction, while PreviewHistory's stale completion deletes only by reused session/key. The verified two-engine native-capture/real-IDB control shows the newer blue11.5 row exists before release, then disappears and forces one green fallback; ordinary order keeps blue with zero preview HTTP. Guarding deletion alone cannot prevent the preceding stale overwrite. The exact six-file generation-owned write/deletion scope, including checks inside the actual IDB mutation and safe failed replacements, addresses both hazards without changing namespaces or capture/retention policy. Approval includes all frozen real-IDB/native regressions, separate overwrite/delete removal negatives, failed/no replacements, old reads/sessions, exact byte/count accounting, eight-write and bounded-memory checks, existing P37/P40 cases and independent exact-final READY. Forced scheduling establishes admissibility, not natural incidence; no earlier vote transfers.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:37:57Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Pinned607cedd PreviewHistory lines103-108 starts a key-only write then handles retired completion with an unconditional key-only delete; PreviewStorage converts before opening an independent IDB transaction and has no per-asset row ownership. The original two-engine native/actual-IDB fixture genuinely trims red10.123678, admits blue11.5 under reused frame:10, persists/cools blue, then releases the genuine held old conversion. Its row disappears and cold scrub paints one green HTTP fallback; unchanged-order controls retain blue with one disk hit and zero HTTP. This establishes an admissible forced schedule, not natural incidence or a full-camera proof. Approve the exact six-file ownership correction for BOTH transaction-time writes and deletes, preserving schema/namespaces, legacy calls, accounting, eight-write backpressure, bounds and nearest/coalescing/failure policies. Suppressing obsolete cleanup alone is insufficient because the old put already overwrites. Approval includes all frozen native/real-IDB regressions, separate overwrite/delete removal negatives, failed replacement and stale-read/session controls, byte/count/boundedness checks, existing P37/P40 cases/docs and independent exact-final READY; incomplete work must be parked at the deadline.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:41:26Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
         }
+      },
+      "implementation": {
+        "base": "f065e5d0548dacc165d2d434e6ae2e5b867215c0",
+        "worktree": "/workspace/layerglass-review/preview-write-ownership",
+        "author": "r04",
+        "quorum_before_worktree": 6,
+        "authorization": "Author may edit only frozen scope after committed quorum; independent exact-final acceptance before integration."
       }
     },
     {
@@ -5314,7 +5357,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/final-interaction-review.json",
       "risk": "Simply retaining a failed archive can revive missing/pre-page media; simply catching while creating new dirs preserves leak. Cleanup must keep ownership across partial recursive failure, refuse admission until resolved, preserve sibling reads and not replace original create errors. Expected HTTP cleanup failure semantics are explicitly changed only on failed close/forget. No old P30 vote transfer.",
       "validation_plan": "Preserve exact old-source failure/ordinary control. Add non-root actual permission-fault HTTP/worker regression: final close returns503 with retired token, failed repeated creates503/no new archive dirs or increasing history, sibling token/media responsive, restore deletion and automatic cleanup removes exact old directory then new create records normally without old footage. Cover partial recursive removal, already absent path, expiry, forget, failed initial-create rollback retaining original error, worker alive and conservative accounted bytes, cleanup recovery and successful controls. Run backend replay/lifecycle, printer-history, scrub-preview, HTTP/provider/forget-related regressions and docs links in Docker. Independent exact-final peer READY before integration; one new normal combined fullCI after corrections, no hardware/network probes, credentials/deploy or broadened source. Deadline16:03:49UTC: stop starting work and safely park incomplete work/validation.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -5357,7 +5400,42 @@
           "revision": 1,
           "recorded_at": "2026-10-26T15:30:07Z",
           "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Pinned _prune unconditionally discards an inactive archive after rmtree(ignore_errors=True), so create/accounting/maintenance lose its files. The actual non-root permission-fault HTTP/worker proof restores deletion permissions before retry ticks yet leaves three orphans: disk grows32768/49152/65536 against16384 accounted bytes, while an unchanged sibling remains responsive; ordinary release removes its directory. Approve only the closed five-file final/inactive lifecycle correction: retain exact retired-directory ownership and conservative bytes through partial/absent-path cleanup, retry before allocation/collection, invalidate old tokens and never revive a partially removed archive. Explicit503 for expected close/forget cleanup failures is authorized without changing registry persistence errors or direct OSError/original rollback exception semantics. Final-release is the demonstrated branch; partial removal, expiry, forget, rollback, no-backlog repeated create, sibling responsiveness and recovery/active-prune compatibility need the frozen regressions and independent exact-final READY. Preserve evidence and park incomplete validation at the deadline rather than weaken acceptance.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:32:02Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Fresh approval of exact P45rev1/five-file scope at607cedd. I verified report00a33e3c..., all7 pinned source hashes and52 manifest entries, and inspected the original non-root HTTP/worker fixture plus pinned prune/create/release/forget/rollback and handlers. Inactive cleanup uses rmtree(ignore_errors=True) and drops archives unconditionally, so accounting and the existing cleanup-before-collection fence lose the failed directory. The actual final-release control restores permissions before two maintenance ticks yet retains three16384-byte orphans; disk reaches65536 under32768 cap while accounting16384 and sibling media stays responsive. Ordinary removal succeeds. Keeping exact ownership and conservative accounting until recursive deletion succeeds lets the existing retry/admission fence prevent fresh orphan allocation; retired partially deleted archives must never be reused. The exact scope expressly authorizes generic503 for expected HTTP close/forget cleanup failure after token retirement, while preserving direct OSError propagation, create503 and original rollback exception identity. Approval includes future non-root actual permission-fault repeated-create/no-growth/sibling-responsiveness/recovery controls; partial deletion, already-absent directory, expiry, forget, failed initial rollback, worker/accounting and successful lifecycle tests; unchanged active unlink-before-bookkeeping/current-fragment floor and lock order; relevant HTTP/history/preview/provider regressions/docs; exact-final independent READY and combined normal CI. Only final release has original runtime evidence; other paths require the frozen new validation. No startup sweep, quota redesign, registry/pairing change or eventual-deletion guarantee is authorized. Preserve original negatives and park incomplete validation/source at the deadline. No other ballots, author tree or runtime was used.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:33:59Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Fresh pinned-source review confirms inactive cleanup suppresses rmtree failures then discards the only archive record, so restored files escape accounting and maintenance. The verified non-root production HTTP/worker fixture has a successful ordinary close, three real permission-fault cycles with retired tokens but surviving files, actual bytes rising to65536 under32768 cap, and an unchanged responsive sibling. Keeping exact retired ownership/accounting and retrying before allocation/collection addresses the leak while explicitly preventing reuse of partially deleted footage. The five-file scope appropriately adds generic503 only for expected close/forget cleanup failure, preserving direct OSError propagation, original rollback errors and active-fragment semantics. Approval includes frozen partial/already-absent, expiry/forget/rollback, repeated-admission, sibling/worker and recovery tests plus independent exact-final READY. Those additional branches remain future validation; no eventual deletion under permanent faults or prior approval transfer is assumed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:37:57Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Pinned607cedd _prune lines624-627 suppresses recursive deletion errors and drops inactive archive ownership; subsequent accounting/admission and worker retry cannot see surviving files. The hash-verified non-root production HTTP/worker fixture restores permissions before maintenance yet shows three 200 final closes leaving32768/49152/65536 actual bytes against32768cap while only16384 remain accounted, then49152 orphan bytes with zero archives. The ordinary removal control and unchanged sibling token/media discriminate a real inactive-cleanup lifecycle gap from permanent denial or active-fragment P30 behavior. Approve only the exact five-file retired-archive ownership/conservative accounting/retry-before-allocation correction, with no reuse of partial/pre-page footage and explicit generic503 for expected replay-cleanup failures on HTTP close/forget after token retirement. Preserve unrelated registry errors, direct release/forget propagation, original rollback exceptions, sibling reads, active-fragment floor and lock order. Approval includes actual permission-fault HTTP/worker blocked-create/recovery controls, partial/absent/expiry/forget/rollback tests, accounting/worker/sibling checks, relevant backend suites/docs and independent exact-final READY. Only final release was reproduced so far; the other branches remain mandatory future validation, with no eventual-deletion promise or deadline rush.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T15:41:26Z",
+          "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70"
         }
+      },
+      "implementation": {
+        "base": "f065e5d0548dacc165d2d434e6ae2e5b867215c0",
+        "worktree": "/workspace/layerglass-review/retired-archive-cleanup",
+        "author": "r06",
+        "quorum_before_worktree": 6,
+        "authorization": "Author may edit only frozen scope after committed quorum; independent exact-final acceptance before integration."
       }
     }
   ],
@@ -6777,6 +6855,31 @@
       "at": "2026-10-26T15:30:07Z",
       "type": "quorum",
       "message": "P44/P45 each have6fresh explicit APPROVE. Root no vote. No author worktree/edit yet; committing quorum first, then exact separate worktrees."
+    },
+    {
+      "at": "2026-10-26T15:30:32Z",
+      "type": "implementation-authorization",
+      "message": "Root created distinct P44/P45 worktrees AFTER f065e5d committed initial6freshapprovals each. R04startingP44; R06authorqueued for availablechildslot. No canonicalproduct edits/integration. Deadlinebound unchanged."
+    },
+    {
+      "at": "2026-10-26T15:32:02Z",
+      "type": "ballot",
+      "message": "R07 explicit Round15 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T15:33:59Z",
+      "type": "ballot",
+      "message": "R08 explicit Round15 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T15:37:57Z",
+      "type": "ballot",
+      "message": "R09 explicit Round15 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T15:41:26Z",
+      "type": "ballot",
+      "message": "R10 explicit Round15 ballot imported for all2 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
@@ -7465,6 +7568,24 @@
       "parent": "1eaa2b4393dc8133b0f17bff0973ee3dbd96d96e",
       "quorum_before_creation": 6,
       "scope": "New frozen Round14 exact3files, accepted-descriptor precise local event view/retention/mapping, current mapped-ID activation; P42originalapprovalnottransferred."
+    },
+    {
+      "proposal": "P44",
+      "reviewer": "r04",
+      "path": "/workspace/layerglass-review/preview-write-ownership",
+      "branch": "review/preview-write-ownership",
+      "parent": "f065e5d0548dacc165d2d434e6ae2e5b867215c0",
+      "quorum_before_creation": 6,
+      "scope": "Exact frozen Round15 scope; no vote transfer."
+    },
+    {
+      "proposal": "P45",
+      "reviewer": "r06",
+      "path": "/workspace/layerglass-review/retired-archive-cleanup",
+      "branch": "review/retired-archive-cleanup",
+      "parent": "f065e5d0548dacc165d2d434e6ae2e5b867215c0",
+      "quorum_before_creation": 6,
+      "scope": "Exact frozen Round15 scope; no vote transfer."
     }
   ],
   "delivery": {
