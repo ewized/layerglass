@@ -38,7 +38,12 @@ try {
   for (const [name, engine] of Object.entries({ chromium, webkit })) {
     const browser = await engine.launch({ headless: true });
     try {
-      for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+      for (const viewport of [
+        { width: 1440, height: 1000 },
+        { width: 414, height: 896 },
+        { width: 390, height: 844 },
+        { width: 320, height: 568 }
+      ]) {
         const page = await browser.newPage({ viewport });
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
@@ -47,12 +52,23 @@ try {
         assert.match(await page.title(), /LayerGlass/);
         assert.equal(await page.locator('h1').count(), 1);
         assert.equal(await page.locator('.actions .primary').getAttribute('href'), 'https://app.layer.glass/?backend=demo');
+        const openApp = page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Open App', exact: true });
+        assert.equal(await openApp.getAttribute('href'), 'https://app.layer.glass/');
+        assert.equal(await openApp.isVisible(), true);
+        const buttonBounds = await openApp.boundingBox();
+        const brandBounds = await page.locator('header .brand').boundingBox();
+        assert(buttonBounds.height >= 44, 'Open App remains a touch-sized header link.');
+        assert(buttonBounds.x >= brandBounds.x + brandBounds.width,
+          `${name} ${viewport.width}: Open App must not overlap the brand.`);
         assert.equal(await page.locator('script').count(), 0, 'The product site does not need a browser runtime.');
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true,
           `${name} ${viewport.width}: product site must fit the viewport.`);
         assert.equal(await page.locator('.brand img').evaluate(image => image.complete && image.naturalWidth > 0), true);
         assert.deepEqual(errors, []);
         if (name === 'chromium') await page.screenshot({ path: join(screenshots, `site-${viewport.width}.png`), fullPage: true });
+        await page.route('https://app.layer.glass/**', route => route.fulfill({ contentType: 'text/html', body: '<title>App destination</title>' }));
+        await openApp.click();
+        await page.waitForURL('https://app.layer.glass/');
         await page.close();
       }
       const player = await browser.newPage({ viewport: { width: 390, height: 844 } });

@@ -55,11 +55,15 @@ a:focus-visible {
 }
 .nav nav {
   display: flex;
+  align-items: center;
   gap: 32px;
   color: #c5cfc2;
   font-size: 14px;
 }
-.nav a:hover,
+.nav .button {
+  white-space: nowrap;
+}
+.nav a:not(.button):hover,
 .text-link:hover,
 .footer a:hover {
   color: var(--green);
@@ -550,6 +554,11 @@ h1 {
     max-width: 110px;
     line-height: 1.8;
     text-align: right;
+  }
+}
+@media (max-width: 380px) {
+  .nav .source-link {
+    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {

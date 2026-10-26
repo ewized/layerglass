@@ -17,6 +17,10 @@ own hardware without a Cloudflare account.
 | `layerglass-site` | `layer.glass` | `dist/apps/layerglass-site/` | Product website and install/source links |
 | `layerglass-web` | `app.layer.glass` | `dist/apps/layerglass/` | Browser demo and optional connection to the user's backend |
 
+The website header's **Open App** button links to `https://app.layer.glass/`
+without selecting a backend. **Explore the demo** explicitly adds
+`?backend=demo`; both entry points remain available.
+
 The hosted app must ship without an automatic backend. First visits show Demo,
 Docker and Direct printer choices; valid saved selections open directly. Demo uses
 bundled sample video and simulated printer data. Docker connects to an explicitly
