@@ -62,13 +62,14 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 5 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r05/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r05/ballot-round4.json",
-      "ballot_round5": "test-results/review-2026-10-26/r05/ballot-round5.json"
+      "ballot_round5": "test-results/review-2026-10-26/r05/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r05/ballot-round6.json"
     },
     {
       "id": "r06",
@@ -98,13 +99,14 @@
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 5 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r08/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r08/ballot-round4.json",
-      "ballot_round5": "test-results/review-2026-10-26/r08/ballot-round5.json"
+      "ballot_round5": "test-results/review-2026-10-26/r08/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r08/ballot-round6.json"
     },
     {
       "id": "r09",
@@ -304,7 +306,9 @@
       "ballots_started": true,
       "reviewers_completed": [
         "r04",
+        "r05",
         "r06",
+        "r08",
         "r09"
       ],
       "notes": "Independent read-only native-focus traces explain CI-only timing failure. No test assertion or product source changed before fresh voting."
@@ -3341,6 +3345,13 @@
         "starting_commit": "37f01e9",
         "integrated": false,
         "notes": "Only frozen majority-approved scopes; JPEG waiting-page/subsecond controls and prolonged unlink-only writable-append fault required."
+      },
+      "implementation_review": {
+        "peer": "r04",
+        "decision": "BLOCKED pending approved atomicity correction",
+        "reviewed_head": "01a1245e3799d6278b6cce0590e028b7dd6b119e",
+        "evidence": "test-results/review-2026-10-26/r04/p29-p30-diff-review.json",
+        "next": "R06 corrects append/stat failure consistency within existing exact P29 scope; independent re-review before integration."
       }
     },
     {
@@ -3455,6 +3466,12 @@
         "starting_commit": "37f01e9",
         "integrated": false,
         "notes": "Only frozen majority-approved scopes; JPEG waiting-page/subsecond controls and prolonged unlink-only writable-append fault required."
+      },
+      "implementation_review": {
+        "peer": "r04",
+        "decision": "READY independently; combined branch held for P29 correction",
+        "reviewed_head": "01a1245e3799d6278b6cce0590e028b7dd6b119e",
+        "evidence": "test-results/review-2026-10-26/r04/p29-p30-diff-review.json"
       }
     },
     {
@@ -3579,7 +3596,7 @@
       "evidence_path": "test-results/review-2026-10-26/r05/round4-findings.json",
       "risk": "Moderate async state: conflating successful partial and failed attempts could create per-SSE/render retry loops or release a successor request. Recovery must be tied to accepted same-session coverage and consumed owned eligibility.",
       "validation_plan": "Successful partial + later coverage hydrates missing past reading once with pending coalescing; unchanged/identical coverage, cached/full windows and unrecorded future make no requests. HTTP/JSON/timeout remain suppressed through advancing SSE until explicit retry. Preserve all P23 cancellation/A-B-A, late callback, replacement-session and bounded-window cases. Durable real Stats+GoogleCastSender+PlayerUpdates+EventSource reconnect regression recovers right reading without local seek, with local-seek/full-cache controls; WebKit uses only external clock and remains Cast-ineligible. Relevant units/docs and both engines must pass.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r08": {
           "vote": "APPROVE",
@@ -3630,7 +3647,14 @@
           "result": "Fresh actual ReplayBuffer payload generation and actual Chromium Stats/Cast/PlayerUpdates plus WebKit external-clock/EventSource fixtures independently reproduce original gap and local-seek/full-cache controls on5055adf.",
           "evidence": "test-results/review-2026-10-26/root-round5-history/{chromium,webkit}.log"
         }
-      ]
+      ],
+      "implementation": {
+        "owner": "r05",
+        "worktree": "/workspace/layerglass-review/history-hydration",
+        "branch": "review/history-hydration",
+        "base": "4c845ad",
+        "authorized_after_six_recorded_approvals": true
+      }
     },
     {
       "id": "P33",
@@ -3669,6 +3693,20 @@
           "rationale": "The exact unchanged rejectedSetup function at CI head1d9174e reproduced the immediate-snapshot failure3/4 Chromium and1/4 WebKit runs when the fifth response was held120ms. All four failing traces show trusted native blur from the disabled hidden input to body before response release, zero application focus() calls, advanced editorRevision and editingCamera=null; immediate controls pass4/4 per engine. Source guards already invalidate response restoration after closeEditor. Approve only the frozen test scheduling correction and validation: observe native dismissal and capture activeElement while the response remains held, then retain strict node equality and explicit same-editor closed/hidden guards across rejection. Injected visible-focus and editor-reopen controls must still fail; all other keyboard/request-count cases and both engines remain required. This evidence does not justify production focus-policy changes, post-response snapshots, weakened assertions or a fixed-sleep substitute.",
           "revision": 1,
           "recorded_at": "2026-10-26T07:00:10Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "I inspected pinned1d9174e rejectedSetup, printer closeEditor and P22 restoration guards, and independently validated the original16-run trace artifact against the exact function SHA256b67abdfc102833cd0e402c9e3fc6bce2cdf4d1b4cb0227a71a9d8231c982afc9. All four unchanged-assertion failures show trusted native blur from disabled hidden input to body while the fifth response is still held, zero application focus calls, unchanged advanced revision and editingCamera=null. The immediate snapshot therefore mixes native lifecycle phases. This exact test-only scope settles dismissal and captures focus before releasing the response, retaining strict node equality plus hidden/same-editor-closed guards. Its wrong-visible-focus and reopened-editor negative injections must still fail the corresponding assertions; snapshotting after response or weakening equality is explicitly excluded. I approve the existing immediate/delayed Chromium/WebKit plan and unchanged request/draft/other-case checks without a production-policy change.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:05:07Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "I inspected the exact pinned rejectedSetup and P22 revision/visibility guards, then independently ran its unchanged function body16 times against the frozen connected player (function SHA256 b67abdfc...). All immediate cases passed; one held-response WebKit run failed the original strict dismissal assertion. Its trace proves a trusted native blur from hidden disabled input to body before response release, zero application focus calls, editingCamera=null and advanced editorRevision. This supports a pre-response observable native-settling checkpoint, not a production policy change. Approve the exact test-only scope: snapshot while response remains held, retain strict node equality across release plus same-editor identity/closed/hidden guards and all other setup cases/counts. Wrong visible focus after response must still fail equality and reopening must fail the closed/hidden guards; those mandatory negative injections and immediate/delayed two-engine corrected-suite runs are acceptance requirements, not claimed completed implementation validation. No post-response snapshot or weaker endpoint assertion is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:05:07Z",
           "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
         }
       }
@@ -4211,6 +4249,21 @@
       "at": "2026-10-26T07:02:25Z",
       "type": "majority",
       "message": "P32 revision1 has six explicit distinct approvals before implementation. R05 completes its separate P33 ballot before implementation assignment; canonical source remains unchanged for P32. P27/P31 integrated only after ten approvals and independent connected-browser review."
+    },
+    {
+      "at": "2026-10-26T07:05:07Z",
+      "type": "ballot",
+      "message": "R05 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:05:07Z",
+      "type": "ballot",
+      "message": "R08 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:05:55Z",
+      "type": "implementation",
+      "message": "R05 finished three independent ballots, then began P32 only in prepared history-hydration worktree from4c845ad after six approvals. R06 assigned bounded P29 atomic append-fault correction after R04 BLOCKED review; P30 independently READY. P33 has five explicit approvals and no code/test changes authorized yet."
     }
   ],
   "validation": [
