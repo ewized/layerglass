@@ -2,7 +2,7 @@ import type { Page } from 'playwright';
 import assert from 'node:assert/strict';
 import { chromium, webkit } from 'playwright';
 import { setTimeout as delay } from 'node:timers/promises';
-import { SHELL_PATHS, SHELL_CACHE_PREFIX } from '../src/pwa-shell.js';
+import { SHELL_PATHS, SHELL_CACHE_PREFIX } from '../src/pwa-shell.ts';
 import { waitForPlayer } from './player-page.ts';
 
 const base = process.env.VIEWER_URL || 'http://127.0.0.1:8080';
