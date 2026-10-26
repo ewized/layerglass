@@ -4097,7 +4097,8 @@
             "/workspace/layerglass-review/check-container-ownership/test-results/p34/report.json"
           ]
         },
-        "canonical_commit": "038efc662c4e4e9b1d84972c400b1723d4e79bfb"
+        "canonical_commit": "038efc662c4e4e9b1d84972c400b1723d4e79bfb",
+        "combined_check": "PASS on all39 snapshot951aafc (218Python/263JavaScript/35docs/20bothengine suites); exact product source unchanged by later audit bookkeeping."
       }
     },
     {
@@ -4195,7 +4196,8 @@
         "peer_decision": "READY",
         "source_sha256": "e4b14d276d13ce00dcb769a5b88cf33c18632009ec8b5964c2c9938895c8d5f0",
         "validation": "Actual registered history suite plain/spaced/percent paths passes both engines; direct control passes, unknown2, realchild7, actual240000ms ETIMEDOUT preserved; exec3300exit0, owned container removed.",
-        "canonical_commit": "e18167d4a6922a5b57f3def9d79cba0af63d4f1c"
+        "canonical_commit": "e18167d4a6922a5b57f3def9d79cba0af63d4f1c",
+        "combined_check": "PASS on all39 snapshot951aafc (218Python/263JavaScript/35docs/20bothengine suites); exact product source unchanged by later audit bookkeeping."
       }
     },
     {
@@ -4343,6 +4345,9 @@
         "verification": "test-results/review-2026-10-26/root-p36-merge/merged-source-verification.json",
         "recorded_at": "2026-10-26T09:50:08Z",
         "validation": "Author103JS/35docs/twoenginefixture andindependentR05same+ownlegacycontrols; R06backend22checksapplicableviaunchangedhashes. Finalcombinedall awaitsP39stableintegration."
+      },
+      "implementation": {
+        "combined_check": "PASS on all39 snapshot951aafc (218Python/263JavaScript/35docs/20bothengine suites); exact product source unchanged by later audit bookkeeping."
       }
     },
     {
@@ -4448,7 +4453,8 @@
           "docs/local-previews.md": "b4ea387bba34d745bb0acd52dd56793f60b2dc4445cf7c6304a959a91d0da1fd"
         },
         "validation": "Independent29focusedunits, actual original corrected adjacentcolor consumer and registered Chromium/WebKit loading/held/corrupt/late/24steprealIDB suite pass; oldmodule negatives retained. Actual45min/6h integration run pending.",
-        "canonical_commit": "25c569f81149f990cfea3519a96db571a804146b"
+        "canonical_commit": "25c569f81149f990cfea3519a96db571a804146b",
+        "combined_check": "PASS on all39 snapshot951aafc (218Python/263JavaScript/35docs/20bothengine suites); exact product source unchanged by later audit bookkeeping."
       }
     },
     {
@@ -4649,7 +4655,8 @@
         "worktree": "/workspace/layerglass-review/check-built-image-id",
         "branch": "review/check-built-image-id",
         "authorized_at": "2026-10-26T09:41:40Z",
-        "authorization": "7fresh explicit approvals for exactP39rev1 before any source/product-doc edits; priorP38votesnotused; root0."
+        "authorization": "7fresh explicit approvals for exactP39rev1 before any source/product-doc edits; priorP38votesnotused; root0.",
+        "combined_check": "PASS on all39 snapshot951aafc (218Python/263JavaScript/35docs/20bothengine suites); exact product source unchanged by later audit bookkeeping."
       },
       "independent_final_review": {
         "status": "READY",
@@ -4769,7 +4776,8 @@
         "peer_report_sha256": "85e0278c34c249559e1329c27ca29b0d97a3db8620475ad2211948ea0a376543",
         "peer_reviewed_commit": "f4c8ce4206604b24ec9612f421109d32959ffa51",
         "canonical_commit": "38b8124f3ff0b845fb660343d4442e3d399df836",
-        "integration_verification": "test-results/review-2026-10-26/root-p40-merge/source-verification.json"
+        "integration_verification": "test-results/review-2026-10-26/root-p40-merge/source-verification.json",
+        "combined_check": "PASS on all39 snapshot951aafc (218Python/263JavaScript/35docs/20bothengine suites); exact product source unchanged by later audit bookkeeping."
       }
     }
   ],
@@ -5816,6 +5824,11 @@
       "at": "2026-10-26T10:43:05Z",
       "type": "peer-acceptance",
       "message": "P40 R05 exactf4c8ce4 READY report atomicallycomplete/7source+6evidencehashes verified before mutation. Clean exact3file author/base and canonicaltarget equality;10freshvotesfirst6pre-edits verified. Peer originalactualprimary+aligned+fullpreview-loading bothengines andmetadataequalitypass, authoronlyunits/docs/JPEGclock qualified. Ready for exactcherry; combinedcheck stillpending."
+    },
+    {
+      "at": "2026-10-26T10:50:24Z",
+      "type": "combined-check",
+      "message": "All39 immutable source951aafc archived with Git object manifest; scripts/check.sh all running in root exec session58296. Python218, JavaScript263,35docs and Nx build/cache checks passed so far; browser phase still running. Audit-only loopback proxy wrapper, normal hosted CI remains separate."
     }
   ],
   "validation": [
@@ -6143,6 +6156,24 @@
       "status": "focused pass; combined pending",
       "summary": "P40 author87units/35docs/2registeredbothengine suites; peer originalactualprimary+aligned andcompletepreview-loading bothengine plusmetadata equality. Exactcanonical7hashes/P36unchanged15/P39script+doc verified. Originalnegatives and draft failures qualified/preserved.",
       "evidence": "test-results/review-2026-10-26/r05/p40-final-review.json"
+    },
+    {
+      "status": "inconclusive; aborted pilot",
+      "summary": "R06 generated-JPEG pilot on all39 source951aafc requested60 measured seconds and aborted at0.193s. Chromium CDP body observation was empty; root cause unproved. One WebKit sample passed. Retention, cold preview and endurance not established. Backend sessions/media reached zero before fixture shutdown; Chromium native pagehide receipt missing. Owned containers verified absent, fixture cleanup passed. Original failure preserved; diagnostic harness preparation only authorized next.",
+      "evidence": "test-results/review-2026-10-26/r06/jpeg-soak/pilot-report.json",
+      "sha256": "5377aaa3120d4ad7298db08f8e1ba154a3429361630b550d42de811535c39c8a"
+    },
+    {
+      "status": "running; partial2hour observation",
+      "summary": "Corrected a505 native6hour run has crossed2actual hours in Chromium/WebKit. One video/session per engine, bounded stream/preview RAM, actual cold-IDB reads and zero HLS/previewHTTP observed. Start remains0; actual pruning and6hour completion not yet reached. Source predates P36/P39/P40.",
+      "evidence": "test-results/review-2026-10-26/root-p37-2h-checkpoint.json",
+      "sha256": "a6f4eacbdd469b7f7c11cb20b7c060780102b24e8796ac8b66c079e2b5a1fb2d"
+    },
+    {
+      "status": "pass",
+      "summary": "All39 full combined check on immutable951aafc exited0:218Python,263JavaScript,35linkedMarkdown,Nx3project build+cache graph and20defaultbrowser suites in Chromium/WebKit. PWA shellcache off; owned check-name prefix container list empty. P39 untagged build cache retained intentionally. Local loopback-proxy audit wrapper; hostedCI still separate. No hardware/printer/deployment claim.",
+      "evidence": "test-results/review-2026-10-26/root-all39-full/report.json",
+      "sha256": "395754c537fcd32da475d58c87c295fed522996002aad4d93032cb411e2db0ef"
     }
   ],
   "implementation_worktrees": [
