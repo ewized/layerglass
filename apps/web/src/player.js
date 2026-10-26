@@ -327,6 +327,8 @@ async function attachPlayer(prepared = null, recovering = false) {
   }
   pageReplay.attachMedia({ preserve: recovering && priorSession && priorSession === pageReplay.session?.session_id });
   detachPlayer();
+  const session = pageReplay.session?.session_id;
+  const ownsSession = () => version === selectionVersion && session === pageReplay.session?.session_id;
   attachedGeneration = pageReplay.session?.session_id || status.generation;
   lastAttachAt = Date.now();
   waiting('Loading the live view', 'Getting the latest image from your camera.');
@@ -401,19 +403,28 @@ async function attachPlayer(prepared = null, recovering = false) {
       transport.failureLimit = 3;
       transport.quiet = false;
       transport.onFailure = () => {
-        if (transport !== videoStream || playerMedia.remoteActive) return;
+        if (transport !== videoStream || !ownsSession() || playerMedia.remoteActive) return;
         streamFallback = true;
         attachPlayer(null, true);
       };
       if (pageReplay.mediaRestore && !pageReplay.followLive) {
         // The initial index arrives before its live media burst. Let that burst
         // establish the loader's next sequence before asking it for old footage.
-        try { await transport.waitFor(() => transport.nextSequence !== null ? true : null, AbortSignal.timeout(45000)); }
-        catch (_) {
-          if (transport === videoStream && networkAvailable() && !pageHidden && playerVisible()) transport.onFailure();
-          return;
+        const canLoad = () => networkAvailable() && !pageHidden && playerVisible() && !playerMedia.remoteActive;
+        for (;;) {
+          try {
+            await transport.waitFor(() => canLoad() && transport.nextSequence !== null ? true : null, AbortSignal.timeout(45000));
+          } catch (_) {
+            if (transport !== videoStream || !ownsSession()) return;
+            if (canLoad()) { transport.onFailure(); return; }
+            // A suspended transport reconnects on visibility/network restoration.
+            // Keep its initializer waiting too, even if this deadline elapsed.
+            continue;
+          }
+          if (transport !== videoStream || !ownsSession()) return;
+          if (!canLoad()) continue;
+          break;
         }
-        if (transport !== videoStream || version !== selectionVersion) return;
       }
     }
     const decoder = hls = new Hls({ enableWorker: true, preferManagedMediaSource: true, liveDurationInfinity: true,
@@ -429,7 +440,7 @@ async function attachPlayer(prepared = null, recovering = false) {
     hls.on(Hls.Events.MEDIA_ATTACHING, () => playerMedia.setSource(source));
     hls.on(Hls.Events.MEDIA_ATTACHED, (_event, data) => playerMedia.setMediaSource(hls, data.mediaSource));
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      if (hls !== decoder) return;
+      if (hls !== decoder || !ownsSession()) return;
       pageReplay.mediaReady();
       if (!pageReplay.paused) play();
     });

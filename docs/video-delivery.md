@@ -172,6 +172,11 @@ deadlines as well as the fetch reader; intentional suspension must not become a
 fatal fragment timeout. Visibility restoration resumes paused/replayed footage
 with its original recording session. Native PiP and Cast keep their existing
 visibility/remote-playback behavior.
+If recovery is still waiting for its first media fragment, that transport's
+initializer also waits through hidden/offline readiness deadlines. It constructs
+the decoder only after foreground network delivery resumes. Transport replacement
+or a session/camera change cancels the old initializer; its late readiness or
+failure callback cannot attach media to the replacement recording.
 
 During HLS fallback, a foreground Live viewer schedules a quiet probe after one
 minute. It must receive at least two media fragments before replacing the working
@@ -204,6 +209,12 @@ reconnection, visibility changes and compatibility fallback.
 replay through decoder rebuilds, continuous-to-HLS failure recovery and native
 file reattachment. It verifies recorded telemetry clocks, one restoration seek
 and explicit Live during loading.
+`apps/web/tests/browser-replay-suspension.js` holds initial media through an
+accelerated readiness deadline, then verifies real decoded paused/playing replay
+after visibility and offline lifecycle restoration. It also checks explicit Live,
+session replacement and camera cancellation. Visibility/network flags and the
+45-second deadline are controlled by the fixture; media clocks and decoding are
+not accelerated.
 These are generated-media checks in headless Chromium/WebKit; native Safari HLS
 and physical-device recovery remain device checks. Unit/HTTP tests
 exercise record parsing, memory limits, decoder buffer transfer, retention,

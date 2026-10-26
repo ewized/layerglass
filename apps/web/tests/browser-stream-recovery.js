@@ -9,6 +9,7 @@ async function run(name, engine) {
   const browser = await engine.launch({ headless: true, args: name === 'chromium' ? ['--no-sandbox'] : [] });
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block',
     extraHTTPHeaders: { 'X-Fixture-Stream-Viewer': name } });
+  await context.route(url => ['http:', 'https:'].includes(url.protocol) && url.origin !== new URL(base).origin, route => route.abort());
   const block = async enabled => {
     const response = await context.request.post(`${base}/__fixture/video-stream?viewer=${name}&blocked=${enabled ? 1 : 0}`);
     assert.equal(response.status(), 200, 'Run this test against tests/fixture_server.py.');
