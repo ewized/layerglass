@@ -195,6 +195,7 @@ export class PageReplay {
     this.followLive = true;
     this.paused = false;
     this.position = 0;
+    this.lastImagePosition = null;
     this.timeline.reset();
     this.eventMarkers?.reset?.();
     this.scrubbing = false;

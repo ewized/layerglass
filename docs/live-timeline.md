@@ -69,8 +69,9 @@ interaction choices are specific to this viewer.
   seconds past the newest observation and stops on a reported stream error.
   Seeking is independently clamped to actually available media.
 - Retention trimming can move the earliest available point. Page/session reset
-  clears the clock and window. Temporary recording and its storage cap are
-  unchanged.
+  clears the clock, window and JPEG frame-request deduplication. A replacement
+  camera requests its own replay frame even at the same timestamp. Temporary
+  recording and its storage cap are unchanged.
 
 `apps/web/tests/timeline.test.js` exercises the actual browser controller with a fake
 clock and media inputs. The core regression first failed with a movement from

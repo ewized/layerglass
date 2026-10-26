@@ -127,6 +127,30 @@ test('JPEG replay has the same 1× live-relative position as HLS', async () => {
   }
 });
 
+test('JPEG frame deduplication belongs to its session, including paused same-position seeks', async () => {
+  const p = await player({ kind: 'jpeg' });
+  const requests = [];
+  let source;
+  Object.defineProperty(p.replay.image, 'src', { get: () => source, set: value => { source = value; requests.push(value); } });
+  p.replay.seek(30);
+  p.replay.seek(30.2);
+  assert.deepEqual(requests, ['/fixture.jpg?at=30'], 'Same-session requests still deduplicate by decoded frame position');
+  const next = { ...p.replay.session, session_id: 'next-page', camera_id: 'next-camera', frame_url: '/next-camera.jpg' };
+  p.replay.release = () => {};
+  p.replay.close();
+  p.replay.session = next;
+  p.replay.attachMedia();
+  p.replay.mediaReady();
+  p.replay.image.src = '/next-camera-live.jpg';
+  p.replay.togglePause();
+  p.replay.seek(30.2);
+  assert.equal(p.replay.image.src, '/next-camera.jpg?at=30', 'The replacement camera must request its own historical frame');
+  assert.equal(p.replay.paused, true);
+  close(p.replay.position, 30.2, 'Paused historical position');
+  p.replay.seek(30.4);
+  assert.equal(requests.length, 3, 'The new session also deduplicates repeated requests for one frame');
+});
+
 test('two-second segment batches do not make normal replay bounce each second', async () => {
   const p = await player();
   p.replay.seek(50);
