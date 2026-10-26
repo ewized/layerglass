@@ -29,7 +29,8 @@ export class PythonBackend {
   async fetch(path, init = {}) {
     // Preserve an installation's same-origin reverse-proxy login while keeping
     // cookies/HTTP auth out of a separately selected backend origin.
-    const response = await this.fetcher(this.resolve(path), { ...init, credentials: 'same-origin' });
+    // A redirect must not replay a printer access code at an unselected origin.
+    const response = await this.fetcher(this.resolve(path), { ...init, credentials: 'same-origin', redirect: 'error' });
     if (!response.headers?.get('Content-Type')?.startsWith('application/json')) return response;
     const headers = new Headers(response.headers);
     headers.delete('Content-Length');

@@ -85,9 +85,10 @@ test('Python routes media/session URLs to its selected origin and preserves only
     return Response.json({ status: { playlist_url: '/stream/a/live.m3u8', jpeg_url: null },
       replay: { video_url: '/replay/a/video', frame_url: '/replay/a/frame.jpg' } });
   } });
-  const data = await (await backend.fetch('/api/snapshot', { credentials: 'include' })).json();
+  const data = await (await backend.fetch('/api/snapshot', { credentials: 'include', redirect: 'follow' })).json();
   assert.equal(requests[0].url, 'https://printer.test/api/snapshot');
   assert.equal(requests[0].options.credentials, 'same-origin');
+  assert.equal(requests[0].options.redirect, 'error', 'Callers cannot opt an access-code request into redirect replay.');
   assert.equal(data.status.playlist_url, 'https://printer.test/stream/a/live.m3u8');
   assert.equal(data.replay.video_url, 'https://printer.test/replay/a/video');
   assert.equal(data.replay.frame_url, 'https://printer.test/replay/a/frame.jpg');

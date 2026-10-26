@@ -167,6 +167,10 @@ cookies and HTTP authentication are omitted. If a backend uses such a login,
 open its own viewer origin; cross-origin authentication needs a separately
 designed token/login flow. See the browser platform's
 [CORS credential rules](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS).
+Backend fetches reject HTTP redirects, including redirects to the same host.
+Enter the backend's final origin so a redirected setup request cannot forward
+a printer access code to another destination. SSE has its own browser-managed
+redirect behavior; it carries no setup POST body.
 
 ## Validation
 
