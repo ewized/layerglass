@@ -17,7 +17,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(response.status(), 200, 'Run against the generated camera fixture.');
   };
   const page = await context.newPage();
-  const errors = [], messages = [], sessions = [];
+  const errors = [], messages = [], sessions = [], nativeCases = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (['warning', 'error'].includes(message.type())) messages.push(message.text()); });
   page.on('request', request => {
@@ -29,6 +29,8 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     const printerTime = printerPlaybackTime(app.video, app.hls, app.pageReplay);
     const slider = document.querySelector('#replay-slider');
     return { at: performance.now() / 1000, time: app.video.currentTime, paused: app.video.paused,
+      controllerPaused: app.pageReplay.paused, autoplay: app.video.autoplay, reloadAutoplay: app.reloadAutoplay,
+      seeking: app.video.seeking, source: app.video.getAttribute('src'), currentSource: app.video.currentSrc,
       followLive: app.pageReplay.followLive, session: app.pageReplay.session?.session_id,
       sameVideo: app.video === window.originalVideo, videos: document.querySelectorAll('video').length,
       rebuilt: app.hls !== window.priorHls, fallback: app.streamFallback, seeks: window.recoverySeeks,
@@ -143,28 +145,80 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     // as well, without claiming older Safari's native network HLS is covered.
     await page.goto(`${base}/?backend=demo`);
     await waitForPlayer(page, ({ app }) => app.pageReplay.session?.kind === 'file' && app.video.readyState >= 2 &&
-      app.video.currentTime > 175 && !app.video.paused, null, { timeout: 25000 });
+      app.video.currentTime > 175 && !app.video.paused && !app.pageReplay.paused && !app.video.seeking &&
+      !app.pageReplay.attaching && !app.pageReplay.mediaRestore, null, { timeout: 25000 });
     await page.evaluate(async () => {
       const app = await import('/static/player.js');
       window.originalVideo = app.video;
-      window.restoreLoads = 0;
+      window.recoverySeeks = 0; window.restoreLoads = 0;
+      window.nativeTransitions = { seeked: 0, pause: 0, play: 0, playing: 0 };
+      for (const type of Object.keys(window.nativeTransitions)) app.video.addEventListener(type, () => window.nativeTransitions[type]++);
       app.video.addEventListener('loadeddata', () => window.restoreLoads++);
       app.video.addEventListener('seeking', () => window.recoverySeeks++);
     });
+    const nativeInitial = await read();
+    const nativeAction = (action, expectedPaused) => page.evaluate(async ({ action, expectedPaused, initial }) => {
+      const app = await import('/static/player.js');
+      const snapshot = () => ({ time: app.video.currentTime, paused: app.video.paused,
+        controllerPaused: app.pageReplay.paused, ready: app.video.readyState, seeking: app.video.seeking,
+        attaching: app.pageReplay.attaching, restore: app.pageReplay.mediaRestore,
+        source: app.video.getAttribute('src'), currentSource: app.video.currentSrc,
+        session: app.pageReplay.session?.session_id, followLive: app.pageReplay.followLive,
+        sameVideo: app.video === window.originalVideo, videos: document.querySelectorAll('video').length });
+      const before = snapshot(), events = { ...window.nativeTransitions };
+      if (before.paused !== expectedPaused || before.controllerPaused !== expectedPaused || before.ready < 2 ||
+          before.seeking || before.attaching || before.restore || !before.sameVideo || before.videos !== 1 ||
+          before.session !== initial.session || before.source !== initial.source || before.currentSource !== initial.currentSource ||
+          action === 'toggle' && (before.followLive || before.time < 30 || before.time >= 33)) {
+        throw new Error(`Native ${action} setup changed before action: ${JSON.stringify({ expectedPaused, before, events })}`);
+      }
+      if (action === 'seek') app.pageReplay.seek(30);
+      else app.pageReplay.togglePause();
+      return { action, before, after: snapshot(), events };
+    }, { action, expectedPaused, initial: nativeInitial });
     for (const paused of [true, false]) {
-      await page.evaluate(async () => {
-        const app = await import('/static/player.js');
-        app.pageReplay.seek(30);
-        if (app.video.paused) app.pageReplay.togglePause();
-      });
-      await waitForPlayer(page, ({ app }) => !app.video.seeking && app.video.currentTime >= 30 && app.video.currentTime < 33 && !app.video.paused);
-      if (paused) await page.evaluate(async () => (await import('/static/player.js')).pageReplay.togglePause());
+      const nativeCase = { requestedPaused: paused, setup: await read() };
+      nativeCases.push(nativeCase);
+      // Share the original default 30 s seek budget with the one requested native
+      // transition. These are preconditions; recovery never waits for pause.
+      const setupDeadline = Date.now() + 30000;
+      const remainingSetup = () => {
+        const remaining = setupDeadline - Date.now();
+        assert(remaining > 0, 'Native setup exceeded its 30 second budget.');
+        return remaining;
+      };
+      nativeCase.seek = await nativeAction('seek', !paused);
+      await waitForPlayer(page, ({ app, arg }) => !app.video.seeking && app.video.readyState >= 2 &&
+        app.video.currentTime >= 30 && app.video.currentTime < 33 && app.video.paused === arg.expectedPaused &&
+        app.pageReplay.paused === arg.expectedPaused && !app.pageReplay.attaching && !app.pageReplay.mediaRestore &&
+        window.nativeTransitions.seeked > arg.seeked,
+      { expectedPaused: !paused, seeked: nativeCase.seek.events.seeked }, { timeout: remainingSetup() });
+      nativeCase.transition = await nativeAction('toggle', !paused);
+      assert.equal(nativeCase.transition.after.paused, paused, 'The single native toggle must request the intended state.');
+      await waitForPlayer(page, ({ app, arg }) => !app.video.seeking && app.video.readyState >= 2 &&
+        !app.pageReplay.attaching && !app.pageReplay.mediaRestore && app.video.paused === arg.paused &&
+        app.pageReplay.paused === arg.paused && window.nativeTransitions[arg.paused ? 'pause' : 'play'] > arg.events[arg.paused ? 'pause' : 'play'] &&
+        (arg.paused || window.nativeTransitions.playing > arg.events.playing),
+      { paused, events: nativeCase.transition.events }, { timeout: remainingSetup() });
+      const transitions = await page.evaluate(() => ({ ...window.nativeTransitions }));
+      const event = paused ? 'pause' : 'play';
+      assert.equal(transitions[event] - nativeCase.transition.events[event], 1, 'Exactly one requested native transition is observed.');
       await page.evaluate(() => { window.recoverySeeks = 0; window.restoreLoads = 0; });
       const before = await read();
+      nativeCase.before = before;
+      console.log(JSON.stringify({ browser: name, transport: 'native-file', phase: 'before-error', ...nativeCase }));
+      assert.equal(before.paused, paused, 'Native pause intent must be established before error injection.');
+      assert.equal(before.controllerPaused, paused, 'Controller pause intent must agree before error injection.');
+      assert.equal(before.seeking, false); assert(before.ready >= 2);
+      assert.equal(before.attaching, false); assert.equal(before.restore, null);
+      assert.equal(before.followLive, false); assert.equal(before.session, nativeInitial.session);
+      assert.equal(before.sameVideo, true); assert.equal(before.videos, 1);
+      assert.equal(before.source, nativeInitial.source); assert.equal(before.currentSource, nativeInitial.currentSource);
       await page.evaluate(async () => (await import('/static/player.js')).video.dispatchEvent(new Event('error')));
       await waitForPlayer(page, ({ app }) => window.restoreLoads > 0 && !app.pageReplay.attaching && !app.video.seeking &&
         app.video.readyState >= 2, null, { timeout: 15000 });
       const after = await read();
+      nativeCase.after = after;
       assert.equal(after.session, before.session);
       assert.equal(after.sameVideo, true);
       assert.equal(after.videos, 1);
@@ -185,6 +239,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.deepEqual(errors, []);
     console.log(`${name}: paused/playing continuous, HLS and native-file recovery, recorded clocks, one seek/session/video and explicit Live passed.`);
   } catch (error) {
+    if (nativeCases.length) console.error('Native recovery snapshots', JSON.stringify(nativeCases));
     console.error(name, error.stack, await read().catch(() => null), messages.slice(-15));
     throw error;
   } finally {
