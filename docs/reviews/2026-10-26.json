@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -30,13 +30,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r01/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r01/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r01/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r01/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r01/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r01/round13-ballot.json"
     },
     {
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
@@ -50,13 +51,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r02/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r02/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r02/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r02/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r02/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r02/round13-ballot.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
@@ -69,13 +71,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r03/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r03/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r03/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r03/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r03/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r03/round13-ballot.json"
     },
     {
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
@@ -88,13 +91,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r04/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r04/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r04/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r04/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r04/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r04/round13-ballot.json"
     },
     {
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -107,13 +111,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r05/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r05/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r05/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r05/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r05/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r05/round13-ballot.json"
     },
     {
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
@@ -127,13 +132,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r06/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r06/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r06/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r06/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r06/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r06/round13-ballot.json"
     },
     {
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -146,13 +152,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r07/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r07/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r07/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r07/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r07/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r07/round13-ballot.json"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -165,7 +172,8 @@
       "ballot_round9": "test-results/review-2026-10-26/r08/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r08/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r08/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r08/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r08/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r08/round13-ballot.json"
     },
     {
       "id": "r09",
@@ -555,8 +563,18 @@
       "slate": "test-results/review-2026-10-26/round-13-slate.json",
       "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9",
       "ballots_started": true,
-      "reviewers_completed": [],
-      "notes": "3file localvalidJPEG timelineconsumer eligibility/activation only; lowerprecision/retention separateissue stop clause. No edits/authorworktree before6committed approvals."
+      "reviewers_completed": [
+        "r01",
+        "r02",
+        "r03",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08"
+      ],
+      "notes": "3file localvalidJPEG timelineconsumer eligibility/activation only; lowerprecision/retention separateissue stop clause. No edits/authorworktree before6committed approvals.",
+      "decision": "P42 revision1 approved by8 explicit independent reviewers; threshold committed before implementation. Remaining2 ballots requested separately, none inferred."
     }
   ],
   "proposals": [
@@ -4949,8 +4967,66 @@
       "evidence_path": "test-results/review-2026-10-26/r03/final-print-stats-timeline-review.json",
       "risk": "Wrong replay-mode gating, erasing pending summaries or applying display rather than proven bounds can hide legitimate events or preserve the clamped marker bug. Render-only filtering leaves stale activation possible. Keep exact event/clock identity, original placement and compatibility; source proof still needs connected browser validation.",
       "validation_plan": "Connected production timeline component in Chromium/WebKit with production-recorder-derived JPEG metadata/history and real native decoded stills: initial0..2proven/0..3slider hides stored2.5PAUSE; stale rendered/menu activation outside currentintersection makes0seek/0unfulfilledemit; accepted1030successor admits same2.5event, pointer/keyboard activation commits exactly1seek to2.5 with same session/imageowner, correct held pixels and PAUSE at1002.5. Removing coveragegate is required negative control recovering original mismatch. Test valid completedJPEG, inclusive actualbounds, realretention, fractional lowerbound compatibility, offscreen/frozen display mappings and pending summary preservation. Legacy descriptorless/invalidJPEG, file/H264/remote anddisabled controls unchanged,0extra telemetry/media requests from render/hover alone. If independent lower-precision/retention issue arises stop without broader edits. Run focused relevantJS plus existing registered browser-timeline-events, JPEGclock and preview-loading bothengines, docslinks; independent exact-final READY before integration. New normalfullCI after voted/tested implementation; no unchanged-source rerun, realprinter/device/deploy.",
-      "status": "voting",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The pinned component admits markers on slider min/max (components/timeline-events.js:39-41) and activation rechecks only the legacy session-visible event ID before seeking/emitting the requested position (128-142). PageReplay deliberately renders a projected legacy tail while its valid local JPEG bounds and jpegTarget stop at the accepted capture (replay.js:296-304,381-417,635). The saved actual-recorder payload and production-method proof therefore support the marker at 2.5 versus committed position 2/RUNNING mismatch; the successor at 1030 proves the same observation becomes a legitimate completed held-interval target. The frozen three-file scope appropriately intersects eligibility with both current proven coverage and the original displayed window, revalidates activation, and preserves the original grouping/offset mapping and pending summary. Approval is local-valid-descriptor JPEG only, with no model/global clock/seek/recorder change, epsilon or compatibility expansion. Connected native Chromium/WebKit component proof, coverage-gate removal negative, stale marker/menu zero-seek/zero-unfulfilled-emit checks, successor exact one-seek/PAUSE control and the frozen legacy/remote/retention/fractional/display controls remain mandatory. A separate lower-precision or retention defect must stop this implementation for a fresh evidenced scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:16:18Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned component render lines 39-41 admits the projected slider range, while activation line 131 revalidates session-wide visibility; PageReplay.jpegTarget clamps the admitted 2.5 target to proven end 2. Actual recorder payloads and the production-method reproducer support the resulting RUNNING/PAUSE mismatch and the successor-completed held-interval control. The exact local valid-descriptor render/activation gate can correct this consumer without changing placement or discarding pending summaries. Connected Chromium/WebKit decoding, stale-activation zero-seek/zero-emit, gate-removal negative and compatibility controls remain mandatory before integration; current evidence does not provide connected browser proof. Precision, retention, global clock and other-mode changes remain outside this three-file scope and require fresh evidence/votes if independently necessary.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:16:18Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Fresh inspection confirms component render admits projected slider positions and activation rechecks only legacy session visibility, while valid local JPEG seek clamps to descriptor coverage: the saved real-recorder case requests 2.5 but commits 2/RUNNING. The exact three-file eligibility intersection and activation recheck address that consumer mismatch without changing clocks, descriptor ownership, model retention or other replay modes; keeping summaries pending preserves the proven 1030 successor/held-interval control. Approval includes the specified connected Chromium/WebKit/native-still tests, stale activation and gate-removal negatives, unchanged legacy/file/H264/remote/disabled controls and request counts. Existing evidence is model/controller proof, not completed browser validation. The explicit stop for a separately demonstrated precision/retention defect is necessary; this vote authorizes no broader fix.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:16:18Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Pinned component source admits markers through projected slider bounds and activation rechecks only legacy visibility. Actual recorder metadata plus production model/controller proof demonstrates event2.5 admitted with proven end2, then clamped to RUNNING2; the1030 successor legitimately admits the same event/held interval. A valid-local-JPEG-only gate at rendering and activation is justified within the three files, while retaining pending summaries and original slider placement/offsets. Approval requires connected native Chromium/WebKit pointer/keyboard and stale-menu controls, the gate-removal negative, inclusive bounds/retention/fractional and legacy/remote compatibility, and all frozen suites/docs checks. The existing proof uses image/render sinks and cannot substitute for those browser tests. Any distinct lower-bound conversion/retention defect must stop for new evidence/scope/votes; no model/clock/seek normalization is authorized. Slate, report and seven raw-evidence hashes verified; no runtime, author tree or other ballots inspected.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:17:40Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned component rendering (39\u201341) admits events through projected slider bounds, and activation (131\u2013142) rechecks legacy visibility before emitting the requested position; local JPEG seeking (386, 414\u2013417) clamps to proven descriptor coverage. Recorder-derived evidence establishes the 2.5 marker \u2192 2/RUNNING mismatch. Successor 1030 makes the same 2.5 observation valid with the recorded 1002 still selected and PAUSE history. Existing proof uses IO/render sinks and does not establish native decoding. The exact three-file scope gates rendering and stale activation for valid local JPEG while preserving pending summaries, slider placement/offsets, ownership and other modes. I approve the existing connected Chromium/WebKit validation plan, including the removed-gate negative, stale activation, successor, inclusive/fractional/retention/frozen-display controls and no extra requests. A separate clock/retention defect requires stopping for fresh scope. Canonical Python JSON hash, 18 pinned source hashes and seven evidence hashes verified; no app runtime or other ballots read.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:23:06Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected pinned e6527f1d5fb8779d1f03f62e402c0813c15dee7a, exact slate/report, raw recorder payloads, reproducer scripts/results and existing browser test; verified slate/report plus all18source and7evidence hashes. Component lines39-41 admit on projected slider bounds, while lines128-142 recheck only legacy session visibility and emit the requested position. Production PageReplay bounds/seek at296-304 and381-417 instead clamp valid JPEG to its proven descriptor. The actual recorder payload has slider/session end3, proven end2 and observed PAUSE2.5; production controller commits2/RUNNING. The1030successor control preserves the same event at2.5, selecting the preceding still with PAUSE at1002.5. This supports the narrow component admission-and-activation gate. Approval requires limiting it to valid owned LOCAL JPEG, preserving remote/invalid/legacy/file/H264 behavior, pending summaries and original slider placement/offsets. Stale marker/menu activation must revalidate the current intersection and produce neither a clamped seek nor an unfulfilled emit. Raw image/render sinks are not native browser proof: the frozen connected Chromium/WebKit negative control, successor/pointer/keyboard/native-clock/ownership checks, inclusive/frozen-display/retention/fractional compatibility, zero-extra-request checks, relevant suites/docs and independent exact-final READY remain required before integration. A separately demonstrated precision/retention defect must stop for fresh scope/votes; it cannot broaden these three files into global model/clock changes. No runtime, other-ballot or author-tree inspection, diagnostic or tracked edits performed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:23:06Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Pinned component render uses the projected slider range and activation rechecks only session-wide visibility; neither verifies valid local JPEG coverage. The actual recorder payload and production-controller proof demonstrate marker 2.5 inside display 0..3 but beyond proven end 2, committing 2/RUNNING at 1002 while emitting the requested marker position. The accepted 1030 successor makes that same 2.5 event seekable with the preceding held still and PAUSE at 1002.5, supporting pending preservation rather than deletion or timestamp movement. I approve only the closed three-file local-valid-owned-JPEG consumer gate, intersecting current proven bounds with display eligibility again on activation while retaining original placement/offset mapping and legacy/file/H264/remote behavior. Source/IO-sink evidence is not connected native-browser proof: both-engine decoded-still, stale activation with zero seek/emit, removed-gate negative, boundaries/fractional-retention/frozen-window, compatibility/no-extra-request and registered regression checks remain required, followed by independent exact-final READY. Any separate clock-precision or retention defect must stop this scope for new evidence and fresh votes.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:23:06Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Fresh approval of the exact frozen Round13 revision1 scope and canonical hash, independently recomputed excluding sha256. I inspected e6527f1 source, verified all18 pinned source hashes and all7 saved evidence hashes, and verified finding report aa8e150769ac0ddac47955ceae0913a958d8ae2270ff113372d5f18b4da4cdd5. The component render at lines39-41 uses only displayed slider bounds; activation at128-142 rechecks session-wide visibility and then emits the requested position. PageReplay.bounds/jpegTarget instead limit valid local JPEG seeks to descriptor.start..position. The actual recorder payload and production-method consumer show event2.5 admitted in slider0..3 while proven0..2 clamps to2 with RUNNING at1002. The1030 successor control admits original2.5 against provenend30 and preserves the preceding still plus PAUSE history at1002.5, supporting a consumer eligibility correction rather than moving/deleting that event. The three-file scope can intersect eligibility with current proven and displayed bounds at render and activation while retaining original grouping/placement/offset mapping and pending summaries. Approval includes future connected Chromium/WebKit native-image proof, exact one-seek/clock/history ownership after the successor, removed-gate negative control, stale marker/menu zero-seek/zero-unfulfilled-emit controls, inclusive/fractional/retained/frozen-window compatibility, legacy/invalid-descriptor/file/H264/remote/disabled behavior, no render/hover requests, required focused suites/docs and independent exact-final READY. Existing sink-based evidence is not connected browser proof. A separate lower-bound precision or retention defect requires the stipulated stop and fresh scope/votes. No implementation, other ballots, vote transfer or new application runtime was used for this decision.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:23:06Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        }
+      },
+      "implementation_status": "Approved8/10; not yet started. Exact three-file scope; independent connected-browser acceptance required."
     }
   ],
   "commits": [
@@ -6125,6 +6201,51 @@
       "at": "2026-10-26T13:11:49Z",
       "type": "proposal",
       "message": "FreezeRound13P42rev1 exact3files afterR03report/source/evidence verification. No transferred approvals or author worktree/edits. Fresh10reviewer ballots now required; threshold6beforeimplementation."
+    },
+    {
+      "at": "2026-10-26T13:16:18Z",
+      "type": "ballot",
+      "message": "R01 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:16:18Z",
+      "type": "ballot",
+      "message": "R02 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:16:18Z",
+      "type": "ballot",
+      "message": "R03 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:17:40Z",
+      "type": "ballot",
+      "message": "R04 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:23:06Z",
+      "type": "ballot",
+      "message": "R05 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:23:06Z",
+      "type": "ballot",
+      "message": "R06 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:23:06Z",
+      "type": "ballot",
+      "message": "R07 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:23:06Z",
+      "type": "ballot",
+      "message": "R08 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:23:13Z",
+      "type": "quorum",
+      "message": "P42 revision1 has8 explicit APPROVE ballots against exact frozen Round13 SHA35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9. No source edits/worktree created. Committing quorum before author work begins."
     }
   ],
   "validation": [
@@ -6570,6 +6691,11 @@
       "status": "RUNNING_PARTIAL_FOUR_HOURS",
       "summary": "Nativea5059827run bothengines crossedactual4h with48preview sweeps and16rewind/Livecycles perengine, realretentionpruning/coldIDB reads, unchangednativeplayer/session andbounded128KiBcompressedRAM/8MiBdecoded/16MiBstream. Not6hcompletion/currentall40source or hardwarecertification. CheckpointSHA350625bd85f7215589887fe268f943612ceacaa4b21c72aa1d8298711db82d58.",
       "evidence": "test-results/review-2026-10-26/root-p37-four-hour-checkpoint.json"
+    },
+    {
+      "status": "RAW_FAIL_WITH_THIS_RUN_CAUSAL_TRACE",
+      "summary": "OneboundedJPEGcausaldiagnostic at951aafc failed31.496of90s,1strictcycle perengine, nohour. Existinghistory.read returnednull because ownedclock exceeded receivedcoverage by0.457155s; guardsallowedrender, nullrowpaintedmdash. ExistingHTTPextendedcoverage andnotifyingapply/onChange rendered38/10000 on SAMEownedframe at+8ms. Thisinstrumentedrun explains its documented unknown-historypath; historicalv4.2cause remainsunproved. Allstrictassertions unchanged; cold/pruning/twocycle/endurancegatesunmet. Native/backend/privateTTL cleanupPASS, exactCIDabsence, protocol anomalies/observerbounds retained. Rootverified313artifact hashes/reportSHA7a7a28c23f531e52b277810e9689cd64a9747f20e07002a48b62e5dbf2d67302 andmanifestSHAf7ceb9b4196e43310952f88ec871dd26b1dbfc8dc5d5e3ed6d76a251d7b26b79. No acceptance/product change/retry.",
+      "evidence": "test-results/review-2026-10-26/r06/jpeg-soak/diagnostic-run-report.json"
     }
   ],
   "implementation_worktrees": [
