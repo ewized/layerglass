@@ -15,6 +15,23 @@ from replay import ReplayBuffer
 from test_replay import CAMERA, Registry, Source
 
 
+class ObservedLock:
+    """Signal a worker's lock attempt without depending on scheduler timing."""
+
+    def __init__(self, lock):
+        self.lock = lock
+        self.waiter = None
+        self.waiting = threading.Event()
+
+    def __enter__(self):
+        if threading.current_thread() is self.waiter:
+            self.waiting.set()
+        return self.lock.__enter__()
+
+    def __exit__(self, *args):
+        return self.lock.__exit__(*args)
+
+
 class ReplayLifecycleTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
@@ -104,6 +121,83 @@ class ReplayLifecycleTests(unittest.TestCase):
         with urlopen(request, timeout=3) as response:
             self.assertEqual(response.status, 201)
             self.assertTrue(json.load(response)['ready'])
+
+    def test_forget_before_admission_rejects_a_waiting_create(self):
+        old = self.replay.create(CAMERA)['session_id']
+        original = self.replay.media(old, sequence=0)
+        observed = self.replay.lock = ObservedLock(self.replay.lock)
+        created, errors = [], []
+
+        def create():
+            try:
+                created.append(self.replay.create(CAMERA))
+            except Exception as error:
+                errors.append(error)
+
+        worker = observed.waiter = threading.Thread(target=create, daemon=True)
+        with observed:
+            worker.start()
+            self.assertTrue(observed.waiting.wait(3))
+            # Model registry.forget followed by replay.forget, as in the HTTP
+            # handler, while the queued create has not acquired the DVR lock.
+            self.registry.source = None
+            self.replay.forget(CAMERA)
+            self.assertFalse(original.exists())
+        worker.join(timeout=3)
+        self.assertFalse(worker.is_alive())
+        self.assertEqual(created, [])
+        self.assertEqual(len(errors), 1)
+        self.assertIsInstance(errors[0], ValueError)
+        self.assertFalse(self.replay.sessions)
+        self.assertFalse(self.replay.archives)
+        self.assertEqual(list(self.replay.root.iterdir()), [])
+
+    def test_forget_after_admission_releases_the_completed_create(self):
+        observed = self.replay.lock = ObservedLock(self.replay.lock)
+        entered, finish = threading.Event(), threading.Event()
+        created, errors = [], []
+        collect = self.replay._collect
+
+        def hold_collection(*args):
+            entered.set()
+            if not finish.wait(3):
+                raise RuntimeError('Fixture collection was not released.')
+            return collect(*args)
+
+        def create():
+            try:
+                created.append(self.replay.create(CAMERA))
+            except Exception as error:
+                errors.append(error)
+
+        def forget():
+            try:
+                self.replay.forget(CAMERA)
+            except Exception as error:
+                errors.append(error)
+
+        creator = threading.Thread(target=create, daemon=True)
+        forgetter = observed.waiter = threading.Thread(target=forget, daemon=True)
+        with patch.object(self.replay, '_collect', side_effect=hold_collection):
+            creator.start()
+            try:
+                self.assertTrue(entered.wait(3))
+                self.registry.source = None
+                forgetter.start()
+                self.assertTrue(observed.waiting.wait(3))
+            finally:
+                finish.set()
+                creator.join(timeout=3)
+                if forgetter.ident is not None:
+                    forgetter.join(timeout=3)
+        self.assertFalse(creator.is_alive())
+        self.assertFalse(forgetter.is_alive())
+        self.assertEqual(errors, [])
+        self.assertEqual(len(created), 1)
+        self.assertTrue(created[0]['ready'])
+        self.assertIsNone(self.replay.status(created[0]['session_id']))
+        self.assertFalse(self.replay.archives)
+        self.assertEqual(list(self.replay.root.iterdir()), [])
 
 
 if __name__ == '__main__':

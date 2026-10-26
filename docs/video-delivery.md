@@ -32,6 +32,12 @@ unreturned page lease and prunes unused archives. A later retry can succeed
 without waiting for lease expiry or consuming the viewer limit. Other pages
 keep their existing shared archive and history.
 
+Page creation checks printer admission under the DVR lock, using the same
+replay-to-registry lock order as collection. Forgetting a printer removes its
+registry binding before pruning its page leases: a concurrent create either
+finishes before that pruning or rejects the removed binding afterward. It cannot
+restore a page archive after forget completes.
+
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified

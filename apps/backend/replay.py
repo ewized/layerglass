@@ -115,10 +115,12 @@ class ReplayBuffer:
             self._prune()
 
     def create(self, camera):
-        relay = self.registry.get_relay(camera)
-        if not relay:
-            raise ValueError('Choose a configured printer first.')
         with self.lock:
+            # Match the collector's replay-to-registry lock order. A queued
+            # create must recheck admission after a completed forget.
+            relay = self.registry.get_relay(camera)
+            if not relay:
+                raise ValueError('Choose a configured printer first.')
             self._prune()
             if len(self.sessions) >= 128:
                 raise ValueError('Too many open viewers. Close an unused page and try again.')
