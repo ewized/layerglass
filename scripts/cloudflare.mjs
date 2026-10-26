@@ -124,7 +124,7 @@ async function wrangler(action, name) {
 export async function main(args = process.argv.slice(2)) {
   const [action = 'check', selection = 'all'] = args;
   if (args.length > 2 || !['prepare', 'check', 'dry-run', 'deploy', 'verify'].includes(action)) {
-    throw new Error('Usage: node scripts/cloudflare.mjs [prepare|check|dry-run|deploy|verify] [site|web|all]');
+    throw new Error('Usage: node scripts/cloudflare.mjs [prepare|check|dry-run|deploy|verify] [layerglass-site|layerglass|all]');
   }
   const names = selection === 'all' ? Object.keys(targets) : [selection];
   for (const name of names) {
