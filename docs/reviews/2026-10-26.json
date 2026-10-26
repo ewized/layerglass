@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active:43frozenproposals/40integrated/P38+P42superseded/P43implementing after6freshcommittedapprovals. Currentall40CI+hostingPASS. Older-pin native6h ongoing; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
+  "status": "Active:43frozenproposals/40integrated/P38+P42superseded; P43exactauthorcommit implemented and awaiting independent finalREADY. Currentall40CI+hostingPASS. Older-pin native6h beyond5h, finalpending; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -5097,7 +5097,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/p42-scope-stop-report.json",
       "risk": "A coverage-only gate hides legitimate events because legacy anchors are rounded; a render-only fix leaves stale activation and destructive retention. A broad model change risks legacy modes. Consumer-only precise views must use the accepted descriptor rather than raw metadata, preserve original session identity and pending summaries, and recompute activation position. Connected native/browser proof remains required; original stopped proposal approvals do not transfer.",
       "validation_plan": "Connected production timeline component in Chromium/WebKit with actual production-recorder-derived metadata/history and real native decoded JPEGs: initial proven0..2/display0..3 hides stored2.5PAUSE; stale rendered/menu actions outside current intersection make0seek/0unfulfilledemit; successor1030 admits the SAME2.5event, pointer/keyboard each commit exactly1seek2.5 with same session/image ownership, correct held pixels and PAUSE at1002.5. Add BOTH exact fractional-origin/anchor payloads from STOP report; assert current precise event mapping, no deletion of valid retained summaries, unchanged original model/controller sessions and exactly mapped seek/emit. Coverage-gate removal must recover upper-tail clamped marker mismatch; precise-view removal must recover fractional hidden/deleted-event negatives. Test inclusive actual bounds, real pruning, offscreen hide/reveal, frozen original display/group placement, pending summaries and stale cached-position activation. Preserve descriptorless/invalid JPEG, H264/file, remote and disabled behavior;0additional telemetry/media requests on render/hover. Run relevantJS units, registered browser-timeline-events, browser-jpeg-clock and browser-preview-loading both engines, docslinks. Obtain independent exact-final READY before integration, then one new normal fullCI on the tested source. No real printer/device/prod/cloud probes, deploy, relaxed assertions or unchanged-source rerun. Preserve all original failed controls and P42STOP reports.",
-      "status": "implementing",
+      "status": "implemented",
       "ballots": {
         "r02": {
           "vote": "APPROVE",
@@ -5170,7 +5170,25 @@
           "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
         }
       },
-      "implementation_status": "R02 exact3file P43 implementation in NEW /workspace/layerglass-review/jpeg-event-precision, parent1eaa2b4 with6fresh committed approvals before creation. Original P42tree remains unedited. Independent exact-finalREADY required."
+      "implementation_status": "Exact author e5965875f3a55954908b786d0f4e910256e46933 clean,3files; root verified53artifact manifest and3source hashes. Author118JS/35docs/3registered browser suites bothengines/nativepositives+policynegativesPASS. Independent R03 exact-final source/native review in progress; NO integration yet.",
+      "implementation": {
+        "author_head": "e5965875f3a55954908b786d0f4e910256e46933",
+        "author_base": "1eaa2b4393dc8133b0f17bff0973ee3dbd96d96e",
+        "report": "test-results/review-2026-10-26/r02/p43-implementation-report.json",
+        "report_sha256": "0b92192384bee4ca6498e3de3e11a69075c77fed4c904492bea689e691baedd1",
+        "manifest_sha256": "c695cc31b84022f52ee154e09a0412219506adb2024d3f2af3fa9454e04497e8",
+        "manifest_verified_entries": 53,
+        "source_sha256": {
+          "apps/web/src/components/timeline-events.js": "bac7d6457acb86ea7f257323f0af7e1bec4416f6377f698df569e70f6eb0249c",
+          "apps/web/tests/browser-timeline-events.js": "be8757f3579753c6eab0a6cbc15eff0cc7e35ccf580f4c2668266af1cace6713",
+          "docs/timeline-events.md": "4ca8b37fe5983310eda7531fc27c359ba1313458e3798ff33c4d53d29e0c1162",
+          "unchanged apps/web/src/timeline-events.js": "7c8e6a02acdba28d6db422b4867f05ef50759d4f7bd45ccd8fdc9b9e4aa325c1",
+          "unchanged apps/web/src/replay.js": "873d3dd9ab42e75e5c0bf2e93765beec36321adcc67bc705e15dd6438d38e8f4",
+          "unchanged apps/backend/replay.py": "b0ab6a6b4d62d7e554523130e9bb5fcca6550295639ad719fc5d2232f49328c6"
+        },
+        "independent_final": "pending R03 exact-finalREADY",
+        "integration": "NOT YET"
+      }
     }
   ],
   "commits": [
@@ -6490,6 +6508,11 @@
       "at": "2026-10-26T13:47:40Z",
       "type": "ballot-complete",
       "message": "Round14 P43rev1 complete10/10fresh APPROVE. All43frozenproposals now have430explicit ballots:429APPROVE/1ABSTAIN/0REJECT. P38+P42 superseded drafts remain unintegrated;40corrections integrated; P43implementation pending finaltests/peer. Root0votes."
+    },
+    {
+      "at": "2026-10-26T14:04:03Z",
+      "type": "author-delivery",
+      "message": "P43 exactfinal e596587 received clean at approvedparent1eaa,3files. Root verified report0b921923...,53manifestentries and3exactsourcehashes/scope. Author recordedpositive/negative/browser/unit/docs checks; original H264body unchanged. Early fixture/setup failures and reconstructed-first-adapter qualification retained. R03 nowassigned independent exactfinal review/native acceptance; no integrationbeforeREADY."
     }
   ],
   "validation": [
@@ -6948,6 +6971,18 @@
     {
       "status": "CAUSAL_PATH_SUPPORTED_RAW_FAIL",
       "summary": "Independent R05 completed JPEG diagnostic reviewb9c0caff... supports THIS instrumented run actual uncovered-history/null-read/pending-HTTP/notifying-same-clock-layer38 path. Root verified9 archived Git-pinned source hashes and20 evidence hashes. Correct render completion was+8wall-clock/+9page-monotonic milliseconds, JSON+7both; no exact latency claim. Original R06 report remains frozen. RAWFAIL31.496/90s,1strictcycle perengine,0certifiedcold/pruning/hour and protocol-body anomalies remain; historical v4.2cause unproved."
+    },
+    {
+      "status": "RUNNING_PARTIAL_FIVE_HOURS",
+      "summary": "Native6h earlier-pina5059827 passed actual5h checkpoint in both engines, each60preview sweeps/20rewind-Livecycles, same owned session/video, actualretentionpruning/coldIDB and caps observed. Snapshot root-p37-five-hour-checkpoint.json SHAe0d916f6e31a9f6f0537a79e13c05273b425cfb926e6bf0b950a852589d6a312. Full6h final/cleanup still pending; not latestP43-source endurance or phone guarantee."
+    },
+    {
+      "status": "NO_FINDINGS_WITHIN_PREINTEGRATION_SCOPE",
+      "summary": "Independent R08 preintegration audit at1262b61 a085d0d0... verifies14frozen slates/43scopes/140rawballotfiles/430explicit votes(429APPROVE/1ABSTAIN),root0; P43parent1eaa contains6fresh approvals,P42tree clean and votes nottransferred. Root verified7machine artifacts/8snapshots/3pinned sources. Uncommittedfirst-edit chronology remains unproved. Future P43finalREADY/integration/CI and6hcompletion outside snapshot."
+    },
+    {
+      "status": "INDEPENDENT_BASELINE_NATIVE_NEGATIVES_CONFIRMED",
+      "summary": "R03 P43 independent pre-author harness checkpoint1ec38386... reproduces original upper-tail seek/emit mismatch and both fractional hidden/deleted-summary defects in actual connected component/controller/native JPEGs,14pages acrossChromium/WebKit. Integer/successor controls pass. Root verified complete own-source/harness/evidence hash list. Positive final-source acceptance NOT YET run; no author tree read. Native stale-menu/cached-position inputs are controlled robustness scenarios, not scheduling-cause claims."
     }
   ],
   "implementation_worktrees": [
