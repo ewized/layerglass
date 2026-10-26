@@ -30,7 +30,7 @@
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 7 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
@@ -39,7 +39,8 @@
       "ballot_round5": "test-results/review-2026-10-26/r02/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r02/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r02/round7-ballot.json",
-      "round7_findings": "test-results/review-2026-10-26/r02/round7-findings.json"
+      "round7_findings": "test-results/review-2026-10-26/r02/round7-findings.json",
+      "ballot_round8": "test-results/review-2026-10-26/r02/round8-ballot.json"
     },
     {
       "id": "r03",
@@ -381,6 +382,7 @@
       "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428",
       "ballots_started": true,
       "reviewers_completed": [
+        "r02",
         "r03",
         "r04",
         "r05"
@@ -3959,7 +3961,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
       "risk": "Low subprocess path conversion. Use fileURLToPath rather than ad hoc substitution; preserve existing child failures/timeouts and suite selection.",
       "validation_plan": "Actual registered self-contained history reconnect suite passes in plain, spaced and literal-percent checkout paths in both engines. Unknown suite still exits2. Ordinary child failure and timeout/error propagation remain intact; inspect unchanged default list, environment, inherited stdio and240000ms timeout. Use ignored isolated generated fixture controls, not production devices.",
-      "status": "implementing",
+      "status": "validated",
       "ballots": {
         "r07": {
           "vote": "APPROVE",
@@ -4017,6 +4019,13 @@
           "recorded_at": "2026-10-26T08:16:45Z",
           "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
         }
+      },
+      "implementation": {
+        "author_commit": "bf58836d0691baa01e3e30c455c1651e115f3080",
+        "peer_review": "test-results/review-2026-10-26/r02/p35-diff-review.json",
+        "peer_decision": "READY",
+        "source_sha256": "e4b14d276d13ce00dcb769a5b88cf33c18632009ec8b5964c2c9938895c8d5f0",
+        "validation": "Actual registered history suite plain/spaced/percent paths passes both engines; direct control passes, unknown2, realchild7, actual240000ms ETIMEDOUT preserved; exec3300exit0, owned container removed."
       }
     },
     {
@@ -4072,6 +4081,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:21:18Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "I read the exact final16-file scope rather than treating authorship as approval. My pinned full-player Chromium/WebKit evidence proves a paused blue JPEG at provisional position11 acquires layer31 while its pixels stay blue; the archive at11 is green and the locally captured blue preview is mislabeled11. The final scope correctly requires decoded/request identity across metadata and pending-image races, explicit provisional targets, reset/session/source/recovery and subsecond/non-rounded capture boundaries. Optional internal descriptors and an existing-endpoint selector are bounded; no new header/CORS/provider/storage policy is allowed. This fixes the demonstrated contract without changing P29/P31 held intervals or using latest SSE time/end_seconds-1 as proof of visible pixels. Implementation must pass the stated ownership and legacy/fallback controls before integration; no algorithm has been presumed correct. Evidence: r02/round7-findings.json and jpeg-main-player/jpeg-consumers artifacts.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:24:03Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
     },
@@ -4115,6 +4131,13 @@
           "rationale": "Pinned PreviewHistory.get returns a memory-only peek before choosing the global nearest asset; scrub-preview correctly refuses that farther asset but then has no new target/completion to trigger recovery. My independent bounded a239c0c rerun with the actual component and real IndexedDB reproduces both engines: cold exact25.066666 is nearest, hot20.133333 prevents frame25 reads and leaves red; evicting only the hot Blob makes one frame25 read paint blue, with the same video and zero seeks/HTTP/pageerrors. Selecting the nearest eligible asset before its storage tier is the narrow model correction; public placeholder peek and the component need no policy change. The frozen tie, coalescing, eviction, session/asset, delayed-IDB, single-decode, corruption/fallback and contiguous-sweep controls preserve P11 and storage bounds. I approve that plan including the later capped45-minute integration rerun, without claiming a completed WebKit long run or physical-phone latency.",
           "revision": 1,
           "recorded_at": "2026-10-26T08:21:18Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned PreviewHistory.get at158 returns memory-only peek before asking nearest across retained assets; scrub-preview then refuses that farther asset because the globally nearest asset differs and resolution stops. I independently reran the frozen component/real-IndexedDB negative against my pinned a239c0c source in both engines: exact cold25.066666 stays blue on disk while warm20.133333 red remains displayed, with only frame20 read; evicting the warm Blob makes the same target read frame25 once and paint blue, preserving the same video with0seeks/HTTP/pageerrors. Selecting the closest eligible asset first is a bounded correction within get; keep peek/nearest as placeholders and preserve coalescing, session/asset guards, late IDB/P11, cache limits and server fallback. The four-file scope and both-direction/contiguous-sweep validation are appropriate. Evidence: r02/round8/results.json and preview-adjacent.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:24:03Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
@@ -4847,6 +4870,11 @@
       "at": "2026-10-26T08:21:18Z",
       "type": "ballot",
       "message": "R05 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:24:03Z",
+      "type": "ballot",
+      "message": "R02 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
