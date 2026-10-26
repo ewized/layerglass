@@ -43,7 +43,7 @@ export const settingsTemplate = `
       <div data-settings-page="root" class="settings-page">
         <button id="printers-button" class="menu-row" data-settings-target="printers"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-printer"/></svg><span>Printers</span><span id="selected-printer" class="menu-value"></span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button>
         <button id="backends-button" class="menu-row" data-settings-target="backends"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-connection"/></svg><span>Backend</span><span id="selected-backend" class="menu-value"></span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <button id="refresh-button" class="menu-row menu-separator"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg><span id="refresh-label">Refresh viewer</span></button>
+        <button id="refresh-button" class="menu-row"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg><span id="refresh-label">Refresh viewer</span></button>
         <span id="stream-message" class="sr-only" role="status" aria-live="polite">Connecting to the camera…</span>
       </div>
       <div data-settings-page="printers" class="settings-page" hidden>

@@ -133,7 +133,6 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .menu-danger { color: #ed907d; }
 .menu-row .menu-chevron { width: 15px; height: 15px; margin-left: auto; color: var(--muted); }
 .menu-row .menu-value { max-width: 142px; margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 12px; }
-.menu-separator { margin-top: 8px; border-top: 1px solid #ffffff12; border-radius: 0 0 7px 7px; }
 .printer-skeleton-row { display: flex; align-items: center; gap: 16px; min-height: 60px; padding: 10px 6px; animation: skeleton-pulse 1.6s ease-in-out infinite; }
 .printer-skeleton-label { display: flex; flex: 1; flex-direction: column; gap: 8px; }
 .skeleton-name, .skeleton-address, .skeleton-action { display: block; border-radius: 4px; background: #ffffff14; }
