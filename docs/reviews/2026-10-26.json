@@ -4829,7 +4829,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/ci-native-pause-finding.json",
       "risk": "Low test-only correction, with a real risk of hiding a restoration race if after-error polling is weakened or setup silently repairs repeated wrong intent. Keep the one explicit transition observable and keep original post-error assertions strict. Additional pre-error readiness is a test precondition, not a product waiver.",
       "validation_plan": "Keep this primary CI log immutable. Compare exact original and candidate assertion/predicate contracts. Use generated native media in both Chromium/WebKit, including held initial/seek readiness and explicit paused/playing intent establishment, proving no recovery error is injected while setup is unsettled. Wrong native/controller setup must fail/log rather than toggle again. Run the focused native cases and existing browser-replay-recovery suite in both engines; preserve all network/Live cases and decoded clock/session/video/one-seek checks. No full combined suite, real device, CI rerun or product-source change is needed for this candidate. Preserve all original after-error readiness predicates and assertions verbatim wherever possible, verify exact contracts explicitly, and obtain independent exact-final READY before integration. A new normal full CI run may occur only after voted implementation/focused validation; no rerun fishing of the unchanged failed source.",
-      "status": "validated",
+      "status": "committed",
       "ballots": {
         "r02": {
           "vote": "APPROVE",
@@ -4914,7 +4914,10 @@
         "source_sha256": "9a7f6845f5ddab1bf6ee53890bc70952813b2adc1244f0c0315cd5be757516c8",
         "independent_review": "test-results/review-2026-10-26/r07/p41-final-review.json",
         "independent_report_sha256": "6ffe740882acd668f204eaf1cc8d4d1300817028019f5586a57d148fba6932a5",
-        "acceptance": "Exacta9917ec READY. Root verified author/peer evidence, sole-file source and clean identity, prior7approval threshold commit, all10final approvals and preserved primary CI. Integration authorized only exactonecommit."
+        "acceptance": "Exacta9917ec READY. Root verified author/peer evidence, sole-file source and clean identity, prior7approval threshold commit, all10final approvals and preserved primary CI. Integration authorized only exactonecommit.",
+        "merged_commit": "0835f88dbb6604b778afbfa4174fb9efad7e18f7",
+        "merged_source_verified": true,
+        "validation_limit": "Test-only improvement; historical CI cause remains unproved. Original all39 production source remains unchanged. New normalCI may validate combined40 source."
       }
     }
   ],
@@ -5082,6 +5085,10 @@
     {
       "sha": "38b8124f3ff0b845fb660343d4442e3d399df836",
       "summary": "P40 fix(web): preserve precise local JPEG preview bounds;10fresh votes, first6pre-edit, independently READY exactauthorf4c8ce4. Focused bothengine realIDB/rounding/retention/compatibility pass; combinedcheck pending."
+    },
+    {
+      "sha": "0835f88dbb6604b778afbfa4174fb9efad7e18f7",
+      "summary": "P41 test(player): establish and log native/controller recovery intent, preserving every original post-error contract;10fresh approvals plus exact independentREADY."
     }
   ],
   "activity": [
@@ -6056,6 +6063,11 @@
       "at": "2026-10-26T12:15:47Z",
       "type": "validation",
       "message": "Ignored JPEGv4.2 source READY R04cfebeec3 verified with5current source hashes+41frozen artifacts. Exactlyone90s pilot authorized at951aafc; no retry/hour. Actual>=2cycles bothengines/allstrictproofs+observedpressure/coldstatus required before any hour promotion; prior failures unchanged."
+    },
+    {
+      "at": "2026-10-26T12:25:54Z",
+      "type": "integration",
+      "message": "P41 exacta9917ec source integrated as0835f88dbb6604b778afbfa4174fb9efad7e18f7 only after all10fresh approvals, committed acceptance8413393 and complete independent R07READY.40corrections now integrated; P38superseded. Initial guard schema mismatch stopped before mutation; correctednested24filepeer manifest thenpassed. No production source altered byP41."
     }
   ],
   "validation": [
@@ -6466,6 +6478,16 @@
       "status": "READY_EXACT_FINAL",
       "summary": "P41a9917ec independently R07READY:10selected controls bothengines,12successful native recoveries+4expected wrong-setup rejections; all30originalassertions and exact post-error/network/Live bodies/budgets retained. Author fullrecovery-suite evidence bothengines verified, not independently rerun. Root verified peer/author manifests, exactclean onefile source, pre-edit committed approvalthreshold and10final votes. Historical CI cause unproved; no product fix claimed.",
       "evidence": "test-results/review-2026-10-26/r07/p41-final-review.json"
+    },
+    {
+      "status": "PASS_MERGED_SOURCE_GUARD",
+      "summary": "P41 canonical0835f88 exactauthor sourceSHA9a7f6845... verified. Compared951aafc all39baseline: sole non-audit difference is the approved native recovery test; every production/build/docs source remains identical. Author complete recovery suite and independent focused negative/readiness cases bothengines PASS; no redundant localfull rerun or historical-CI cause claim.",
+      "evidence": "test-results/review-2026-10-26/r07/p41-final-review.json"
+    },
+    {
+      "status": "INCONCLUSIVE_ABORTED_PILOT",
+      "summary": "JPEGv4.2 at951aafc failed30.807of90s: WebKit fullStats layerdash vs37/10000 after bothengines completed1strict Pause/preview/exactnativecommit/Live cycle. Sameownednativeframe/Blob/hash/clock showed37/10000 in one37ms-later diagnostic; receivedhistorycoverage/render causality unknown. Two-cycle/certifiedcold/pruning gates unmet; native/backend cleanup and privateTTL controls PASS. Root verified309artifact hashes and reportSHAf68cf0efc417e5f8e3dc06cc16d3925fe6a5871915f45903b69e3106c669ef5d /manifestSHAe915a5cfabf65451a5c07994ffa8c95452a3a02b43ec390d0b408568db3eeea6. No retry/patch/hour authorized; R05 independent source/evidence diagnosis pending.",
+      "evidence": "test-results/review-2026-10-26/r06/jpeg-soak/pilot-report-v4.2.json"
     }
   ],
   "implementation_worktrees": [
