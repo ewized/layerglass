@@ -37,6 +37,11 @@ browser provider can use the existing envelope:
 }
 ```
 
+The [demo backend](architecture/backend-providers.md) seeds three minutes of
+recorded simulated readings on subscription. Its start, pause and resume markers
+use this same model and recorded video clock; they are not separate UI fixtures.
+The finite demo's finish event appears when the simulated live edge reaches it.
+
 `at`, `from` and `until` are epoch seconds, matching recorded video clock
 anchors. Event summaries contain `{ id, type, at, label }`, with generic labels
 and no credentials or raw manufacturer reports. The model accepts normalized

@@ -372,7 +372,7 @@ class ViewerHandler(BaseHTTPRequestHandler):
             return True
         return origin in (f'http://{self.headers.get("Host")}', f'https://{self.headers.get("Host")}') or bool(self._cors_origin())
 
-    def _headers(self, code, content_type, length, stream=False, shell=False):
+    def _headers(self, code, content_type, length, stream=False, shell=False, extra_headers=()):
         self.send_response(code)
         self.send_header('Content-Type', content_type)
         if length is not None:
@@ -417,6 +417,8 @@ class ViewerHandler(BaseHTTPRequestHandler):
                          "chrome-extension://enhhojjnijigcajfphajepfemndkmdlo; style-src 'self'; "
                          f"img-src 'self' data: blob:{targets}; media-src 'self' blob:{targets}; connect-src 'self'{targets}; "
                          "worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; frame-ancestors 'none'")
+        for name, value in extra_headers:
+            self.send_header(name, value)
         self.end_headers()
 
     def _json(self, code, payload, head=False):
@@ -596,9 +598,49 @@ class ViewerHandler(BaseHTTPRequestHandler):
                     '.html': 'text/html; charset=utf-8',
                     '.webmanifest': 'application/manifest+json; charset=utf-8',
                 }.get(file.suffix, mimetypes.guess_type(file.name)[0] or 'application/octet-stream')
-                self._headers(200, content_type, size, shell=shell)
+                # Native video seeks into the preloaded demo using byte ranges.
+                # Scope this to static MP4s; live/DVR transports keep their own
+                # delivery and origin rules. If-Range cannot match an unversioned
+                # no-store file, so return the complete current representation.
+                video_file = path.startswith('/static/') and file.suffix == '.mp4'
+                headers = [('Accept-Ranges', 'bytes')] if video_file else []
+                byte_range = self.headers.get('Range') if video_file and not head and not self.headers.get('If-Range') else None
+                start, end = 0, size - 1
+                if byte_range:
+                    match = re.fullmatch(r'bytes=([0-9]*)-([0-9]*)', byte_range)
+                    try:
+                        if not match or not any(match.groups()):
+                            raise ValueError
+                        first, last = match.groups()
+                        if first:
+                            start = int(first)
+                            end = min(int(last), size - 1) if last else size - 1
+                        else:
+                            suffix = int(last)
+                            if not suffix:
+                                raise ValueError
+                            start = max(0, size - suffix)
+                        if start > end or start >= size:
+                            raise ValueError
+                    except ValueError:
+                        self._headers(416, content_type, 0, shell=shell,
+                                      extra_headers=[*headers, ('Content-Range', f'bytes */{size}')])
+                        return
+                    headers.append(('Content-Range', f'bytes {start}-{end}/{size}'))
+                self._headers(206 if byte_range else 200, content_type, end - start + 1,
+                              shell=shell, extra_headers=headers)
                 if not head:
-                    shutil.copyfileobj(source, self.wfile)
+                    if byte_range:
+                        source.seek(start)
+                        remaining = end - start + 1
+                        while remaining:
+                            chunk = source.read(min(remaining, 65536))
+                            if not chunk:
+                                break
+                            self.wfile.write(chunk)
+                            remaining -= len(chunk)
+                    else:
+                        shutil.copyfileobj(source, self.wfile)
         except FileNotFoundError:
             return self._json(404, {'error': 'Not found.'}, head)
         except (BrokenPipeError, ConnectionResetError):

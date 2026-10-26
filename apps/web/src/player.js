@@ -152,7 +152,12 @@ $('local-media').addEventListener('change', async event => {
   await loadCatalog();
   await loadStatus();
 });
-video.addEventListener('loadedmetadata', () => backend.setDuration?.(video.duration));
+video.addEventListener('loadedmetadata', () => {
+  backend.setDuration?.(video.duration);
+  // A demo can already have retained footage. Start this native file at its
+  // simulated live edge instead of labelling the first historical frame Live.
+  if (pageReplay.session?.kind === 'file' && pageReplay.followLive) pageReplay.goLive();
+});
 
 function waiting(title, detail, spinning = true) {
   if (!networkAvailable()) {

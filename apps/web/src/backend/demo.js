@@ -9,10 +9,14 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
 
 export class DemoBackend {
   constructor({ clock = () => Date.now() / 1000, duration = 300,
+    prebufferSeconds = Math.min(180, duration * 0.6),
     media = new URL('../demo/printer.mp4', import.meta.url).href } = {}) {
     this.id = 'demo'; this.label = 'Browser demo'; this.capabilities = DEMO_CAPABILITIES;
     this.clock = clock; this.duration = duration; this.media = media;
-    this.started = clock(); this.sessions = new Map(); this.generation = 0;
+    // The bundled demonstration has recorded history before the visit. Real
+    // recordings and user-selected files still begin at their own page load.
+    this.started = clock() - Math.max(0, Math.min(duration, prebufferSeconds));
+    this.sessions = new Map(); this.generation = 0;
   }
 
   resolve(path) { return path; }
@@ -64,24 +68,30 @@ export class DemoBackend {
       preview_fallback: false, telemetry: this.capabilities.telemetry, demo: true };
   }
 
-  history(token, at = this.clock()) {
+  history(token, at = this.clock(), { fromStart = false } = {}) {
     if (this.local) return null;
     const session = this.session(token);
     if (!session) return null;
     const end = this.started + this.elapsed();
-    const from = Math.max(this.started, Math.floor(at / 120) * 120);
-    const until = Math.min(end, from + 120);
+    const from = fromStart ? this.started : Math.max(this.started, Math.floor(at / 120) * 120);
+    const until = fromStart ? end : Math.min(end, from + 120);
     if (until < from) return null;
-    const samples = [];
-    for (let time = from; time <= until; time += 1) samples.push({ at: time, printer: this.printer(time) });
+    const samples = [{ at: from, printer: this.printer(from) }];
+    // Sample on clip seconds so transitions retain their exact video position
+    // even when the page clock and two-minute cache windows are fractional.
+    for (let second = Math.floor(from - this.started) + 1; second <= until - this.started; second++) {
+      const time = this.started + second;
+      samples.push({ at: time, printer: this.printer(time) });
+    }
+    if (samples.at(-1).at < until) samples.push({ at: until, printer: this.printer(until) });
     return { session_id: token, camera_id: CAMERA, from, until, samples };
   }
 
-  snapshot(path) {
+  snapshot(path, { fromStart = true } = {}) {
     const query = new URL(path, 'http://demo.invalid').searchParams;
     const token = query.get('session');
     return { version: 1, catalog: this.catalog(), status: this.status(), session_id: token,
-      replay: this.session(token), ...(this.session(token) ? { telemetry: this.history(token) } : {}) };
+      replay: this.session(token), ...(this.session(token) ? { telemetry: this.history(token, this.clock(), { fromStart }) } : {}) };
   }
 
   async fetch(path, init = {}) {
@@ -109,12 +119,14 @@ export class DemoBackend {
 
   events(path) {
     const listeners = new Map();
-    const emit = () => {
-      const event = { data: JSON.stringify(this.snapshot(path)) };
+    const emit = fromStart => {
+      const event = { data: JSON.stringify(this.snapshot(path, { fromStart })) };
       for (const listener of listeners.get('state') || []) listener(event);
     };
-    const initial = setTimeout(emit, 0);
-    const timer = setInterval(emit, 1000);
+    // Seed the existing history/event pipeline once per subscription, then
+    // retain its normal small update windows rather than replaying the seed.
+    const initial = setTimeout(() => emit(true), 0);
+    const timer = setInterval(() => emit(false), 1000);
     return { readyState: 1, addEventListener(name, listener) {
       if (!listeners.has(name)) listeners.set(name, new Set());
       listeners.get(name).add(listener);

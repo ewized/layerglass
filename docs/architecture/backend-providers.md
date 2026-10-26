@@ -23,7 +23,7 @@ still require the Python backend because their protocols are not browser APIs.
 | Per-printer access codes and saved connections | Server-owned | Unavailable |
 | Bambu RTSPS, JPEG camera protocol and MQTT | Server adapters | Unavailable |
 | Print telemetry | Actual printer data | Explicitly simulated in demo; absent for local files |
-| Rewind video | Server DVR for this page's session | Generated clip or selected local file, limited to elapsed page time |
+| Rewind video | Server DVR for this page's session | Demo includes three minutes of history; local files are limited to elapsed page time |
 | Local still previews, diffusion, custom controls, native decoder | Yes | Yes |
 | Server sprite fallback | Yes | Unavailable |
 | Cast receiver network URL | Yes | Unavailable |
@@ -31,10 +31,20 @@ still require the Python backend because their protocols are not browser APIs.
 
 The generated five-minute demo video is a small bundled MP4 with a visible demo
 watermark. It loads from the same static host, without a camera, Python process,
-account, external media URL or cloud recording. Its simulated printer starts
-after two seconds, pauses at 30 seconds, resumes at 35 seconds and finishes at
-five minutes. Opening a local file replaces those simulated readings with no
-telemetry. Neither source is admitted as a network printer.
+account, external media URL or cloud recording. A visit opens at the simulated
+live edge, three minutes into that clip, with earlier footage immediately
+available to scrub. The first metadata update includes that footage's simulated
+telemetry, so print-start, pause and resume markers appear without waiting or
+seeking first. Later updates use the normal two-minute telemetry window.
+The simulated printer starts at clip second 2, pauses at 30, resumes at 35 and
+finishes at five minutes. Future footage/events remain outside the replay
+window until the simulated clock reaches them. Reloading starts a fresh demo
+session with the same preloaded history. Opening a local file starts a fresh
+buffer at zero and replaces the simulated readings with no telemetry or print
+events. Neither source is admitted as a network printer.
+The Python-served viewer also supports byte-range requests for the bundled MP4,
+so its native video element can open at that same preloaded position and seek
+without a second decoder or downloading through a custom playback pipeline.
 
 ## Selecting a provider
 

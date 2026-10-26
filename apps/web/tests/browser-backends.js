@@ -57,6 +57,35 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     await waitForPlayer(page, ({ app }) => app.video.currentTime > 2 && app.video.readyState >= 2 &&
       app.pageReplay.session?.kind === 'file' && document.querySelector('#overlay').hidden, null, { timeout: 15000 });
     assert.equal(await page.locator('video').count(), 1);
+    await waitForPlayer(page, ({ app }) => app.video.currentTime >= 179 && app.pageReplay.session.end_seconds >= 180 &&
+      document.querySelector('#timeline-events').groups?.flatMap(group => group.events).length === 3);
+    assert(await page.locator('video').evaluate(video => video.currentTime < 195), 'The demo opens at its preloaded live edge.');
+    const demoEvents = await page.locator('#timeline-events').evaluate(markers => markers.groups.flatMap(group =>
+      group.events.map(({ type, position }) => [type, position])));
+    assert.deepEqual(demoEvents, [['started', 2], ['paused', 30], ['resumed', 35]],
+      'Preloaded events appear immediately without seeking or waiting for a real print.');
+    const pausedGroup = await page.locator('#timeline-events').evaluate(markers => {
+      const index = markers.groups.findIndex(group => group.events.some(event => event.type === 'paused'));
+      return { index, clustered: markers.groups[index].events.length > 1 };
+    });
+    await page.locator('.timeline-event').nth(pausedGroup.index).tap();
+    if (pausedGroup.clustered) await page.getByRole('menuitem', { name: /^Print paused/ }).tap();
+    await waitForPlayer(page, ({ app }) => app.video.currentTime >= 30 && app.video.currentTime < 35 && !app.video.seeking);
+    await page.evaluate(async () => {
+      const app = await import('/static/player.js');
+      app.pageReplay.togglePause();
+      app.playerTools.showStats(true);
+    });
+    await page.waitForFunction(() => document.querySelector('[data-stat-key="print_state"]')?.textContent === 'PAUSE');
+    assert.equal(await page.locator('#live-button').getAttribute('aria-pressed'), 'false');
+    assert.match(await page.locator('#replay-time').textContent(), /^−[23]:\d{2}$/);
+    await page.screenshot({ path: `/app/test-results/demo-preloaded-replay-${name}.png` });
+    await page.evaluate(async () => {
+      const app = await import('/static/player.js');
+      app.playerTools.showStats(false);
+      app.pageReplay.goLive();
+    });
+    await waitForPlayer(page, ({ app }) => app.pageReplay.followLive && app.video.currentTime >= 179 && !app.video.paused);
     assert.equal(await page.locator('#camera-name').textContent(), 'Demo printer');
     assert.equal(await page.locator('#cast-button').isDisabled(), true);
     await page.locator('#options-button').click();
@@ -160,6 +189,8 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     phase = 'local file';
     await page.locator('#local-media').setInputFiles({ name: 'local-print.mp4', mimeType: 'video/mp4', buffer: demoFile });
     await waitForPlayer(page, ({ app }) => app.video.currentSrc.startsWith('blob:') && app.video.currentTime > 0 && !app.video.paused);
+    assert(await page.locator('#replay-slider').evaluate(slider => Number(slider.max) < 10), 'Local files must not inherit the demo prebuffer.');
+    assert.equal(await page.locator('.timeline-event').count(), 0, 'Local files must not retain demo print events.');
     assert.equal(await page.locator('#camera-name').textContent(), 'Local video');
     assert.equal(await page.locator('video').count(), 1);
     assert.equal(requests.filter(path => path.startsWith('/api/') || path.startsWith('/replay/')).length, 0);
