@@ -10,14 +10,24 @@ export function backendConfig(value = {}, page = globalThis.location?.href || 'h
     return { type: 'direct', profile: 'moonraker', url: directOrigin(value.url, page) };
   }
   const current = new URL(page);
-  const url = new URL(value.url || current.origin);
+  const message = 'Use a backend hostname or HTTP(S) origin, without a path or credentials.';
+  let address = value.url === undefined ? current.origin : value.url;
+  if (typeof address !== 'string' || !address.trim()) throw new TypeError(message);
+  address = address.trim();
+  if (address.includes('\\') || address.startsWith('/') && !address.startsWith('//')) throw new TypeError(message);
+  // A hostname (including a port or bracketed IPv6 address) defaults to HTTPS.
+  // Leave explicit schemes intact so the origin validation can reject them.
+  if (!/^(?:[a-z][a-z\d+.-]*:\/\/|(?:https?|file|ftp|ftps|ws|wss|javascript|data|blob|mailto|tel):)/i.test(address)) {
+    address = address.startsWith('//') ? `https:${address}` : `https://${address}`;
+  }
+  let url;
+  try { url = new URL(address); }
+  catch (_) { throw new TypeError(message); }
   if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password ||
       url.pathname !== '/' || url.search || url.hash) {
-    throw new TypeError('Use a backend origin, such as https://printer.example.com, without a path or credentials.');
+    throw new TypeError(message);
   }
-  if (current.protocol === 'https:' && url.protocol !== 'https:' && !['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)) {
-    throw new TypeError('An HTTPS app needs an HTTPS backend. Open the local viewer directly or configure HTTPS on the backend.');
-  }
+  if (current.protocol === 'https:' && url.protocol === 'http:') url.protocol = 'https:';
   return { type: 'python', url: url.origin };
 }
 

@@ -53,8 +53,13 @@ honors byte ranges for clients opening its bundled MP4 asset directly.
 
 On a first visit to the hosted or standalone app, choose **Demo**, **Docker
 backend**, or **Direct printer**. Nothing connects, plays or probes a backend before that choice.
-Docker asks for the container's HTTP(S) origin and checks `/api/backend` before
-saving it. Failed or incompatible connections keep the chooser open.
+Docker accepts a hostname with an optional port, such as `printer.example.com`
+or `printer.example.com:8443`; the `https://` prefix is optional. The HTTPS app
+also upgrades pasted `http://` addresses to `https://` before checking
+`/api/backend` or saving the connection. The same normalization applies in
+Settings → Backend and to previously saved addresses. Explicit HTTP addresses
+still work when opening the self-hosted HTTP viewer directly. Failed or
+incompatible connections keep the chooser open.
 
 Open **Settings → Backend** to change to **Docker backend**, **Demo**, or
 **Direct printer (Klipper / Moonraker)** later. Direct mode verifies the controller

@@ -47,6 +47,30 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     await page.locator('.backend-connect-error').waitFor();
     assert.equal(await page.evaluate(() => localStorage.getItem('layerglass-backend')), null);
     assert.equal(requests.some(path => path.startsWith('/api/')), false);
+    assert.equal(await page.locator('#backend-connect-url').getAttribute('type'), 'text');
+    await page.evaluate(() => {
+      window.backendAddressFetch = window.fetch;
+      window.backendAddressRequests = [];
+      window.fetch = (input, options) => {
+        const url = new URL(input, location.href);
+        if (url.hostname === 'backend.test') {
+          window.backendAddressRequests.push(url.href);
+          return Promise.resolve(Response.json({ id: 'unrelated', protocol_version: 1 }));
+        }
+        return window.backendAddressFetch(input, options);
+      };
+    });
+    const shortAddresses = ['backend.test:8443'];
+    if (new URL(base).protocol === 'https:') shortAddresses.push('http://backend.test:8443');
+    for (const address of shortAddresses) {
+      await page.locator('#backend-connect-url').fill(address);
+      await page.locator('.backend-connect-form [type="submit"]').click();
+      await page.waitForFunction(() => document.querySelector('.backend-connect-error').textContent.includes('not a compatible'));
+    }
+    assert.deepEqual(await page.evaluate(() => window.backendAddressRequests),
+      shortAddresses.map(() => 'https://backend.test:8443/api/backend'), 'Normalize before any probe.');
+    assert.equal(await page.evaluate(() => localStorage.getItem('layerglass-backend')), null);
+    await page.evaluate(() => { window.fetch = window.backendAddressFetch; });
     await page.route(base + '/api/backend', route => route.fulfill({ json: { id: 'unrelated', protocol_version: 1 } }));
     await page.locator('#backend-connect-url').fill(base);
     await page.locator('.backend-connect-form [type="submit"]').click();
@@ -127,6 +151,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     // Match the printer access-code interaction: editing does not connect;
     // one adjacent icon confirms, with errors below the whole input row.
     await page.locator('[data-backend-select="python"]').click();
+    assert.equal(await page.locator('#backend-url').getAttribute('type'), 'text');
     await page.locator('#backend-url').fill(base);
     await page.evaluate(() => {
       window.backendTestFetch = window.fetch;
@@ -134,12 +159,13 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
       window.fetch = (input, options) => {
         if (new URL(input, location.href).pathname === '/api/backend') {
           window.backendTestRequests++;
+          window.backendTestURL = new URL(input, location.href).href;
           return new Promise((_resolve, reject) => { window.backendTestReject = reject; });
         }
         return window.backendTestFetch(input, options);
       };
     });
-    await page.locator('#backend-url').fill(base + '/');
+    await page.locator('#backend-url').fill('backend.test:8443');
     assert.equal(await page.evaluate(() => window.backendTestRequests), 0);
     await page.getByRole('button', { name: 'Save and connect', exact: true }).click();
     assert.equal(await page.locator('#backend-confirm').isDisabled(), true);
@@ -148,6 +174,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(await page.locator('#backend-confirm').getAttribute('aria-busy'), 'true');
     await page.evaluate(() => document.querySelector('#backend-form').requestSubmit());
     assert.equal(await page.evaluate(() => window.backendTestRequests), 1, 'Pending confirmation must not submit twice.');
+    assert.equal(await page.evaluate(() => window.backendTestURL), 'https://backend.test:8443/api/backend');
     await page.evaluate(() => window.backendTestReject(new DOMException('signal timed out', 'TimeoutError')));
     await page.waitForFunction(() => document.querySelector('#backend-error').textContent.startsWith('Connection timed out.'));
     assert.equal(await page.locator('#backend-url').getAttribute('aria-invalid'), 'true');

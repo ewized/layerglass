@@ -33,7 +33,7 @@ export class PrinterBackendPicker extends PlayerElement {
         <p class="backend-intro" data-connection-intro>Enter the address of your LayerGlass container.</p>
         <form class="backend-connect-form">
           <label for="backend-connect-url">Backend address</label>
-          <input id="backend-connect-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com" required>
+          <input id="backend-connect-url" name="url" type="text" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="printer.example.com" required>
           <p class="backend-address-hint"></p>
           <p class="backend-connect-error" role="alert" hidden></p>
           <button type="submit" class="button primary"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-connection"/></svg><span>Connect</span><span class="loader" aria-hidden="true" hidden></span></button>
@@ -53,8 +53,6 @@ export class PrinterBackendPicker extends PlayerElement {
       direct.disabled = true;
       direct.querySelector('span span').textContent = unsupported;
     }
-    this.querySelector('.backend-address-hint').textContent = this.ownerDocument.location.protocol === 'https:' ?
-      'Use an HTTPS address that this device can reach.' : 'Use the address you open to view your container.';
     this.listen(this, 'click', event => {
       const choice = event.target.closest('[data-backend-choice]')?.dataset.backendChoice;
       if (choice === 'demo') this.select({ type: 'demo' });
@@ -79,7 +77,11 @@ export class PrinterBackendPicker extends PlayerElement {
       'Connect to your existing Klipper / Moonraker controller. Live camera only; Bambu printers need Docker.' :
       'Enter the address of your LayerGlass container.';
     this.form.querySelector('label').textContent = direct ? 'Printer / controller address' : 'Backend address';
-    this.input.placeholder = direct ? 'https://klipper.example.com' : 'https://printer.example.com';
+    this.input.type = direct ? 'url' : 'text';
+    this.input.placeholder = direct ? 'https://klipper.example.com' : 'printer.example.com';
+    this.querySelector('.backend-address-hint').textContent = this.ownerDocument.location.protocol === 'https:' ?
+      direct ? 'Use an HTTPS address that this device can reach.' : 'HTTPS is automatic.' :
+      'Use the address you open to view your container.';
     (name !== 'choose' ? this.input : this.querySelector(`[data-backend-choice="${direct ? 'direct' : 'docker'}"]`)).focus({ preventScroll: true });
   }
 

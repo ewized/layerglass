@@ -76,7 +76,7 @@ export const backendListTemplate = `
 </div>
 <form id="backend-form" class="backend-form" hidden>
   <label for="backend-url" id="backend-url-label" class="sr-only">Backend address</label>
-  <input id="backend-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com" aria-describedby="backend-capabilities backend-error" required disabled>
+  <input id="backend-url" name="url" type="text" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="printer.example.com" aria-describedby="backend-capabilities backend-error" required disabled>
   <button id="backend-confirm" class="icon-button primary" type="submit" title="Save and connect" aria-label="Save and connect"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></button>
   <p id="backend-error" class="backend-error" role="alert" hidden></p>
   <p id="backend-capabilities" class="backend-note"></p>

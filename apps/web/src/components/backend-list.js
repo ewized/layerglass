@@ -80,7 +80,8 @@ export class PrinterBackendList extends PlayerElement {
     this.querySelector(`[data-backend-row="${type}"]`).append(this.form);
     this.form.hidden = false;
     this.input.value = this.drafts.get(type) || '';
-    this.input.placeholder = type === 'direct' ? 'https://klipper.example.com' : 'https://printer.example.com';
+    this.input.type = type === 'direct' ? 'url' : 'text';
+    this.input.placeholder = type === 'direct' ? 'https://klipper.example.com' : 'printer.example.com';
     this.querySelector('#backend-url-label').textContent = type === 'direct' ? 'Printer / controller address' : 'Backend address';
     this.querySelector('#backend-capabilities').textContent = type === 'direct' ?
       'Live camera only. Bambu printers require the Docker backend.' : 'Connect to LayerGlass on your hardware.';

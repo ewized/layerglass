@@ -24,14 +24,16 @@ test('a host-provided backend is retained; standalone apps require a choice and 
   assert.deepEqual(readBackend(storage, 'https://viewer.test/?backend=demo'), { type: 'demo' });
 });
 
-test('invalid preferences recover and unsafe/mixed-content addresses are rejected before requests', () => {
+test('invalid preferences recover and unsafe backend addresses are rejected before requests', () => {
   assert.equal(readBackend({ getItem: () => '{broken' }, 'https://app.layer.glass/', 'choose'), null);
   assert.deepEqual(readBackend({ getItem: () => '{broken' }, 'https://viewer.test/', 'python'), { type: 'python', url: 'https://viewer.test' });
   for (const value of [{}, { type: 'unknown' }, { type: 'python' }, { type: 'python', url: 'https://user:code@printer.test' }]) {
     assert.equal(readBackend({ getItem: () => JSON.stringify(value) }, 'https://app.layer.glass/', 'choose'), null);
   }
-  for (const url of ['https://name:code@printer.test', 'https://printer.test/api', 'https://printer.test?code=secret',
-    'http://192.168.1.4:8099', 'file:///tmp/video', 'javascript:alert(1)']) {
+  for (const url of ['', '   ', '/printer', '\\printer', 'name:code@printer.test',
+    'https://name:code@printer.test', 'https://printer.test/api', 'https://printer.test?code=secret',
+    'printer.test/api', 'printer.test?key=value', 'printer.test#section',
+    'file:///tmp/video', 'ftp://printer.test', 'javascript:alert(1)', 'javascript:123', 'data:123']) {
     assert.throws(() => backendConfig({ type: 'python', url }, 'https://app.layer.glass/'));
   }
   assert.equal(backendConfig({ url: 'http://192.168.1.4:8099' }, 'http://192.168.1.2/').url, 'http://192.168.1.4:8099');
@@ -46,6 +48,34 @@ test('invalid preferences recover and unsafe/mixed-content addresses are rejecte
     if (descriptor) Object.defineProperty(globalThis, 'localStorage', descriptor);
     else delete globalThis.localStorage;
   }
+});
+
+test('Docker hostnames default to HTTPS and HTTP is upgraded before use by an HTTPS app', () => {
+  const page = 'https://app.layer.glass/';
+  for (const [input, expected] of [
+    ['printer.example.com', 'https://printer.example.com'],
+    [' printer.example.com:8443/ ', 'https://printer.example.com:8443'],
+    ['printer:8443', 'https://printer:8443'],
+    ['192.168.4.104:8443', 'https://192.168.4.104:8443'],
+    ['[fd00::1]:8443', 'https://[fd00::1]:8443'],
+    ['//printer.example.com', 'https://printer.example.com'],
+    ['http://printer.example.com', 'https://printer.example.com'],
+    ['HTTP://PRINTER.EXAMPLE.COM:8443/', 'https://printer.example.com:8443'],
+    ['http://192.168.4.104:8443', 'https://192.168.4.104:8443'],
+    ['http://localhost:8443', 'https://localhost:8443'],
+  ]) assert.equal(backendConfig({ type: 'python', url: input }, page).url, expected, input);
+});
+
+test('Docker normalization persists only the HTTPS origin and upgrades saved HTTP choices', () => {
+  let saved = JSON.stringify({ type: 'python', url: 'http://printer.example.com:8443' });
+  const storage = { getItem: () => saved, setItem: (_key, value) => { saved = value; } };
+  const page = 'https://app.layer.glass/';
+  const expected = { type: 'python', url: 'https://printer.example.com:8443' };
+  assert.deepEqual(readBackend(storage, page, 'choose'), expected);
+  assert.deepEqual(saveBackend({ type: 'python', url: 'printer.example.com:8443', access_code: 'not-stored' }, storage, page), expected);
+  assert.deepEqual(JSON.parse(saved), expected);
+  assert.deepEqual(readBackend(undefined, 'http://192.168.4.2:8099/', 'python'),
+    { type: 'python', url: 'http://192.168.4.2:8099' }, 'The HTTP container viewer retains its own authoritative origin.');
 });
 
 test('Python routes media/session URLs to its selected origin and preserves only same-origin proxy credentials', async () => {
