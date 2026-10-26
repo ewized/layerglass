@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 3 ballot complete",
+      "status": "independent Round4 API pass active",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -56,7 +56,7 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 3 ballot complete",
+      "status": "independent Round4 remote/provider pass active",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -66,7 +66,7 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "independent Round4 backend review active at4f6f6be",
+      "status": "independent Round4 backend pass complete;2 proposals, no implementation",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
@@ -76,7 +76,7 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 3 ballot complete",
+      "status": "independent Round4 delivery pass active",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -86,7 +86,7 @@
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "independent Round4 workspace/provider review active at1af28b1",
+      "status": "independent Round4 workspace pass complete;1 proposal",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -96,7 +96,7 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 3 ballot complete",
+      "status": "independent Round4 input pass complete;1 proposal",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -106,7 +106,7 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "independent Round4 documentation review active atdf663ea",
+      "status": "independent Round4 docs pass complete;1 proposal",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -116,7 +116,7 @@
   "rounds": [
     {
       "id": 1,
-      "phase": "integrated; combined validation next",
+      "phase": "integrated; unit/workspace and corrected browser validation passed",
       "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
       "reviewers_completed": [
         "r01",
@@ -216,6 +216,30 @@
       ],
       "balloting_completed_at": "2026-10-26T05:50:58Z",
       "decision": "P26 approved10/10; root votes0."
+    },
+    {
+      "id": 4,
+      "phase": "voting",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "frozen_at": "2026-10-26T06:03:54Z",
+      "proposal_ids": [
+        "P27",
+        "P28",
+        "P29",
+        "P30",
+        "P31"
+      ],
+      "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80",
+      "slate_path": "test-results/review-2026-10-26/round-4-slate.json",
+      "ballots_started": true,
+      "reviewers_completed": [
+        "r01",
+        "r06",
+        "r08",
+        "r09",
+        "r10"
+      ],
+      "notes": "Five exact deeper-review corrections frozen. R01 independent108-request API/SSE pass found no material new defect; independent R05/R07 passes continue. Later candidates do not alter this slate."
     }
   ],
   "proposals": [
@@ -2933,6 +2957,114 @@
         },
         "validation": "Author114 focused backend cases/35 docs, deterministic persisted/reloaded B-binding regression and original-code failure. Root reviewed lock ordering and independently passed22 combined CORS/binding cases with P24."
       }
+    },
+    {
+      "id": "P27",
+      "round": 4,
+      "revision": 1,
+      "title": "Restore owned focus after a failed Settings backend check",
+      "author": "r08",
+      "source_finding": "R08-R4-C1",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "files": [
+        "apps/web/src/player.js",
+        "apps/web/tests/browser-keyboard-focus.js",
+        "docs/web-components.md"
+      ],
+      "scope": "Record ownership of the submitted Settings backend editor before busy rendering disables it. After a failed validation/probe/storage operation, restore its reenabled address input only when the same request/editor is still connected and open on the visible Backend settings page, submitted focus was owned, and focus was lost to the document without intentional navigation. Preserve current provider, drafts/error, single bounded probe, success/reload, onboarding and printer editor behavior. Do not steal focus after user movement, dismissal or page/editor replacement. Add actual Chromium/WebKit consumer regressions and a component note.",
+      "evidence": "Actual full bootstrap/player loopback HTTP503 fixture: Chromium input loses focus to body when disabled; failure reenables controls but Enter cannot retry and Escape does not dismiss. WebKit keeps focus.100 backend-list reconnect cycles preserve draft and exactly one action. Root independently reran on all26 source and reproduced both controls.",
+      "evidence_path": "test-results/review-2026-10-26/r08/round4-findings.json",
+      "risk": "Low/moderate async focus ownership; unconditional focus would steal intentional navigation.",
+      "validation_plan": "Actual keyboard submit/failure regains same input and explicit retry issues exactly one new check. Cover incompatible response, timeout and supported Direct failure plus intentional focus movement/Settings dismissal/navigation and success behavior; preserve existing onboarding/printer focus checks in both engines.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P28",
+      "round": 4,
+      "revision": 1,
+      "title": "Describe replay bytes as a retention target rather than a hard quota",
+      "author": "r10",
+      "source_finding": "R10-R4-C1",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "files": [
+        "docs/operations/installation.md",
+        "docs/reference/application-guide.md"
+      ],
+      "scope": "Documentation only: qualify installation replay-budget wording, application retention paragraph and REPLAY_MAX_MB table entry as a retained-video target. Explain at least one current fragment/frame per active camera is preserved, so the target can be exceeded and is not a filesystem quota. Explain the trimming indication reports removal of older history. Preserve defaults, lease/expiry/durability, ordinary trimming and all runtime behavior. Do not claim a fixed overrun bound or that other disk usage is counted.",
+      "evidence": "Production ReplayBuffer with a valid1MiB target retains1.5MiB from two current camera fragments, or2MiB from one current fragment, with limited=false. Ordinary old-fragment trimming works and sets limited. Root independently reproduced all three scenarios on all26 source.",
+      "evidence_path": "test-results/review-2026-10-26/r10/round4-findings.json",
+      "risk": "Negligible runtime risk; wording must avoid implying a new hard quota or unmeasured overrun guarantee.",
+      "validation_plan": "Compare prose with one-fragment-per-archive guard and limited metadata; rerun isolated single/multi-camera and ordinary-trimming controls against unchanged code; Docker documentation validator.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P29",
+      "round": 4,
+      "revision": 1,
+      "title": "Attribute JPEG capture intervals to the preceding held frame",
+      "author": "r06",
+      "source_finding": "R06-R4-C1",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "files": [
+        "apps/backend/replay.py",
+        "apps/backend/tests/test_replay.py",
+        "apps/backend/tests/test_printer_history.py",
+        "apps/backend/tests/test_scrub_preview.py",
+        "docs/printer-telemetry.md",
+        "docs/video-delivery.md"
+      ],
+      "scope": "Correct JPEG interval attribution only. When a successor capture arrives, finalize the preceding JPEG interval at that successor timestamp, holding that preceding still through the elapsed gap, and append the successor at its own capture timestamp with the existing bounded provisional latest tail. Displayed clock progresses through the hold; recorded readings use that same wall clock. Do not collapse gaps or interpolate images/readings. Adjust the provisional tail, archive position and affected clock anchors atomically under existing DVR lock; completed earlier starts remain stable. Preserve pages opened while awaiting a successor, first-frame/origin/opened_at restrictions, retention, previews, latest end_time bounds, unchanged-capture deduplication and all HLS/transports/native-decoder/read-only telemetry policy. Add focused regressions and delivery/telemetry explanation; temporary archives require no persistent migration.",
+      "evidence": "Real ReplayBuffer+JPEG/history loopback HTTP with captures1000,1030..1065: frame1030 starts at media1 with duration30. Forward media30.5->31.1 maps production printer clock1059.5->1031.1 and layers59->31, a28.4s backward clock jump. Fixture uses identifiable synthetic frame bytes, not a real camera/rendering claim.",
+      "evidence_path": "test-results/review-2026-10-26/r06/round4-findings.json",
+      "risk": "Moderate: finalizing provisional JPEG tail affects origin, clock and pruning boundaries. A different gap policy or transport would require fresh scope/votes.",
+      "validation_plan": "Repeat real HTTP metadata/image/history + production JS clock/row lookup:30.5->31.1 must map1030.5->1031.1/layers30->31. Earlier gap positions cannot show successor image. Cover equal/varying cadence, unchanged capture, reconnect, later tabs during/after gap, trimming held interval and preview bounds; existing HLS/replay/history/preview checks remain passing.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P30",
+      "round": 4,
+      "revision": 1,
+      "title": "Recover DVR pruning errors without losing file ownership or growing history",
+      "author": "r06",
+      "source_finding": "R06-R4-C2",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "files": [
+        "apps/backend/replay.py",
+        "apps/backend/tests/test_replay_lifecycle.py",
+        "apps/backend/tests/test_replay.py",
+        "docs/video-delivery.md"
+      ],
+      "scope": "In both active-archive fragment-pruning paths, unlink before removing the Fragment and changing byte accounting; retain missing_ok. Handle expected pruning/unlink OSError inside background maintenance using generic temporary-buffer error behavior, preserving worker, page tokens, other-viewer service and tracked failed fragment. Retry outstanding pruning before accepting further media when retained cap cannot be satisfied, or enforce an equally bounded pause; catch-and-append growth is excluded. After cleanup succeeds resume normal collection with same tokens/priority and consistent page starts/telemetry/preview eviction. Do not catch programming errors indiscriminately or introduce new storage, permission changes, API policy, lock-order redesign or filesystem-wide cleanup. Add real non-root transient/prolonged-error, release/cap and recovery regressions plus corresponding note.",
+      "evidence": "Real non-root0500 archive directory under20byte cap with three9byte fragments causes unlink PermissionError outside worker catch. Fragment is dequeued but9byte file remains; restoring0700 and publishing later source frames leaves worker dead, health503 and recording end6 instead of10.",
+      "evidence_path": "test-results/review-2026-10-26/r06/round4-findings.json",
+      "risk": "Low/moderate ownership/retry boundary; catch-only fix risks unbounded recording, while a stale blocked state risks permanent pause.",
+      "validation_plan": "Actual non-root0500->0700 fault must keep worker/health alive and failed file tracked; restore permissions resumes same tokens and trimming automatically. Hold fault across many source updates/ticks to prove bytes/file counts bounded and other-viewer metadata/media responsive. Cover older-page-release path, ordinary multi-viewer retention, preview and printer-history pruning.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P31",
+      "round": 4,
+      "revision": 1,
+      "title": "Keep copy-feedback dismissal from stealing later keyboard focus",
+      "author": "r09",
+      "source_finding": "R09-R4-C1",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "files": [
+        "apps/web/src/components/overlays.js",
+        "apps/web/tests/browser-keyboard-focus.js",
+        "docs/web-components.md"
+      ],
+      "scope": "At successful Copy debug info feedback auto-dismissal, return focus to player only if the menu still contains the active element. Always close at the existing one-second deadline. Preserve explicit Escape restoration, clipboard success/failure feedback, newer-menu/openRevision ownership and timer cleanup. Do not change replay blur cancellation, tab order, menu actions or product UI. Add real connected-player keyboard regressions and component note.",
+      "evidence": "Actual unmodified full player in Chromium/WebKit: keyboard Copy success then Tab to slider and held ArrowRight previews60->~61.8. The feedback timer close(true) moves focus to player and cancels scrub; keyup commits0. Same held key without timer commits1; menu-owned timer correctly returns focus. Normal pointer/touch/pan/cancel/fullscreen controls pass.",
+      "evidence_path": "test-results/review-2026-10-26/r09/round4-findings.json",
+      "risk": "Low: guard current menu focus while preserving normal dismissal handoff.",
+      "validation_plan": "Trusted Chromium/WebKit Copy->Tab->held-arrow past deadline: menu closes, slider focus/scrub persist, keyup commits once. Menu-owned focus still restores player; unrelated control focus retained. Preserve Escape, failed clipboard retry, late/newer-menu ownership and disconnect cleanup.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -3319,6 +3451,16 @@
       "at": "2026-10-26T05:50:58Z",
       "type": "integration",
       "message": "All26 exact approved corrections integrated after independent diff review;260 explicit ballots retained (259 APPROVE,1 ABSTAIN; root0). New6-hour two-engine generated-camera retention run started at all26 source. Baseline real60-minute run passed. Deeper independent reviews continue."
+    },
+    {
+      "at": "2026-10-26T06:02:39Z",
+      "type": "review",
+      "message": "Independent deeper reviews have five new demonstrated candidates so far; none frozen, voted or implemented. Original18-suite browser rerun passed. Corrected retention harness validated with actual trimming and replacement6-hour run active; original intentional interruption preserved."
+    },
+    {
+      "at": "2026-10-26T06:03:54Z",
+      "type": "freeze",
+      "message": "Frozen Round4 P27-P31 revision1 at all26 baseline5055adf; zero new votes, zero implementation authorization. Root0; each needs6 of10 explicit approvals. Other independent deeper passes continue."
     }
   ],
   "validation": [
@@ -3378,7 +3520,7 @@
     },
     {
       "summary": "Immutable combined first-round check.sh all with build, units, docs, Nx/site and all18 browser suites",
-      "status": "stopped at audit harness artifact; browser-only rerun active",
+      "status": "nonbrowser stages passed; corrected browser rerun passed",
       "source": "75a0479",
       "log": "test-results/review-2026-10-26/round1-full.log",
       "started_at": "2026-10-26T05:30:37Z",
@@ -3389,7 +3531,8 @@
         "test-results/review-2026-10-26/cookie-proxy-control.log"
       ],
       "browser_retry": "test-results/review-2026-10-26/round1-browser-proxy.log",
-      "completed_stages": "196 Python tests,214 JavaScript tests,35 linked docs, Nx backend/web/site builds, build-cache restore, graph and site browser checks passed. Full browser stage is a separate active rerun."
+      "completed_stages": "196 Python tests,214 JavaScript tests,35 linked docs, Nx backend/web/site builds, build-cache restore, graph and site browser checks passed. Full browser stage is a separate active rerun.",
+      "browser_retry_result": "All18 standard browser suites passed Chromium/WebKit at immutable75a0479, exec86150 exit0. Original failed command/log retained; routing artifact was in audit isolation, not product."
     },
     {
       "summary": "Root independent combined P24 public-scan and P26 registry-ordering regression check",
@@ -3401,7 +3544,7 @@
     },
     {
       "summary": "Pinned all26-fix six-hour native-video/local-preview retention run in Chromium and WebKit",
-      "status": "running",
+      "status": "intentionally stopped to correct audit assertion",
       "source": "df663ead6cfda57bd95d43f0547214c462129919",
       "duration_seconds": 21600,
       "started_at": "2026-10-26T05:50:58Z",
@@ -3409,7 +3552,53 @@
         "test-results/review-2026-10-26/retention_26fixes_v1-chromium.log",
         "test-results/review-2026-10-26/retention_26fixes_v1-webkit.log"
       ],
-      "environment": "Generated camera only; network-isolated fixture1CPU/384MiB and each browser1CPU/1GiB;128KiB compressed preview RAM forces IndexedDB reads; normal128MiB disk bounds;1GiB server DVR cap. Physical-device behavior unverified."
+      "environment": "Generated camera only; network-isolated fixture1CPU/384MiB and each browser1CPU/1GiB;128KiB compressed preview RAM forces IndexedDB reads; normal128MiB disk bounds;1GiB server DVR cap. Physical-device behavior unverified.",
+      "stopped_at": "2026-10-26T05:55:00Z",
+      "result": "Audit final assertion confused current retained still count with total captured count; hovering trims stills older than retained DVR footage. No product failure claimed. Exact owned containers stopped; exit137 expected. Replacement pilot and run tracked separately."
+    },
+    {
+      "summary": "Retention-pruning pilot with corrected capture accounting in both engines",
+      "status": "passed",
+      "source": "5055adf",
+      "duration_seconds": 100,
+      "log": "test-results/review-2026-10-26/retention_prune_pilot_v2-{chromium,webkit}.log",
+      "result": "5MiB DVR target advanced oldest footage; total native captures20/19, retained frames18/16. Three cold disk previews per engine without server images/video restarts; bytes/count within storage limits;0 page errors. Pilot cleanup-count observation led to using real page navigation rather than model-only close in replacement harness.",
+      "recorded_at": "2026-10-26T06:02:39Z"
+    },
+    {
+      "summary": "Replacement pinned all26 six-hour native-video/local-preview retention run",
+      "status": "running",
+      "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "duration_seconds": 21600,
+      "first_samples_at": [
+        "2026-10-26T05:58:17.477Z",
+        "2026-10-26T05:58:20.097Z"
+      ],
+      "logs": [
+        "test-results/review-2026-10-26/retention_26fixes_v2-chromium.log",
+        "test-results/review-2026-10-26/retention_26fixes_v2-webkit.log"
+      ],
+      "environment": "Network-isolated generated camera; fixture1CPU/384MiB and each browser1CPU/1GiB; forced128KiB compressed RAM, normal IndexedDB quotas,1GiB DVR retention target. Total captures and retained-frame bounds checked separately; real navigation cleanup.",
+      "recorded_at": "2026-10-26T06:02:39Z"
+    },
+    {
+      "summary": "Immutable all26 complete check.sh all",
+      "status": "running; unit/docs/workspace stages passed",
+      "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "log": "test-results/review-2026-10-26/all26-full.log",
+      "result": "199 Python tests,226 JS tests,35 linked docs, Nx builds/cache restore/graph/site tests passed; browser stage active with audit-only proxy isolation.",
+      "recorded_at": "2026-10-26T06:02:39Z"
+    },
+    {
+      "summary": "Coordinator independent controls for new Round4 backend-focus and retention-documentation proposals",
+      "status": "reproduced, not approved or implemented",
+      "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "logs": [
+        "test-results/review-2026-10-26/root-round4-focus-control.log",
+        "test-results/review-2026-10-26/root-round4-budget-control.log"
+      ],
+      "result": "Actual Chromium focus-loss/WebKit control and100 component reconnect cycles reproduced at all26 source. Three actual ReplayBuffer cap/current-fragment scenarios reproduced; no runtime edits.",
+      "recorded_at": "2026-10-26T06:02:39Z"
     }
   ],
   "implementation_worktrees": [
