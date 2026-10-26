@@ -17,7 +17,8 @@ export class ReplayTimeline {
 
   fit() { this.fitRequested = true; }
 
-  frame({ start, end, current, live, paused, scrubbing, now, advancing }) {
+  frame({ start, end, current, live, paused, scrubbing, now, advancing, limit = Infinity }) {
+    end = Math.min(end, limit);
     if (this.edge === null) {
       this.edge = end;
       this.observedEnd = end;
@@ -30,6 +31,10 @@ export class ReplayTimeline {
       this.observedEnd = Math.max(this.observedEnd, end);
       this.edge = Math.max(this.observedEnd, Math.min(this.edge, this.observedEnd + 6));
     }
+    // A native file has a final media time, even while its simulated live clock
+    // is interpolated. Also correct an earlier estimate when metadata arrives.
+    this.observedEnd = Math.min(this.observedEnd, limit);
+    this.edge = Math.min(this.edge, limit);
     this.lastTime = now;
 
     const mode = scrubbing ? 'scrub' : live ? 'live' : paused ? 'paused' : 'playing';
@@ -43,8 +48,8 @@ export class ReplayTimeline {
       this.window.start += shift;
       this.window.end = this.edge;
     }
-    this.window.start = Math.max(start, this.window.start);
-    this.window.end = Math.max(this.window.start, this.window.end);
+    this.window.start = Math.max(start, Math.min(this.window.start, limit));
+    this.window.end = Math.max(this.window.start, Math.min(this.window.end, limit));
     this.mode = mode;
     this.fitRequested = false;
     return { ...this.window,
@@ -404,7 +409,8 @@ export class PageReplay {
     const previewing = this.scrubbing && Number.isFinite(this.previewPosition);
     const timeline = this.timeline.frame({ start, end: Math.max(end, this.session.end_seconds), current: previewing ? this.previewPosition : playhead,
       live: this.followLive, paused: this.paused, scrubbing: this.scrubbing, now: performance.now() / 1000,
-      advancing: this.session.ready && !this.session.error });
+      advancing: this.session.ready && !this.session.error,
+      limit: this.session.kind === 'file' && Number.isFinite(this.video.duration) ? this.video.duration : Infinity });
     if (!this.scrubbing || updateDuringScrub) {
       this.slider.min = timeline.start;
       this.slider.max = timeline.end;

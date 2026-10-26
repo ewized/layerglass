@@ -67,7 +67,8 @@ interaction choices are specific to this viewer.
   reachable even after the displayed window has moved past it.
 - Display time advances between HLS segment reports. Prediction is capped at six
   seconds past the newest observation and stops on a reported stream error.
-  Seeking is independently clamped to actually available media.
+  Native demo/local files also stop at their known media duration, including at
+  the final paused frame. Seeking is independently clamped to available media.
 - Retention trimming can move the earliest available point. Page/session reset
   clears the clock, window and JPEG frame-request deduplication. A replacement
   camera requests its own replay frame even at the same timestamp. Temporary

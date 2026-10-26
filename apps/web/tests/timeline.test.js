@@ -26,7 +26,7 @@ class Element extends EventTarget {
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
 }
 
-async function player({ end = 100, current = 98, kind = 'hls' } = {}) {
+async function player({ end = 100, current = 98, kind = 'hls', duration = Infinity } = {}) {
   let milliseconds = 0;
   let timerId = 0;
   const timers = new Map();
@@ -43,6 +43,7 @@ async function player({ end = 100, current = 98, kind = 'hls' } = {}) {
   const { PageReplay } = await loadBrowserModule('replay.js', context);
   const video = new Element();
   video.currentTime = current;
+  video.duration = duration;
   video.paused = false;
   video.pause = () => { video.paused = true; video.dispatchEvent(new Event('pause')); };
   video.play = () => { video.paused = false; video.dispatchEvent(new Event('play')); return Promise.resolve(); };
@@ -477,6 +478,46 @@ test('unreported missing segments cap the display prediction rather than growing
   p.replay.togglePause();
   for (let second = 0; second < 30; second++) p.advance(1, 0);
   assert.equal(p.document.getElementById('replay-time').textContent, '−0:08');
+});
+
+test('finite files interpolate before EOF but never display footage beyond their duration', async () => {
+  const p = await player({ kind: 'file', end: 99, current: 95, duration: 100 });
+  p.replay.seek(95);
+  p.advance(0.5, 0, 0.5);
+  close(p.replay.timeline.edge, 99.5, 'The finite file still interpolates its growing live edge');
+  for (let tick = 0; tick < 8; tick++) {
+    p.advance(0.25, 0, 0.25);
+    assert(p.replay.timeline.edge <= 100);
+    assert(Number(p.slider.max) <= 100);
+  }
+  p.replay.session.end_seconds = 100;
+  p.video.currentTime = 100;
+  p.video.pause();
+  for (let second = 0; second < 30; second++) p.advance(1, 0, 0);
+  close(p.replay.timeline.edge, 100, 'EOF stops the display clock');
+  close(Number(p.slider.max), 100, 'EOF bounds the paused timeline');
+  assert.equal(p.document.getElementById('replay-time').hidden, true, 'A final frame has no invented delay from Live');
+});
+
+test('finite-file replay keeps its live-relative fraction while playback and recording advance', async () => {
+  const p = await player({ kind: 'file', duration: 300 });
+  p.replay.seek(50);
+  const fraction = p.fraction();
+  for (let second = 0; second < 120; second++) {
+    p.advance();
+    close(p.fraction(), fraction, 'Matched-rate native file replay');
+  }
+});
+
+test('late file metadata also clamps an existing paused display estimate', async () => {
+  const p = await player({ kind: 'file', current: 100 });
+  p.video.pause();
+  p.advance(6, 0, 0);
+  close(p.replay.timeline.edge, 106, 'Duration is not known yet');
+  p.video.duration = 100;
+  p.replay.render();
+  close(p.replay.timeline.edge, 100, 'Known duration corrects the prediction');
+  close(Number(p.slider.max), 100, 'Known duration corrects the frozen window');
 });
 
 test('closing a page session resets the live clock and view for the next session', async () => {
