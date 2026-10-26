@@ -4686,7 +4686,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/merged-preview-review-1.json",
       "risk": "Moderate client boundary correction across several consumers. A partial fix can still hide/drop the exact first capture or reject a valid fallback, while a global change can weaken other transports or real retention. Gate on valid local JPEG precision and preserve all legacy/remote/other-mode and ownership behavior; source/evidence and tests must cover both rounding directions and genuine retention advancement.",
       "validation_plan": "Keep the exact old-source actual-recorder primary negative and aligned-fixture diagnostic control immutable. In Chromium and WebKit, real native-decoded JPEG PreviewCapture/toBlob/PreviewHistory/PreviewStorage/actual IDB must retain the precisely owned cold first frame and disk row and paint it with zero preview HTTP; do not merely change fixture session.start_seconds in the corrected primary. Include an actual upward-rounding recorder payload and a downward-rounding case, page/retained-first start, precise end/provisional-tail boundary and valid local-JPEG gating. Verify legacy/no-descriptor JPEG,H264,file/demo and remote behavior remains unchanged. Actual retained-start advancement must still exclude/prune older captures and hide invalid preview points; delayed backup from before the new retained start/session must not repopulate/paint current history, while a valid precise-start backup can be accepted. Retain existing corrupt-sprite cooldown/recovery,500ms delayed-IDB fallback/late-local ownership, adjacent warm/cold and forward/return P37 controls, same native video/zero main seeks and no extra main-media request on hover. Focused relevant JS units, complete existing browser-preview-loading and browser-jpeg-clock suites both engines, Bash/diff/scope as relevant and35docs. No full duplicate suite, physical device/LAN/registry/service or credential probes; root owns final combined check and preserves active native six-hour fixture.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -4764,10 +4764,12 @@
         "worktree": "/workspace/layerglass-review/jpeg-preview-bounds",
         "author_report": "test-results/review-2026-10-26/r04/p40-implementation-report.json",
         "author_report_sha256": "08f1ff465fb07fd3e4c36a0ed7a124828a22c5ac074c46d058ed2c9951d7c1c6",
-        "status": "Exact final independent READY accepted; integration next.",
+        "status": "Integrated exact independently READY source; combined check pending.",
         "peer_report": "test-results/review-2026-10-26/r05/p40-final-review.json",
         "peer_report_sha256": "85e0278c34c249559e1329c27ca29b0d97a3db8620475ad2211948ea0a376543",
-        "peer_reviewed_commit": "f4c8ce4206604b24ec9612f421109d32959ffa51"
+        "peer_reviewed_commit": "f4c8ce4206604b24ec9612f421109d32959ffa51",
+        "canonical_commit": "38b8124f3ff0b845fb660343d4442e3d399df836",
+        "integration_verification": "test-results/review-2026-10-26/root-p40-merge/source-verification.json"
       }
     }
   ],
@@ -4931,6 +4933,10 @@
     {
       "sha": "5b51ab7ffa4034f7428c1b467d056ec592ca8c0c",
       "summary": "P39: untagged builds runbyvalidated immutableID, noimagecleanup and explicitordinarycacheretention;10freshvotes/independentR08READY; P38unintegrateddraft superseded."
+    },
+    {
+      "sha": "38b8124f3ff0b845fb660343d4442e3d399df836",
+      "summary": "P40 fix(web): preserve precise local JPEG preview bounds;10fresh votes, first6pre-edit, independently READY exactauthorf4c8ce4. Focused bothengine realIDB/rounding/retention/compatibility pass; combinedcheck pending."
     }
   ],
   "activity": [
@@ -6132,6 +6138,11 @@
       "summary": "R10 second merged documentation/source consistency pass at ee2a6fb:20git-blob hashes independently checked against current443dc6d; no new independent material finding. P34/35/36/37/39 contracts consistent; P38 historical supersession and existingP40 explicitly excluded. No fresh runtime/hardware/deployment claim.",
       "evidence": "test-results/review-2026-10-26/r10/merged-docs-review-2.json",
       "sha256": "131cfc61304094a09ccb95a0c107210d624a60848b3ad35d4ee6848f68962984"
+    },
+    {
+      "status": "focused pass; combined pending",
+      "summary": "P40 author87units/35docs/2registeredbothengine suites; peer originalactualprimary+aligned andcompletepreview-loading bothengine plusmetadata equality. Exactcanonical7hashes/P36unchanged13/P39script+doc verified. Originalnegatives and draft failures qualified/preserved.",
+      "evidence": "test-results/review-2026-10-26/r05/p40-final-review.json"
     }
   ],
   "implementation_worktrees": [
