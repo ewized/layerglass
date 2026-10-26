@@ -513,6 +513,17 @@
       "majority_recorded_at": "2026-10-26T10:20:35Z",
       "decision": "P40rev1 all10freshAPPROVE; first6saved+committed inee2a6fb before author edits, root0. No prior scope votes transferred. Independent exact-final review still required before integration.",
       "completed_at": "2026-10-26T10:29:54Z"
+    },
+    {
+      "id": 12,
+      "revision": 1,
+      "baseline": "d6075b0f9364a09cd9188ab3009167af16fc6303",
+      "frozen_at": "2026-10-26T11:36:27Z",
+      "slate": "test-results/review-2026-10-26/round-12-slate.json",
+      "slate_sha256": "9377b27458386e74423ca1c5c27d15d902b5dd3027cd1d5455e023ce32faa6dc",
+      "ballots_started": false,
+      "reviewers_completed": [],
+      "notes": "One-file native recovery test precondition and diagnostic correction. Original hosted-CI cause remains unproved; all post-error assertions strict."
     }
   ],
   "proposals": [
@@ -4779,6 +4790,25 @@
         "integration_verification": "test-results/review-2026-10-26/root-p40-merge/source-verification.json",
         "combined_check": "PASS on all39 snapshot951aafc (218Python/263JavaScript/35docs/20bothengine suites); exact product source unchanged by later audit bookkeeping."
       }
+    },
+    {
+      "id": "P41",
+      "round": 12,
+      "revision": 1,
+      "title": "Establish and report native-file pause intent before recovery injection",
+      "author": "root",
+      "source_finding": "R02-CI-NATIVE-PRECONDITION-01",
+      "baseline": "d6075b0f9364a09cd9188ab3009167af16fc6303",
+      "files": [
+        "apps/web/tests/browser-replay-recovery.js"
+      ],
+      "scope": "Restrict changes to the native-file setup and its diagnostic snapshots. Establish settled initial demo/native readiness and the committed30-second seek before requesting Pause/Play. Record/verify a single explicit expected toggle transition from known native/controller state, then assert and log both native and controller pause state, source/session/node identity, readiness/seeking and attachment/restore state before injecting the error. Fail a wrong setup state explicitly; do not repeat toggles/seeks or retry until the requested state happens to agree. Preserve existing timeout budgets, every after-error readiness predicate and strict paused/recorded-clock/time/one-seek/session/native-node equality plus later fixed/progress checks. Do not add expected pause to after-error polling, relax tolerances, change product code/native event policy, or claim to solve the preserved CI failure. Only the single listed test file may change. No product/decoder/event policy, helper/runner/CI/dependency or documentation change.",
+      "evidence": "Normal CI40312023690 job121535282937 on exactd6075b0 failed WebKit native-file after.paused equality at line171. Original pre-error native/controller state was not asserted/logged, so its cause cannot be established. Local fullall39 source-identical951aafc passed; R02 valid isolated native paused/playing controls passed both engines and exactly one preceding-sequence WebKit control passed strict original assertions. R07 independently source-confirmed missing settled/native/controller before-state contract. Two unsuitable offline-harness timeouts are preserved, not CI reproductions. This proposal corrects a demonstrated test setup/evidence gap only; no causal product fix or solved-CI claim.",
+      "evidence_path": "test-results/review-2026-10-26/r02/ci-native-pause-finding.json",
+      "risk": "Low test-only correction, with a real risk of hiding a restoration race if after-error polling is weakened or setup silently repairs repeated wrong intent. Keep the one explicit transition observable and keep original post-error assertions strict. Additional pre-error readiness is a test precondition, not a product waiver.",
+      "validation_plan": "Keep this primary CI log immutable. Compare exact original and candidate assertion/predicate contracts. Use generated native media in both Chromium/WebKit, including held initial/seek readiness and explicit paused/playing intent establishment, proving no recovery error is injected while setup is unsettled. Wrong native/controller setup must fail/log rather than toggle again. Run the focused native cases and existing browser-replay-recovery suite in both engines; preserve all network/Live cases and decoded clock/session/video/one-seek checks. No full combined suite, real device, CI rerun or product-source change is needed for this candidate. Preserve all original after-error readiness predicates and assertions verbatim wherever possible, verify exact contracts explicitly, and obtain independent exact-final READY before integration. A new normal full CI run may occur only after voted implementation/focused validation; no rerun fishing of the unchanged failed source.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -5829,6 +5859,21 @@
       "at": "2026-10-26T10:50:24Z",
       "type": "combined-check",
       "message": "All39 immutable source951aafc archived with Git object manifest; scripts/check.sh all running in root exec session58296. Python218, JavaScript263,35docs and Nx build/cache checks passed so far; browser phase still running. Audit-only loopback proxy wrapper, normal hosted CI remains separate."
+    },
+    {
+      "at": "2026-10-26T11:13:31Z",
+      "type": "qa-preparation",
+      "message": "V4 ignored-harness preparation authorized after preserving all v3 failures: bounded same-session Live sampling retries; best-effort unload IDB observation plus actual expired-on-open/manual-delete storage controls. Native image bytes/pixels/clock, paused state, URL/backend release, one-commit/cold/retention remain strict. No app edit, new pilot or hour authorization yet. Original v3 manifest has290 entries across run/preparation/post-run receipts; preserved prepared-v3 copies used for files intentionally revised in v4."
+    },
+    {
+      "at": "2026-10-26T11:16:32Z",
+      "type": "publication",
+      "message": "Both review/2026-10-26-twelve-hour and codex/review-ci-2026-10-26 pushed from1a66f5c to d6075b0 after local full pass. Only committed audit ledger differs from exact tested951aafc. No main merge, PR creation, release or deployment."
+    },
+    {
+      "at": "2026-10-26T11:36:27Z",
+      "type": "slate-frozen",
+      "message": "Round12 P41 frozen from independently confirmed native recovery fixture setup/evidence gap, not a causal app fix. R02 source8/evidence21 hashes and R07 source report preserved. Fresh ten-reviewer ballot required, first six before edits; root zero."
     }
   ],
   "validation": [
@@ -6174,6 +6219,36 @@
       "summary": "All39 full combined check on immutable951aafc exited0:218Python,263JavaScript,35linkedMarkdown,Nx3project build+cache graph and20defaultbrowser suites in Chromium/WebKit. PWA shellcache off; owned check-name prefix container list empty. P39 untagged build cache retained intentionally. Local loopback-proxy audit wrapper; hostedCI still separate. No hardware/printer/deployment claim.",
       "evidence": "test-results/review-2026-10-26/root-all39-full/report.json",
       "sha256": "395754c537fcd32da475d58c87c295fed522996002aad4d93032cb411e2db0ef"
+    },
+    {
+      "status": "inconclusive; aborted diagnostic pilot",
+      "summary": "R06 v3 JPEG pilot aborted at0.200s on a Live frame transition during asynchronous proof collection. Exact consumed native Blob533208B/hash matched archive and pixels; six distinct Chromium GET identities had empty protocol observations, WebKit one sample passed. Both synchronous native-URL/Blob cleanup receipts and backend sessions/media0 before shutdown passed. Immediate-IDB-deletion checks timed out; documented page-exit cleanup is best effort, exact final orphan counts were not saved. No app defect or pressure/endurance pass established.",
+      "evidence": "test-results/review-2026-10-26/r06/jpeg-soak/pilot-report-v3.json",
+      "sha256": "6d76ade57ad4be643ee28303acb0603a9a0382212279000600b1a4f2973172f9"
+    },
+    {
+      "status": "failed; investigation active",
+      "summary": "Normal GitHub CI40312023690 job121535282937 on published all39d6075b0 failed WebKit native-file paused recovery at browser-replay-recovery.js:171 (after.paused=false vs expectedtrue, time33.012764519). Chromium native and both-engine stream/HLS cases passed. Local all39 combined check remains a qualified local pass, not hostedCI green. Exact original log preserved; R02 runtime/source diagnosis and R07 independent source review active, no new code or CI rerun authorized.",
+      "evidence": "test-results/review-2026-10-26/github-ci-40312023690.log",
+      "sha256": "8e283c85aa36653c797ea09561443e92b05779823c438391deb4f17563799adc",
+      "url": "https://github.com/ewized/layerglass/actions/runs/40312023690"
+    },
+    {
+      "status": "pass",
+      "summary": "Normal public-hosting checks40312020839 succeeded on published all39d6075b0. Credential-free static build, Cloudflare config/dry-run and local Worker fixture checks; no deployment.",
+      "url": "https://github.com/ewized/layerglass/actions/runs/40312020839"
+    },
+    {
+      "status": "source review; cause unresolved",
+      "summary": "R07 independently confirmed published all39 product identity and original CI pause postcondition failure. Source/logs cannot classify missing native-file fixture precondition versus lost recovery intent; before state was not logged and catch reread is later. Plausible play-event/controller intent path requires actual chronology; no fix proposed, runtime or tracked edits. R02 bounded runtime diagnosis active.",
+      "evidence": "test-results/review-2026-10-26/r07/ci-native-pause-source-review.json",
+      "sha256": "c8e79bb7c0b3367b40cf19536aeb5e89adc911fb090a532e23e320f7a2182149"
+    },
+    {
+      "status": "QA source finding; no runtime",
+      "summary": "R04 found v4 ignored JPEG sampler lacks expected workflow mode across candidates and steady calls; it could accept a stationary unexpected pause. Explicit caller modes required before any pilot. Other native/clock/Stats/cold/retention/cleanup/TTL assertions remain strict. Source-only reachability, not a reproduced product defect.",
+      "evidence": "test-results/review-2026-10-26/r04/jpeg-qa-v4-source-review.json",
+      "sha256": "adaee858e88ad9bdb73c9f77b57455048b650d085aec501dde94b3a5bd155b02"
     }
   ],
   "implementation_worktrees": [
