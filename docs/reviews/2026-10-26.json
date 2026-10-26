@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active finalhour:43frozenproposals/41integrated/P38+P42superseded. All41normalCI+hostingPASS on862c01d, independentlyverified. Earliera505native6hPASS/source+cleanupindependentlyverified. Outcome note finaltextNO_FINDINGS/36docsPASS. JPEG longstressincomplete. Continue reviewuntil16:03:49UTC; no futurecompletion claim.",
+  "status": "Active until 2026-10-26 16:03:49 UTC: 45 frozen proposals, 450 explicit ballots, 41 integrated, P38/P42 superseded; P44/P45 exact author commits independently READY, acceptance being committed before integration. New combined full CI pending; previous all41 CI passed. Earlier-source native six-hour PASS; long JPEG stress incomplete.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -5256,7 +5256,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/final-interaction-review.json",
       "risk": "Guarding only completion or deletion misses stale writes; non-atomic guards may race queued IDB work; retained per-key queues can grow. Failed replacements must not cold-read old pixels under new metadata. Keep optional legacy API behavior and exact usage state. Existing prior approvals do not transfer.",
       "validation_plan": "Keep original failing fixture/control immutable. Add registered meaningful unit and actual-IDB/native JPEG regressions both engines for held conversion after replacement, stale completed-write cleanup after newer row, no replacement, failed replacement, old reads/sessions, repeated replacements/different keys, byte/count agreement and bounded writes. Native cold scrub must paint exact blue11.5 from local disk with0preview HTTP and same session/one video. Include mutation-removal negatives proving both stale overwrite and stale delete protections. Run relevant preview-history units plus registered browser-preview-storage and browser-preview-loading both engines, P37 nearest/coalesced/late reads/P40 precise bounds existing cases, docs links. Independent exact-final peer READY before integration; one new normal combined fullCI after all new corrections, no unchanged-source retry or relaxed assertion. No real printer, cloud, credentials or deployment. Stop starting work16:03:49UTC and safely park incomplete validation/source rather than rush.",
-      "status": "implementing",
+      "status": "validated",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -5334,7 +5334,15 @@
         "worktree": "/workspace/layerglass-review/preview-write-ownership",
         "author": "r04",
         "quorum_before_worktree": 6,
-        "authorization": "Author may edit only frozen scope after committed quorum; independent exact-final acceptance before integration."
+        "authorization": "Author may edit only frozen scope after committed quorum; independent exact-final acceptance before integration.",
+        "author_commit": "97714cf2bea62693956f87adedf089c83d199325",
+        "peer": "r05",
+        "peer_report": "test-results/review-2026-10-26/r05/p44-final-review.json",
+        "peer_report_sha256": "2488e1107e68e71c5a779ef75de5a4728612f37dc6695db0cc5af221f6269180",
+        "peer_status": "READY",
+        "accepted_at": "2026-10-26T15:47:10Z",
+        "root_evidence_hashes_verified": 34,
+        "integration": "PENDING; acceptance committed before cherry-pick"
       }
     },
     {
@@ -5357,7 +5365,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/final-interaction-review.json",
       "risk": "Simply retaining a failed archive can revive missing/pre-page media; simply catching while creating new dirs preserves leak. Cleanup must keep ownership across partial recursive failure, refuse admission until resolved, preserve sibling reads and not replace original create errors. Expected HTTP cleanup failure semantics are explicitly changed only on failed close/forget. No old P30 vote transfer.",
       "validation_plan": "Preserve exact old-source failure/ordinary control. Add non-root actual permission-fault HTTP/worker regression: final close returns503 with retired token, failed repeated creates503/no new archive dirs or increasing history, sibling token/media responsive, restore deletion and automatic cleanup removes exact old directory then new create records normally without old footage. Cover partial recursive removal, already absent path, expiry, forget, failed initial-create rollback retaining original error, worker alive and conservative accounted bytes, cleanup recovery and successful controls. Run backend replay/lifecycle, printer-history, scrub-preview, HTTP/provider/forget-related regressions and docs links in Docker. Independent exact-final peer READY before integration; one new normal combined fullCI after corrections, no hardware/network probes, credentials/deploy or broadened source. Deadline16:03:49UTC: stop starting work and safely park incomplete work/validation.",
-      "status": "implementing",
+      "status": "validated",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -5435,7 +5443,15 @@
         "worktree": "/workspace/layerglass-review/retired-archive-cleanup",
         "author": "r06",
         "quorum_before_worktree": 6,
-        "authorization": "Author may edit only frozen scope after committed quorum; independent exact-final acceptance before integration."
+        "authorization": "Author may edit only frozen scope after committed quorum; independent exact-final acceptance before integration.",
+        "author_commit": "e9ba83ffc5be7e7e22f4083fc5a587d3c318e82d",
+        "peer": "r03",
+        "peer_report": "test-results/review-2026-10-26/r03/p45-final-review.json",
+        "peer_report_sha256": "c73a197768fae60b3bfcaea0c2ce3e88d23c3f59d0c67036e3b5b69b02e6e623",
+        "peer_status": "READY",
+        "accepted_at": "2026-10-26T15:47:10Z",
+        "root_evidence_hashes_verified": 17,
+        "integration": "PENDING; acceptance committed before cherry-pick"
       }
     }
   ],
@@ -6880,6 +6896,17 @@
       "at": "2026-10-26T15:41:26Z",
       "type": "ballot",
       "message": "R10 explicit Round15 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T15:43:35Z",
+      "type": "audit-status-correction",
+      "message": "R08 final delta identified top mutable status still at43proposals after Round15: corrected current count to45/450 with41integrated/2superseded/2independentacceptancepending. Prior status retained verbatim in this record; frozen scopes/ballots unchanged.",
+      "previous_status": "Active finalhour:43frozenproposals/41integrated/P38+P42superseded. All41normalCI+hostingPASS on862c01d, independentlyverified. Earliera505native6hPASS/source+cleanupindependentlyverified. Outcome note finaltextNO_FINDINGS/36docsPASS. JPEG longstressincomplete. Continue reviewuntil16:03:49UTC; no futurecompletion claim."
+    },
+    {
+      "at": "2026-10-26T15:47:10Z",
+      "type": "independent-final-acceptance",
+      "message": "Exact P44/R05READY and P45/R03READY accepted after root report/source/evidence hash guards. Commit this acceptance before any cherry-pick. Six fresh approvals committed f065 before worktrees; all10fresh votes retained4df. Root never votes; no scope changes or product edits."
     }
   ],
   "validation": [
@@ -7410,6 +7437,14 @@
     {
       "summary": "R05 final bounded provider/recovery/history/event interaction source review at607cedd found no concrete new issue; root verified28 pinned source/test/doc hashes and4saved evidence hashes, report95035a2303caa323e416e3ffbf446813f027222a388759886c414e0ce00bfb05. No new runtime or exhaustive/device claim.",
       "status": "NO_FINDINGS"
+    },
+    {
+      "summary": "P44 exact author 97714cf2bea62693956f87adedf089c83d199325 independently READY byR05, reportSHA2488e1107e68e71c5a779ef75de5a4728612f37dc6695db0cc5af221f6269180; root verified source/evidence receipts,10fresh approvals and six-vote committed worktree parent; no integration yet. 37focusedJS/36docs/registeredstorage+loading bothengines/4mutationnegatives plus ownnativeIDBpeercontrols.",
+      "status": "READY"
+    },
+    {
+      "summary": "P45 exact author e9ba83ffc5be7e7e22f4083fc5a587d3c318e82d independently READY byR03, reportSHAc73a197768fae60b3bfcaea0c2ce3e88d23c3f59d0c67036e3b5b69b02e6e623; root verified source/evidence receipts,10fresh approvals and six-vote committed worktree parent; no integration yet. 150focusedbackendchecks/36docs/strongshutdown; ownnonrootHTTPpermissionworkerfinal/baselinecontrols.",
+      "status": "READY"
     }
   ],
   "implementation_worktrees": [
