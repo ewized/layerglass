@@ -16,24 +16,26 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 5 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r01/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r01/ballot-round4.json",
-      "ballot_round5": "test-results/review-2026-10-26/r01/ballot-round5.json"
+      "ballot_round5": "test-results/review-2026-10-26/r01/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r01/ballot-round6.json"
     },
     {
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 4 ballot complete",
+      "status": "round 5 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r02/ballot-round3.json",
-      "ballot_round4": "test-results/review-2026-10-26/r02/ballot-round4.json"
+      "ballot_round4": "test-results/review-2026-10-26/r02/ballot-round4.json",
+      "ballot_round5": "test-results/review-2026-10-26/r02/ballot-round5.json"
     },
     {
       "id": "r03",
@@ -242,7 +244,7 @@
     },
     {
       "id": 4,
-      "phase": "all ten ballots recorded; approved implementation and independent review",
+      "phase": "all five integrated after ten approvals and independent reviews; combined check pending",
       "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
       "frozen_at": "2026-10-26T06:03:54Z",
       "proposal_ids": [
@@ -284,6 +286,8 @@
       "slate_path": "test-results/review-2026-10-26/round-5-slate.json",
       "ballots_started": true,
       "reviewers_completed": [
+        "r01",
+        "r02",
         "r04",
         "r05",
         "r06",
@@ -307,6 +311,7 @@
       "slate_path": "test-results/review-2026-10-26/round-6-slate.json",
       "ballots_started": true,
       "reviewers_completed": [
+        "r01",
         "r04",
         "r05",
         "r06",
@@ -3656,6 +3661,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T07:20:14Z",
           "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned recorder-generated partial response succeeds through 1262, then real EventSource/PlayerUpdates reconnect coverage 1339..1370 leaves receiver 1280 blank after one request; local seek fetches 80%, then cached 1290 renders 90% without refetch. Both supported Chromium Cast and Cast-ineligible WebKit external-clock controls reproduce. The scope correctly limits hydration to later accepted same-session recorded proof consumed by its owning request, preserving sticky HTTP/JSON/timeout failures, future/cache/pending bounds and P23 ownership rather than resetting on each SSE/render.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:26:51Z",
+          "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
         }
       },
       "additional_evidence": [
@@ -3731,6 +3743,13 @@
           "rationale": "Independently verified the archived test/player/printer blobs against frozen 1d9174e and reran eight exact-original rejectedSetup executions with the original function hash and assertions intact. Immediate controls passed in both engines; one held-response Chromium run reproduced the same strict-equality failure. Its trace proves the disabled hidden input natively blurs to body before the response is released, with zero application focus calls and the editor revision advanced/editingCamera null. This is a pre-response lifecycle race, so an observable native-dismissal checkpoint followed by a snapshot still taken before release is a justified test-only correction. Approve only the exact preserved strict node equality and same-editor closed/hidden guards, existing request/ownership controls and both engines. Mandatory injected post-response focus of a different visible control must still fail equality, and reopening the editor must fail the hidden guard; taking a snapshot after response or weakening those assertions is outside this approval. Production P22/P27/P31 behavior remains unchanged.",
           "revision": 1,
           "recorded_at": "2026-10-26T07:08:02Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Independent1d9174e execution of the exact unchanged rejectedSetup function reproduced the dismissal equality failure2/4 held-response Chromium runs and1/4 WebKit runs; immediate controls passed4/4 in each engine. All three failures show the disabled hidden input still active at closeEditor return, then a trusted native blur to body while response5 is still held, with zero application focus calls and unchanged closed-editor revision/editingCamera=null. The production restore guard is already invalidated by closeEditor. A pre-response observable native dismissal barrier therefore corrects the test's causal comparison without changing product policy. Approval retains a snapshot taken while the response remains held, strict cross-response node equality, explicit same-editor closed/hidden guards, all other scenarios/counts and both engines; the required response-driven wrong-focus and reopened-editor injections must still fail. Post-response snapshots, weaker focus assertions, blind sleeps or production focus changes are outside this scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:26:51Z",
           "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
         }
       },
@@ -4341,6 +4360,21 @@
       "at": "2026-10-26T07:21:01Z",
       "type": "integration",
       "message": "32 proposals now independently reviewed and integrated. P32 remains in isolated implementation after seven explicit approvals; original P23 ABSTAIN retained. A separate six-hour newer-source local-preview sweep is prepared to cover every retained still after45actualminutes, complementing the still-running5055adf six-hour three-point fixture. No new full-CI result yet."
+    },
+    {
+      "at": "2026-10-26T07:26:51Z",
+      "type": "ballot",
+      "message": "R01 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:26:51Z",
+      "type": "ballot",
+      "message": "R02 explicit Round5 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:26:51Z",
+      "type": "review",
+      "message": "P32 author5619dfb now complete and pinned,94focusedconsumerunits/4browsercases/35docs plus unchanged-base negatives. R04 independent peer assigned; no integration until READY. Remaining independent ballots continue R02/R03, P23ABSTAIN preserved. Both model-capacity interruptions recovered on same-agent retry without model changes. Second six-hour32-proposal run has actual initial native samples; first5055adf run continues separately."
     }
   ],
   "validation": [
@@ -4525,6 +4559,28 @@
       "status": "passed",
       "evidence": "test-results/review-2026-10-26/r04/p29-p30-followup-review.json",
       "source": "02285f6"
+    },
+    {
+      "summary": "Second six-hour native-video/local-preview sweep on independently reviewed32-proposal snapshotbac0827",
+      "status": "running",
+      "source": "bac0827674b667ee6f6545b21fb626392d3332f8",
+      "first_samples": {
+        "chromium": "2026-10-26T07:21:09.096Z",
+        "webkit": "2026-10-26T07:21:11.328Z"
+      },
+      "seconds_requested": 21600,
+      "full_sweep_after_seconds": 2700,
+      "limits": "Generated H264 native playback only; P32 not in source. No physical phone/device claim.128KiB compressedRAM forces real IndexedDB, normal disk quota/8MiB decoded cap,1GiB DVRtarget. CPU/RAM-capped network-none fixture and two browsers, no host ports. Full retained-still sweep at45actualminutes,15min replay/Live gestures, no full-run outcome until completion.",
+      "logs": [
+        "test-results/review-2026-10-26/retention_phase2_sweep_v1-chromium.log",
+        "test-results/review-2026-10-26/retention_phase2_sweep_v1-webkit.log"
+      ],
+      "resources": [
+        "codex__layerglass_review_retention_phase2_sweep_v1_20261026_fixture",
+        "codex__layerglass_review_retention_phase2_sweep_v1_20261026_chromium",
+        "codex__layerglass_review_retention_phase2_sweep_v1_20261026_webkit"
+      ],
+      "exec_session": 55778
     }
   ],
   "implementation_worktrees": [
@@ -4647,6 +4703,24 @@
         "P28"
       ],
       "starting_commit": "37f01e9"
+    },
+    {
+      "path": "/workspace/layerglass-review/history-hydration",
+      "branch": "review/history-hydration",
+      "owner": "r05",
+      "proposals": [
+        "P32"
+      ],
+      "starting_commit": "4c845ad"
+    },
+    {
+      "path": "/workspace/layerglass-review/ci-focus-stability",
+      "branch": "review/ci-focus-stability",
+      "owner": "r09",
+      "proposals": [
+        "P33"
+      ],
+      "starting_commit": "181366a"
     }
   ],
   "delivery": {
