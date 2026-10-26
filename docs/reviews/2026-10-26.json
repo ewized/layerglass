@@ -6039,6 +6039,11 @@
       "at": "2026-10-26T11:58:51Z",
       "type": "decision",
       "message": "Round12P41 all10 explicit fresh ballots complete andAPPROVE. R06 assigned ignoredv4.2 QA preparation-only to compare actual range-serialized committed target, retaining all strict native/workflow/storage checks; no runtime authorized."
+    },
+    {
+      "at": "2026-10-26T12:04:04Z",
+      "type": "checkpoint",
+      "message": "Eight-hour checkpoint:39integrated improvements,41proposals/410explicit ballots409APPROVE1ABSTAIN0REJECT; P38superseded andP41test-only implementing after committed threshold. All39local combined PASS; normal hostedCI native-pause failure remains causeunproved. Native6h ongoing beyond3h with realpruning and JPEGQA remains partial/aborted. About4h remain to16:03:49deadline; no early completion."
     }
   ],
   "validation": [
@@ -6424,6 +6429,21 @@
       "status": "RUNNING_PARTIAL",
       "summary": "Native6h runa5059827 has crossed real3h and observed first DVR pruning in both engines: Chromium10899s bounds12\u201310896, WebKit10931s bounds42\u201310926. One original video/session,0HLS/previewHTTP, compressedRAM\u2264128KiB, continuing actual coldIDB hits. Still running; not6h/retained-pruning workflow pass; source predatesP36/P39/P40/P41.",
       "evidence": "test-results/review-2026-10-26/root-p37-first-pruning-checkpoint.json"
+    },
+    {
+      "status": "NO_FINDINGS_SOURCE_ONLY",
+      "summary": "R10 bounded final documentation consistency review at193495d/3d7d7aa found no additional material mismatch across28hashed source/docs/router files, P36/P37/P39/P40 behavior and storage/capability/validation claims. Root verified all28 current Git blob identities. SHA256cb16f6fe3d717a77b9c2f009af431450dbe4ef084388a0260b3572787de2a975. Source-only; no fresh runtime/link/device certification or P41 implementation review.",
+      "evidence": "test-results/review-2026-10-26/r10/final-doc-consistency.json"
+    },
+    {
+      "status": "NO_FINDINGS_SOURCE_ONLY",
+      "summary": "R01 targeted final late security/integrity review atbfa61a2 found no newly evidenced leakage, printer-admission expansion or resource-ownership defect across P34\u2013P40. Root verified all20 sourceSHA256s; reportSHA13f4a1ac6a18f2c74926c57dcde9936f4013f6c5ed34efb39ebfd91e0c180fd9. Source-only, no active payload/probe/device/runtime/deployment or P41author review; original CI remains causally unresolved.",
+      "evidence": "test-results/review-2026-10-26/r01/final-late-security-review.json"
+    },
+    {
+      "status": "RUNNING_PARTIAL",
+      "summary": "Currenta5059827native buffer run passed prior11744s elapsed failure point in both engines with successful old/middle/recent local previews during retention pruning and replay/Live controls. Exact current/preview line hashes saved. This is not6h completion or cause proof; current run includes36corrections and predatesP36/P39/P40/P41.",
+      "evidence": "test-results/review-2026-10-26/root-p37-post-old-failure-checkpoint.json"
     }
   ],
   "implementation_worktrees": [
