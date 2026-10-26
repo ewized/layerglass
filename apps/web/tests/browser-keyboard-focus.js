@@ -278,15 +278,22 @@ async function rejectedSetup(browser) {
     await pointerFocus.dispose();
 
     await submit(5);
-    const dismissedFocus = await page.locator('#camera-list').evaluateHandle(list => {
-      list.closeEditor();
-      return document.activeElement;
-    });
+    const dismissedEditor = await editor.elementHandle();
+    await page.locator('#camera-list').evaluate(list => list.closeEditor());
+    // Keep rejection held until native rendering has unfocused the hidden form.
+    await page.waitForFunction(form => form.isConnected && form.hidden && !form.getClientRects().length &&
+      !form.contains(document.activeElement), dismissedEditor);
+    const dismissedFocus = await page.evaluateHandle(() => document.activeElement);
     await reject(5);
+    assert.equal(await dismissedEditor.evaluate(form => form.isConnected &&
+      form === document.querySelector('.printer-code-form') && form.hidden &&
+      document.querySelector('#camera-list').editingCamera === null), true,
+      'A failed response must keep the same dismissed editor closed and hidden.');
     assert.equal(await editor.isVisible(), false);
     assert.equal(await dismissedFocus.evaluate(node => node === document.activeElement), true,
       'A response must not change the focus left by programmatic editor dismissal.');
     await dismissedFocus.dispose();
+    await dismissedEditor.dispose();
 
     await open(); await submit(6);
     await options.focus(); await page.keyboard.press('Enter');
