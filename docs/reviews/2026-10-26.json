@@ -140,6 +140,25 @@
       "slate_path": "test-results/review-2026-10-26/round-1-slate.json",
       "balloting_completed_at": "2026-10-26T04:38:10Z",
       "decision": "22 exact revision1 proposals each approved10/10; root votes0"
+    },
+    {
+      "id": 2,
+      "phase": "voting",
+      "baseline": "afee31a57de6363ed69f7ffbe113207fafe904ba",
+      "reviewers_completed": [
+        "r01",
+        "r07"
+      ],
+      "ballots_started": true,
+      "frozen_at": "2026-10-26T05:17:41Z",
+      "proposal_ids": [
+        "P23",
+        "P24",
+        "P25"
+      ],
+      "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd",
+      "slate_path": "test-results/review-2026-10-26/round-2-slate.json",
+      "notes": "Initial deeper independent reports from R01/R07 plus a coordinator reproduction; the coordinator does not vote. Additional independent deep reviews continue. No Round2 implementation authorized yet."
     }
   ],
   "proposals": [
@@ -2392,6 +2411,70 @@
         "integrated": false,
         "peer_review": "pending"
       }
+    },
+    {
+      "id": "P23",
+      "round": 2,
+      "revision": 1,
+      "title": "Restore cancelled historical telemetry window eligibility",
+      "author": "root",
+      "source_finding": "cancelled-printer-history-window",
+      "baseline": "afee31a57de6363ed69f7ffbe113207fafe904ba",
+      "files": [
+        "apps/web/src/printer-history.js",
+        "apps/web/tests/printer-history.test.js",
+        "docs/printer-telemetry.md"
+      ],
+      "scope": "Release retry suppression only for superseded or aborted unfinished historical telemetry requests, retaining session/window/request ownership. A later explicit read of that cancelled window may fetch again; repeated rendering during its current request must not duplicate fetches. Preserve bounded windows and real-failure/timeout suppression until explicit retry. Late abort/finally callbacks must not clear newer same-window ownership or modify a replacement session. Add deterministic cancellation, late-result and outage regressions and update telemetry note.",
+      "evidence": "Offline fixture starts slow window A, seeks to B (aborting A), completes B, then returns to A. A remains requested:true with pending:null, no third fetch and no readings. Expected3 requests, actual2; normal player resets outage suppression only on online.",
+      "evidence_path": "test-results/review-2026-10-26/root-round2-findings.json",
+      "risk": "Low/moderate asynchronous ownership; careless resets can introduce render-driven request loops or let stale callbacks damage new requests.",
+      "validation_plan": "Cancelled A, successful B, return A loads its recorded reading once; repeated reads while pending do not duplicate, late A promises and replacement sessions remain isolated, actual failures/timeouts stay suppressed until retry, windows remain bounded.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P24",
+      "round": 2,
+      "revision": 1,
+      "title": "Keep private discovery results out of public Scan responses",
+      "author": "r01",
+      "source_finding": "R01-R2-C1",
+      "baseline": "afee31a57de6363ed69f7ffbe113207fafe904ba",
+      "files": [
+        "apps/backend/app.py",
+        "apps/backend/tests/test_backend_cors.py",
+        "apps/backend/tests/test_public_telemetry.py",
+        "docs/camera-adapters.md"
+      ],
+      "scope": "Serialize the POST /api/discover progress object from a copy of Discovery.status() with found omitted, matching the catalog progress envelope. Preserve all other current progress fields,202 status,queued/retry values and existing exact-origin/header policy. Do not mutate private discovery candidates,cache,verified serial/model or scheduling. Public printer results continue through the sanitized catalog. Add real HTTP queued and cooldown regression cases and clarify the discovery note; no new authentication or capabilities.",
+      "evidence": "Actual HTTP fixture with a paired approved synthetic printer produces clean /api/cameras JSON but full URL/code-bearing discovery.found name in POST /api/discover, both queued:false cooldown and queued:true responses. Private candidates remain unchanged; exact configured frontend CORS admits both responses.",
+      "evidence_path": "test-results/review-2026-10-26/r01/round2-findings.json",
+      "risk": "Low; undocumented clients using discovery.found must use the existing camera catalog. Internal identity and pairing must remain untouched.",
+      "validation_plan": "Real HTTP Scan with synthetic URL/saved-code name omits found and secrets in queued/cooldown cases, preserves every other progress/queued/retry property, private candidates/serial/model unchanged, catalog stays sanitized, CORS/header rejection/admission and pairing fixtures pass.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P25",
+      "round": 2,
+      "revision": 1,
+      "title": "Route website test screenshots portably",
+      "author": "r07",
+      "source_finding": "R07-R2-C1",
+      "baseline": "afee31a57de6363ed69f7ffbe113207fafe904ba",
+      "files": [
+        "apps/site/tests/browser-site.js",
+        "apps/web/tests/run-js.sh",
+        "docs/development/testing.md"
+      ],
+      "scope": "Make site browser-test screenshot output selectable by the invoking harness and default to this checkout's ignored test-results directory for independent site:test. Keep temporary-copy run-js.sh workspace checks explicitly collecting screenshots in their mounted output directory. Preserve current site assertions, engines/viewports, declared build prerequisites, normal check.sh artifact collection and shipped behavior. Do not broaden to unrelated browser suites or introduce a runtime.",
+      "evidence": "Actual locked Chromium site check outside /app reaches screenshot and fails ENOENT on /app/test-results/site-1440.png. Identical pinned source with a writable unrelated /app tree passes both browser engines and writes there instead of its checkout.",
+      "evidence_path": "test-results/review-2026-10-26/r07/round2-findings.json",
+      "risk": "Low test-only path change; temporary-source cleanup must not discard screenshots expected in the host collector.",
+      "validation_plan": "Actual clean Nx site:test outside /app as non-root passes Chromium/WebKit and writes selected/checkout screenshots, no writes to an unrelated /app. Normal run-js.sh --workspace still exports screenshots to its mounted ignored collector; docs check passes.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -2615,6 +2698,11 @@
       "at": "2026-10-26T05:12:18Z",
       "type": "review",
       "message": "P05/P07 integrated after R04 review;17 approved proposals integrated. R02 correcting P06 hidden/offline readiness dead-end. R09 finished UI implementation and is validating both engines. R07 submitted one concrete Round2 artifact-path candidate; root telemetry-cancellation candidate retained separately. R01 conducting independent Round2 security/lifecycle pass. No Round2 source changes or ballots yet. Two-engine retention pilot running against pinned2070a48 with4KiB compressed RAM cap; cold real IDB previews paint with zero preview/video restart requests."
+    },
+    {
+      "at": "2026-10-26T05:17:41Z",
+      "type": "slate frozen",
+      "message": "Round2 froze3 exact revision1 candidates P23-P25 atafee31a57de6363ed69f7ffbe113207fafe904ba. No new ballots or source edits yet; ten distinct reviewers will vote with6 required. Audit bookkeeping now validates every ballot revision/hash and immutable frozen scope before writing. R01/R07 initial deeper reviews complete; R03 continuing independently."
     }
   ],
   "validation": [
@@ -2661,6 +2749,14 @@
       "status": "passed",
       "log": "/workspace/layerglass-review/docs-build-contracts/test-results/clean-site-test-v2.log",
       "recorded_at": "2026-10-26T05:02:55Z"
+    },
+    {
+      "summary": "Two-engine120-second retention pilot: real native capture and cold IDB previews with4KiB compressed RAM; no preview HTTP or extra video requests",
+      "status": "passed",
+      "source": "2070a480fe9a4bc5fdfc46a7092670ad33da1564",
+      "log": "test-results/review-2026-10-26/retention_pilot_v1-{chromium,webkit}.log",
+      "recorded_at": "2026-10-26T05:17:41Z",
+      "limitations": "Synthetic media, headless engines and forced memory pressure; no physical-phone performance claim. First cold WebKit paint1286ms, later200/81ms; Chromium23/8/21ms."
     }
   ],
   "implementation_worktrees": [
