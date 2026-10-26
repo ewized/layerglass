@@ -1,7 +1,7 @@
 {
   "phase": "User-authorized merge after the completed twelve-hour review",
   "started_observed_at": "2026-10-26T16:18:55Z",
-  "updated_at": "2026-10-26T16:31:29.988829+00:00",
+  "updated_at": "2026-10-26T16:35:47.219524+00:00",
   "user_request": "dont forget to merge this in at the end",
   "status": "Investigating final CI failure and verifying default-branch integration before actual merge.",
   "review_result_commit": "ddf84213ed5cc7a5e8732c13e2b1f56c2835a569",
@@ -36,8 +36,72 @@
         "apps/web/tests/browser-timeline-events.js",
         "docs/development/testing.md"
       ],
-      "status": "Frozen for fresh votes; no implementation authorized yet",
-      "ballots": [],
+      "status": "approved",
+      "ballots": [
+        {
+          "reviewer": "r01",
+          "vote": "APPROVE",
+          "rationale": "At the pinned source, jpegEventViewer admits a same-session decoded frame without requiring playing intent, then calls togglePause unconditionally before waiting for paused=true (browser-timeline-events.js:647-659). The unchanged JPEG action inverts controller.paused (replay.js:543-559). The saved controlled production-established paused entry therefore demonstrates a real fixture-contract defect: the helper resumes valid ready pixels and its original 10000ms paused wait fails. P46's exact two-file test-quality scope establishes complete current owner/readiness, prepares pause idempotently with at most one production toggle, records bounded before/after/failure state and cleans helper resources on setup failure while preserving the original exception. This is justified independently of the historical CI cause, which remains UNPROVED. Approval requires the frozen playing/already-paused and held/unready/wrong-owner controls, original post-preparation predicate and all later pixels/clock/Stats/seek/emit/session/node/request assertions, unchanged budgets, both-engine registered runs and independent exact-final review. No direct state assignment, repair/retry, desired-pixel polling, product change, timeout relaxation or solved-CI claim is approved.",
+          "caveats": [],
+          "slate_sha256": "70410c75341e4301b82f3c47e9f8e5ef5a0ffb176ec44b417f920ce440d52939",
+          "path": "test-results/review-2026-10-26/merge/r01-p46-ballot.json",
+          "sha256": "77520e856ceaa44840ebb54c703444e5aeab0c941457877a8e3ef2e6709a40e8"
+        },
+        {
+          "reviewer": "r02",
+          "vote": "APPROVE",
+          "rationale": "The exact source accepts an owned already-paused JPEG frame at line647, then unconditionally inverts paused at line649 before requiring paused at lines658-659. The preserved production-action control establishes that admissible state without field/native mocks, observes true->false, and preserves the unchanged10000ms TimeoutError while native green64x36 pixels, frame ownership, session and single video remain ready. This supports the bounded two-file test-quality scope: owned native readiness, at-most-one conditional production Pause, before/after/failure observations and failure cleanup while retaining every later strict pixel/clock/Stats/marker/seek/session/node/request assertion and budget.",
+          "caveats": [
+            "Historical CI40352944569 cause remains UNPROVED; the controlled extra Pause does not show spontaneous fresh startup or native-event interference in that run.",
+            "No production change, repair toggle/seek, direct controller/native assignment, desired-pixel polling, retry, timeout/tolerance increase or skipped case is authorized.",
+            "Valid playing/already-paused and invalid held/wrong-owner native controls, both-engine registered suite validation and independent exact-final review remain required. Approval is of the frozen scope, not an implementation or solved-CI claim."
+          ],
+          "slate_sha256": "70410c75341e4301b82f3c47e9f8e5ef5a0ffb176ec44b417f920ce440d52939",
+          "path": "test-results/review-2026-10-26/merge/r02-p46-ballot.json",
+          "sha256": "709812783cc92ebfffca2e7c502cee3146d02c1e556ccfdb484d2d905451f1cd"
+        },
+        {
+          "reviewer": "r03",
+          "vote": "APPROVE",
+          "rationale": "Pinned helper readiness accepts an owned already-paused JPEG, yet unconditional togglePause inverts it before a strict paused wait. The preserved production-action control establishes that admissible prestate and the unchanged 10000ms timeout; the separate natural unpaused pass and missing historical failure snapshots leave the CI cause unproved. The exact two-file test-quality scope correctly strengthens native ownership/readiness, prepares paused intent once conditionally, preserves all original waits and downstream pixel/clock/Stats/seek/identity/request outcomes, and adds failure cleanup/diagnostics. Approval includes playing/already-paused positives and held/unready/wrong-owner negatives without repair, desired-pixel waits or production changes; final independent review and new normal validation remain required.",
+          "caveats": [],
+          "slate_sha256": "70410c75341e4301b82f3c47e9f8e5ef5a0ffb176ec44b417f920ce440d52939",
+          "path": "test-results/review-2026-10-26/merge/r03-p46-ballot.json",
+          "sha256": "66a381886ae23c1828312fbd2172413bd754b643ebc8a16ee2408ee1907f0b14"
+        },
+        {
+          "reviewer": "r04",
+          "vote": "APPROVE",
+          "rationale": "Pinned helper source accepts a ready same-session decoded frame without requiring an unpaused controller, then blindly toggles before the strict paused wait. The preserved production-action control establishes paused=true without field/native overrides, leaves ownership/src/green pixels unchanged, and the original toggle changes it to false before the unchanged10000ms timeout. This demonstrates a setup-contract gap; the original CI log lacks the state needed to attribute its failure, so that historical cause remains UNPROVED. The exact two-file test-quality scope is appropriate: stronger native/owner readiness, at most one idempotent production Pause action, bounded diagnostic snapshots and setup-failure cleanup, with every original post-predicate/pixel/clock/Stats/marker/seek/session/request assertion and timeout retained. Approval requires the frozen playing/already-paused and held/wrong-owner controls in both engines, immutable original negatives, independent exact-final review and new normal combined-source CI/hosting. No retry, production change, expected-pixel readiness wait, budget/tolerance increase or earlier-vote transfer is authorized. Slate, both source reports, original CI log and the14-entry paused-control manifest hashes were independently verified; no new runtime was run.",
+          "caveats": [],
+          "slate_sha256": "70410c75341e4301b82f3c47e9f8e5ef5a0ffb176ec44b417f920ce440d52939",
+          "path": "test-results/review-2026-10-26/merge/r04-p46-ballot.json",
+          "sha256": "f718f3b5e529bca07c78e74cc8dd1e197f8d050831b940a33414727078cff3b6"
+        },
+        {
+          "reviewer": "r07",
+          "vote": "APPROVE",
+          "rationale": "The pinned helper at lines647-659 accepts either controller pause state and then unconditionally inverts it before requiring paused=true. Production decodedImage() proves current session/camera/version/src ownership, and JPEG togglePause() inverts paused. The saved real-WebKit control establishes an owned complete64x36 already-paused frame through one production Pause, then observes the unchanged helper resume it and fail its original10000ms predicate after10006ms with the same session/src/pixels, one video, zero native seeks and no pending image. The separate natural-playing control passes. This demonstrates a narrow setup-contract defect and supports idempotent requested Pause, stronger native ownership/readiness, diagnostic snapshots and failure cleanup in the exact two-file scope. Retaining the post-preparation predicate, all later native pixel/clock/Stats/marker/seek/request assertions and original budgets avoids weakening the behavior being tested.",
+          "caveats": [
+            "Historical CI40352944569 cause remains UNPROVED. The deliberately established paused prestate is a discriminating harness control, not a reproduction of spontaneous CI scheduling or proof of a product defect.",
+            "Approval includes every frozen acceptance requirement as future work: both-engine registered timeline suite and playing/already-paused/held-unready/wrong-owner controls, original predicates/budgets/tolerances preserved, no extra seek/source/session/native-node changes or repair actions, bounded failure snapshots and owned resource cleanup.",
+            "Readiness and the guarded production action must use actual current owned native state; do not wait for desired pixels/markers, assign controller/native state, add retries, skip cases or mask an original error with cleanup failure.",
+            "Independent exact-final non-author review and new exact combined-source normal CI plus hosting remain required before merge. Existing failed43 evidence and prior negatives remain immutable; prior green source/older endurance do not transfer."
+          ],
+          "slate_sha256": "70410c75341e4301b82f3c47e9f8e5ef5a0ffb176ec44b417f920ce440d52939",
+          "path": "test-results/review-2026-10-26/merge/r07-p46-ballot.json",
+          "sha256": "715213fc371a3dd764ba46e78cec3ea54ff0cefdb12ac9f0e37c860de5c2a1fd"
+        },
+        {
+          "reviewer": "r10",
+          "vote": "APPROVE",
+          "rationale": "Fresh scope assessment at basec644455/receipt251e619, with no transferred audit approval. Source jpegEventViewer647 accepts an already-paused owned decoded image, line649 unconditionally toggles it, then658-659 strictly requires paused/native readiness. The hash-verified controlled adapter establishes paused=true through one production action, preserves ownership/source/pixels/session/video and the original10000ms predicate, then records the unchanged helper resuming tofalse and timing out; the natural unpaused diagnostic is a passing counter-case. This demonstrates a test setup-contract gap, not the historical CI40352944569 cause, which remains UNPROVED. Approve only the two-file test/guide correction: precise native ownership/readiness, idempotent at-most-one conditional production Pause, bounded before/after/failure diagnostics and helper resource cleanup preserving the original error. All original post-preparation predicates,10000ms budgets, tolerances, registered timeout and downstream native pixel/clock/Stats/marker/exact seek/emit/identity/request assertions must remain. Approval includes both-engine playing/already-paused and held/unready/wrong-owner controls, immutable old-source failure evidence, focused registered suite, independent non-author exact-final review and one new combined CI/hosting validation before merge. No production change, repairs/retries, historical-cause claim or completed-audit rewrite is authorized.",
+          "caveats": [],
+          "slate_sha256": "70410c75341e4301b82f3c47e9f8e5ef5a0ffb176ec44b417f920ce440d52939",
+          "path": "test-results/review-2026-10-26/merge/r10-p46-ballot.json",
+          "sha256": "84bd1f1d88df9d738e1bb19700a66a74ff05aff6e166617d9d141ad6e576c061"
+        }
+      ],
       "evidence": [
         {
           "path": "test-results/review-2026-10-26/merge/r02-diagnosis.json",
@@ -47,7 +111,65 @@
           "path": "test-results/review-2026-10-26/merge/r02-paused-precondition.json",
           "sha256": "1c3f92935af0796782375f6f6bafa33b49e9fbbc9dd57eb3a36010bc2626c723"
         }
-      ]
+      ],
+      "frozen_scope": {
+        "id": "P46",
+        "phase": "Post-window user-authorized merge follow-through",
+        "frozen_at": "2026-10-26T16:31:29.988829+00:00",
+        "base_commit": "c64445551082157cc6b916a9cfcc0fda097e6bf9",
+        "title": "Make native JPEG timeline fixture pause intent explicit and failures diagnosable",
+        "kind": "test-quality correction; no production change or historical CI causal claim",
+        "files": [
+          "apps/web/tests/browser-timeline-events.js",
+          "docs/development/testing.md"
+        ],
+        "problem": "jpegEventViewer accepts an already-paused owned native frame, then blindly toggles to playing before requiring paused=true. A controlled production-established already-paused prestate demonstrates the unchanged 10000ms failure. The original CI failure has no state snapshot and its cause remains unproved.",
+        "evidence": [
+          {
+            "path": "test-results/review-2026-10-26/merge/r02-diagnosis.json",
+            "sha256": "5ab8c368a74deeac1c4037582e0befcfe4ce12769a03577e398cf80ea921886f"
+          },
+          {
+            "path": "test-results/review-2026-10-26/merge/r02-paused-precondition.json",
+            "sha256": "1c3f92935af0796782375f6f6bafa33b49e9fbbc9dd57eb3a36010bc2626c723"
+          }
+        ],
+        "scope": [
+          "Strengthen jpegEventViewer native initial readiness: current decoded-frame session/camera/version/source ownership, not attaching/loading, native image complete with nonzero dimensions. Never wait for a desired pixel or marker result.",
+          "Prepare paused intent idempotently through existing production action: togglePause at most once only if paused is false, with bounded before/after state recorded. No direct production state/native getter assignments, repair toggles, retry loop, seek or forced event.",
+          "Preserve the original post-preparation paused/decoded/native-image predicate and all subsequent native pixels, mapped clock, Stats, marker activation, exact seeks/emits, session/video identity, ownership and HTTP request assertions. Preserve all existing 10000ms waits, tolerances and registered suite timeout.",
+          "Add bounded setup/failure snapshots sufficient to distinguish controller paused/attaching, native image complete/dimensions/src, decoded frame and owner, pending loading/restoration and native video state. Ensure helper-created browser context/HTTP server close if setup fails; preserve original thrown error and useful cleanup error context.",
+          "Include discriminating native controls for playing and production-established already-paused entry, plus held/unready and wrong-owner guard controls. Both valid entry states must reach identical paused intent without extra seek, session/native node/source changes or repair; invalid readiness must not proceed or be reported as success.",
+          "Document exact fixture setup contract and evidence limitation in testing guide; no claim this proves historical CI cause or physical device behavior."
+        ],
+        "out_of_scope": [
+          "Any apps/web/src or backend production change",
+          "Workflow dependencies or timeout/budget changes",
+          "Retries, skipped cases or weakened original outcomes",
+          "Physical printer/network, credentials, deployments, image releases",
+          "Rewriting completed twelve-hour audit, failed raw logs or earlier negative controls"
+        ],
+        "validation": [
+          "Keep original controlled old-source timeout and original CI raw evidence immutable",
+          "Focused registered browser-timeline-events runs in Chromium and WebKit using generated offline Docker fixture, with all original postassertions retained",
+          "Explicit valid/invalid readiness and pause-entry controls with bounded diagnostics/cleanup",
+          "Independent exact-final diff and evidence review by a non-author reviewer",
+          "One new normal combined-source CI and hosting validation before merge"
+        ],
+        "voting": {
+          "identities": "Same ten reviewer identities r01-r10; root does not vote",
+          "threshold": 6,
+          "before": "Commit at least six explicit frozen-scope approvals before creating author worktree or editing approved source files"
+        },
+        "status": "Frozen for fresh votes; no implementation authorized yet"
+      },
+      "vote_counts": {
+        "APPROVE": 6,
+        "REJECT": 0,
+        "ABSTAIN": 0
+      },
+      "approval_observed_at": "2026-10-26T16:35:47.335166+00:00",
+      "author_worktree_created": false
     }
   ],
   "integration": {
@@ -66,6 +188,10 @@
     {
       "at": "2026-10-26T16:31:29.988829+00:00",
       "event": "P46 frozen after one natural unpaused pass and one controlled already-paused old-source failure. Historical CI cause remains unproved; fresh votes pending."
+    },
+    {
+      "at": "2026-10-26T16:35:47.335166+00:00",
+      "event": "Six explicit fresh approvals received for frozen P46 before author worktree/source edits. Root contributes no vote."
     }
   ]
 }
