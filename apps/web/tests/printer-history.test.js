@@ -204,6 +204,217 @@ test('completed windows stay suppressed when their notification starts another r
   await settled();
 });
 
+test('later recorded coverage hydrates a successful partial window once and cached readings remain stable', async t => {
+  const { history, requests, respond } = deferredHistory(t, { maxWindows: 3 });
+  history.read(1220);
+  respond(0, payload([[1220, 20], [1262, 62]], 1200, 1262));
+  await settled();
+  assert.equal(history.read(1220).layer, 20);
+  for (let frame = 0; frame < 60; frame++) assert.equal(history.read(1280), null);
+  assert.equal(requests.length, 1, 'A future point and unchanged coverage must not refetch a partial success.');
+  history.apply(payload([[1339, 39], [1370, 70]], 1339, 1370));
+  assert.equal(history.read(1280), null);
+  const current = requests[1].signal;
+  for (let frame = 0; frame < 60; frame++) history.read(1280);
+  assert.equal(requests.length, 2);
+  assert.equal(history.controller.signal, current);
+  respond(1, payload([[1220, 20], [1280, 80], [1290, 90]], 1200, 1320));
+  await settled();
+  assert.equal(history.read(1280).layer, 80);
+  assert.equal(history.read(1220).layer, 20);
+  for (let frame = 0; frame < 60; frame++) {
+    history.apply(payload([[1370, 70]], 1339, 1370));
+    assert.equal(history.read(1290).layer, 90);
+  }
+  assert.equal(requests.length, 2, 'A completed full window stays cached after repeated SSE and render reads.');
+  assert(history.windows.size <= 3);
+});
+
+test('invalid, other-session and future query envelopes cannot authorize partial hydration', async t => {
+  const { history, requests, respond } = deferredHistory(t);
+  history.read(1220);
+  respond(0, payload([[1220, 20], [1262, 62]], 1200, 1262));
+  await settled();
+  for (const packet of [
+    payload([[1370, 70]], 1339, 1370, { session_id: 'c'.repeat(32) }),
+    payload([[1370, 70]], 1339, 1370, { camera_id: 'd'.repeat(16) }),
+    payload([[1370, 70]], 1339, NaN),
+    payload([[1370, 70]], 1370, 1339),
+    payload([], 1320, 1440),
+    payload([[1262, 62]], 1320, 1440), // Future query with an older baseline.
+    payload([[2000, 1]], 1339, 1370), // Sample outside the accepted coverage.
+    { ...session, from: 1339, until: 1370, samples: [null, { at: 1370, printer: null }, { at: NaN, printer: {} }] },
+  ]) {
+    history.apply(packet);
+    for (let frame = 0; frame < 5; frame++) assert.equal(history.read(1280), null);
+    assert.equal(requests.length, 1);
+  }
+  history.apply(payload([[1370, 70]], 1339, 1370));
+  history.read(1280);
+  assert.equal(requests.length, 2, 'An actual accepted later sample supplies the missing evidence.');
+  respond(1, payload([[1280, 80]], 1200, 1320));
+  await settled();
+  assert.equal(history.read(1280).layer, 80);
+});
+
+test('recording that advances during a partial request remains evidence after its response', async t => {
+  const { history, requests, respond } = deferredHistory(t);
+  history.apply(payload([[1262, 62]], 1231, 1262));
+  history.read(1220);
+  history.apply(payload([[1370, 70]], 1339, 1370));
+  respond(0, payload([[1220, 20], [1262, 62]], 1200, 1262));
+  await settled();
+  history.read(1280);
+  assert.equal(requests.length, 2, 'The in-flight response must not erase newer accepted recording evidence.');
+  respond(1, payload([[1280, 80]], 1200, 1320));
+  await settled();
+  assert.equal(history.read(1280).layer, 80);
+});
+
+test('an identical partial hydration is consumed rather than retried by rendering or advancing SSE', async t => {
+  let history;
+  const fixture = deferredHistory(t, { onChange: () => history.read(1280) });
+  ({ history } = fixture);
+  history.read(1220);
+  fixture.respond(0, payload([[1220, 20], [1262, 62]], 1200, 1262));
+  await settled();
+  history.apply(payload([[1370, 70]], 1339, 1370));
+  assert.equal(fixture.requests.length, 2);
+  fixture.respond(1, payload([[1220, 20], [1262, 62]], 1200, 1262));
+  await settled();
+  for (let second = 1371; second < 1400; second++) {
+    history.apply(payload([[second, second % 100]], second - 1, second));
+    for (let frame = 0; frame < 5; frame++) assert.equal(history.read(1280), null);
+  }
+  assert.equal(fixture.requests.length, 2, 'Success with the same incomplete coverage must not become an SSE polling loop.');
+  assert.equal(history.read(1220).layer, 20);
+  history.retry(); history.read(1280);
+  assert.equal(fixture.requests.length, 3);
+  fixture.respond(2, payload([[1280, 80]], 1200, 1320));
+  await settled();
+  assert.equal(history.read(1280).layer, 80);
+});
+
+test('a hydration covering its target may recover a later recorded portion without fetching future points', async t => {
+  const { history, requests, respond } = deferredHistory(t);
+  history.read(1220);
+  respond(0, payload([[1220, 20], [1230, 30]], 1200, 1230));
+  await settled();
+  history.apply(payload([[1260, 60]], 1255, 1260));
+  history.read(1240);
+  respond(1, payload([[1240, 40], [1250, 50]], 1200, 1250));
+  await settled();
+  assert.equal(history.read(1240).layer, 40);
+  for (let frame = 0; frame < 60; frame++) assert.equal(history.read(1270), null);
+  assert.equal(requests.length, 2);
+  history.apply(payload([[1300, 100]], 1299, 1300));
+  history.read(1270);
+  assert.equal(requests.length, 3);
+  respond(2, payload([[1270, 70]], 1200, 1320));
+  await settled();
+  assert.equal(history.read(1270).layer, 70);
+});
+
+test('an initially unrecorded query can hydrate only after actual later recording, including an empty partial', async t => {
+  for (const body of [payload([[1262, 62]], 1200, 1262), payload([], 1200, 1200)]) await t.test(String(body.until), async t => {
+    const { history, requests, respond } = deferredHistory(t);
+    history.read(1280);
+    respond(0, body);
+    await settled();
+    for (let frame = 0; frame < 60; frame++) assert.equal(history.read(1280), null);
+    assert.equal(requests.length, 1);
+    history.apply(payload([[1370, 70]], 1339, 1370));
+    history.read(1280);
+    assert.equal(requests.length, 2);
+    respond(1, payload([[1280, 80]], 1200, 1320));
+    await settled();
+    assert.equal(history.read(1280).layer, 80);
+  });
+});
+
+test('canceling a hydration preserves P23 return-to-window and late-callback ownership', async t => {
+  const { history, requests, respond } = deferredHistory(t);
+  history.read(1220);
+  respond(0, payload([[1220, 20], [1262, 62]], 1200, 1262));
+  await settled();
+  history.apply(payload([[1370, 70]], 1339, 1370));
+  history.read(1280);
+  history.read(1460);
+  history.read(1280);
+  assert.equal(requests.length, 4);
+  assert.equal(requests[1].signal.aborted, true);
+  const current = requests[3].signal;
+  respond(1, payload([[1280, 1]], 1200, 1320));
+  respond(2, payload([[1460, 2]], 1440, 1560));
+  await settled();
+  assert.equal(history.peek(1280), null);
+  assert.equal(history.pending, 10);
+  assert.equal(history.controller.signal, current);
+  for (let frame = 0; frame < 60; frame++) history.read(1280);
+  assert.equal(requests.length, 4);
+  respond(3, payload([[1280, 80]], 1200, 1320));
+  await settled();
+  assert.equal(history.read(1280).layer, 80);
+});
+
+test('replacement sessions reject old recorded coverage and late hydration responses', async t => {
+  const { history, requests, respond } = deferredHistory(t);
+  history.read(1220);
+  respond(0, payload([[1220, 20], [1262, 62]], 1200, 1262));
+  await settled();
+  history.apply(payload([[1370, 70]], 1339, 1370));
+  history.read(1280);
+  const replacement = { session_id: 'c'.repeat(32), camera_id: 'd'.repeat(16) };
+  history.setSession(replacement);
+  history.read(1220);
+  respond(2, payload([[1220, 3], [1262, 4]], 1200, 1262, replacement));
+  await settled();
+  respond(1, payload([[1280, 80]], 1200, 1320));
+  history.apply(payload([[1400, 100]], 1390, 1400));
+  await settled();
+  for (let frame = 0; frame < 60; frame++) assert.equal(history.read(1280), null);
+  assert.equal(requests.length, 3, 'Previous session watermarks or callbacks must not authorize new-session requests.');
+  history.apply(payload([[1370, 70]], 1339, 1370, replacement));
+  history.read(1280);
+  assert.equal(requests.length, 4);
+  respond(3, payload([[1280, 8]], 1200, 1320, replacement));
+  await settled();
+  assert.equal(history.read(1280).layer, 8);
+});
+
+test('real HTTP, JSON and timeout failures stay sticky while recorded SSE advances', async t => {
+  t.mock.method(console, 'warn', () => {});
+  for (const stage of ['initial', 'hydration']) for (const failure of ['HTTP', 'JSON', 'timeout']) await t.test(`${stage} ${failure}`, async t => {
+    const { history, requests, respond } = deferredHistory(t, { abortAware: true });
+    if (stage === 'hydration') {
+      history.read(1220);
+      respond(0, payload([[1220, 20], [1262, 62]], 1200, 1262));
+      await settled();
+      history.apply(payload([[1370, 70]], 1339, 1370));
+    }
+    if (failure === 'timeout') t.mock.timers.enable({ apis: ['setTimeout'] });
+    const time = stage === 'hydration' ? 1280 : 1220;
+    history.read(time);
+    assert.equal(requests.length, stage === 'hydration' ? 2 : 1, 'The request receiving the injected failure must be active.');
+    const failed = requests.length - 1;
+    if (failure === 'timeout') t.mock.timers.tick(6000);
+    else requests[failed].resolve(failure === 'HTTP' ? { ok: false } :
+      { ok: true, json: async () => { throw new SyntaxError('Synthetic invalid JSON'); } });
+    await settled();
+    for (let second = 1370; second < 1400; second++) {
+      history.apply(payload([[second, second % 100]], second - 1, second));
+      assert.equal(history.read(time), null);
+      assert.equal(history.read(1280), null);
+    }
+    assert.equal(requests.length, failed + 1);
+    history.retry(); history.read(time);
+    assert.equal(requests.length, failed + 2);
+    respond(failed + 1, payload([[time, 20]], 1200, 1320));
+    await settled();
+    assert.equal(history.read(time).layer, 20);
+  });
+});
+
 test('HTTP and JSON failures stay suppressed across other reads until explicit retry', async t => {
   t.mock.method(console, 'warn', () => {});
   for (const failure of [

@@ -25,7 +25,7 @@ Pass representative suite names to focus a browser run, for example
 | Change | Focused coverage |
 | --- | --- |
 | Approved devices, discovery/backoff, credentials | `test_providers.py`, `test_identification.py`, `test_discovery_cache.py`, `test_cameras.py`, `test_printer_bindings.py` |
-| MQTT data and replay time | `test_printer.py`, `test_public_telemetry.py`, `test_printer_history.py`, `printer-history.test.js`, `printer-stats.test.js` |
+| MQTT data and replay time | `test_printer.py`, `test_public_telemetry.py`, `test_printer_history.py`, `printer-history.test.js`, `printer-stats.test.js`, `browser-history-reconnect.js` |
 | Video transport and DVR | `test_video_stream.py`, `test_replay.py`, `video-stream.test.js`, browser video-stream/stream-recovery/replay-recovery/replay-suspension suites |
 | Live-relative timeline and gesture commits | `timeline.test.js`, `scrub-preview.test.js`, browser scrub-commit suite |
 | Observed print-event markers | `timeline-events.test.js`, browser timeline-events suite |
@@ -56,6 +56,15 @@ fragment. Those seeks must reposition the paced archive response immediately;
 ordinary consecutive playback keeps the existing response. The browser checks
 also verify that returning to Live reaches the current edge without recurring
 playlist or segment requests.
+
+The default history reconnect suite runs its own generated loopback HTTP/SSE
+server. It connects production Stats, PageReplay, PrinterHistory, PlayerUpdates
+and the Chromium Cast sender to recorder-shaped fixture payloads. It checks
+partial-history hydration after an SSE-only reconnect, without local seek events,
+plus future-point suppression, pending-read coalescing, cached readings and an
+explicit local-seek control. WebKit uses only an external-clock adapter and must
+remain Cast-ineligible. This fixture needs no printer, receiver or media decoder;
+the existing video/history suites cover actual video playback separately.
 
 ## Focused commands
 

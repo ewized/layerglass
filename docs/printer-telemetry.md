@@ -86,6 +86,15 @@ an outage polling loop. Local seeks already trigger that retry through the
 Stats replay/seek handlers, as do opening Stats and reconnecting the network;
 receiver-side clock changes do not emit those local seek events.
 
+A successful history response can cover only the part of a two-minute window
+that has been recorded so far. After an SSE reconnect, later accepted sample
+timestamps can establish that a missing point in that window is now in the
+recorded past. Reading that point may then hydrate the window once. Query range
+endpoints alone, empty future responses and other-session packets do not prove
+recording progress. Pending reads still share one request. A completed hydration
+that still misses its target stays suppressed until explicit retry, rather than
+repeating on every render or SSE sample; real failures keep that same suppression.
+
 Telemetry is pruned with discarded footage and deleted when its archive loses
 its last page lease or the printer is forgotten. Snapshots are compressed in
 server memory, then expanded to ordinary JSON for HTTP/SSE. A 43,200-sample limit
@@ -105,6 +114,12 @@ polling. `apps/web/tests/browser-printer-history.js` uses
 `apps/backend/tests/fixture_server.py` with `FIXTURE_TELEMETRY=1` to check changing readings
 through real Chromium/WebKit video playback, pause, rewind, forward replay and
 Live. Set `TRANSPORT=hls` to exercise HLS fallback.
+The default `browser-history-reconnect.js` fixture connects the actual Stats,
+PageReplay, PrinterHistory, Cast sender and metadata-update consumers. Generated
+HTTP/SSE payloads check receiver-originated recovery after a partial success,
+with future-point, pending-read, full-cache and local-seek controls. Chromium
+uses a synthetic Cast SDK; WebKit checks the shared history clock with an adapter
+and remains ineligible for Google Cast. This does not verify receiver hardware.
 
 Clock references: [hls.js playingDate](https://hlsjs.video-dev.org/api-docs/hls.js.hls.playingdate),
 [HLS program date time](https://www.rfc-editor.org/rfc/rfc8216#section-4.3.2.6).

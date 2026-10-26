@@ -11,6 +11,20 @@ function preceding(samples, time) {
   return low ? samples[low - 1] : null;
 }
 
+function acceptedSamples(payload, session) {
+  if (!session || payload?.session_id !== session.session_id || payload.camera_id !== session.camera_id ||
+      !Array.isArray(payload.samples) || !Number.isFinite(payload.from) || !Number.isFinite(payload.until) || payload.until < payload.from) return null;
+  return payload.samples.filter(sample => Number.isFinite(sample?.at) && sample.printer && typeof sample.printer === 'object')
+    .sort((a, b) => a.at - b.at);
+}
+
+function latestRecorded(payload, samples) {
+  // An empty future query can have a future from/until without any recording.
+  // Only accepted sample timestamps inside its coverage prove recorder progress.
+  return samples.reduce((latest, sample) => sample.at >= payload.from && sample.at <= payload.until ?
+    Math.max(latest, sample.at) : latest, -Infinity);
+}
+
 export function printerPlaybackTime(video, hls, replay) {
   if (!replay.session) return null;
   if (!replay.remote && replay.session.kind !== 'jpeg') {
@@ -47,6 +61,7 @@ export class PrinterHistory {
     this.session = null;
     this.version = 0;
     this.request = null;
+    this.recordedUntil = -Infinity;
   }
 
   setSession(session) {
@@ -57,6 +72,7 @@ export class PrinterHistory {
     this.controller = null;
     this.pending = null;
     this.windows.clear();
+    this.recordedUntil = -Infinity;
     this.session = session;
     this.onSession(session);
     this.warned = false;
@@ -64,7 +80,7 @@ export class PrinterHistory {
 
   window(key) {
     let window = this.windows.get(key);
-    if (!window) window = { samples: [], ranges: [], requested: false };
+    if (!window) window = { samples: [], ranges: [], requested: false, partial: null };
     this.windows.delete(key);
     this.windows.set(key, window);
     while (this.windows.size > this.maxWindows) this.windows.delete(this.windows.keys().next().value);
@@ -72,10 +88,9 @@ export class PrinterHistory {
   }
 
   apply(payload, notify = true) {
-    if (!this.session || payload?.session_id !== this.session.session_id || payload.camera_id !== this.session.camera_id ||
-        !Array.isArray(payload.samples) || !Number.isFinite(payload.from) || !Number.isFinite(payload.until) || payload.until < payload.from) return;
-    const samples = payload.samples.filter(sample => Number.isFinite(sample.at) && sample.printer && typeof sample.printer === 'object')
-      .sort((a, b) => a.at - b.at);
+    const samples = acceptedSamples(payload, this.session);
+    if (!samples) return;
+    this.recordedUntil = Math.max(this.recordedUntil, latestRecorded(payload, samples));
     for (let key = Math.floor(payload.from / WINDOW); key <= Math.floor(payload.until / WINDOW); key++) {
       const start = key * WINDOW;
       const end = start + WINDOW;
@@ -103,7 +118,9 @@ export class PrinterHistory {
     const key = Math.floor(time / WINDOW);
     const window = this.window(key);
     if (window.ranges.some(([start, end]) => start <= time && time <= end)) return preceding(window.samples, time)?.printer || null;
-    if (this.pending !== key && !window.requested && globalThis.navigator?.onLine !== false) this.load(key, time);
+    const hydrate = window.partial && time > window.partial.until && time <= this.recordedUntil &&
+      this.recordedUntil > window.partial.recorded;
+    if (this.pending !== key && (!window.requested || hydrate) && globalThis.navigator?.onLine !== false) this.load(key, time, Boolean(hydrate));
     return null; // Missing history must never substitute today's live reading.
   }
 
@@ -118,14 +135,16 @@ export class PrinterHistory {
     for (const window of this.windows.values()) window.requested = false;
   }
 
-  async load(key, time) {
+  async load(key, time, hydrating = false) {
     this.request?.cancel();
     const controller = this.controller = new AbortController();
     const version = this.version;
     const session = this.session;
+    const recorded = this.recordedUntil;
     this.pending = key;
     const window = this.window(key);
     window.requested = true;
+    window.partial = null; // Consume eligibility before callbacks or more reads.
     let timedOut = false, finished = false, timeout;
     const request = this.request = { cancel: () => {
       clearTimeout(timeout);
@@ -144,6 +163,15 @@ export class PrinterHistory {
       const payload = await response.json();
       if (version !== this.version || controller.signal.aborted) return;
       finished = true;
+      const samples = acceptedSamples(payload, session);
+      const until = samples && Math.min((key + 1) * WINDOW, payload.until);
+      // A first partial success may become useful after recording advances. A
+      // hydration that still misses its target must not rearm an identical
+      // partial response on every render or subsequent SSE sample.
+      if (samples && payload.from < (key + 1) * WINDOW && until >= key * WINDOW && until < (key + 1) * WINDOW &&
+          (!hydrating || until >= time)) {
+        window.partial = { until, recorded: Math.max(recorded, latestRecorded(payload, samples)) };
+      }
       this.apply(payload);
     } catch (error) {
       if (version !== this.version || controller.signal.aborted && !timedOut) return;

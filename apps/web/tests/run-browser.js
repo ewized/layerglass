@@ -19,6 +19,7 @@ const available = [
   'browser-timeline-events.js',
   'browser-fullscreen.js',
   'browser-google-cast.js',
+  'browser-history-reconnect.js',
   'browser-pwa.js',
 ];
 const selected = process.argv.slice(2);
