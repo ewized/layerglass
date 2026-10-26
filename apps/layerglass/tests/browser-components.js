@@ -30,6 +30,21 @@ async function run(name, engine) {
       };
     });
     assert.deepEqual(initial, { registered: true, native: true, count: 13, player: true, idsUnique: true });
+    const retained = await page.evaluate(async () => {
+      const { LitElement } = await import('/static/platform.js');
+      const { playerStyles } = await import('/static/styles.js');
+      const host = document.querySelector('printer-player');
+      const video = document.querySelector('video');
+      const styles = playerStyles(document);
+      const rules = Object.keys(styles.cache.inserted);
+      host.requestUpdate();
+      await host.updateComplete;
+      return { lit: host instanceof LitElement, video: video === document.querySelector('video'),
+        cache: styles === playerStyles(document), rules: Object.keys(styles.cache.inserted).length === rules.length,
+        extracted: document.querySelector('meta[name="layerglass-emotion"]').content.split(' ').every(id => styles.cache.inserted[id]),
+        inlineStyles: document.querySelectorAll('style[data-emotion]').length };
+    });
+    assert.deepEqual(retained, { lit: true, video: true, cache: true, rules: true, extracted: true, inlineStyles: 0 });
     await page.evaluate(() => {
       const mount = document.createElement('div');
       mount.id = 'component-test';
@@ -40,8 +55,8 @@ async function run(name, engine) {
       right.id = 'component-right';
       window.componentCamera = { id: 'f'.repeat(16), host: '192.168.50.8', name: 'Printer <img src=x onerror=alert(1)>', configured: false, setup: { type: 'access_code' } };
       // Properties can be set before connection; two lists can use the same printer.
-      left.update([window.componentCamera], null);
-      right.update([window.componentCamera], null);
+      left.setPrinters([window.componentCamera], null);
+      right.setPrinters([window.componentCamera], null);
       window.componentSaves = [];
       left.addEventListener('printer-save', event => window.componentSaves.push(event.detail));
       mount.append(left, right);
@@ -56,7 +71,7 @@ async function run(name, engine) {
     await left.locator('input').fill('12345678');
     await page.evaluate(() => {
       window.componentInput = document.querySelector('#component-left input');
-      document.querySelector('#component-left').update([{ ...window.componentCamera, name: 'Renamed printer' }], null);
+      document.querySelector('#component-left').setPrinters([{ ...window.componentCamera, name: 'Renamed printer' }], null);
     });
     assert.equal(await left.locator('input').inputValue(), '12345678');
     assert.equal(await right.locator('input').isVisible(), false, 'Editing one list must not open another list.');
@@ -73,7 +88,7 @@ async function run(name, engine) {
     assert.deepEqual(await page.evaluate(() => window.componentSaves), [
       { cameraId: 'f'.repeat(16), code: '12345678' }, { cameraId: 'f'.repeat(16), code: '12345678' },
     ], 'Each gesture must emit one action after reconnection.');
-    await page.evaluate(() => document.querySelector('#component-left').update([{ ...window.componentCamera, configured: true }], null));
+    await page.evaluate(() => document.querySelector('#component-left').setPrinters([{ ...window.componentCamera, configured: true }], null));
     assert.equal(await left.locator('input').isVisible(), false);
     assert.equal(await left.locator('.printer-access').isVisible(), false);
     assert.equal(await left.locator('input').inputValue(), '');

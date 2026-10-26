@@ -17,13 +17,13 @@
       "inputs": [
         "default",
         "^default",
-        "{workspaceRoot}/scripts/build-python-backend.mjs"
+        "{workspaceRoot}/scripts/build-python-backend.ts"
       ],
       "outputs": [
         "{workspaceRoot}/dist/apps/python-backend"
       ],
       "options": {
-        "command": "node scripts/build-python-backend.mjs"
+        "command": "node scripts/build-python-backend.ts"
       }
     },
     "test": {

@@ -34,12 +34,12 @@ jobs:
               npx nx run-many -t build --projects=layerglass,layerglass-site
               npm --prefix infra/cloudflare ci
               npm --prefix infra/cloudflare test
-              node scripts/cloudflare.mjs prepare all
-              node scripts/cloudflare.mjs check all
-              node scripts/cloudflare.mjs dry-run all
+              node scripts/cloudflare.ts prepare all
+              node scripts/cloudflare.ts check all
+              node scripts/cloudflare.ts dry-run all
               npm --prefix infra/cloudflare run test:local
-              node scripts/delivery.mjs prepare "$LAYERGLASS_REVISION"
-              node scripts/delivery.mjs verify "$LAYERGLASS_REVISION"
+              node scripts/delivery.ts prepare "$LAYERGLASS_REVISION"
+              node scripts/delivery.ts verify "$LAYERGLASS_REVISION"
             '
       - name: Preserve the validated assets
         id: assets
@@ -47,5 +47,6 @@ jobs:
         with:
           name: public-assets-${{ github.sha }}-${{ github.run_attempt }}
           path: dist/apps/
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 7

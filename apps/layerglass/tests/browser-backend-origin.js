@@ -5,6 +5,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { chromium, webkit } from 'playwright';
 import { waitForPlayer } from './player-page.js';
+import { fixtureAsset } from './fixture-assets.js';
 
 const backend = process.env.VIEWER_URL || 'http://127.0.0.1:8080';
 const frontend = backend.replace('127.0.0.1', 'localhost');
@@ -36,13 +37,14 @@ async function rejectRedirectedSetup(browser) {
       const status = Number(request.url.split('/').at(-1));
       response.writeHead(status, { ...cors, Location: `${receiver}/unselected/configure` }).end();
     });
-    const source = await readFile(new URL('../src/backend/python.js', import.meta.url));
+    const source = await readFile(new URL('../../../dist/browser/apps/layerglass/src/backend/python.js', import.meta.url));
     // Deliberately no CSP: the selected-origin guarantee must come from the
     // backend fetch policy, even when another origin admits the redirected POST.
-    const origin = await listen((request, response) => {
-      response.writeHead(200, { 'Content-Type': request.url === '/backend-python.js' ?
-        'text/javascript' : 'text/html', Connection: 'close' });
-      response.end(request.url === '/backend-python.js' ? source : '<!doctype html><title>Redirect fixture</title>');
+    const origin = await listen(async (request, response) => {
+      const asset = fixtureAsset(new URL(request.url, 'http://fixture').pathname);
+      const module = request.url === '/backend-python.js';
+      response.writeHead(200, { 'Content-Type': module || asset ? 'text/javascript' : 'text/html', Connection: 'close' });
+      response.end(module ? source : asset ? await readFile(asset) : '<!doctype html><title>Redirect fixture</title>');
     });
     context = await browser.newContext({ serviceWorkers: 'block' });
     const page = await context.newPage();

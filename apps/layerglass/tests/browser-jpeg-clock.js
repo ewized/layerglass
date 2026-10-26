@@ -5,7 +5,7 @@ import fs from 'node:fs/promises';
 import { chromium, webkit } from 'playwright';
 
 const fixture = JSON.parse(await fs.readFile(new URL('./fixtures/jpeg-clock.json', import.meta.url), 'utf8'));
-const source = new URL('../src/', import.meta.url);
+const source = new URL('../../../dist/browser/apps/layerglass/src/', import.meta.url);
 const servers = new Set();
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function until(predicate, message) {

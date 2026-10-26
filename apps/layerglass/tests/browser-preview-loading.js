@@ -91,7 +91,7 @@ const jpegBoundsMetadata = {
 };
 
 // Isolated component fixture: real JPEG decoding, no camera, stream or app startup.
-const source = new URL('../src/', import.meta.url);
+const source = new URL('../../../dist/browser/apps/layerglass/src/', import.meta.url);
 const html = `<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">
   <video></video><div><input type="range" min="0" max="120" style="width:320px">
   <printer-scrub-preview></printer-scrub-preview></div><script type="module">

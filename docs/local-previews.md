@@ -27,9 +27,9 @@ Actual retention advancement still removes older captures and rejects old replie
 Legacy JPEG without a valid descriptor, H.264, file/demo and remote playback keep
 their existing session clipping. Projected Live labels and seek gestures are unchanged.
 
-`apps/layerglass/src/preview-history.js` keeps compressed JPEGs in a 32 MiB LRU, with bounded
+`apps/layerglass/src/preview-history.ts` keeps compressed JPEGs in a 32 MiB LRU, with bounded
 24-hour/five-second metadata. At 20 KiB per image, 45 minutes is 540 images and
-about 10.3 MiB. Actual image sizes depend on the scene. `apps/layerglass/src/preview-storage.js`
+about 10.3 MiB. Actual image sizes depend on the scene. `apps/layerglass/src/preview-storage.ts`
 backs this with IndexedDB: at most 128 MiB / 20,000 records across page sessions,
 also capped to 10% of the origin's reported remaining storage. These are app
 budgets, not promises that the browser will provide that space. Pending writes
@@ -56,7 +56,7 @@ A nearby resident still can remain a labelled placeholder while the closer
 persisted frame loads; it cannot prevent that frame from being read and painted.
 Equal-distance ties retain the existing earlier-frame preference.
 
-`apps/layerglass/src/components/scrub-preview.js` paints local JPEGs to one canvas. Decoded
+`apps/layerglass/src/components/scrub-preview.ts` paints local JPEGs to one canvas. Decoded
 ImageBitmaps are independently capped to 8 MiB and closed on eviction/reset.
 Rapid movement coalesces decoding toward the latest target. A real still remains
 visible during a disk read/decode; the label uses that still's timestamp, with

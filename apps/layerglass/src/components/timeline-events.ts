@@ -1,0 +1,293 @@
+import type { PrinterTimelineEvents, EventGroup, PositionedEvent } from '../timeline-events.js';
+import { eventElement } from '../dom.js';
+import { PlayerElement } from './base.js';
+import { PageReplay } from '../replay.js';
+import { groupTimelineEvents } from '../timeline-events.js';
+
+export class PrinterTimelineMarkers extends PlayerElement {
+  declare readReplay: (() => PageReplay) | undefined;
+  declare history: PrinterTimelineEvents | undefined;
+  declare groups: EventGroup[];
+  declare signature: string | null;
+  declare observer: ResizeObserver | undefined;
+  declare tooltip: HTMLElement | null;
+  declare menu: HTMLElement | null;
+  declare opener: HTMLButtonElement | null;
+  declare menuEvents: PositionedEvent[] | null;
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role', 'group');
+    this.setAttribute('aria-label', 'Print events');
+    this.listen(this, 'click', (event) => this.activate(event));
+    this.listen(this, 'keydown', (event) => this.keydown(event));
+    this.listen(this, 'pointerover', (event) =>
+      this.describe(eventElement(event).closest<HTMLButtonElement>('.timeline-event')),
+    );
+    this.listen(this, 'focusin', (event) =>
+      this.describe(eventElement(event).closest<HTMLButtonElement>('.timeline-event')),
+    );
+    this.listen(this, 'pointerleave', () => this.hideTooltip());
+    this.listen(this, 'focusout', (event) => {
+      if (!(event.relatedTarget instanceof Node) || !this.contains(event.relatedTarget)) this.closeMenu();
+    });
+    this.listen(
+      this.ownerDocument,
+      'pointerdown',
+      (event) => {
+        if (!(event.target instanceof Node) || !this.contains(event.target)) this.closeMenu();
+      },
+      { capture: true },
+    );
+    this.observer?.disconnect();
+    this.observer = new ResizeObserver(() => this.renderMarkers());
+    this.observer.observe(this);
+    this.renderMarkers();
+  }
+
+  configure(readReplay: () => PageReplay, history: PrinterTimelineEvents) {
+    this.readReplay = readReplay;
+    this.history = history;
+    this.renderMarkers();
+  }
+
+  offset(event: PositionedEvent) {
+    const replay = this.readReplay?.();
+    return `−${PageReplay.time(Math.max(0, (replay?.timeline.edge ?? replay?.session?.end_seconds ?? event.position) - event.position))}`;
+  }
+
+  localJpegEvents(replay: PageReplay | undefined, slider: HTMLInputElement) {
+    const frame = !replay?.remote && replay?.session?.kind === 'jpeg' && replay.jpegDescriptor?.();
+    if (!frame || !replay?.session) return null;
+    // Keep the controller/model session untouched. The accepted descriptor is
+    // precise enough for both event mapping and destructive retention; the
+    // legacy session clock and provisional tail need not be.
+    return {
+      session: {
+        ...replay.session,
+        start_seconds: frame.start,
+        end_seconds: frame.position,
+        clock: frame.clock,
+      },
+      bounds: {
+        start: Math.max(frame.start, Number(slider.min)),
+        end: Math.min(frame.position, Number(slider.max)),
+      },
+    };
+  }
+
+  renderMarkers() {
+    if (!this.isConnected || !this.rendered) return;
+    const replay = this.readReplay?.();
+    const slider = this.parentElement?.querySelector<HTMLInputElement>('#replay-slider');
+    const session = replay?.session;
+    const local = session && slider && this.localJpegEvents(replay, slider);
+    const groups =
+      !session || !this.history || !slider || slider.disabled
+        ? []
+        : groupTimelineEvents(
+            this.history!.visible(
+              local?.session ?? session,
+              local?.bounds ?? { start: Number(slider.min), end: Number(slider.max) },
+            ),
+            Number(slider.min),
+            Number(slider.max),
+            this.clientWidth,
+          );
+    const signature = groups.map((group) => group.events.map((event) => event.id).join(',')).join('|');
+    if (signature !== this.signature) {
+      const focused =
+        this.querySelector<HTMLButtonElement>('.timeline-event:focus') ||
+        (this.menu?.contains(this.ownerDocument.activeElement) ? this.opener : null);
+      const focusedId = this.groups?.[Number(focused?.dataset.group)]?.events[0]?.id;
+      const focusIndex = Math.max(
+        0,
+        groups.findIndex((group) => group.events.some((event) => event.id === focusedId)),
+      );
+      this.reset();
+      this.signature = signature;
+      this.groups = groups;
+      for (const [index, group] of groups.entries()) {
+        const button = this.ownerDocument.createElement('button');
+        button.type = 'button';
+        button.className = `timeline-event event-${group.events.at(-1)!.type}`;
+        button.dataset.group = String(index);
+        button.tabIndex = index === focusIndex ? 0 : -1;
+        if (group.events.length > 1) {
+          button.setAttribute('aria-haspopup', 'menu');
+          button.setAttribute('aria-expanded', 'false');
+        }
+        this.append(button);
+      }
+      const tooltip = this.ownerDocument.createElement('span');
+      tooltip.className = 'timeline-event-tooltip';
+      tooltip.hidden = true;
+      this.append(tooltip);
+      this.tooltip = tooltip;
+      if (focused)
+        this.querySelector<HTMLButtonElement>('.timeline-event[tabindex="0"]')?.focus({
+          preventScroll: true,
+        });
+    }
+    this.groups = groups;
+    for (const button of this.querySelectorAll<HTMLButtonElement>('.timeline-event')) {
+      const group = groups[Number(button.dataset.group)]!;
+      button.style.left = `${group.fraction * 100}%`;
+      const first = group.events[0]!;
+      button.setAttribute(
+        'aria-label',
+        group.events.length > 1
+          ? `${group.events.length} print events, ${this.offset(first)} from live`
+          : `${first.label}, ${this.offset(first)} from live`,
+      );
+    }
+    const described = this.querySelector<HTMLButtonElement>('.timeline-event:is(:hover, :focus-visible)');
+    if (described && !this.menu) this.describe(described);
+    for (const button of this.menu?.querySelectorAll('button') || []) {
+      const event = this.menuEvents![Number(button.dataset.event)]!;
+      button.querySelector('time')!.textContent = this.offset(event);
+    }
+  }
+
+  describe(button: HTMLButtonElement | null) {
+    if (!this.tooltip || !button || this.menu) return;
+    const group = this.groups[Number(button.dataset.group)];
+    if (!group || !button) return;
+    this.tooltip.replaceChildren();
+    const label = this.ownerDocument.createElement('span');
+    label.textContent =
+      group.events.length > 1 ? `${group.events.length} print events` : group.events[0]!.label;
+    const time = this.ownerDocument.createElement('time');
+    time.textContent = this.offset(group.events[0]!);
+    this.tooltip.append(label, time);
+    this.tooltip.style.left = `clamp(86px, ${group.fraction * 100}%, calc(100% - 86px))`;
+    this.tooltip.hidden = false;
+  }
+
+  hideTooltip() {
+    if (this.tooltip) this.tooltip.hidden = true;
+  }
+
+  activate(event: MouseEvent) {
+    const item = eventElement(event).closest<HTMLElement>('[data-event]');
+    if (item) {
+      this.seek(this.menuEvents?.[Number(item.dataset.event)]);
+      return;
+    }
+    const button = eventElement(event).closest<HTMLButtonElement>('.timeline-event');
+    const group = button && this.groups?.[Number(button.dataset.group)];
+    if (!group || !button) return;
+    if (group.events.length === 1) {
+      this.seek(group.events[0]!);
+      return;
+    }
+    if (this.opener === button && this.menu) {
+      this.closeMenu();
+      return;
+    }
+    this.closeMenu();
+    this.hideTooltip();
+    this.opener = button;
+    button.setAttribute('aria-expanded', 'true');
+    const menu = this.ownerDocument.createElement('div');
+    menu.className = 'timeline-event-menu';
+    menu.setAttribute('role', 'menu');
+    menu.setAttribute('aria-label', 'Print events');
+    menu.style.left = `clamp(106px, ${group.fraction * 100}%, calc(100% - 106px))`;
+    this.menuEvents = group.events;
+    for (const [index, value] of group.events.entries()) {
+      const choice = this.ownerDocument.createElement('button');
+      choice.type = 'button';
+      choice.tabIndex = -1;
+      choice.dataset.event = String(index);
+      choice.setAttribute('role', 'menuitem');
+      const label = this.ownerDocument.createElement('span');
+      label.textContent = value.label;
+      const time = this.ownerDocument.createElement('time');
+      time.textContent = this.offset(value);
+      choice.append(label, time);
+      menu.append(choice);
+    }
+    this.append(menu);
+    this.menu = menu;
+    (menu.firstElementChild as HTMLElement | null)?.focus({ preventScroll: true });
+  }
+
+  seek(event: PositionedEvent | undefined) {
+    const replay = this.readReplay?.();
+    const slider = this.parentElement?.querySelector<HTMLInputElement>('#replay-slider');
+    if (!event || slider?.disabled || !replay?.session) return;
+    const local = slider && this.localJpegEvents(replay, slider);
+    const current = this.history!.visible(local?.session ?? replay.session, local?.bounds).find(
+      (value) => value.id === event!.id,
+    );
+    if (!current) return;
+    if (local) event = current;
+    replay.seek(event.position);
+    this.closeMenu();
+    // Fitting the timeline for this seek can regroup/recreate markers. Restore
+    // focus by event identity rather than holding a detached menu opener.
+    const group = this.groups.findIndex((value) => value.events.some((value) => value.id === event.id));
+    const button = this.querySelector<HTMLButtonElement>(`.timeline-event[data-group="${group}"]`);
+    if (button) {
+      for (const marker of this.querySelectorAll<HTMLButtonElement>('.timeline-event'))
+        marker.tabIndex = marker === button ? 0 : -1;
+      button.focus({ preventScroll: true });
+    }
+    this.emit('timeline-event-seek', { id: event.id, position: event.position });
+  }
+
+  keydown(event: KeyboardEvent) {
+    const inMenu = eventElement(event).closest('.timeline-event-menu');
+    const buttons = [
+      ...this.querySelectorAll<HTMLButtonElement>(inMenu ? '.timeline-event-menu button' : '.timeline-event'),
+    ];
+    if (event.key === 'Escape') {
+      this.closeMenu(true);
+      event.preventDefault();
+      return;
+    }
+    const previous = inMenu ? 'ArrowUp' : 'ArrowLeft';
+    const next = inMenu ? 'ArrowDown' : 'ArrowRight';
+    if (![previous, next, 'Home', 'End'].includes(event.key)) return;
+    const current = buttons.indexOf(event.target as HTMLButtonElement);
+    const index =
+      event.key === 'Home'
+        ? 0
+        : event.key === 'End'
+          ? buttons.length - 1
+          : (current + (event.key === previous ? -1 : 1) + buttons.length) % buttons.length;
+    if (!inMenu) for (const button of buttons) button.tabIndex = button === buttons[index] ? 0 : -1;
+    buttons[index]?.focus({ preventScroll: true });
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  closeMenu(restoreFocus = false) {
+    const opener = this.opener;
+    const menu = this.menu;
+    // Removing a focused child can synchronously emit focusout. Clear our
+    // references first so its dismissal handler cannot remove the same node.
+    this.menu = null;
+    this.menuEvents = null;
+    this.opener = null;
+    menu?.remove();
+    opener?.setAttribute('aria-expanded', 'false');
+    this.hideTooltip();
+    if (restoreFocus) opener?.focus({ preventScroll: true });
+  }
+
+  reset() {
+    this.closeMenu();
+    this.replaceChildren();
+    this.groups = [];
+    this.signature = null;
+    this.tooltip = null;
+  }
+
+  override disconnectedCallback() {
+    this.observer?.disconnect();
+    this.closeMenu();
+    super.disconnectedCallback();
+  }
+}

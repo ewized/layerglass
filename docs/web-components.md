@@ -7,10 +7,12 @@ tags: [technical]
 
 [Vault home](index.md)
 
-The UI uses native autonomous custom elements, registered by
-`apps/layerglass/src/components/index.js` through the existing ESM entry point. The page has
+The UI uses Lit custom elements written in strict TypeScript, registered by
+`apps/layerglass/src/components/index.ts` through the existing ESM entry point. The page has
 one `printer-player` host; importing the entry again reuses its module and player.
-There are no new runtime dependencies or build steps.
+The [workspace build](architecture/workspace.md) compiles the native ESM modules and
+bundles Lit/Emotion locally. [Coding conventions](development/coding-conventions.md)
+own the framework, typing and styling rules.
 
 | Element | Responsibility |
 | --- | --- |
@@ -61,14 +63,18 @@ the blurred background. Media events and ResizeObserver drive updates without
 another decoder, media request, or timer loop. Hidden documents and a matching
 aspect ratio skip drawing. Reduced motion keeps a still sample.
 
-`PlayerElement` renders static markup once in `connectedCallback`. Each
+`PlayerElement` extends `LitElement` and renders the trusted static template once
+into light DOM. Its synchronous first `performUpdate()` lets existing controllers
+find their children during upgrade. Later Lit updates reuse those static nodes.
+The edge-rendered backend chooser adopts its existing light-DOM markup using
+`data-ssr` and `noChange`; it does not use experimental shadow-DOM hydration. Each
 connection gets an `AbortController` for its listeners; disconnection removes
 those listeners. Reconnecting reuses child nodes and installs one set of
 handlers. Supported native moves preserve focus without disconnecting. The
 stats panel stops sampling when hidden, detached, backgrounded or on pagehide,
 and restarts once when it becomes visible/connected again.
 
-Printer lists accept `update(cameras, selectedCamera, busy)`. Printer rows use
+Printer lists accept `setPrinters(cameras, selectedCamera, busy)`. Printer rows use
 data properties and `textContent` for server-provided names/IPs. Their inline
 fields and unique labels stay attached across discovery updates. Separate list
 instances keep independent editors. Codes live in input values and action-event
@@ -91,7 +97,7 @@ on the timeline or another control continues without interruption.
 UI actions are synchronous bubbling/composed `CustomEvent`s: `printer-select`,
 `printer-save`, `printer-forget`, `printer-scan`, `player-play`, `settings-toggle`,
 `cast-request`, `fullscreen-toggle`, `backend-save` and `player-action`. The printer list consumes
-`printer-edit` locally. `apps/layerglass/src/player.js` handles the application/network
+`printer-edit` locally. `apps/layerglass/src/player.ts` handles the application/network
 actions; UI elements do not fetch, scan, save credentials, or open recordings.
 Synchronous fullscreen and Cast events retain the original click's browser activation.
 

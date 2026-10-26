@@ -13,13 +13,13 @@
       "executor": "nx:run-commands",
       "inputs": [
         "default",
-        "{workspaceRoot}/scripts/build-static.mjs"
+        "{workspaceRoot}/scripts/build-static.ts"
       ],
       "outputs": [
         "{workspaceRoot}/dist/apps/layerglass-site"
       ],
       "options": {
-        "command": "node scripts/build-static.mjs layerglass-site"
+        "command": "node scripts/build-static.ts layerglass-site"
       }
     },
     "test": {
@@ -35,7 +35,7 @@
         }
       ],
       "options": {
-        "command": "node apps/layerglass-site/tests/browser-site.js"
+        "command": "node --import tsx apps/layerglass-site/tests/browser-site.js"
       }
     },
     "preview": {
@@ -46,7 +46,7 @@
         "build"
       ],
       "options": {
-        "command": "node scripts/serve-static.mjs layerglass-site 8102"
+        "command": "node scripts/serve-static.ts layerglass-site 8102"
       }
     }
   }

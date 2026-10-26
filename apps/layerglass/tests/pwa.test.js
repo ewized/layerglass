@@ -25,23 +25,23 @@ test('cross-origin, range and mutation requests never enter the app cache', () =
 });
 
 test('the offline shell includes the full shipped module graph and media worker', async () => {
-  const files = await fs.readdir(new URL('../src/', import.meta.url), { recursive: true });
+  const files = await fs.readdir(new URL('../../../dist/browser/apps/layerglass/src/', import.meta.url), { recursive: true });
   for (const file of files.filter(file => /\.(?:m?js|css)$/.test(file) && file !== 'service-worker.js')) {
     assert.ok(SHELL_PATHS.includes('/static/' + file), `Missing offline dependency: ${file}`);
   }
   const modules = JSON.parse(await fs.readFile(new URL('../browser-modules.json', import.meta.url), 'utf8'));
   for (const name of modules) {
-    const files = await fs.readdir(new URL(`../../${name}/src/`, import.meta.url), { recursive: true });
+    const files = await fs.readdir(new URL(`../../../dist/browser/apps/${name}/src/`, import.meta.url), { recursive: true });
     for (const file of files.filter(file => /\.m?js$/.test(file))) {
       assert.ok(SHELL_PATHS.includes(`/${name}/src/${file}`), `Missing offline provider dependency: ${name}/${file}`);
     }
   }
   assert.equal(new Set(SHELL_PATHS).size, SHELL_PATHS.length);
   for (const path of SHELL_PATHS) {
-    const file = path === '/' ? new URL('../src/index.html', import.meta.url) :
-      path === '/manifest.webmanifest' ? new URL('../src/manifest.webmanifest', import.meta.url) :
-      path.startsWith('/static/') ? new URL('../src/' + path.slice('/static/'.length), import.meta.url) :
-      new URL('../..' + path, import.meta.url);
+    const file = path === '/' ? new URL('../../../dist/browser/apps/layerglass/src/index.html', import.meta.url) :
+      path === '/manifest.webmanifest' ? new URL('../../../dist/browser/apps/layerglass/src/manifest.webmanifest', import.meta.url) :
+      path.startsWith('/static/') ? new URL('../../../dist/browser/apps/layerglass/src/' + path.slice('/static/'.length), import.meta.url) :
+      new URL('../../../dist/browser/apps' + path, import.meta.url);
     assert.ok((await fs.stat(file)).isFile(), `Missing shell file: ${path}`);
   }
 });

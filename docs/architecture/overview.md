@@ -22,13 +22,13 @@ the Python-served viewer defaults to its own backend.
 | Discovery | [`discovery.py`](../../apps/python-backend/discovery.py) | Bounded camera-port scans, identity races, caching and backoff |
 | Manufacturer adapters | [`apps/python-backend/providers/`](../../apps/python-backend/providers/) | Approved profiles, transport setup, identity and read-only telemetry |
 | Session DVR | [`replay.py`](../../apps/python-backend/replay.py) | Retained video segments, time mapping, telemetry history and preview backup |
-| Player controller | [`apps/layerglass/src/player.js`](../../apps/layerglass/src/player.js), [`apps/layerglass/src/replay.js`](../../apps/layerglass/src/replay.js) | One media element, playback state and live-relative timeline |
+| Player controller | [`apps/layerglass/src/player.ts`](../../apps/layerglass/src/player.ts), [`apps/layerglass/src/replay.ts`](../../apps/layerglass/src/replay.ts) | One media element, playback state and live-relative timeline |
 | UI elements | [`apps/layerglass/src/components/`](../../apps/layerglass/src/components/) | Light-DOM Web Components and accessible player interactions |
-| Transport and lifecycle | [`apps/layerglass/src/video-stream.js`](../../apps/layerglass/src/video-stream.js), [`apps/layerglass/src/updates.js`](../../apps/layerglass/src/updates.js) | Continuous video response, SSE metadata, recovery and fallback |
+| Transport and lifecycle | [`apps/layerglass/src/video-stream.ts`](../../apps/layerglass/src/video-stream.ts), [`apps/layerglass/src/updates.ts`](../../apps/layerglass/src/updates.ts) | Continuous video response, SSE metadata, recovery and fallback |
 | Backend selection | [`apps/layerglass/src/backend/`](../../apps/layerglass/src/backend/) | Provider choice and the selected-origin Python HTTP client |
 | Browser backends | [`demo-backend`](../../apps/demo-backend/), [`local-backend`](../../apps/local-backend/) | Independent simulated and direct/local browser transports |
-| Print events | [`apps/layerglass/src/timeline-events.js`](../../apps/layerglass/src/timeline-events.js) | Observed state transitions mapped onto retained video time |
-| Local previews | [`apps/layerglass/src/preview-history.js`](../../apps/layerglass/src/preview-history.js), [`apps/layerglass/src/preview-storage.js`](../../apps/layerglass/src/preview-storage.js) | Sample decoded frames, bounded RAM/IndexedDB and session cleanup |
+| Print events | [`apps/layerglass/src/timeline-events.ts`](../../apps/layerglass/src/timeline-events.ts) | Observed state transitions mapped onto retained video time |
+| Local previews | [`apps/layerglass/src/preview-history.ts`](../../apps/layerglass/src/preview-history.ts), [`apps/layerglass/src/preview-storage.ts`](../../apps/layerglass/src/preview-storage.ts) | Sample decoded frames, bounded RAM/IndexedDB and session cleanup |
 
 ## Data flow
 

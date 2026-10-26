@@ -1,4 +1,5 @@
 [
   "demo-backend",
-  "local-backend"
+  "local-backend",
+  "backend-contracts"
 ]

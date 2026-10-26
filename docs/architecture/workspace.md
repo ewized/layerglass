@@ -7,12 +7,13 @@ tags: [architecture, development]
 
 [Vault home](../index.md) · [Architecture](overview.md) · [Workflow](../development/workflow.md)
 
-LayerGlass has five named projects under `apps/`. Nx manages their independent
+LayerGlass has five product/backend projects and a shared `backend-contracts` library under `apps/`. Nx manages their independent
 builds, tests and dependencies; the browser projects use native ES modules.
 The two browser backends are embeddable modules and need no running server.
 
 | Project | Source | Purpose | Output |
 | --- | --- | --- | --- |
+| `backend-contracts` | [`apps/backend-contracts/`](../../apps/backend-contracts/) | Typed public transport contracts and boundary helpers | `dist/backends/backend-contracts` |
 | `python-backend` | [`apps/python-backend/`](../../apps/python-backend/) | Optional Python service: discovery, saved printers, telemetry and DVR | `dist/apps/python-backend` source package |
 | `demo-backend` | [`apps/demo-backend/`](../../apps/demo-backend/) | Simulated printer data, preloaded replay and bundled demonstration video | `dist/backends/demo-backend` |
 | `local-backend` | [`apps/local-backend/`](../../apps/local-backend/) | Approved direct-printer connections, MJPEG transport and local-file sessions | `dist/backends/local-backend` |
@@ -33,13 +34,15 @@ Each module has its own `build` and `test` targets and unit tests.
 `src/backend/` keep player imports stable, while implementations live in the
 backend projects. The Python HTTP client stays with the player; the actual Python
 service lives in `python-backend`. That service depends on the player source
-because it can serve the complete viewer in one Docker container.
+because its Docker build can serve the complete compiled viewer in one container.
 
 [`browser-modules.json`](../../apps/layerglass/browser-modules.json) explicitly
 lists the public browser modules. Static builds compose their cached artifacts
-into the player output. The Python viewer serves the same source modules from
-bounded asset roots. Native relative imports work in both layouts, without an
-import map, bundler or second runtime. Only module `src/` files are public;
+into the player output. The Python viewer serves compiled modules from
+bounded asset roots under `/opt/layerglass-browser/apps`. TypeScript compiles to
+the established native ESM URLs. Lit and Emotion are bundled locally in one platform
+module, with an extracted stylesheet and shared cache; see the
+[coding guide](../development/coding-conventions.md). Only module `src/` files are public;
 Python sources, workspace configuration and tests are outside those roots.
 The service-worker revision includes the modules and its shell allowlist lists
 their executable files. Shell response caching remains disabled for development.
@@ -49,6 +52,9 @@ their executable files. Shell response caching remains disabled for development.
 ```sh
 npm ci
 npx nx show projects
+npm run typecheck
+npm run lint
+npm run format:check
 npm run build
 npx nx test layerglass
 npx nx test demo-backend
@@ -63,7 +69,7 @@ Use the [Docker workflow](../development/workflow.md) for project runtimes.
 `npm test` runs the player and both browser-backend test targets.
 `python-backend:test` and `layerglass:browser` delegate to disposable Docker checks.
 `./scripts/check.sh all` runs Python/JavaScript tests, all fixture browser suites,
-documentation and workspace packaging. Its `workspace` mode builds all five
+documentation and workspace packaging. Its `workspace` mode builds all six
 projects twice to verify cache restoration and exports the project graph.
 `layerglass-site:test` builds the player and website first, then renders desktop
 and mobile layouts in Chromium/WebKit, checks the generated service worker, and
@@ -78,13 +84,16 @@ When running in Docker, publish only the intended loopback port.
 
 `layer.glass` serves `dist/apps/layerglass-site`; `app.layer.glass` serves
 `dist/apps/layerglass`. The hosted player always requires a backend choice on a
-first visit. Its browser backends are composed static assets, not public Python
+first visit. Cloudflare renders that public chooser before browser JavaScript attaches
+its behavior. Its browser backends are composed static assets, not public Python
 services. Discovery, printer codes, real telemetry and DVR stay on the selected
 Python service. See [backend providers](backend-providers.md) and
 [public hosting](../operations/cloudflare.md).
 
 Browser-module outputs use `dist/backends/` so the credential-free hosting build
-contains exactly the two public applications under `dist/apps/`. Delivery checks
+contains the two public application directories and the private `.edge/layerglass.mjs`
+renderer under `dist/apps/`. The renderer is outside both public asset roots and its
+bytes are included in the validated delivery manifest. Delivery checks
 continue to reject unexpected public directories, private files and symlinks.
 Cloudflare Worker identities and public domains are deployment identifiers and
 remain stable even though their Nx projects and build paths have been renamed.

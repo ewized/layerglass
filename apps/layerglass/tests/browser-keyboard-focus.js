@@ -427,7 +427,7 @@ async function rejectedBackend(browser, name) {
     await page.waitForFunction(() => document.activeElement === document.body);
     await failed(replaced);
     assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), [], 'A replacement field does not own the old request.');
-    await page.locator('#backend-list').evaluate(list => { list.input.replaceWith(window.originalBackendInput); list.input = window.originalBackendInput; list.render(); });
+    await page.locator('#backend-list').evaluate(list => { list.input.replaceWith(window.originalBackendInput); list.input = window.originalBackendInput; list.renderPresentation(); });
 
     await open(); await options.focus();
     const unownedIndex = checks.length;

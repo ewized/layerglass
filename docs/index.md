@@ -20,6 +20,7 @@ Start with the [README](../README.md) for a quick introduction.
 
 ## Development
 
+- [Coding conventions](development/coding-conventions.md) and [coding skill](development/skills/layerglass-typescript/SKILL.md) — strict TypeScript, Lit, Emotion and rendering boundaries.
 - [Workflow](development/workflow.md) — local fixture, branches and commits.
 - [Testing](development/testing.md) — reproducible checks without a printer.
 - [Twelve-hour review](reviews/2026-10-26.md) — reviewer roster, majority decisions and validated improvements.

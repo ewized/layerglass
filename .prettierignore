@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.nx/
+test-results/
+apps/layerglass/src/vendor/
+docs/reviews/
+package-lock.json
+infra/cloudflare/package-lock.json

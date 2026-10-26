@@ -5,8 +5,8 @@ import { readFileSync } from 'node:fs';
 // are eligible; paths cannot escape into project configuration or Python code.
 const modules = JSON.parse(readFileSync(new URL('../browser-modules.json', import.meta.url), 'utf8'));
 const roots = [
-  ['/static/', new URL('../src/', import.meta.url)],
-  ...modules.map(name => [`/${name}/src/`, new URL(`../../${name}/src/`, import.meta.url)]),
+  ['/static/', new URL('../../../dist/browser/apps/layerglass/src/', import.meta.url)],
+  ...modules.map(name => [`/${name}/src/`, new URL(`../../../dist/browser/apps/${name}/src/`, import.meta.url)]),
 ];
 
 export function fixtureAsset(pathname) {

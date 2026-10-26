@@ -1,3 +1,18 @@
+FROM node:24-bookworm AS browser-build
+WORKDIR /build
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY scripts/compile-browser.ts scripts/compile-browser.ts
+COPY tsconfig*.json ./
+COPY types types
+COPY apps/layerglass/src apps/layerglass/src
+COPY apps/backend-contracts/src apps/backend-contracts/src
+COPY apps/local-backend/src apps/local-backend/src
+COPY apps/demo-backend/src apps/demo-backend/src
+RUN ./node_modules/.bin/tsc -p tsconfig.browser.json \
+    && ./node_modules/.bin/tsc -p tsconfig.service-worker.json \
+    && node scripts/compile-browser.ts
+
 FROM python:3.13-slim
 
 RUN apt-get update \
@@ -13,10 +28,8 @@ RUN pip install --no-cache-dir -r apps/python-backend/requirements.txt
 RUN mkdir /buffer && chown viewer:viewer /buffer
 COPY apps/python-backend/*.py /app/apps/python-backend/
 COPY apps/python-backend/providers /app/apps/python-backend/providers
-COPY apps/layerglass/src /app/apps/layerglass/src
+COPY --from=browser-build /build/dist/browser/apps /opt/layerglass-browser/apps
 COPY apps/layerglass/browser-modules.json /app/apps/layerglass/browser-modules.json
-COPY apps/demo-backend/src /app/apps/demo-backend/src
-COPY apps/local-backend/src /app/apps/local-backend/src
 
 # Changing release metadata must not invalidate the FFmpeg/pip layers.
 ARG VERSION=0.1.0
@@ -28,7 +41,9 @@ LABEL org.opencontainers.image.title="LayerGlass" \
       org.opencontainers.image.revision="${REVISION}"
 USER viewer
 
-ENV PYTHONUNBUFFERED=1 PORT=8080
+ENV PYTHONUNBUFFERED=1 PORT=8080 \
+    LAYERGLASS_STATIC_DIR=/opt/layerglass-browser/apps/layerglass/src \
+    LAYERGLASS_BROWSER_APPS_DIR=/opt/layerglass-browser/apps
 EXPOSE 8080
 HEALTHCHECK --interval=20s --timeout=4s --start-period=10s --retries=3 \
     CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('PORT','8080')+'/healthz',timeout=3).read()"

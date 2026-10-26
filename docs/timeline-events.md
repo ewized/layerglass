@@ -24,7 +24,7 @@ HTML. Timeline controls continue to operate the same video decoder and session.
 
 ## Data and evidence
 
-`apps/layerglass/src/timeline-events.js` exports the transport-independent
+`apps/layerglass/src/timeline-events.ts` exports the transport-independent
 `PrinterTimelineEvents` model. `PrinterHistory` supplies accepted session resets
 and telemetry batches through optional `onSession` and `onSamples` callbacks.
 No additional endpoint, timer or poll loop is introduced. A Python, demo or

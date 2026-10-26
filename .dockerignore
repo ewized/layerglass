@@ -9,12 +9,14 @@ __pycache__
 **/tests
 test-results
 node_modules
+**/node_modules
 .nx
 dist
 README.md
 AGENTS.md
 docs
-scripts
+scripts/*
+!scripts/compile-browser.ts
 data
 buffer
 recordings
