@@ -125,13 +125,14 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 5 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r10/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r10/ballot-round4.json",
-      "ballot_round5": "test-results/review-2026-10-26/r10/ballot-round5.json"
+      "ballot_round5": "test-results/review-2026-10-26/r10/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r10/ballot-round6.json"
     }
   ],
   "rounds": [
@@ -295,7 +296,7 @@
     },
     {
       "id": 6,
-      "phase": "voting",
+      "phase": "majority approved; remaining ballots continue",
       "baseline": "1d9174e393ce47f93aa9006d5076bf70004ee522",
       "frozen_at": "2026-10-26T06:36:56Z",
       "proposal_ids": [
@@ -309,9 +310,12 @@
         "r05",
         "r06",
         "r08",
-        "r09"
+        "r09",
+        "r10"
       ],
-      "notes": "Independent read-only native-focus traces explain CI-only timing failure. No test assertion or product source changed before fresh voting."
+      "notes": "Independent read-only native-focus traces explain CI-only timing failure. No test assertion or product source changed before fresh voting.",
+      "majority_recorded_at": "2026-10-26T07:08:02Z",
+      "decision": "P33 revision1 has six explicit approvals R04/R06/R09/R05/R08/R10 before any test correction. Root0; production policies remain out of scope."
     }
   ],
   "proposals": [
@@ -3672,7 +3676,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/ci-focus/proposed-scope.json",
       "risk": "Low test scheduling change, but taking control after the response or replacing strict node equality could conceal real response-driven focus regression. Both are excluded; injected wrong-focus/reopen controls must still fail.",
       "validation_plan": "Retain original CI/original unchanged-assertion120ms traces. Run corrected actual connected-player suite in Chromium/WebKit with immediate and delayed responses; native settling and snapshot occur while response held, strict equality/hidden/closed editor hold after release. Existing same-editor retry, moved focus, pointer/Settings dismissal, successful setup and request counts remain passing. Disposable fault injection that focuses another visible control after response must fail equality, and reopening closed editor must fail hidden guard; product code unchanged.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -3707,6 +3711,13 @@
           "rationale": "I inspected the exact pinned rejectedSetup and P22 revision/visibility guards, then independently ran its unchanged function body16 times against the frozen connected player (function SHA256 b67abdfc...). All immediate cases passed; one held-response WebKit run failed the original strict dismissal assertion. Its trace proves a trusted native blur from hidden disabled input to body before response release, zero application focus calls, editingCamera=null and advanced editorRevision. This supports a pre-response observable native-settling checkpoint, not a production policy change. Approve the exact test-only scope: snapshot while response remains held, retain strict node equality across release plus same-editor identity/closed/hidden guards and all other setup cases/counts. Wrong visible focus after response must still fail equality and reopening must fail the closed/hidden guards; those mandatory negative injections and immediate/delayed two-engine corrected-suite runs are acceptance requirements, not claimed completed implementation validation. No post-response snapshot or weaker endpoint assertion is approved.",
           "revision": 1,
           "recorded_at": "2026-10-26T07:05:07Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently verified the archived test/player/printer blobs against frozen 1d9174e and reran eight exact-original rejectedSetup executions with the original function hash and assertions intact. Immediate controls passed in both engines; one held-response Chromium run reproduced the same strict-equality failure. Its trace proves the disabled hidden input natively blurs to body before the response is released, with zero application focus calls and the editor revision advanced/editingCamera null. This is a pre-response lifecycle race, so an observable native-dismissal checkpoint followed by a snapshot still taken before release is a justified test-only correction. Approve only the exact preserved strict node equality and same-editor closed/hidden guards, existing request/ownership controls and both engines. Mandatory injected post-response focus of a different visible control must still fail equality, and reopening the editor must fail the hidden guard; taking a snapshot after response or weakening those assertions is outside this approval. Production P22/P27/P31 behavior remains unchanged.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:08:02Z",
           "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
         }
       }
@@ -4264,6 +4275,16 @@
       "at": "2026-10-26T07:05:55Z",
       "type": "implementation",
       "message": "R05 finished three independent ballots, then began P32 only in prepared history-hydration worktree from4c845ad after six approvals. R06 assigned bounded P29 atomic append-fault correction after R04 BLOCKED review; P30 independently READY. P33 has five explicit approvals and no code/test changes authorized yet."
+    },
+    {
+      "at": "2026-10-26T07:08:02Z",
+      "type": "ballot",
+      "message": "R10 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:08:02Z",
+      "type": "majority",
+      "message": "P33 rev1 reached six distinct explicit approvals before any source/test edit. R09 will implement only pre-response native-focus settling and snapshot in the existing programmatic-dismissal test, preserving strict cross-response equality and hidden/editor guards, with mandated wrong-focus/reopen negative controls. No production change authorized by P33."
     }
   ],
   "validation": [
