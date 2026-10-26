@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "independent Round4 API pass active",
+      "status": "independent Round4 ballot in progress after no-finding API pass",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -116,7 +116,7 @@
   "rounds": [
     {
       "id": 1,
-      "phase": "integrated; unit/workspace and corrected browser validation passed",
+      "phase": "integrated; combined all26 check passed",
       "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
       "reviewers_completed": [
         "r01",
@@ -163,7 +163,7 @@
     },
     {
       "id": 2,
-      "phase": "integrated; combined validation in progress",
+      "phase": "integrated; combined all26 check passed",
       "baseline": "afee31a57de6363ed69f7ffbe113207fafe904ba",
       "reviewers_completed": [
         "r01",
@@ -192,7 +192,7 @@
     },
     {
       "id": 3,
-      "phase": "integrated; combined validation in progress",
+      "phase": "integrated; combined all26 check passed",
       "baseline": "7f2a8cf2e6136a9b41a62e847ff1dab8cc4a57ad",
       "frozen_at": "2026-10-26T05:24:15Z",
       "proposal_ids": [
@@ -3021,7 +3021,15 @@
       "risk": "Moderate: finalizing provisional JPEG tail affects origin, clock and pruning boundaries. A different gap policy or transport would require fresh scope/votes.",
       "validation_plan": "Repeat real HTTP metadata/image/history + production JS clock/row lookup:30.5->31.1 must map1030.5->1031.1/layers30->31. Earlier gap positions cannot show successor image. Cover equal/varying cadence, unchanged capture, reconnect, later tabs during/after gap, trimming held interval and preview bounds; existing HLS/replay/history/preview checks remain passing.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {},
+      "additional_evidence": [
+        {
+          "reviewer": "root",
+          "result": "Root independently repeated actual DVR/image/history HTTP and production JS clock/formatter at all26 source: layers59->31, clock reverses28.4s.",
+          "evidence": "test-results/review-2026-10-26/root-round4-backend/jpeg-clock.log",
+          "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4"
+        }
+      ]
     },
     {
       "id": "P30",
@@ -3043,7 +3051,15 @@
       "risk": "Low/moderate ownership/retry boundary; catch-only fix risks unbounded recording, while a stale blocked state risks permanent pause.",
       "validation_plan": "Actual non-root0500->0700 fault must keep worker/health alive and failed file tracked; restore permissions resumes same tokens and trimming automatically. Hold fault across many source updates/ticks to prove bytes/file counts bounded and other-viewer metadata/media responsive. Cover older-page-release path, ordinary multi-viewer retention, preview and printer-history pruning.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {},
+      "additional_evidence": [
+        {
+          "reviewer": "root",
+          "result": "Root independently repeated real non-root archive permission failure on all26 source: dead worker/health503 and tracked ownership lost while original9byte file remains.",
+          "evidence": "test-results/review-2026-10-26/root-round4-backend/prune.log",
+          "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4"
+        }
+      ]
     },
     {
       "id": "P31",
@@ -3461,6 +3477,11 @@
       "at": "2026-10-26T06:03:54Z",
       "type": "freeze",
       "message": "Frozen Round4 P27-P31 revision1 at all26 baseline5055adf; zero new votes, zero implementation authorization. Root0; each needs6 of10 explicit approvals. Other independent deeper passes continue."
+    },
+    {
+      "at": "2026-10-26T06:07:12Z",
+      "type": "validation",
+      "message": "All26 immutable combined check.sh all completed exit0;199 Python/226 JS/35 docs/Nx builds/cache/graph/site and18 browser suites pass. Root independently reproduced JPEG/prune candidates; no new implementation before voting. Preparing review-only draft PR for CI; no merge, publication of image or deployment."
     }
   ],
   "validation": [
@@ -3583,11 +3604,12 @@
     },
     {
       "summary": "Immutable all26 complete check.sh all",
-      "status": "running; unit/docs/workspace stages passed",
+      "status": "passed",
       "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
       "log": "test-results/review-2026-10-26/all26-full.log",
-      "result": "199 Python tests,226 JS tests,35 linked docs, Nx builds/cache restore/graph/site tests passed; browser stage active with audit-only proxy isolation.",
-      "recorded_at": "2026-10-26T06:02:39Z"
+      "result": "Exit0:199 Python tests,226 JS tests,35 linked docs; Nx builds/cache restore/graph/site checks; all18 default browser suites in Chromium/WebKit. Audit-only proxy isolation blocks optional external HTTP without altering source/online behavior or cookie assertions. Owned check containers/image removed.",
+      "recorded_at": "2026-10-26T06:02:39Z",
+      "completed_at": "2026-10-26T06:07:12Z"
     },
     {
       "summary": "Coordinator independent controls for new Round4 backend-focus and retention-documentation proposals",
