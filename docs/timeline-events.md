@@ -82,6 +82,24 @@ window remain available when the user fits the complete history for a scrub.
 Discarded footage removes its older events. Changing camera/session, closing or
 reloading the page removes all associated event evidence.
 
+Local JPEG markers also require proven replay coverage. When the controller
+returns an accepted owned JPEG descriptor, the component passes its precise
+clock and retained start/end as a temporary session view to the event model.
+This keeps fractional event positions and retention aligned with the recorded
+stills without changing either session object or the global clock model.
+The provisional latest-frame tail and predicted slider edge do not prove that
+an observation is seekable. A future summary stays pending until a successor
+capture completes its held interval; its observation time is never moved to
+the still's capture time.
+
+Rendering and activation intersect that proven coverage with the displayed
+slider window. Placement and negative offsets still use the original display
+mapping, including a frozen scrub window. Activation resolves the current event
+by ID and commits/emits its freshly mapped position, so a stale marker or menu
+cannot request an earlier clamped frame. Descriptorless/invalid JPEG, remote
+playback and video/file sessions retain their existing behavior. This does not
+reconstruct summaries already discarded before the precise view was available.
+
 The model retains at most 512 small summaries and one compact latest baseline,
 independently of the eight-window diagnostic cache. A 45-minute open page does
 not lose its early markers just because newer telemetry evicts old diagnostic

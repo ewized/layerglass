@@ -31,13 +31,25 @@ export class PrinterTimelineMarkers extends PlayerElement {
     return `−${PageReplay.time(Math.max(0, (replay?.timeline.edge ?? replay?.session?.end_seconds ?? event.position) - event.position))}`;
   }
 
+  localJpegEvents(replay, slider) {
+    const frame = !replay?.remote && replay?.session?.kind === 'jpeg' && replay.jpegDescriptor?.();
+    if (!frame) return null;
+    // Keep the controller/model session untouched. The accepted descriptor is
+    // precise enough for both event mapping and destructive retention; the
+    // legacy session clock and provisional tail need not be.
+    return { session: { ...replay.session, start_seconds: frame.start,
+      end_seconds: frame.position, clock: frame.clock },
+    bounds: { start: Math.max(frame.start, Number(slider.min)), end: Math.min(frame.position, Number(slider.max)) } };
+  }
+
   render() {
     if (!this.isConnected || !this.rendered) return;
     const replay = this.readReplay?.();
     const slider = this.parentElement?.querySelector('#replay-slider');
     const session = replay?.session;
+    const local = session && slider && this.localJpegEvents(replay, slider);
     const groups = !session || !this.history || slider?.disabled ? [] : groupTimelineEvents(
-      this.history.visible(session, { start: Number(slider.min), end: Number(slider.max) }),
+      this.history.visible(local?.session ?? session, local?.bounds ?? { start: Number(slider.min), end: Number(slider.max) }),
       Number(slider.min), Number(slider.max), this.clientWidth);
     const signature = groups.map(group => group.events.map(event => event.id).join(',')).join('|');
     if (signature !== this.signature) {
@@ -128,7 +140,11 @@ export class PrinterTimelineMarkers extends PlayerElement {
   seek(event) {
     const replay = this.readReplay?.();
     const slider = this.parentElement?.querySelector('#replay-slider');
-    if (!event || slider?.disabled || !replay?.session || !this.history.visible(replay.session).some(value => value.id === event.id)) return;
+    if (!event || slider?.disabled || !replay?.session) return;
+    const local = slider && this.localJpegEvents(replay, slider);
+    const current = this.history.visible(local?.session ?? replay.session, local?.bounds).find(value => value.id === event.id);
+    if (!current) return;
+    if (local) event = current;
     replay.seek(event.position);
     this.closeMenu();
     // Fitting the timeline for this seek can regroup/recreate markers. Restore
