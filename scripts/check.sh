@@ -8,10 +8,9 @@ project_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
 task_host_path=${LAYERGLASS_HOST_PATH:-$project_root}
 task_run_id=${GITHUB_RUN_ID:-$$}
 task_prefix="codex__layerglass_check__${task_run_id}"
-task_image=${LAYERGLASS_TEST_IMAGE:-local/layerglass-check:$task_run_id}
+task_image=${LAYERGLASS_TEST_IMAGE:-}
 task_uid=$(id -u)
 task_gid=$(id -g)
-task_image_owned=0
 mkdir -p "$project_root/test-results/scrub-commit"
 task_container_dir=$(mktemp -d /tmp/layerglass-check.XXXXXX)
 
@@ -35,9 +34,6 @@ cleanup() {
       docker rm -f "$task_container" >/dev/null 2>&1 || true
     fi
   done
-  if [[ "$task_image_owned" == 1 ]]; then
-    docker image rm "$task_image" >/dev/null 2>&1 || true
-  fi
   rm -rf "$task_container_dir" || true
   exit "$task_status"
 }
@@ -46,8 +42,16 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 if [[ -z "${LAYERGLASS_TEST_IMAGE:-}" && "$mode" != javascript && "$mode" != workspace ]]; then
-  task_image_owned=1
-  docker build --tag "$task_image" --build-arg "VERSION=$(cat "$project_root/VERSION")" "$project_root"
+  # Run the immutable result without creating a tag or deleting build cache.
+  docker build --iidfile "$task_container_dir/image.iid" \
+    --build-arg "VERSION=$(cat "$project_root/VERSION")" "$project_root"
+  if [[ -f "$task_container_dir/image.iid" ]]; then
+    task_image=$(<"$task_container_dir/image.iid")
+  fi
+  if [[ ! "$task_image" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+    echo 'Build did not record a valid image ID.' >&2
+    exit 1
+  fi
 fi
 
 # Playwright requires the browser binaries from its matching image release.

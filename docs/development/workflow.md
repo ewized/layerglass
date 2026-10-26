@@ -46,9 +46,13 @@ special cases to the browser entrypoint.
 ./scripts/check.sh all
 ```
 
-The check script uses disposable containers and removes the test image it builds.
-It writes ignored logs/artifacts to `test-results/`. To reuse an already built
-runtime image, set `LAYERGLASS_TEST_IMAGE`; the script will not remove that image.
+The check script uses disposable containers. Default runtime builds have no
+output tag; the script validates Docker's recorded image ID and runs that exact
+image. Cleanup removes owned containers and temporary records, leaving ordinary
+build results/cache to Docker and the operator. The script never removes image
+IDs or tags. It writes ignored logs/artifacts to `test-results/`. To reuse an
+already built runtime image, set `LAYERGLASS_TEST_IMAGE`; the script will not
+build over or remove that image.
 With the project Node dependencies installed in a development environment,
 `npx nx show projects`, `npx nx test web`, and `npx nx build site` address the
 independent modules. `npx nx test backend` and `npx nx run web:browser` delegate
