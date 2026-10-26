@@ -12,20 +12,33 @@ task_image=${LAYERGLASS_TEST_IMAGE:-local/layerglass-check:$task_run_id}
 task_uid=$(id -u)
 task_gid=$(id -g)
 task_image_owned=0
-task_containers=()
 mkdir -p "$project_root/test-results/scrub-commit"
+task_container_dir=$(mktemp -d /tmp/layerglass-check.XXXXXX)
+
+container_id() {
+  local task_id
+  [[ -f "$1" ]] || return 1
+  task_id=$(<"$1")
+  [[ "$task_id" =~ ^[0-9a-f]{64}$ ]] || return 1
+  printf '%s\n' "$task_id"
+}
 
 cleanup() {
   task_status=$?
-  if [[ -n "${task_fixture:-}" ]]; then
-    docker logs "$task_fixture" > "$project_root/test-results/fixture.log" 2>&1 || true
+  if task_fixture_id=$(container_id "$task_container_dir/fixture.cid"); then
+    docker logs "$task_fixture_id" > "$project_root/test-results/fixture.log" 2>&1 || true
   fi
-  for task_container in "${task_containers[@]}"; do
-    docker rm -f "$task_container" >/dev/null 2>&1 || true
+  # Docker writes each private cidfile at creation, before foreground execution.
+  # A rejected name has no ID; later containers reusing that name are not ours.
+  for task_cidfile in "$task_container_dir"/*.cid; do
+    if task_container=$(container_id "$task_cidfile"); then
+      docker rm -f "$task_container" >/dev/null 2>&1 || true
+    fi
   done
   if [[ "$task_image_owned" == 1 ]]; then
     docker image rm "$task_image" >/dev/null 2>&1 || true
   fi
+  rm -rf "$task_container_dir" || true
   exit "$task_status"
 }
 trap cleanup EXIT
@@ -46,8 +59,8 @@ if [[ "$mode" == javascript || "$mode" == workspace ]]; then
   task_metadata_image=node:24-bookworm
   task_metadata_command=(node --input-type=commonjs -p "require('./package.json').devDependencies.playwright")
 fi
-task_containers+=("${task_prefix}_playwright_version")
 task_playwright_version=$(docker run --rm --init --name "${task_prefix}_playwright_version" \
+  --cidfile "$task_container_dir/playwright_version.cid" \
   --user "$task_uid:$task_gid" -e PYTHONDONTWRITEBYTECODE=1 \
   -v "$task_host_path:/app:ro" -w /app "$task_metadata_image" "${task_metadata_command[@]}")
 if [[ ! "$task_playwright_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -57,29 +70,29 @@ fi
 task_playwright_image="mcr.microsoft.com/playwright:v${task_playwright_version}-noble"
 
 run_python() {
-  task_containers+=("${task_prefix}_python")
   docker run --rm --init --name "${task_prefix}_python" --user "$task_uid:$task_gid" \
+    --cidfile "$task_container_dir/python.cid" \
     -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/app/apps/backend \
     -v "$task_host_path:/app:ro" -w /app/apps/backend \
     "$task_image" python -B -m unittest discover -s tests -p 'test_*.py' -v \
     2>&1 | tee "$project_root/test-results/python.log"
-  task_containers+=("${task_prefix}_docs")
   docker run --rm --init --name "${task_prefix}_docs" --user "$task_uid:$task_gid" \
+    --cidfile "$task_container_dir/docs.cid" \
     -e PYTHONDONTWRITEBYTECODE=1 -v "$task_host_path:/app:ro" -w /app \
     "$task_image" python -B scripts/check-docs.py
 }
 
 run_javascript() {
-  task_containers+=("${task_prefix}_javascript")
   docker run --rm --init --name "${task_prefix}_javascript" --user "$task_uid:$task_gid" \
+    --cidfile "$task_container_dir/javascript.cid" \
     -e npm_config_cache=/tmp/npm-cache -v "$task_host_path:/app:ro" -w /app \
     "$task_playwright_image" sh apps/web/tests/run-js.sh \
     2>&1 | tee "$project_root/test-results/javascript.log"
 }
 
 run_workspace() {
-  task_containers+=("${task_prefix}_workspace")
   docker run --rm --init --name "${task_prefix}_workspace" --user "$task_uid:$task_gid" \
+    --cidfile "$task_container_dir/workspace.cid" \
     -e npm_config_cache=/tmp/npm-cache -v "$task_host_path:/app:ro" \
     -v "$task_host_path/test-results:/app/test-results" -w /app \
     "$task_playwright_image" sh apps/web/tests/run-js.sh --workspace \
@@ -88,12 +101,13 @@ run_workspace() {
 
 run_browsers() {
   task_fixture="${task_prefix}_fixture"
-  task_containers+=("$task_fixture")
   docker run --detach --rm --init --name "$task_fixture" --user "$task_uid:$task_gid" \
+    --cidfile "$task_container_dir/fixture.cid" \
     -e PYTHONDONTWRITEBYTECODE=1 -e FIXTURE_TELEMETRY=1 -e FIXTURE_DUAL_TELEMETRY=1 \
     -e VIEWER_ALLOWED_ORIGINS=http://localhost:8080 -e VIEWER_BACKEND_ORIGINS=http://127.0.0.1:8080 \
     -e PWA_CACHE_ENABLED=0 -v "$task_host_path:/app:ro" -w /app \
     "$task_image" python -B apps/backend/tests/fixture_server.py >/dev/null
+  task_fixture=$(container_id "$task_container_dir/fixture.cid")
   task_ready=0
   for ((task_attempt=0; task_attempt<30; task_attempt++)); do
     if docker exec "$task_fixture" python -c \
@@ -109,8 +123,8 @@ run_browsers() {
     docker logs "$task_fixture" >&2
     return 1
   fi
-  task_containers+=("${task_prefix}_browser")
   docker run --rm --init --name "${task_prefix}_browser" --user "$task_uid:$task_gid" \
+    --cidfile "$task_container_dir/browser.cid" \
     --network "container:$task_fixture" --shm-size=512m \
     -e npm_config_cache=/tmp/npm-cache -e VIEWER_URL=http://127.0.0.1:8080 -e PWA_CACHE_ENABLED=0 \
     -v "$task_host_path:/app:ro" -v "$task_host_path/test-results:/app/test-results" -w /app \
