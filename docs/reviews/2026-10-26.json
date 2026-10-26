@@ -4760,11 +4760,14 @@
         }
       },
       "implementation": {
-        "author": "r04",
+        "author_commit": "f4c8ce4206604b24ec9612f421109d32959ffa51",
         "worktree": "/workspace/layerglass-review/jpeg-preview-bounds",
-        "branch": "review/jpeg-preview-bounds",
-        "authorized_at": "2026-10-26T10:20:35Z",
-        "authorization": "Sixfresh explicitAPPROVE forP40rev1 beforecomponent/test/productdoc edits; originalP36/P37votesnottransferred; root0."
+        "author_report": "test-results/review-2026-10-26/r04/p40-implementation-report.json",
+        "author_report_sha256": "08f1ff465fb07fd3e4c36a0ed7a124828a22c5ac074c46d058ed2c9951d7c1c6",
+        "status": "Exact final independent READY accepted; integration next.",
+        "peer_report": "test-results/review-2026-10-26/r05/p40-final-review.json",
+        "peer_report_sha256": "85e0278c34c249559e1329c27ca29b0d97a3db8620475ad2211948ea0a376543",
+        "peer_reviewed_commit": "f4c8ce4206604b24ec9612f421109d32959ffa51"
       }
     }
   ],
@@ -5790,6 +5793,23 @@
       "at": "2026-10-26T10:29:54Z",
       "type": "ballot",
       "message": "R06 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:36:49Z",
+      "type": "author-evidence",
+      "message": "P40 exactf4c8ce4 clean3file author diff/source/artifact/original-evidence hashes verified. Author87units/35docs/2registeredtwoengine browser suites pass, oldcomponent negatives and failedharnessdrafts preserved/qualified. R05 exactfinalpeer active; no integration before saved READY."
+    },
+    {
+      "at": "2026-10-26T10:42:07Z",
+      "type": "qa-preparation",
+      "message": "R06 generated-JPEG harnessv2 prepared and syntax-only checked; root verified prepared5/original6/syntax2 hashes, reviewed UID99:100, exactfull-layer oracle, syncsnapshot, precise-bound candidates and immutableCID verifiedabsence cleanup. Originaldraftreadonly. No fixture/assets/browser/pilot/hour run yet; separate finalP40pin+60spilot gate remains.",
+      "evidence": "test-results/review-2026-10-26/r06/jpeg-soak/prepared-report-v2.json",
+      "sha256": "5d080e2ae6b8e285d5a247d18efbcc0b1bb0420b2d5829eecfdc9b150d9ac6c1"
+    },
+    {
+      "at": "2026-10-26T10:43:05Z",
+      "type": "peer-acceptance",
+      "message": "P40 R05 exactf4c8ce4 READY report atomicallycomplete/7source+6evidencehashes verified before mutation. Clean exact3file author/base and canonicaltarget equality;10freshvotesfirst6pre-edits verified. Peer originalactualprimary+aligned+fullpreview-loading bothengines andmetadataequalitypass, authoronlyunits/docs/JPEGclock qualified. Ready for exactcherry; combinedcheck stillpending."
     }
   ],
   "validation": [
@@ -6106,6 +6126,12 @@
       "source": "76334efe744526b4f4bca6c7e4ceb679855659d8",
       "evidence": "test-results/review-2026-10-26/r09/merged-player-review-1.json",
       "limits": "Read-only source/existingevidence; knownprecisionconcern delegatedR04, notcleared; no physicaldevice/browser rerun."
+    },
+    {
+      "status": "read-only pass",
+      "summary": "R10 second merged documentation/source consistency pass at ee2a6fb:20git-blob hashes independently checked against current443dc6d; no new independent material finding. P34/35/36/37/39 contracts consistent; P38 historical supersession and existingP40 explicitly excluded. No fresh runtime/hardware/deployment claim.",
+      "evidence": "test-results/review-2026-10-26/r10/merged-docs-review-2.json",
+      "sha256": "131cfc61304094a09ccb95a0c107210d624a60848b3ad35d4ee6848f68962984"
     }
   ],
   "implementation_worktrees": [
