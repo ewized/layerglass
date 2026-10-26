@@ -1,3 +1,4 @@
+import { fixtureAsset } from './fixture-assets.js';
 import assert from 'node:assert/strict';
 import { chromium, webkit } from 'playwright';
 import { waitForPlayer } from './player-page.js';
@@ -651,9 +652,8 @@ async function jpegEventViewer(browser, initial, { beforePause, holdImage = fals
       }
       response.writeHead(200, { 'Content-Type': 'image/jpeg', 'Cache-Control': 'no-store' }).end(Buffer.from(eventJpegColors[chosen.color], 'base64')); return;
     }
-    if (url.pathname.startsWith('/static/')) {
-      const file = new URL(url.pathname.slice(8), source);
-      if (!file.href.startsWith(source.href)) { response.writeHead(404).end(); return; }
+    const file = fixtureAsset(url.pathname);
+    if (file) {
       try { response.writeHead(200, { 'Content-Type': file.pathname.endsWith('.css') ? 'text/css' : 'text/javascript' }).end(await readFile(file)); }
       catch { response.writeHead(404).end(); }
       return;

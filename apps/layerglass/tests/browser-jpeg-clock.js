@@ -1,3 +1,4 @@
+import { fixtureAsset } from './fixture-assets.js';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import fs from 'node:fs/promises';
@@ -86,9 +87,8 @@ async function viewer(browser, cadence = 'subsecond', { original = false, record
       if (gate?.(info)) { held.push({ info, response }); return; }
       image(response, selected.color); return;
     }
-    if (url.pathname.startsWith('/static/')) {
-      const file = new URL(url.pathname.slice(8), source);
-      if (!file.href.startsWith(source.href)) { response.writeHead(404).end(); return; }
+    const file = fixtureAsset(url.pathname);
+    if (file) {
       try { response.writeHead(200, { 'Content-Type': file.pathname.endsWith('.css') ? 'text/css' : 'text/javascript' }).end(await fs.readFile(file)); }
       catch { response.writeHead(404).end(); }
       return;

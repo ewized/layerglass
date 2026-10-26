@@ -1,3 +1,4 @@
+import { fixtureAsset } from './fixture-assets.js';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -117,8 +118,8 @@ const server = createServer(async (request, response) => {
   if (path === '/') {
     response.writeHead(200, { 'Content-Type': 'text/html' }); response.end(html); return;
   }
-  const file = path.startsWith('/static/') && new URL(path.slice('/static/'.length), source);
-  if (!file || !file.href.startsWith(source.href)) { response.writeHead(404).end(); return; }
+  const file = fixtureAsset(path);
+  if (!file) { response.writeHead(404).end(); return; }
   try {
     const body = await readFile(file);
     response.writeHead(200, { 'Content-Type': 'text/javascript' }); response.end(body);
