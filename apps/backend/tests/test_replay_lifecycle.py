@@ -199,6 +199,53 @@ class ReplayLifecycleTests(unittest.TestCase):
         self.assertFalse(self.replay.archives)
         self.assertEqual(list(self.replay.root.iterdir()), [])
 
+    def test_rolling_manifest_bookkeeping_stays_bounded_after_retention(self):
+        token = self.replay.create(CAMERA)['session_id']
+        archive = self.replay.archives[CAMERA]
+        self.assertEqual(self.replay.media(token, sequence=0).read_bytes(), b'frame-a-3')
+        self.replay.max_bytes = 25
+        for last in range(4, 1004):
+            numbers = range(last - 2, last + 1)
+            self.source.publish(numbers)
+            self.replay._collect(archive, self.source)
+            self.replay._prune()
+            self.assertLessEqual(len(archive.seen), len(numbers))
+        self.assertLessEqual(len(archive.fragments), 2)
+        self.assertEqual(archive.sequence, 1001)
+        self.assertTrue(self.replay.status(token)['limited'])
+        self.assertIsNone(self.replay.media(token, sequence=0))
+        for _ in range(10):
+            self.replay._collect(archive, self.source)
+        self.assertEqual(archive.sequence, 1001, 'An unchanged manifest must not duplicate footage.')
+        self.assertEqual(self.replay.media(token, sequence=1000).read_bytes(), b'frame-a-1003')
+
+    def test_bounded_names_preserve_new_page_and_reconnect_boundaries(self):
+        first = self.replay.create(CAMERA)['session_id']
+        archive = self.replay.archives[CAMERA]
+        self.source.publish(range(3, 8))
+        self.replay._collect(archive, self.source)
+        previous = archive.sequence - 1
+        later = self.replay.create(CAMERA)['session_id']
+        self.assertFalse(self.replay.status(later)['ready'])
+        self.assertIsNone(self.replay.media(later, sequence=previous))
+        self.assertEqual(self.replay.media(first, sequence=previous).read_bytes(), b'frame-a-7')
+        self.source.generation = 'b' * 32
+        self.source.directory = self.root / self.source.generation
+        self.source.directory.mkdir()
+        # A reconnect can reuse source names still in the old manifest. Each
+        # belongs to new footage, unlike an unchanged manifest in one generation.
+        self.source.publish([5, 6, 7])
+        self.replay._collect(archive, self.source)
+        self.replay._prune()
+        self.assertEqual(archive.sequence, previous + 4)
+        self.assertLessEqual(len(archive.seen), 3)
+        self.assertEqual(self.replay.media(first, sequence=previous).read_bytes(), b'frame-a-7')
+        self.assertEqual(self.replay.media(later, sequence=previous + 1).read_bytes(), b'frame-b-5')
+        self.assertIsNone(self.replay.media(later, sequence=previous))
+        index, _ = self.replay.video_update(later)
+        self.assertTrue(index['segments'][0]['discontinuity'])
+        self.assertEqual([item['sequence'] for item in index['segments']], list(range(previous + 1, previous + 4)))
+
 
 if __name__ == '__main__':
     unittest.main()

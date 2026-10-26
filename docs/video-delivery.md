@@ -38,6 +38,11 @@ registry binding before pruning its page leases: a concurrent create either
 finishes before that pruning or rejects the removed binding afterward. It cannot
 restore a page archive after forget completes.
 
+Source-filename deduplication retains only names in the relay's current rolling
+manifest, so this bookkeeping stays bounded even during a long uninterrupted
+recording. A new relay generation resets those names while preserving retained
+page history, discontinuities and each page's starting boundary.
+
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified

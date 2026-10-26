@@ -515,6 +515,7 @@ class ReplayBuffer:
         if archive.generation != generation:
             archive.seen.clear()
             archive.generation = generation
+        archive.seen.intersection_update(name for name, _duration, _date in items)
         if not archive.primed:
             # Do not import the rolling live window from before this page opened.
             archive.seen.update(item[0] for item in items[:-1])
