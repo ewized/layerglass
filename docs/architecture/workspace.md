@@ -34,6 +34,9 @@ graph to ignored `test-results/project-graph.json`. Python and fixture browser
 checks still run against generated media, never a real printer.
 The website check renders both desktop and mobile widths in Chromium and
 WebKit and checks the actual built assets and links.
+It also inspects the web app's generated service worker. The `site:test`
+target declares both builds as prerequisites, so `nx test site` works from
+a clean checkout.
 
 In an environment with the project's Node dependencies and Docker CLI:
 

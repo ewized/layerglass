@@ -14,7 +14,7 @@
     "test": {
       "executor": "nx:run-commands",
       "cache": false,
-      "dependsOn": ["build"],
+      "dependsOn": ["build", { "projects": ["web"], "target": "build" }],
       "options": { "command": "node apps/site/tests/browser-site.js" }
     },
     "preview": {
