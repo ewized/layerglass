@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "reviewing",
+  "status": "voting",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -37,56 +37,97 @@
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "reviewing"
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r04/"
     },
     {
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "reviewing"
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r05/"
     },
     {
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "reviewing"
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r06/"
     },
     {
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "queued"
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r07/"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "queued"
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r08/initial-report.json"
     },
     {
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "queued"
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r09/report.md"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "queued"
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt"
     }
   ],
   "rounds": [
     {
       "id": 1,
-      "phase": "initial review",
+      "phase": "voting",
       "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
       "reviewers_completed": [
         "r01",
         "r02",
-        "r03"
+        "r03",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08",
+        "r09",
+        "r10"
       ],
-      "ballots_started": false
+      "ballots_started": true,
+      "frozen_at": "2026-10-26T04:22:11Z",
+      "proposal_ids": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P19",
+        "P20",
+        "P21",
+        "P22"
+      ],
+      "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b",
+      "slate_path": "test-results/review-2026-10-26/round-1-slate.json"
     }
   ],
   "proposals": [
@@ -220,9 +261,304 @@
       "validation_plan": "Unit tests near EOF and after EOF advance clock; edge and max never exceed duration, no fake end offset; pre-EOF equal-rate replay stays stable; HLS interpolation unchanged.",
       "status": "proposed",
       "ballots": {}
+    },
+    {
+      "id": "P08",
+      "revision": 1,
+      "title": "Keep Direct refresh results owned by the current probe",
+      "author": "r05",
+      "source_finding": "R05-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/backend/direct.js:129"
+      ],
+      "scope": "Guard DirectPrinterBackend ready/refresh success and failure assignments by current probe generation or promise identity. Older callers may settle but cannot overwrite the newer shared identity/error. Preserve shared ready calls and user-initiated refresh.",
+      "evidence": "Hold the original ready responses, complete refresh with new webcams, then release the original: old identity and stream_url replace the new result.",
+      "evidence_path": "test-results/review-2026-10-26/r05/",
+      "risk": "Low; no transport/capability expansion.",
+      "validation_plan": "Focused production-module fixtures release stale success and failure after a current refresh, asserting identity, error, camera catalog and source remain current; shared ready/refresh still work.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P09",
+      "revision": 1,
+      "title": "Allow explicit retry after Cast SDK initialization failure",
+      "author": "r05",
+      "source_finding": "R05-C2",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/cast-sender.js:15",
+        "apps/web/src/cast-sender.js:55"
+      ],
+      "scope": "Clear rejected global SDK loading and per-instance initialization caches; clean up failed script/callback so an explicit source/viewer refresh can retry once connectivity returns. Preserve deduplicated concurrent loading, existing SDK listeners and synchronous user picker activation; no autonomous retry loop.",
+      "evidence": "Initial synthetic SDK error stays cached at both levels; later explicit Refresh viewer never attempts a second script request and keeps Cast disabled.",
+      "evidence_path": "test-results/review-2026-10-26/r05/",
+      "risk": "Low; cleanup must not duplicate SDK callbacks or sender listeners.",
+      "validation_plan": "Fail first script load, succeed on explicit refresh, assert only bounded retry, native picker remains synchronously invoked by click, concurrent initialization shares one active script.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P10",
+      "revision": 1,
+      "title": "Respect sprite decode failure cooldown before fetching",
+      "author": "r04",
+      "source_finding": "R04-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/components/scrub-preview.js:127",
+        "apps/web/src/components/scrub-preview.js:197"
+      ],
+      "scope": "Consult the matching server-sprite decode failure cooldown before scheduling/refetching that sprite. Keep legitimate fallback from a corrupt captured local frame to a different server sprite and allow valid retry after expiry; no broad new cache.",
+      "evidence": "A corrupt HTTP200 image/jpeg sprite causes five requests in 650ms at a stationary target because HTTP scheduling ignores decode:sheet cooldown.",
+      "evidence_path": "test-results/review-2026-10-26/r04/",
+      "risk": "Low; avoid suppressing a different fallback image or permanently poisoning the preview.",
+      "validation_plan": "Fixture corrupt JPEG yields one request during cooldown then valid response paints after expiry; local-corrupt-frame can still fall back to server sprite; target/session cancellation preserved.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P11",
+      "revision": 1,
+      "title": "Paint persisted previews that finish loading after the deadline",
+      "author": "r04",
+      "source_finding": "R04-C2",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/components/scrub-preview.js:120",
+        "apps/web/src/preview-history.js:177"
+      ],
+      "scope": "Retain asynchronous completion handling for persisted preview reads finishing after the 500ms race. Re-render only if session, epoch and current requested target still match. Keep bounded decoding, per-page ownership and cancellation.",
+      "evidence": "With preview_fallback false, a requested JPEG becomes resident after a delayed disk read but stationary preview never decodes or paints until another pointer event.",
+      "evidence_path": "test-results/review-2026-10-26/r04/",
+      "risk": "Low; stale completions must not repaint a newer target or closed session.",
+      "validation_plan": "Delay a valid persisted read beyond500ms, assert stationary target paints automatically without pointer movement; older target/session completion cannot replace current preview; no second decoder.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P12",
+      "revision": 1,
+      "title": "Delete the HLS relay's owned final generation when it stops",
+      "author": "r06",
+      "source_finding": "R06-A",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/backend/app.py:236-239 removes a previous generation only on the next supervisor iteration",
+        "apps/backend/app.py:296-302 terminates the process but never removes the final generation",
+        "apps/backend/cameras.py:213-222 and 252-257 close old relays on reconfigure/forget",
+        "apps/backend/app.py:581-584 serves generation paths directly from stream_root even after a printer is forgotten"
+      ],
+      "scope": "In Relay._run finally, after FFmpeg termination and reader cleanup, remove only the locally owned final generation directory. Never delete the entire shared camera root or another concurrently started relay's directory.",
+      "evidence": "Close, forget or reconfigure an HLS printer after it has delivered media; keep the viewer HTTP server alive. The old generation's final playlist and segments remain readable at previously issued URLs. Repeating configuration leaves one orphan live window per retired relay in the 128 MiB /tmp tmpfs, eventually breaking new recording. probe_final_live_directory_remains_readable_after_close: relay thread stopped, directory still exists, old segment URL returns HTTP 200 with fixture bytes.",
+      "evidence_path": "test-results/review-2026-10-26/r06/",
+      "risk": "Low. File reads already open may finish on POSIX; new lookups correctly fail after stop. Delete only the owned generation to preserve a concurrently created replacement.",
+      "validation_plan": "Use the existing fake-FFmpeg RecoveryTests fixture: stop/reconfigure/forget a relay, assert its generation path and prior media URL disappear (404); separately assert a replacement generation or sibling directory survives.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P13",
+      "revision": 1,
+      "title": "Roll back session creation when initial collection fails",
+      "author": "r06",
+      "source_finding": "R06-B",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/backend/replay.py:125-135 stores the archive/session before _collect_printer and _collect can fail",
+        "apps/backend/app.py:784-789 turns a creation failure into 409/503 without returning the retained session token",
+        "apps/backend/replay.py:123-124 rejects all new viewers at 128 retained sessions"
+      ],
+      "scope": "Make create transactional for the new session: on a pre-return failure remove that new token and prune unused state, then propagate the original failure; retain other tabs and their already valid archive.",
+      "evidence": "The initial archive write/copy or telemetry collection raises, for example transient ENOSPC; the browser retries creation. Every failed request retains an inaccessible session until the normal 30-minute lease expiry. Once 128 attempts accumulate, a recovered disk cannot admit a viewer because the hidden leases exhaust the limit. Injected copyfile ENOSPC in 128 creates: every create raises, sessions contains 128 entries, and a create after removing the failure is rejected with Too many open viewers.",
+      "evidence_path": "test-results/review-2026-10-26/r06/",
+      "risk": "Low. Cleanup must target only the newly created token and must not remove an archive still leased by other pages.",
+      "validation_plan": "Inject ENOSPC on first collection, assert no new token or unused archive remains, restore the copy and assert create succeeds. Also fail a later tab on a shared archive and assert the existing tab/history is intact.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P14",
+      "revision": 1,
+      "title": "Serialize relay admission with replay create/forget",
+      "author": "r06",
+      "source_finding": "R06-C",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/backend/replay.py:117-121 obtains a relay before acquiring ReplayBuffer.lock",
+        "apps/backend/replay.py:142-145 forget deletes all existing sessions under that lock",
+        "apps/backend/app.py:815-821 forgets the registry first, then the replay buffer"
+      ],
+      "scope": "Move the registry.get_relay admission check inside ReplayBuffer.lock so it shares the existing replay-to-registry lock order used by _run. A completed forget must either make create reject or subsequently prune the created session.",
+      "evidence": "A create request captures a configured relay, then waits for ReplayBuffer.lock while a forget request removes the printer and completes replay.forget. After forget has returned, create uses its stale relay reference to create a new session/archive for the forgotten printer; when the old relay directory remains, archived footage is recreated and readable. Held the replay lock, let a creator capture a relay, marked its registry unavailable and called forget, then released the lock: a new session was returned and frame-a-3 remained readable even though the printer was unconfigured.",
+      "evidence_path": "test-results/review-2026-10-26/r06/",
+      "risk": "Low to medium. Preserve lock order; _run already holds replay.lock while calling registry.get_relay. Registry forget/configure currently release registry.lock before acquiring replay.lock.",
+      "validation_plan": "Deterministically hold ReplayBuffer.lock, start a create, forget the registry/replay while the lock is held, release it, and assert create rejects without retaining a session/archive. Cover the opposite ordering so a forget following a successful create clears that session.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P15",
+      "revision": 1,
+      "title": "Bound source-filename bookkeeping to the rolling HLS manifest",
+      "author": "r06",
+      "source_finding": "R06-D",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/backend/replay.py:55 Archive.seen is a set",
+        "apps/backend/replay.py:505-507 clears seen only when the relay generation changes",
+        "apps/backend/replay.py:513-523 adds every collected filename",
+        "apps/backend/replay.py:546-582 trims footage, clocks, telemetry and previews but never seen"
+      ],
+      "scope": "Intersect seen with filenames in the current rolling manifest before processing it, or use an equivalent bounded source cursor. Preserve generation-change reset and initial page-history exclusion.",
+      "evidence": "A configured HLS relay remains in one generation while a page stays open and the disk cap repeatedly trims old fragments. Memory grows for the lifetime of the stream even though the associated media files have been removed; this defeats bounded recorder retention on the long-lived offline camera service. Collected 1,000 new fixture fragments while pruning to one retained fragment: archive.seen still held 1,003 names, including the two initial skipped pre-page names.",
+      "evidence_path": "test-results/review-2026-10-26/r06/",
+      "risk": "Low. FFmpeg emits a monotonic rolling manifest within each generation; keep reset behavior for a genuine reconnect.",
+      "validation_plan": "Feed thousands of sequential rolling manifests under a small byte limit and assert seen remains bounded by the manifest window, no duplicate append occurs for unchanged manifests, and reconnect/page-isolation behavior is preserved.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P16",
+      "revision": 1,
+      "title": "Declare the website test web-build prerequisite",
+      "author": "r07",
+      "source_finding": "R07-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/site/project.json:17",
+        "apps/site/tests/browser-site.js:27"
+      ],
+      "scope": "Add explicit web:build to site:test.dependsOn while preserving current worker-output assertions and existing site build dependency. Do not restructure tests or introduce a new runtime.",
+      "evidence": "A clean fixture actual site build/test fails ENOENT opening dist/apps/web/service-worker.js before browser launch. Full workspace build masks the missing prerequisite. Offline reproduction stubs Playwright imports solely for dependency resolution, not a claimed browser pass.",
+      "evidence_path": "test-results/review-2026-10-26/r07/site-independent.log",
+      "risk": "Low; an extra declared build prerequisite, no shipped behavior change.",
+      "validation_plan": "Actual nx test site from clean dist and isolated cache must build its prerequisites and pass Chromium/WebKit site and worker checks.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P17",
+      "revision": 1,
+      "title": "Lock onboarding address during its connection check",
+      "author": "r08",
+      "source_finding": "R08-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/components/backend-picker.js:88",
+        "apps/web/src/components/backend-picker.js:101"
+      ],
+      "scope": "Disable the onboarding address input while its bounded Docker or Direct check is pending, matching Settings editor behavior. Keep Back/Escape cancellation available, and restore editing after cancel/failure/timeout. Late cancelled checks cannot select/persist. No new UI or protocol behavior.",
+      "evidence": "Production-module fixture submits originA then edits input to originB before A response; selected origin is A while visible input is B.",
+      "evidence_path": "test-results/review-2026-10-26/r08/initial-report.json",
+      "risk": "Low; bounded input lock with explicit cancellation.",
+      "validation_plan": "Real-browser held-probe regression: address disabled, displayed origin exactly matches successful selection, Back/Escape cancel and late result ignored, failure/timeout restore editing; Direct shares lock.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P18",
+      "revision": 1,
+      "title": "Correct the documented SSE proxy route",
+      "author": "r10",
+      "source_finding": "R10-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "docs/operations/installation.md:61"
+      ],
+      "scope": "Replace the incorrect /events buffering exception with /api/events. Keep /replay requirements, trust/browser constraints and all live proxy configuration unchanged. Documentation only.",
+      "evidence": "Generated loopback HTTP fixture returns404 for /events and200 text/event-stream for actual /api/events. Wrong guidance can leave the real route buffered.",
+      "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
+      "risk": "Negligible; correct existing route text without deployment.",
+      "validation_plan": "Compare handler route with corrected guidance, retain isolated HTTP fixture evidence and run documentation validator.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P19",
+      "revision": 1,
+      "title": "Document explicit allowed-origin mutation policy",
+      "author": "r10",
+      "source_finding": "R10-C2",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "docs/reference/application-guide.md:404"
+      ],
+      "scope": "Qualify cross-origin mutation rejection as untrusted-origin rejection. Explain exact VIEWER_ALLOWED_ORIGINS opt-in and required X-Viewer-Request header, link to backend-provider configuration, preserve trusted-LAN/authenticated-proxy and no-account guidance. Documentation only.",
+      "evidence": "Isolated fixture confirms untrusted origin403, allowed origin without viewer header403, allowed origin plus header200. Reference guide currently claims all cross-origin mutations rejected.",
+      "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
+      "risk": "Negligible; documents current implemented policy without widening it.",
+      "validation_plan": "Compare source/isolated CORS evidence and existing backend-origin tests; documentation validator after edit.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P20",
+      "revision": 1,
+      "title": "Focus only available context-menu actions",
+      "author": "r09",
+      "source_finding": "R09-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/components/overlays.js:174",
+        "apps/web/src/components/overlays.js:198"
+      ],
+      "scope": "Use one visible enabled action list for initial focus and ArrowUp/ArrowDown/Home/End navigation, including safe empty-list handling. Preserve disabled/hidden Mini behavior and native PiP eligibility. No additional UI.",
+      "evidence": "Chromium and WebKit keyboard fixtures show Shift+F10 fails to focus the menu when its first Mini item is unavailable; arrow wrapping includes disabled/hidden items.",
+      "evidence_path": "test-results/review-2026-10-26/r09/report.md",
+      "risk": "Low; menu focus selection only.",
+      "validation_plan": "Real keyboard tests in Chromium/WebKit with Mini disabled, hidden by live-only, enabled, and no available actions. Available actions focus/cycle, Home/End work, no capability change.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P21",
+      "revision": 1,
+      "title": "Hand focus to and from keyboard-opened Stats",
+      "author": "r09",
+      "source_finding": "R09-C2",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/player-tools.js:34",
+        "apps/web/src/player-tools.js:157",
+        "apps/web/src/components/stats.js:50"
+      ],
+      "scope": "On keyboard Stats activation from a focused context menu, transfer focus into Stats (such as Close stats). On keyboard dismissal or focused close action restore player focus. Preserve pointer behavior, sampling lifecycle, and context-only diagnostics; no modal focus trap.",
+      "evidence": "Chromium and WebKit: Enter on Stats hides its focused menu action, activeElement becomes body, and Escape no longer reaches the player to close Stats.",
+      "evidence_path": "test-results/review-2026-10-26/r09/report.md",
+      "risk": "Low; focus handoff must not steal focus after unrelated pointer interactions.",
+      "validation_plan": "Keyboard open Stats, assert focus inside; Escape closes and returns player focus. Keyboard Close also restores focus; timers/reconnection/media/session remain valid; pointer interactions stay natural.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P22",
+      "revision": 1,
+      "title": "Restore failed printer editor keyboard focus safely",
+      "author": "r09",
+      "source_finding": "R09-C3",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/player.js:675",
+        "apps/web/src/player.js:687",
+        "apps/web/src/components/printers.js:81"
+      ],
+      "scope": "Record submitted printer editor focus ownership. After a configure rejection restore the input only if the same editor is still connected/open in the visible Printers page and focus was lost to the document. Never steal intentionally moved focus. Retain draft/error/busy guards; no broad catalog focus changes.",
+      "evidence": "Actual controller with synthetic configure503: Chromium loses input focus to body when pending render disables it and never restores on failure, preventing keyboard retry or Escape. WebKit retained focus in this fixture.",
+      "evidence_path": "test-results/review-2026-10-26/r09/report.md",
+      "risk": "Low to moderate; async ownership/page visibility must be respected.",
+      "validation_plan": "Chromium keyboard submission/failure retains draft and restores usable input, deliberate Enter retries once. Moving focus elsewhere, closing editor or navigating away prevents restoration. Successful setup no hidden focus; WebKit behavior unchanged.",
+      "status": "proposed",
+      "ballots": {}
     }
   ],
-  "commits": [],
+  "commits": [
+    {
+      "sha": "03ee530",
+      "summary": "Process-only checkpoint: audit mandate, reviewer roster and initial proposals; no product changes."
+    }
+  ],
   "activity": [
     {
       "at": "2026-10-26T04:03:49Z",
@@ -238,13 +574,44 @@
       "at": "2026-10-26T04:12:45Z",
       "type": "initial findings",
       "message": "R01-R03 completed read-only fixture review; seven bounded proposals recorded with no ballots inferred. R04-R06 started."
+    },
+    {
+      "at": "2026-10-26T04:15:16Z",
+      "type": "initial findings",
+      "message": "R05 completed; P08/P09 recorded with zero votes. R07 delivery review started."
+    },
+    {
+      "at": "2026-10-26T04:16:06Z",
+      "type": "initial findings",
+      "message": "R04/R06 completed; P10-P15 recorded without votes. R08/R09 initial reviews started."
+    },
+    {
+      "at": "2026-10-26T04:17:56Z",
+      "type": "roster",
+      "message": "All ten distinct reviewers have started initial review in rotating batches. Seven completed; R08-R10 remain reviewing. P16 recorded, still zero ballots."
+    },
+    {
+      "at": "2026-10-26T04:18:52Z",
+      "type": "baseline",
+      "message": "Full baseline check.sh all completed exit0. R08 proposal P17 recorded with no votes. R02 is confirming P06 automatic recovery in generated real-browser fixture."
+    },
+    {
+      "at": "2026-10-26T04:21:05Z",
+      "type": "initial findings",
+      "message": "R10 finished; two documentation-only proposals P18/P19 recorded. Nine reviewers completed, R09 final report pending."
+    },
+    {
+      "at": "2026-10-26T04:22:11Z",
+      "type": "voting setup",
+      "message": "All ten initial reviews complete. Round1 slate frozen at22 bounded proposals. No substantive product edits and zero ballots inferred. P06 browser reproduction still running as supplemental evidence."
     }
   ],
   "validation": [
     {
-      "summary": "Full baseline Python, JavaScript, workspace and browser checks",
-      "status": "running",
-      "log": "test-results/review-baseline-20261026.log"
+      "summary": "Baseline:167 Python tests,198 JavaScript tests,35 linked docs, all Nx builds/site checks and all14 browser suites",
+      "status": "passed",
+      "log": "test-results/review-baseline-20261026.log",
+      "completed_at": "2026-10-26T04:18:52Z"
     }
   ]
 }
