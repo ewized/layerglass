@@ -22,7 +22,7 @@ elif [ "$1" = "--workspace" ]; then
   npx nx show projects --json
   npx nx graph --file=/app/test-results/project-graph.json
   npm run check:docs
-  npx nx test site
+  LAYERGLASS_SITE_TEST_RESULTS="${LAYERGLASS_SITE_TEST_RESULTS:-/app/test-results}" npx nx test site
 else
   node "$@"
 fi

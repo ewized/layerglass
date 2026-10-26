@@ -15,6 +15,10 @@ run the corresponding portion. Logs and screenshots go to ignored `test-results/
 The complete run also builds the Nx backend/web/site projects twice to verify
 cache restoration and exports `test-results/project-graph.json`. `workspace`
 mode runs that packaging/graph/documentation check by itself.
+The independent `site:test` target writes screenshots into its checkout's
+`test-results/` directory. `LAYERGLASS_SITE_TEST_RESULTS` selects another output
+directory; the temporary-copy workspace harness defaults it to the mounted
+artifact collector so those screenshots survive container cleanup.
 Pass representative suite names to focus a browser run, for example
 `./scripts/check.sh browser browser-scrub-commit.js browser-components.js`.
 

@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { chromium, webkit } from 'playwright';
 
 const root = new URL('../../../', import.meta.url);
+const screenshots = resolve(process.env.LAYERGLASS_SITE_TEST_RESULTS || fileURLToPath(new URL('test-results/', root)));
+await mkdir(screenshots, { recursive: true });
 const server = spawn(process.execPath, ['scripts/serve-static.mjs', 'site', '8102'], { cwd: root, stdio: 'pipe' });
 let output = '';
 server.stderr.on('data', chunk => { output += chunk; });
@@ -46,7 +50,7 @@ try {
           `${name} ${viewport.width}: product site must fit the viewport.`);
         assert.equal(await page.locator('.brand img').evaluate(image => image.complete && image.naturalWidth > 0), true);
         assert.deepEqual(errors, []);
-        if (name === 'chromium') await page.screenshot({ path: `/app/test-results/site-${viewport.width}.png`, fullPage: true });
+        if (name === 'chromium') await page.screenshot({ path: join(screenshots, `site-${viewport.width}.png`), fullPage: true });
         await page.close();
       }
       console.log(`${name}: product website desktop/mobile layout, navigation and assets passed.`);
