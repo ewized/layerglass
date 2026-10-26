@@ -22,6 +22,7 @@ Start with the [README](../README.md) for a quick introduction.
 
 - [Workflow](development/workflow.md) — local fixture, branches and commits.
 - [Testing](development/testing.md) — reproducible checks without a printer.
+- [Twelve-hour review](reviews/2026-10-26.md) — reviewer roster, majority decisions and validated improvements.
 - [CI/CD](development/ci-cd.md) — validation, versioning and image publication.
 - [Public Cloudflare hosting](operations/cloudflare.md) — product site, demo, domains and delivery.
 - [GitHub deployment settings](operations/github-deployment.md) — required secrets, enable variable and token scope.

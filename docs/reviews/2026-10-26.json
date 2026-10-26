@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-10-26T04:03:49Z",
+  "deadline": "2026-10-26T16:03:49Z",
+  "status": "reviewing",
+  "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+  "branch": "review/2026-10-26-twelve-hour",
+  "quorum": {
+    "reviewers": 10,
+    "minimum_approvals": 6,
+    "root_votes": false,
+    "missing_or_abstaining_votes_count_as_approval": false
+  },
+  "reviewers": [
+    {
+      "id": "r01",
+      "scope": "Security and trust boundaries",
+      "agent_task": "/root/review_r01_security",
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r01/"
+    },
+    {
+      "id": "r02",
+      "scope": "Player, replay and timeline",
+      "agent_task": "/root/review_r02_player",
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r02/"
+    },
+    {
+      "id": "r03",
+      "scope": "Printer discovery and telemetry",
+      "agent_task": "/root/review_r03_printers",
+      "status": "initial review complete",
+      "initial_report": "test-results/review-2026-10-26/r03/"
+    },
+    {
+      "id": "r04",
+      "scope": "Browser previews, storage and performance",
+      "agent_task": "/root/review_r04_storage",
+      "status": "reviewing"
+    },
+    {
+      "id": "r05",
+      "scope": "Backend providers, casting and PiP",
+      "agent_task": "/root/review_r05_providers",
+      "status": "reviewing"
+    },
+    {
+      "id": "r06",
+      "scope": "Python DVR, concurrency and resource cleanup",
+      "agent_task": "/root/review_r06_backend",
+      "status": "reviewing"
+    },
+    {
+      "id": "r07",
+      "scope": "Docker, CI/CD, Cloudflare and delivery",
+      "agent_task": "/root/review_r07_delivery",
+      "status": "queued"
+    },
+    {
+      "id": "r08",
+      "scope": "Nx workspace, product website and onboarding",
+      "agent_task": "/root/review_r08_workspace",
+      "status": "queued"
+    },
+    {
+      "id": "r09",
+      "scope": "Mobile UI, accessibility and Web Components",
+      "agent_task": "/root/review_r09_accessibility",
+      "status": "queued"
+    },
+    {
+      "id": "r10",
+      "scope": "Documentation accuracy and validation quality",
+      "agent_task": "/root/review_r10_documentation",
+      "status": "queued"
+    }
+  ],
+  "rounds": [
+    {
+      "id": 1,
+      "phase": "initial review",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "reviewers_completed": [
+        "r01",
+        "r02",
+        "r03"
+      ],
+      "ballots_started": false
+    }
+  ],
+  "proposals": [
+    {
+      "id": "P01",
+      "revision": 1,
+      "title": "Reject redirected Python backend fetches",
+      "author": "r01",
+      "source_finding": "R01-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/backend/python.js:29"
+      ],
+      "scope": "Force redirect:error after caller init in PythonBackend.fetch. Keep requests on the explicitly selected backend, including access-code POSTs. Document that redirecting backend URLs must use their final origin. No authentication or EventSource redesign.",
+      "evidence": "307/308 can replay an access-code body at an unselected origin; confirmed with a real Chromium loopback fixture.",
+      "evidence_path": "test-results/review-2026-10-26/r01/",
+      "risk": "Low; installations relying on redirects must enter the final backend origin.",
+      "validation_plan": "Unit test forced policy despite caller override; browser 307/308 receivers receive no configure body; normal same-origin/CORS flow remains valid.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P02",
+      "revision": 1,
+      "title": "Omit sensitive telemetry object keys",
+      "author": "r01",
+      "source_finding": "R01-C2",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/backend/providers/telemetry.py:28"
+      ],
+      "scope": "Drop object entries whose key contains any supplied nonempty saved secret or matches the existing URL expression, before budgeting/copying. Preserve existing private-name filters, limits and benign readings. No claim of current firmware exposure.",
+      "evidence": "Accepted synthetic nested JSON keys retain a configured access code and full authenticated source URL in public_stats.",
+      "evidence_path": "test-results/review-2026-10-26/r01/",
+      "risk": "Low; intentionally removes unusual secret/URL-keyed readings.",
+      "validation_plan": "Nested secret/URL key fixtures and safe siblings; no secret or URL in serialized output; existing bounded sanitizer tests.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P03",
+      "revision": 1,
+      "title": "Sanitize public printer identity metadata",
+      "author": "r03",
+      "source_finding": "R03-C1",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/backend/providers/bambu/telemetry.py:134",
+        "apps/backend/cameras.py:169"
+      ],
+      "scope": "Sanitize public display name and firmware before identity callback/persistence and sanitize already-saved public metadata on catalog projection. Use the shared URL/saved-code policy. Preserve private verified serial/model used for TLS/topic pairing and avoid redacting private authentication identifiers.",
+      "evidence": "Synthetic print.dev_name reaches printers.json and /api/cameras unchanged even though telemetry.status redacts its source URL and access code.",
+      "evidence_path": "test-results/review-2026-10-26/r03/",
+      "risk": "Low to moderate; private serial must remain intact, including short-code cases.",
+      "validation_plan": "Synthetic paired registry checks name/firmware reports, catalog/current/debug/persistence/reload; safe identity unchanged; TLS and subscription serial retained.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P04",
+      "revision": 1,
+      "title": "Keep access codes bound to verified printer serials",
+      "author": "r03",
+      "source_finding": "R03-C2",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/backend/cameras.py:114",
+        "apps/backend/cameras.py:169"
+      ],
+      "scope": "When discovery verifies a different serial at an endpoint paired to a prior verified serial, quarantine the old pairing, close its associated relay/telemetry clients, and require explicit setup for replacement. Never merge replacement serial into an active old-code binding. Preserve unchanged-serial offline resumption, legacy unpinned records and other endpoints. Document replacement transition and persistence behavior.",
+      "evidence": "A synthetic second verified serial at the same endpoint overwrites the paired serial while keeping configured true and old code, including after reload.",
+      "evidence_path": "test-results/review-2026-10-26/r03/",
+      "risk": "Moderate; pairing lifecycle, active clients and atomic persistence need focused review.",
+      "validation_plan": "Pair A then discover B; B cannot use A code or create telemetry before explicit re-pair, including reload. Re-pair B succeeds; repeat A scan/offline restart/metadata delta and unrelated endpoint remain intact; persistence failure covered.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P05",
+      "revision": 1,
+      "title": "Reset JPEG frame deduplication between sessions",
+      "author": "r02",
+      "source_finding": "R02-A",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/replay.js:180",
+        "apps/web/src/replay.js:323"
+      ],
+      "scope": "Reset lastImagePosition on replay close/session reset or scope its cache to session/frame URL. Preserve pause/position semantics and avoid repeated requests within the same session.",
+      "evidence": "Seek JPEG A to 30 s, switch B, pause and seek same rounded time: B retains live image because stale dedup key suppresses its historical frame request.",
+      "evidence_path": "test-results/review-2026-10-26/r02/",
+      "risk": "Low; one legitimate initial frame request for the replacement session.",
+      "validation_plan": "Unit fixture switches JPEG A/B and seeks same rounded time; assert B frame URL assigned and paused; existing timeline tests.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P06",
+      "revision": 1,
+      "title": "Preserve replay intent during automatic media recovery",
+      "author": "r02",
+      "source_finding": "R02-B",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/player.js:326",
+        "apps/web/src/replay.js:216"
+      ],
+      "scope": "Capture session-scoped paused/replay/live intent for automatic transport or decoder reattachment of that same session. Restore seek and pause after readiness; explicit Live and initial/new-session attachment retain intended behavior. Avoid duplicate sessions or native decoders.",
+      "evidence": "Source and controller fixture show attachMedia resets followLive and paused; automatic fatal HLS recovery reuses that path. Browser-level confirmation required before implementation.",
+      "evidence_path": "test-results/review-2026-10-26/r02/",
+      "risk": "Moderate; asynchronous readiness across continuous, HLS and native paths.",
+      "validation_plan": "Extend real-browser recovery fixtures for paused rewind and playing replay, retaining session/video/position or offset. Live recovery still progresses, Chromium/WebKit; unit intent lifecycle.",
+      "status": "proposed",
+      "ballots": {}
+    },
+    {
+      "id": "P07",
+      "revision": 1,
+      "title": "Bound finite-file timeline prediction at duration",
+      "author": "r02",
+      "source_finding": "R02-C",
+      "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "files": [
+        "apps/web/src/replay.js:404",
+        "apps/web/src/replay.js:28"
+      ],
+      "scope": "Apply known finite native file duration as hard cap to display edge prediction while retaining pre-EOF live interpolation. Keep HLS six-second prediction unchanged.",
+      "evidence": "Finite file at EOF predicts six nonexistent seconds and displays artificial negative replay offset despite seek bounds clamped to duration.",
+      "evidence_path": "test-results/review-2026-10-26/r02/",
+      "risk": "Low when limited to kind=file with finite duration.",
+      "validation_plan": "Unit tests near EOF and after EOF advance clock; edge and max never exceed duration, no fake end offset; pre-EOF equal-rate replay stays stable; HLS interpolation unchanged.",
+      "status": "proposed",
+      "ballots": {}
+    }
+  ],
+  "commits": [],
+  "activity": [
+    {
+      "at": "2026-10-26T04:03:49Z",
+      "type": "mandate",
+      "message": "Human authorized ten reviewers, majority-approved improvements, and a twelve-hour review window."
+    },
+    {
+      "at": "2026-10-26T04:06:25Z",
+      "type": "setup",
+      "message": "First three read-only reviewers started. Ten reviewers rotate through three child slots. No code improvements applied and no votes inferred."
+    },
+    {
+      "at": "2026-10-26T04:12:45Z",
+      "type": "initial findings",
+      "message": "R01-R03 completed read-only fixture review; seven bounded proposals recorded with no ballots inferred. R04-R06 started."
+    }
+  ],
+  "validation": [
+    {
+      "summary": "Full baseline Python, JavaScript, workspace and browser checks",
+      "status": "running",
+      "log": "test-results/review-baseline-20261026.log"
+    }
+  ]
+}
