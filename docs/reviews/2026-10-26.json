@@ -4221,7 +4221,7 @@
       "evidence_path": "test-results/review-2026-10-26/root-preview-adjacent/finding.json",
       "risk": "Low/moderate cache selection correction. Preserving only a nearby warm placeholder without resolving the true target would hide the bug; rejecting a late read or reintroducing duplicate decode/HTTP work could regress P11. Keep compressed and decoded limits and session ownership.",
       "validation_plan": "Deterministic units: exact cold vs nearby hot, closer non-exact cold vs farther hot, tie behavior unchanged, coalesced identical disk reads, missing asset and session reset. Actual Chromium/WebKit Web Component+real IndexedDB with distinct decoded colors must replace warm placeholder with correct nearest cold image without additional pointer event, seek/video creation/server preview HTTP. Both directions and a contiguous retained-still sweep under bounded RAM; delayed IDB, stale session/target and corrupt/sprite fallback regressions remain passing. Independently rerun original adjacent-color negative against old module and corrected source. After integration repeat actual45min full retained-preview sweep under resource caps and preserve original failure; do not claim physical-phone or unmeasured zero-latency guarantees.",
-      "status": "validated",
+      "status": "committed",
       "ballots": {
         "r03": {
           "vote": "APPROVE",
@@ -4297,7 +4297,8 @@
           "apps/web/tests/browser-preview-loading.js": "3265a980b06bd046ec6e8812c3a0f72903d37dfce542b73b7b2f1999319ab827",
           "docs/local-previews.md": "b4ea387bba34d745bb0acd52dd56793f60b2dc4445cf7c6304a959a91d0da1fd"
         },
-        "validation": "Independent29focusedunits, actual original corrected adjacentcolor consumer and registered Chromium/WebKit loading/held/corrupt/late/24steprealIDB suite pass; oldmodule negatives retained. Actual45min/6h integration run pending."
+        "validation": "Independent29focusedunits, actual original corrected adjacentcolor consumer and registered Chromium/WebKit loading/held/corrupt/late/24steprealIDB suite pass; oldmodule negatives retained. Actual45min/6h integration run pending.",
+        "canonical_commit": "25c569f81149f990cfea3519a96db571a804146b"
       }
     },
     {
@@ -4477,6 +4478,10 @@
     {
       "sha": "038efc662c4e4e9b1d84972c400b1723d4e79bfb",
       "summary": "P34: immutable test-container ownership cleanup,10approvals, independent READY/actual Docker plus24adapter cases."
+    },
+    {
+      "sha": "25c569f81149f990cfea3519a96db571a804146b",
+      "summary": "P37: closest retained preview before RAM/IDB choice, majority before edits and independent READY; full-duration sweep pending."
     }
   ],
   "activity": [
