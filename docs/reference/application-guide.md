@@ -309,8 +309,11 @@ Footage shared by multiple open pages is stored once per camera. Closing or
 leaving a page releases its history; if the browser disappears without sending
 the close request, its session expires after 30 minutes without a heartbeat.
 All temporary history is cleared on server startup and graceful shutdown.
-The default total buffer cap is 8 GiB. When reached, the oldest footage is
-trimmed and the page says so. Adjust `REPLAY_MAX_MB` for longer viewing sessions.
+The default retained-video target is 8 GiB. The oldest footage is trimmed toward
+that target, and the page indicates when older history has been removed. Byte-budget
+trimming preserves each active camera's last available fragment or frame, so retained
+video can exceed the target. This is not a filesystem quota or a limit on all
+other disk usage. Adjust `REPLAY_MAX_MB` for longer viewing sessions.
 
 ## Live updates and network traffic
 
@@ -390,7 +393,7 @@ and [HLS client behavior](https://www.rfc-editor.org/rfc/rfc8216#section-6.3.4).
 | `DISCOVERY_PORTS` | approved profiles | Optional pairs must already match the approved list; cannot add arbitrary ports |
 | `CAMERA_DATA_DIR` | `/data` | Writable directory for server-side saved access codes |
 | `REPLAY_BUFFER_DIR` | `/buffer` | Writable temporary video directory; use a separate volume |
-| `REPLAY_MAX_MB` | `8192` | Maximum total temporary replay storage, in MiB; oldest footage is trimmed at the limit |
+| `REPLAY_MAX_MB` | `8192` | Retained-video target in MiB; trims oldest history while keeping each active camera's last available fragment/frame, so it can be exceeded; not a filesystem quota |
 | `REPLAY_SESSION_TIMEOUT_SECONDS` | `1800` | Release history after this many seconds without a page heartbeat (10–86400) |
 | `VIEWER_PORT` | `8099` | NAS port exposed by Compose |
 | `PWA_CACHE_ENABLED` | `0` | Network-only UI for development; set `1` for the offline shell |

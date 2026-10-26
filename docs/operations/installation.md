@@ -39,8 +39,10 @@ image has been published, choose `LAYERGLASS_VERSION` in `.env`, then run
 
 Compose creates project-scoped `camera_data` and `camera_buffer` volumes.
 `/data` contains known printers and LAN codes; treat backups accordingly.
-`/buffer` contains temporary rewind history. The default replay cap is 8192 MiB;
-sessions expire after 1800 seconds without a heartbeat. See `.env.example` and
+`/buffer` contains temporary rewind history. The default retained-video target is
+8192 MiB. Byte-budget trimming preserves each active camera's last available
+fragment or frame, so this target can be exceeded; it is not a filesystem quota.
+Sessions expire after 1800 seconds without a heartbeat. See `.env.example` and
 the [configuration table](../reference/application-guide.md#environment-variables).
 
 `docker compose down` preserves named volumes. Do not use `down --volumes` when
