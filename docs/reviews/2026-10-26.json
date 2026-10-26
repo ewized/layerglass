@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -27,13 +27,14 @@
       "round7_findings": "test-results/review-2026-10-26/r01/round7-findings.json",
       "ballot_round7": "test-results/review-2026-10-26/r01/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r01/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r01/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r01/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r01/round10-ballot.json"
     },
     {
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 9 ballot complete",
+      "status": "round 10 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
@@ -44,7 +45,8 @@
       "ballot_round7": "test-results/review-2026-10-26/r02/round7-ballot.json",
       "round7_findings": "test-results/review-2026-10-26/r02/round7-findings.json",
       "ballot_round8": "test-results/review-2026-10-26/r02/round8-ballot.json",
-      "ballot_round9": "test-results/review-2026-10-26/r02/round9-ballot.json"
+      "ballot_round9": "test-results/review-2026-10-26/r02/round9-ballot.json",
+      "ballot_round10": "test-results/review-2026-10-26/r02/round10-ballot.json"
     },
     {
       "id": "r03",
@@ -460,6 +462,8 @@
       "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d",
       "ballots_started": true,
       "reviewers_completed": [
+        "r01",
+        "r02",
         "r03",
         "r04",
         "r06",
@@ -470,7 +474,7 @@
       ],
       "notes": "P39newpolicy: untaggedbuild/runbyimmutableID,noimagecleanup; ordinarycache retained. HeldP38draft and alloriginalvotes/evidence remain immutable. No source/product-doc edits before6freshapprovals.",
       "majority_recorded_at": "2026-10-26T09:41:40Z",
-      "decision": "P39rev1 approved7/10 beforeimplementation,root0;3remainingfreshballots pending. Newpolicyexplicitlyretainsordinarybuildcache, notP38approvaltransfer."
+      "decision": "P39rev1 first7recordedandcommittedbeforeimplementation; now9freshAPPROVE,1pending,root0. Normalbuildcacheretentionexplicit; noP38votestransferred."
     }
   ],
   "proposals": [
@@ -4187,7 +4191,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/round7-p36-proposed-scope.json",
       "risk": "Moderate JPEG-only lifecycle/data ownership correction. The high-risk mistakes are timestamp-only association, label/clock publication before decode, stale completion after a source switch, incorrect treatment of completed held intervals, rounding across capture boundaries, and increasing request rate. The draft deliberately requires independent regression evidence for those cases before integration.",
       "validation_plan": "Reproduce the frozen full-player negative in Chromium/WebKit with real generated JPEG decoding and actual ReplayBuffer payloads: page opens1020; blue capture1030; Pause; green1030.25; later capture1031.5. Corrected paused clock/position/rendered reading and cached preview must remain associated with blue. Verify normal one-second cadence and positive subsecond cadence, including non-half-second and non-millisecond capture positions. Do not pass the check by relying on rounded timestamps that select the preceding capture accidentally. Check explicit historical targets both inside a completed held interval and beyond the latest proven capture in the provisional tail; verify resulting archive-selected pixels, recorded time and thumbnail label agree. Hold a live image response, advance metadata, then finish the old image; reverse the order with a newer image/older metadata. Only proven owning request/completion may publish the displayed time or capture a thumbnail. Metadata alone is not an image identity. Hold an old JPEG completion across a committed seek, explicit Live, camera/session change, close and same-session reattachment. No stale callback may mutate the new source's display clock or preview history. Keep the same native video node and one page session across recovery. Test pause/play and explicit Live while a JPEG image is pending. Completed-history replay, the original thirty-second held-frame gap, later-page minimum/negative clock anchor and prior-page media exclusion must remain correct. During held pointer/key/wheel preview changes issue no intermediate main-image seeks; one release commits one target. Keep existing request/capture bounds and session-scoped deduplication. Verify optional descriptor/selector rejection and legacy-at compatibility without exposing prior-session footage or changing provider/origin boundaries. Standard no-recording live fallback must remain available without presenting an invented historical clock. Run focused affected units, the new bounded two-engine fixture and docs checks; a final core combined check belongs to integration. No real-device/LAN/external request or repeated stress run is needed.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r03": {
           "vote": "APPROVE",
@@ -4277,6 +4281,21 @@
         "status": "BLOCKED at93b2f9a",
         "recorded_at": "2026-10-26T09:34:13Z",
         "result": "Both legacywheel negativepositions and freshlegacyLive Pause/Play oldfootage regressions reproduce in bothengines; exactparentd4528b4 controls pass. Existing101JS/committedbrowser pass butmisscases; scopedcorrection and new exactfinalpeer required."
+      },
+      "corrected_author_checkpoint": {
+        "commit": "22b7e8e416facd34f0106a0f41ad3a5772933412",
+        "report": "test-results/review-2026-10-26/r02/p36-followup-report.json",
+        "sha256": "44964ee21eef402e7bf8bcd71fe2f76a9cf9c06e1e55fef9955b741b63b70b98",
+        "status": "103JS/35docs/fulltwoengineJPEGpass; exact16sourcehashes/cleanheadverified; freshR05re-peerpending; unchangedbackendhashproves22checkpeerapplicability",
+        "recorded_at": "2026-10-26T09:43:46Z"
+      },
+      "corrected_frontend_final_peer": {
+        "status": "READY",
+        "report": "test-results/review-2026-10-26/r05/p36-corrected-final-review.json",
+        "sha256": "edc830afd264c20e2ecef3d199f3a37484016a19aabbbb88559db76a9776f163",
+        "commit": "22b7e8e416facd34f0106a0f41ad3a5772933412",
+        "recorded_at": "2026-10-26T09:47:48Z",
+        "checks": "Independent103units and ownreallegacyconsumer+completeJPEGfixturebothengines; backendhashesunchanged from22checkREADY; originalsretained."
       }
     },
     {
@@ -4554,6 +4573,20 @@
           "rationale": "Fresh assessment of exact91a2caa script/workflow and full frozen scope, risk and validation. The original failed-build deletion and R08's actual after-inspection schedule establish why inspect-then-delete cannot protect a mutable replacement: the observed Python ID differs from Node at removal. P39 avoids that interval by building without tags, requiring a valid full IID from a private record, running default consumers by that immutable ID and performing no image mutation/cleanup. Retaining ordinary build cache is an explicit acceptable policy change; prior P38 votes do not transfer. Approval includes preserved negatives, real offline IID builds, invalid/partial records, same-run private files, cached IDs, 130/143 interruption, replacement schedules, explicit reuse/no-build modes and all seven P34 CID/log/status/temp contracts. These remain implementation acceptance requirements. Slate hash verified; no other ballots, implementation edits or new image probes.",
           "revision": 1,
           "recorded_at": "2026-10-26T09:41:40Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The pinned runner marks image ownership before its tagged build succeeds (scripts/check.sh:48-50), then removes that mutable reference during cleanup (38-39). The saved baseline failure and accepted P38 after-inspection replacement counterexample demonstrate why ownership inferred from either build intent or a prior inspect cannot justify that deletion. This fresh, exact two-file policy removes the mutable-reference operation itself: an untagged build, a private per-invocation IID record validated only after successful completion, immutable-ID selection for every built-runtime consumer, and no image mutation or cleanup on any path. It preserves explicit image reuse, JavaScript/workspace bootstrap behavior and P34 container ownership. Retaining untagged results/cache is a deliberate, documented storage tradeoff; no automatic pruning is authorized. Approval covers the frozen scope and its mandatory real-IID, malformed/missing-record, failure/signal, concurrent-record, alias-replacement and P34 regression validation, not an unreviewed implementation. This is an independent source-only vote, not a transfer of the historical P38 approval.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:45:31Z",
+          "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned91a2caa still marks a mutable default tag owned before build and deletes it on EXIT. The preserved R08 actual after-inspection evidence shows why an inspect-then-remove repair is insufficient: Python ID was observed, Node replacement was present at removal, and the replacement tag disappeared. P39's no-tag build, private validated full IID, immutable-ID runtime consumers and complete absence of image cleanup address both failures without an unproven compare-and-delete guarantee. Retained ordinary build results/cache are an explicit acceptable policy tradeoff. Closed two-file scope preserves explicit reuse/P34 container identity; invalid/missing IID, real interruption, concurrency and alias controls remain required implementation acceptance, not assumed passed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:47:48Z",
           "slate_sha256": "de8a7cb4eb07247b387de9c172a03d420ab18f8dfe26fedc77f5a022cebd548d"
         }
       },
@@ -5475,6 +5508,21 @@
       "at": "2026-10-26T09:41:40Z",
       "type": "fresh policy authorized",
       "message": "P39has7explicitfreshAPPROVEbeforeedits; authorR07willstartclosed2fileimplementationinnewworktreefromcommittedauditcheckpoint. P38draftnotintegrated;usernotaskedforpermission. SixhourP37continues."
+    },
+    {
+      "at": "2026-10-26T09:45:31Z",
+      "type": "ballot",
+      "message": "R01 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:47:48Z",
+      "type": "P36 corrected acceptance guard",
+      "message": "SavedR05READYreportsha/source16hashes/clean22b7e8e, frozenfilelist/10approvals andunchangedR06backendhashes verified BEFORE mutation. ApplyingcompleteP36rangeasonecanonicaldiff preservesP37get/tests/docs andP35nativepaths; originalbadintermediatedraftnotpublishedalone."
+    },
+    {
+      "at": "2026-10-26T09:47:48Z",
+      "type": "ballot",
+      "message": "R02 explicit Round10 ballot imported for all1 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
