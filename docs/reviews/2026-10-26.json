@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active until 2026-10-26 16:03:49 UTC: 45 frozen proposals/15 rounds, 450 explicit ballots (449 APPROVE/1 ABSTAIN), 43 independently accepted improvements integrated; P38/P42 superseded. New normal combined43-source CI to be published now; prior all41 CI success stays source-specific. Earlier a505 native six-hour PASS, long JPEG stress incomplete. No deployment or future completion claim.",
+  "status": "Active until 2026-10-26 16:03:49 UTC:43 accepted improvements integrated from45proposals/15rounds;450explicitballots449APPROVE1ABSTAIN;P38/P42superseded. Final normal CI40352944569running on5042215, hosting40352944680PASS. Earlierall41fullCI and a505native6hPASS remain source-specific; longJPEGstress incomplete. No deployment or future completion claim.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -5342,11 +5342,12 @@
         "peer_status": "READY",
         "accepted_at": "2026-10-26T15:47:10Z",
         "root_evidence_hashes_verified": 34,
-        "integration": "PENDING; acceptance committed before cherry-pick",
+        "integration": "INTEGRATED as 2ce88b5147873d42eb4becfc3c3313674b9df96a after committed exact peer acceptance 087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
         "integration_commit": "2ce88b5147873d42eb4becfc3c3313674b9df96a",
         "acceptance_commit": "087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
         "integrated_at": "2026-10-26T15:48:17Z",
-        "combined_ci": "PENDING new normal run; no current-source fullCI pass yet"
+        "combined_ci": "New normal combined CI40352944569 running on50422151dc6ab7df1510214ea36a9356e5a7ada7; result pending.",
+        "acceptance_time_checkpoint": "PENDING; acceptance committed before cherry-pick"
       }
     },
     {
@@ -5455,11 +5456,12 @@
         "peer_status": "READY",
         "accepted_at": "2026-10-26T15:47:10Z",
         "root_evidence_hashes_verified": 17,
-        "integration": "PENDING; acceptance committed before cherry-pick",
+        "integration": "INTEGRATED as 7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499 after committed exact peer acceptance 087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
         "integration_commit": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
         "acceptance_commit": "087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
         "integrated_at": "2026-10-26T15:48:17Z",
-        "combined_ci": "PENDING new normal run; no current-source fullCI pass yet"
+        "combined_ci": "New normal combined CI40352944569 running on50422151dc6ab7df1510214ea36a9356e5a7ada7; result pending.",
+        "acceptance_time_checkpoint": "PENDING; acceptance committed before cherry-pick"
       }
     }
   ],
@@ -6928,6 +6930,16 @@
       "at": "2026-10-26T15:48:17Z",
       "type": "integration",
       "message": "P44 integrated2ce88b5 and P45 integrated7ee5ad8 onlyAFTER exact peerREADY accepted/committed087b. Root verified11finalsourcefiles byte-identical to reviewed authors,10freshvotes each/six-vote parent. Current43improvements. Preparing one newnormal fullCI oncombinedsource; do not transfer priorall41CI or earliernative6hpass."
+    },
+    {
+      "at": "2026-10-26T15:51:18Z",
+      "type": "audit-label-corrections",
+      "message": "R08identified stale P44/P45 implementation.integration acceptance-time PENDING strings afterintegration; root retainedverbatim asacceptance_time_checkpoint and setcurrentintegrationSHAs. R10identified stale final41 label in earlier-nativeenduranceparagraph; changedto currentapplication source. Previous all41 topdeliveryfieldspreserved as historicalsnapshot before settingactual504newnormalCI/hostingstatus. No frozenvotes/scopes/productsource change."
+    },
+    {
+      "at": "2026-10-26T15:54:38Z",
+      "type": "read-only-final-operations-check",
+      "message": "Exactly18 recordedP44/P45author/peer/earliernative6h CIDs re-inspected absent, root-final18-owned-cid-absence.json SHA3e73f86d870b7d012ffe720ae73b1b3490b037b6411ea44074c75a3413bef355. Exact liveprinter-camera-viewer metadata-only15:53 snapshot SHA77c830d7c6ac860ae901a77060db986fb9eea14f5c5c2378ae982f3b47ff6998: originald401image/Oct25start,runninghealthy,restart_count0. No mutation,Env/credential/HTTP/media/printer/LAN inspection."
     }
   ],
   "validation": [
@@ -7470,6 +7482,14 @@
     {
       "summary": "R08 all15slates/45scopes/150rawballotfiles/450explicitvotes independentlyverified; stale mutable count finding preserved43337444 and separately corrected/current-snapshot recheckREADY9f241e52. Prior-snapshot41integrated/2pending does not infer lateracceptance; root now records actual integration separately. No runtime.",
       "status": "NO_FINDINGS after bookkeeping correction"
+    },
+    {
+      "summary": "R10 outcome43 current pending-CI source-only review9e7f5f5a: published504 stale earlier41-source label preserved as finding; working correction rechecked with no open findings. Root verified11doc/evidence/receipt hashes. Counts43/45/15/450 and acceptance order supported; finalCI and actualdeadlineclosing remain pending.",
+      "status": "NO_OPEN_FINDINGS at pending snapshot"
+    },
+    {
+      "summary": "R08 final43 source/voting integrity report6a68eb3d and separate captured-correction READYbfc14de0: actual087b acceptance precedes2ce/7ee integration; root verified33source-at-commit guards+3snapshot hashes+captured correctedledger. Stale acceptance-timePENDINGstrings preservedhistorically and currentintegrationfields corrected. No other non-audit delta since862;450votes/root0/frozen45scopes intact. Reports remain dated snapshots; newnormalCIpending.",
+      "status": "NO_FINDINGS after current bookkeeping correction"
     }
   ],
   "implementation_worktrees": [
@@ -7650,14 +7670,14 @@
   ],
   "delivery": {
     "review_branch": "review/2026-10-26-twelve-hour",
-    "pushed_commit": "862c01d320d5fdec20ad3f956148d657c17c5935",
+    "pushed_commit": "50422151dc6ab7df1510214ea36a9356e5a7ada7",
     "ci_branch": "codex/review-ci-2026-10-26",
-    "ci_run": "https://github.com/ewized/layerglass/actions/runs/40337893030",
-    "ci_status": "success on tested41source862c01d; normalCI40337893030+hosting40337893048",
+    "ci_run": "https://github.com/ewized/layerglass/actions/runs/40352944569",
+    "ci_status": "in_progress on new43-source5042215; hosting40352944680SUCCESS observed15:51UTC; no current fullCI pass yet.",
     "pull_request": "not created",
     "pr_creation_limit": "GitHub connector integration403 for create pull request; gh not signed in. Read-only API and SSH push work.",
     "deployment": "none; configured deploy workflow is main-only and release is v-tag-only",
-    "published_review_head": "862c01d320d5fdec20ad3f956148d657c17c5935",
+    "published_review_head": "50422151dc6ab7df1510214ea36a9356e5a7ada7",
     "all40_ci": {
       "CI": 40322511914,
       "hosting": 40322511869,
@@ -7681,6 +7701,15 @@
           "ci_status": "failure at keyboard-focus programmatic-dismissal assertion; under investigation",
           "published_review_head": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a"
         }
+      },
+      {
+        "captured_at": "2026-10-26T15:51:18Z",
+        "reason": "Preserve previous successful all41 publication before recording newly published43-source CI. This snapshot is historical.",
+        "pushed_commit": "862c01d320d5fdec20ad3f956148d657c17c5935",
+        "published_review_head": "862c01d320d5fdec20ad3f956148d657c17c5935",
+        "ci_run": "https://github.com/ewized/layerglass/actions/runs/40337893030",
+        "ci_status": "success on tested41source862c01d; normalCI40337893030+hosting40337893048",
+        "publication_policy": "Primary review branch may advance for audit-only notes after finalCI; CI branch remains on tested41code862c01d. Do not trigger redundant fullCI for unchanged non-audit source."
       }
     ],
     "all41_ci": {
@@ -7697,12 +7726,19 @@
       "log_sha256": "3f690a64e516514b54ac08892900b4520d231605d8f29ad4c3d3dc1704d3b4fe",
       "artifact_id": 12659236048
     },
-    "publication_policy": "Primary review branch may advance for audit-only notes after finalCI; CI branch remains on tested41code862c01d. Do not trigger redundant fullCI for unchanged non-audit source.",
+    "publication_policy": "Primary review branch may advance for audit-only notes. CI branch remains on50422151dc6ab7df1510214ea36a9356e5a7ada7, the new43-source workflow input. Do not trigger redundant fullCI for unchanged non-audit source.",
     "pending_all43": {
       "code_commit": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
       "status": "Author/focused and independent exact-final validation passed; publishing one new normal combined fullCI now. No new fullCI result yet.",
       "changed_files_verified": 11,
-      "prior_all41_ci_preserved": true
+      "prior_all41_ci_preserved": true,
+      "published_source": "50422151dc6ab7df1510214ea36a9356e5a7ada7",
+      "ci_run_id": 40352944569,
+      "ci_job_id": 121677633044,
+      "ci_status": "in_progress",
+      "hosting_run_id": 40352944680,
+      "hosting_status": "success",
+      "hosting_updated_at": "2026-10-26T15:49:11Z"
     }
   },
   "outcome_note": "docs/reviews/2026-10-26-outcome.md"
