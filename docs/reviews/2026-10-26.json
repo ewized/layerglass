@@ -27,21 +27,23 @@
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 3 ballot complete",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r02/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r02/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r02/ballot-round4.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 3 ballot complete",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r03/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r03/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r03/ballot-round4.json"
     },
     {
       "id": "r04",
@@ -78,11 +80,12 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "independent Round4 delivery pass active",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r07/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r07/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r07/ballot-round4.json"
     },
     {
       "id": "r08",
@@ -223,7 +226,7 @@
     },
     {
       "id": 4,
-      "phase": "voting",
+      "phase": "majority approved; remaining ballots continue",
       "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
       "frozen_at": "2026-10-26T06:03:54Z",
       "proposal_ids": [
@@ -243,7 +246,9 @@
         "r09",
         "r10"
       ],
-      "notes": "Five exact deeper-review corrections frozen. R01 independent108-request API/SSE pass found no material new defect; independent R05/R07 passes continue. Later candidates do not alter this slate."
+      "notes": "Five exact deeper-review corrections frozen. R01 independent108-request API/SSE pass found no material new defect; independent R05/R07 passes continue. Later candidates do not alter this slate.",
+      "majority_recorded_at": "2026-10-26T06:25:12Z",
+      "decision": "P27-P31 revision1 each have7 explicit APPROVE of10; first six (R01/R06/R09/R10/R03/R02) were recorded before implementation. Root0."
     },
     {
       "id": 5,
@@ -2996,7 +3001,7 @@
       "evidence_path": "test-results/review-2026-10-26/r08/round4-findings.json",
       "risk": "Low/moderate async focus ownership; unconditional focus would steal intentional navigation.",
       "validation_plan": "Actual keyboard submit/failure regains same input and explicit retry issues exactly one new check. Cover incompatible response, timeout and supported Direct failure plus intentional focus movement/Settings dismissal/navigation and success behavior; preserve existing onboarding/printer focus checks in both engines.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3025,8 +3030,30 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:17:05Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Pinned-source full-player rerun reproduced Chromium focus on body after the rejected Settings check, with draft/error retained but keyboard retry unavailable; WebKit retained focus. Recording ownership before busy rendering and restoring only the same visible failed editor addresses the actual consumer. Approval covers the frozen navigation/request guards and Chromium/WebKit failure, intentional-movement, dismissal and success controls; unconditional focus restoration would exceed it.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:22:35Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned full bootstrap reproduces Chromium losing the submitted backend input to body after HTTP503; controls reenable but Escape and Enter cannot act. WebKit retains focus. The scope restores only the same submitted, connected, visible editor after document-lost focus, while tracking intentional navigation and request ownership. Those guards and the specified dismissal/movement/Direct/timeout regressions bound the asynchronous focus risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "The pinned full-player HTTP503 rerun loses backend-url focus to body in Chromium, leaves Enter unable to retry and Escape unable to dismiss; WebKit retains focus. player.js disables the submitting editor without an owned restoration path. The exact request/editor/visible-page and intentional-navigation guards address this without stealing later focus. Approval includes both-engine retry, timeout/incompatible/Direct, dismissal/navigation and success controls; reconnects already preserve one action and the draft.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
-      }
+      },
+      "approved_at": "2026-10-26T06:25:12Z"
     },
     {
       "id": "P28",
@@ -3045,7 +3072,7 @@
       "evidence_path": "test-results/review-2026-10-26/r10/round4-findings.json",
       "risk": "Negligible runtime risk; wording must avoid implying a new hard quota or unmeasured overrun guarantee.",
       "validation_plan": "Compare prose with one-fragment-per-archive guard and limited metadata; rerun isolated single/multi-camera and ordinary-trimming controls against unchanged code; Docker documentation validator.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3074,8 +3101,30 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:17:05Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Source and independent generated-fragment rerun confirm a 1 MiB target retains 1.5 MiB across two current fragments or one 2 MiB fragment without limited=true, while ordinary old-fragment removal sets limited. The three documentation edits correctly describe the retained-video target and current-media floor without changing runtime retention or inventing an overrun bound or filesystem quota.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:22:35Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Production replay with a valid 1 MiB target retains 1.5 MiB across two current fragments or 2 MiB for one oversized current fragment, with limited=false; ordinary old-fragment removal sets limited=true. The docs currently promise a maximum. Describing a retained-video target and current-fragment floor accurately matches source, preserves runtime policy and defaults, and makes no unmeasured filesystem or overrun guarantee.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "The unchanged ReplayBuffer rerun retains 1.5 MiB across two current fragments and 2 MiB for one current fragment under a valid 1 MiB setting, with limited=false; ordinary trimming retains 768 KiB and sets limited=true. This follows the len(fragments)>1 cap guard and contradicts the documented maximum-storage wording. The documentation-only target/quota qualification is accurate and bounded, preserving defaults and runtime behavior without promising a fixed overrun bound.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
-      }
+      },
+      "approved_at": "2026-10-26T06:25:12Z"
     },
     {
       "id": "P29",
@@ -3098,7 +3147,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/round4-findings.json",
       "risk": "Moderate: finalizing provisional JPEG tail affects origin, clock and pruning boundaries. A different gap policy or transport would require fresh scope/votes.",
       "validation_plan": "Repeat real HTTP metadata/image/history + production JS clock/row lookup:30.5->31.1 must map1030.5->1031.1/layers30->31. Earlier gap positions cannot show successor image. Cover equal/varying cadence, unchanged capture, reconnect, later tabs during/after gap, trimming held interval and preview bounds; existing HLS/replay/history/preview checks remain passing.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3127,6 +3176,27 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:17:05Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Independent pinned ReplayBuffer/loopback HTTP plus production JS reproduced media 30.5->31.1 mapping printer time 1059.5->1031.1 and layer 59->31. Finalizing the preceding held JPEG interval at the successor capture fixes that attribution under the explicitly chosen wall-duration policy. Approval includes the required atomic tail/clock adjustment, unchanged completed starts, variable cadence, pages opened during/after gaps, opened_at isolation, preview/retention and end_time tests; gap collapse or origin relaxation is outside scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:22:35Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Actual JPEG frame/history HTTP plus production JS maps forward media 30.5->31.1 to clock 1059.5->1031.1 and layers 59->31. Assigning the elapsed hold to the preceding frame and starting the successor at its capture epoch fixes that attribution. The frozen scope explicitly covers atomic provisional-tail/origin/anchor adjustment, waiting-page first-frame/opened_at isolation, stable completed starts, end_time and preview/retention bounds; these are essential moderate-risk regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Independent pinned ReplayBuffer/HTTP and production JS reruns confirm that attributing the elapsed capture interval to the successor image sends forward media 30.5->31.1 to printer time 1059.5->1031.1 and layers 59->31. Finalizing the preceding held frame and appending the successor at its capture time addresses that demonstrated mismatch. Approval requires the frozen atomic clock/position adjustment, stable completed starts, bounded latest tail/end_time, and tests for later-page first/origin/opened_at restrictions, trimmed or absent held tails, previews and unchanged HLS. A duration-only change or gap collapse would not satisfy this scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
       },
       "additional_evidence": [
@@ -3136,7 +3206,8 @@
           "evidence": "test-results/review-2026-10-26/root-round4-backend/jpeg-clock.log",
           "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4"
         }
-      ]
+      ],
+      "approved_at": "2026-10-26T06:25:12Z"
     },
     {
       "id": "P30",
@@ -3157,7 +3228,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/round4-findings.json",
       "risk": "Low/moderate ownership/retry boundary; catch-only fix risks unbounded recording, while a stale blocked state risks permanent pause.",
       "validation_plan": "Actual non-root0500->0700 fault must keep worker/health alive and failed file tracked; restore permissions resumes same tokens and trimming automatically. Hold fault across many source updates/ticks to prove bytes/file counts bounded and other-viewer metadata/media responsive. Cover older-page-release path, ordinary multi-viewer retention, preview and printer-history pruning.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3186,6 +3257,27 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:17:05Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Independent non-root 0500->0700 rerun reproduced the dequeued but existing 9-byte file, dead worker and health 503 after permissions recovered. Unlink-before-dequeue preserves ownership, and handling expected maintenance OSError with retry before further cap-pressure collection is a bounded correction. Approval includes prolonged-fault byte/file bounds, release-path recovery, same-token service and preview/telemetry eviction checks; catching and continuing to append, broad exception swallowing or permanent pause would fail the frozen scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:22:35Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "A real non-root 0500->0700 fault leaves a 9-byte file untracked, kills the worker, holds recording at 6 instead of 10 seconds and leaves health 503 after permissions recover. Unlink-before-dequeue preserves ownership. The exact scope also requires expected-error containment and outstanding-prune retry or bounded pause before more media, avoiding catch-and-append growth while preserving tokens, other-viewer service and automatic recovery.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "The pinned non-root real 0500->0700 fixture reproduces PermissionError outside the worker catch, health503 after restoration, end6 rather than10, and a 9-byte file already removed from ownership accounting. Both active pruning paths must unlink before deque/accounting changes. Approval includes bounded retry/pause before more media under unresolved cap pressure, same-token automatic recovery, and prolonged-fault plus older-page-release/other-viewer/preview/history controls. Catching the exception while continuing to append, broad programming-error catches, or permission changes are outside the approved scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
       },
       "additional_evidence": [
@@ -3195,7 +3287,8 @@
           "evidence": "test-results/review-2026-10-26/root-round4-backend/prune.log",
           "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4"
         }
-      ]
+      ],
+      "approved_at": "2026-10-26T06:25:12Z"
     },
     {
       "id": "P31",
@@ -3215,7 +3308,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/round4-findings.json",
       "risk": "Low: guard current menu focus while preserving normal dismissal handoff.",
       "validation_plan": "Trusted Chromium/WebKit Copy->Tab->held-arrow past deadline: menu closes, slider focus/scrub persist, keyup commits once. Menu-owned focus still restores player; unrelated control focus retained. Preserve Escape, failed clipboard retry, late/newer-menu ownership and disconnect cleanup.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3244,8 +3337,30 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:17:05Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Trusted Chromium/WebKit reruns reproduced successful Copy auto-dismissal taking slider focus, cancelling a subsequent held-key scrub and yielding zero commits; identical gestures without the timer committed once. Testing current menu focus at the existing deadline preserves the normal menu-owned return while avoiding that interruption. Approval covers the scoped guard and connected-player controls, preserving explicit Escape, late/new-menu ownership, failure retry and timer cleanup without altering replay blur cancellation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:22:35Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Trusted Copy->Tab->held-arrow reproduces both engines moving focus from slider to player at the success timer, cancelling the scrub and committing zero seeks; the same held key without that timer commits once. Menu-owned focus correctly returns to player. Checking current menu focus only at auto-dismiss fixes the demonstrated ownership error while retaining the one-second close, explicit Escape, revision guards and cleanup.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "The pinned connected-player rerun in Chromium and WebKit confirms Copy feedback followed by Tab and held ArrowRight loses slider focus at the one-second close(true), cancels the preview and commits zero; the no-timer control commits once and menu-owned dismissal correctly restores player. Testing current menu focus at dismissal is a narrow correction that preserves deadline and replay blur semantics. Approval includes retained unrelated focus, Escape, clipboard failure, newer-menu/revision and disconnect controls.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:25:11Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
-      }
+      },
+      "approved_at": "2026-10-26T06:25:12Z"
     },
     {
       "id": "P32",
@@ -3697,6 +3812,26 @@
       "at": "2026-10-26T06:18:20Z",
       "type": "freeze",
       "message": "Frozen Round5 P32 revision1, distinct from P23 cancellation and unchanged Round4. No new implementation authorized. Review-only branch pushed; GitHub integration PR create returned403, CLI unauthenticated; existing CI triggered through owned codex/review-ci-2026-10-26 branch at1d9174e. No PR created, merge or deployment."
+    },
+    {
+      "at": "2026-10-26T06:22:35Z",
+      "type": "ballot",
+      "message": "R03 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:25:11Z",
+      "type": "ballot",
+      "message": "R02 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:25:11Z",
+      "type": "ballot",
+      "message": "R07 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:25:12Z",
+      "type": "quorum",
+      "message": "Round4 exact P27-P31 now7/10 APPROVE each, six-voter majority recorded before any implementation. Begin bounded approved corrections; remaining3 ballots will be collected independently. New P32 has no votes/implementation yet. GitHub CI failure preserved and separate focused investigation started."
     }
   ],
   "validation": [
@@ -3829,7 +3964,7 @@
     },
     {
       "summary": "Coordinator independent controls for new Round4 backend-focus and retention-documentation proposals",
-      "status": "reproduced, not approved or implemented",
+      "status": "reproduced; scopes subsequently majority-approved",
       "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
       "logs": [
         "test-results/review-2026-10-26/root-round4-focus-control.log",
@@ -3837,6 +3972,15 @@
       ],
       "result": "Actual Chromium focus-loss/WebKit control and100 component reconnect cycles reproduced at all26 source. Three actual ReplayBuffer cap/current-fragment scenarios reproduced; no runtime edits.",
       "recorded_at": "2026-10-26T06:02:39Z"
+    },
+    {
+      "summary": "GitHub CI on review-only codex branch",
+      "status": "failed; focused investigation active",
+      "source": "1d9174e393ce47f93aa9006d5076bf70004ee522",
+      "url": "https://github.com/ewized/layerglass/actions/runs/40278167693",
+      "log": "test-results/review-2026-10-26/github-ci-40278167693.log",
+      "result": "Workflow syntax/Compose,199 Python/226 JS/docs/Nx/site and initial browser suites passed; keyboard-focus rejectedSetup programmatic-dismissal focus assertion failed. No source/test relaxation; checking application versus native focus-settling assumption.",
+      "recorded_at": "2026-10-26T06:25:12Z"
     }
   ],
   "implementation_worktrees": [
@@ -3937,7 +4081,7 @@
     "pushed_commit": "1d9174e393ce47f93aa9006d5076bf70004ee522",
     "ci_branch": "codex/review-ci-2026-10-26",
     "ci_run": "https://github.com/ewized/layerglass/actions/runs/40278167693",
-    "ci_status": "in_progress at last read",
+    "ci_status": "failure at keyboard-focus programmatic-dismissal assertion; under investigation",
     "pull_request": "not created",
     "pr_creation_limit": "GitHub connector integration403 for create pull request; gh not signed in. Read-only API and SSH push work.",
     "deployment": "none; configured deploy workflow is main-only and release is v-tag-only"
