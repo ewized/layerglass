@@ -16,11 +16,12 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "independent Round4 ballot in progress after no-finding API pass",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r01/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r01/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r01/ballot-round4.json"
     },
     {
       "id": "r02",
@@ -66,11 +67,12 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "independent Round4 backend pass complete;2 proposals, no implementation",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r06/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r06/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r06/ballot-round4.json"
     },
     {
       "id": "r07",
@@ -96,21 +98,23 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "independent Round4 input pass complete;1 proposal",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r09/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r09/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r09/ballot-round4.json"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "independent Round4 docs pass complete;1 proposal",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r10/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r10/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r10/ballot-round4.json"
     }
   ],
   "rounds": [
@@ -240,6 +244,22 @@
         "r10"
       ],
       "notes": "Five exact deeper-review corrections frozen. R01 independent108-request API/SSE pass found no material new defect; independent R05/R07 passes continue. Later candidates do not alter this slate."
+    },
+    {
+      "id": 5,
+      "phase": "voting",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "frozen_at": "2026-10-26T06:18:20Z",
+      "proposal_ids": [
+        "P32"
+      ],
+      "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4",
+      "slate_path": "test-results/review-2026-10-26/round-5-slate.json",
+      "ballots_started": true,
+      "reviewers_completed": [
+        "r05"
+      ],
+      "notes": "Independent R05 successful-partial/SSE reconnect finding arrived after frozen Round4; separate scope and ballots preserve that slate."
     }
   ],
   "proposals": [
@@ -2977,7 +2997,36 @@
       "risk": "Low/moderate async focus ownership; unconditional focus would steal intentional navigation.",
       "validation_plan": "Actual keyboard submit/failure regains same input and explicit retry issues exactly one new check. Cover incompatible response, timeout and supported Direct failure plus intentional focus movement/Settings dismissal/navigation and success behavior; preserve existing onboarding/printer focus checks in both engines.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Independent full-player rerun on 5055adf reproduces Chromium input-to-body focus loss during busy rendering and no keyboard retry after HTTP503; WebKit retains input focus. player.js:116-142 clears busy on failure without restoration, unlike the guarded printer-editor path at 704-743. The frozen ownership/request/editor/visible-page and intentional-navigation conditions appropriately bound restoration. Approval includes the stated actual Chromium/WebKit failure, movement, timeout/Direct and success regressions; unconditional focusing would exceed this scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:08:25Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the real bootstrap/player Settings failure fixture on archived 5055adf: Chromium loses the submitted disabled input to body; after HTTP 503 the draft/error remain but Escape and Enter cannot reach the editor. WebKit retains focus, and 100 reconnects preserve one action. player.js:116-142 has no restoration, unlike the existing printer ownership pattern at 699-743. The narrow request/editor/visibility and intentional-movement guards are necessary; approval includes the specified failure variants, deliberate navigation/dismissal, success and both-engine regressions. No unconditional focusing or probe/provider change is authorized. Evidence: r06/ballot-round4-p27.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:13:06Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "I reran the actual bootstrap/player HTTP 503 fixture on frozen 5055adf. Chromium ends with body focus, an enabled address/error, ineffective Escape and no new request from Enter; WebKit retains input focus, and both engines preserve one action through 100 reconnects. The shared backend-save failure path lacks the printer editor's ownership restoration. I approve this exact Settings-only correction and its failed-probe/storage, retry, navigation/dismissal and success controls. Restore only after reenabling the same owned visible editor; unconditional focus would be incorrect.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:15:29Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the actual consumer fixture against an archive of frozen 5055adf9: Chromium ends on body after the failed Settings backend check, Escape does not dismiss, and Enter issues no retry; WebKit retains the input. The 100-reconnect control still emits one action with the draft intact. Ownership-aware restoration only after re-enabling the original visible failed editor is narrowly appropriate; the required timeout/Direct/incompatible/storage, deliberate-focus, dismissal/navigation and success regressions address the asynchronous risks without changing provider selection.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:17:05Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        }
+      }
     },
     {
       "id": "P28",
@@ -2997,7 +3046,36 @@
       "risk": "Negligible runtime risk; wording must avoid implying a new hard quota or unmeasured overrun guarantee.",
       "validation_plan": "Compare prose with one-fragment-per-archive guard and limited metadata; rerun isolated single/multi-camera and ordinary-trimming controls against unchanged code; Docker documentation validator.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Independent unchanged-runtime rerun retains 1572864 bytes across two current fragments and 2097152 bytes for one current fragment under a valid 1048576-byte target, both limited=false; the ordinary older-fragment control trims to 786432 bytes with limited=true. replay.py:571-574 deliberately preserves each archive's final fragment. The three existing documentation claims imply a hard maximum, so this documentation-only qualification accurately describes retained-video accounting without changing policy or promising an overrun bound.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:08:25Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Verified replay.py:570-578 deliberately stops trimming at one fragment per active archive, and limited at 183 reports removal relative to a page's first sequence. Fresh pinned production fixtures retain 1.5 MiB across two cameras or 2 MiB for one current fragment against a valid 1 MiB target, both without limited; ordinary old-fragment trimming reaches 768 KiB and sets limited. Documentation-only target/floor wording matches these cases and preserves runtime behavior. Do not promise a fixed excess bound or count unrelated storage. The frozen documentation validator passes; after-edit validation remains required. Evidence: r06/ballot-round4-python.log and ballot-round4-docs.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:13:06Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "The pinned pruning guard excludes archives with only one fragment. My rerun retained 1.5 MiB across two current fragments and 2 MiB for one current fragment under a valid 1 MiB target, with limited=false; the ordinary-trim control retains 768 KiB and sets limited=true. The current installation/table prose overstates a maximum. I approve the documentation-only target/quota distinction, current-fragment floor and actual-trimming explanation, including the three controls and docs validator. No fixed overrun bound or wider storage-accounting guarantee is supported.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:15:29Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Reran my storage fixtures against the frozen 5055adf9 archive: a 1 MiB target retains 1.5 MiB across two current fragments or 2 MiB for one current fragment with limited=false; ordinary old-fragment trimming works and sets limited. This exact documentation-only wording corrects a hard-quota implication while preserving the deliberate current-frame floor and runtime behavior. Source comparison, the three counter-cases and Docker documentation validation are sufficient; no fixed overrun bound should be claimed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:17:05Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        }
+      }
     },
     {
       "id": "P29",
@@ -3021,7 +3099,36 @@
       "risk": "Moderate: finalizing provisional JPEG tail affects origin, clock and pruning boundaries. A different gap policy or transport would require fresh scope/votes.",
       "validation_plan": "Repeat real HTTP metadata/image/history + production JS clock/row lookup:30.5->31.1 must map1030.5->1031.1/layers30->31. Earlier gap positions cannot show successor image. Cover equal/varying cadence, unchanged capture, reconnect, later tabs during/after gap, trimming held interval and preview bounds; existing HLS/replay/history/preview checks remain passing.",
       "status": "voting",
-      "ballots": {},
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Independent real HTTP JPEG/history rerun plus production PrinterHistory/row formatting confirms forward positions 30.5 to 31.1 move the printer clock 1059.5 to 1031.1 and displayed layers 59 to 31. replay.py:494-497 assigns the elapsed prior interval to the successor bytes. Finalizing the preceding held still at the successor capture timestamp corrects this attribution while retaining the explicitly chosen wall-duration gap. Approval is limited to that JPEG policy and requires the frozen atomic tail/anchor, later-page awaiting-successor, first-frame/opened_at, variable-cadence, trimming, preview and HLS-preservation validation; collapsing the gap or changing transport is outside scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:08:25Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Reproduced independently against the new pinned baseline with real replay JPEG/history HTTP and production JavaScript clock/history/row selection: advancing media 30.5 to 31.1 moves recorded time 1059.5 to 1031.1 and layers 59 to 31. replay.py:494-497 attaches the preceding gap to the successor image. The explicit preceding-still hold and bounded provisional successor tail correct attribution while preserving elapsed-gap policy. Approval includes the specified later-tab first/origin/opened_at restrictions, stable completed starts, retention/preview and end_time tests; moving the duration alone without those boundaries is insufficient. HLS/transport policy must remain unchanged. Evidence: r06/ballot-round4-jpeg-clock.log and ballot-round4-python.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:13:06Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "My frozen-source real HTTP replay/history plus production JavaScript rerun reproduces media 30.5->31.1 mapping to printer 1059.5->1031.1 and layers 59->31. _collect assigns the preceding 30-second interval to the successor JPEG, and _append creates the reversing anchors. The exact predecessor-hold policy fixes that attribution without collapsing gaps or inventing data. This is moderate-risk clock/origin work: I approve only with the listed atomic tail/anchor updates, stable completed starts, awaiting-successor/later-tab first-frame and opened_at isolation, cadence/deduplication, trimming and preview-bound regressions. HLS and read-only telemetry remain outside the correction.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:15:29Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the real JPEG/history HTTP fixture and production JS clock/row consumer on the frozen archive: a forward step 30.5 to 31.1 produces printer time 1059.5 to 1031.1 and layers 59 to 31. Source assigns the preceding capture interval to the successor image. Finalizing the preceding held still at the successor epoch corrects that attribution under the exact stated wall-duration policy. The moderate origin/tail risk is addressed by required awaiting-successor later-tab, stable-start, opened_at, cadence, trimming, preview and HLS counter-cases; this vote does not approve gap collapse or a different transport policy.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:17:05Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        }
+      },
       "additional_evidence": [
         {
           "reviewer": "root",
@@ -3051,7 +3158,36 @@
       "risk": "Low/moderate ownership/retry boundary; catch-only fix risks unbounded recording, while a stale blocked state risks permanent pause.",
       "validation_plan": "Actual non-root0500->0700 fault must keep worker/health alive and failed file tracked; restore permissions resumes same tokens and trimming automatically. Hold fault across many source updates/ticks to prove bytes/file counts bounded and other-viewer metadata/media responsive. Cover older-page-release path, ordinary multi-viewer retention, preview and printer-history pruning.",
       "status": "voting",
-      "ballots": {},
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Independent non-root0500-to0700 rerun produces a real PermissionError, dequeued-but-existing9-byte file, dead replay worker and health503 after restoration. Both active pruning paths at replay.py:569 and576-577 dequeue before unlink, and maintenance at607 bypasses the collection error catch. The frozen unlink-before-dequeue ownership rule plus expected-OSError recovery is warranted. Approval requires retry-before-growth or the equally bounded pause, prolonged-fault and older-page-release controls, same-token recovery and responsive other-viewer service; catch-and-continue accumulation, a new hard quota or unrelated filesystem cleanup are not approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:08:25Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Fresh non-root pinned-source fixture reproduces real unlink EACCES: replay.py:576 dequeues before 577 deletes, while _run's prune at 607 is outside its storage-error catch. Restoring permissions leaves the worker dead, health 503, end 6 rather than 10, and a 9-byte untracked file. Unlink-before-dequeue plus bounded cleanup-before-collection retry addresses both failures. Approval requires the prolonged-fault, older-page-release and automatic same-token recovery controls, including responsive other-viewer service and normal current-fragment floor behavior. A catch-and-continue appending loop or permanently latched pause is excluded. Evidence: r06/ballot-round4-python.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:13:06Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Running the original fixture non-root against 5055adf reproduced real EACCES, an untracked 9-byte file, dead page-replay worker, health 503 and end 6 after sources reached 10. Both active pruning paths dequeue before unlink, and background pruning lies outside the expected-error handler. I approve unlink-before-accounting plus the bounded retry/pause scope, including prolonged-fault byte/file bounds, other-viewer responsiveness, same-token recovery and older-page-release tests. Catch-and-append growth or permanent suspension would fail this scope; ordinary retention priority and the current-fragment floor must remain.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:15:29Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the actual non-root permission fault on the frozen archive: pruning dequeues an undeleted 9-byte fragment, terminates the worker and leaves health 503 with recording stuck after permissions recover. Unlink-before-accounting preserves file ownership, and an expected-error maintenance boundary is warranted. The exact scope also requires a bounded pause/retry before further media during sustained pruning failure, avoiding catch-and-grow. Prolonged-fault byte/file bounds, responsive other viewers, both active pruning paths, same-token recovery and metadata/preview retention tests are necessary and explicitly included.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:17:05Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        }
+      },
       "additional_evidence": [
         {
           "reviewer": "root",
@@ -3079,6 +3215,60 @@
       "evidence_path": "test-results/review-2026-10-26/r09/round4-findings.json",
       "risk": "Low: guard current menu focus while preserving normal dismissal handoff.",
       "validation_plan": "Trusted Chromium/WebKit Copy->Tab->held-arrow past deadline: menu closes, slider focus/scrub persist, keyup commits once. Menu-owned focus still restores player; unrelated control focus retained. Preserve Escape, failed clipboard retry, late/newer-menu ownership and disconnect cleanup.",
+      "status": "voting",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Independent unmodified full-player Chromium/WebKit reruns show Copy feedback's close(true) timer moves focus from a subsequently focused slider to player, cancels its held-arrow preview and yields zero commits. The identical no-timer gesture commits once, and menu-owned timer focus restoration works. overlays.js:220 should condition only that automatic focus handoff on current menu ownership while always closing at one second; the frozen scope preserves explicit Escape, newer-menu revision ownership, clipboard failure behavior and cleanup.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:08:25Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Inspected overlays.js:206-220 and replay.js:101-103: the copy deadline unconditionally focuses the player, triggering legitimate keyboard-scrub blur cancellation. Independently reran the complete pinned production-player fixture with trusted Chromium/WebKit input: Copy, Tab and held ArrowRight lose slider focus and commit zero; the identical held key without a timer commits once, and menu-owned timer dismissal correctly restores player focus. Conditioning only timer focus restoration on current menu ownership is sufficient and keeps the existing deadline. Approval includes unrelated-control, Escape, clipboard retry, newer-menu/result and disconnect cleanup regressions; replay blur behavior and tab order remain unchanged. Evidence: r06/ballot-round4-p31.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:13:06Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "My unmodified connected-player Chromium/WebKit recordings demonstrate Copy success followed by Tab and a held slider arrow losing focus at the one-second timer; the new seek is canceled and keyup commits zero. The identical held key without that timer commits once, and menu-owned dismissal correctly restores player focus. I approve the precise current-focus ownership guard, always-on-time closure and listed controls. Preserve explicit Escape, failed-copy retry, newer-menu/late-result ownership, disconnect cleanup and replay blur cancellation; no tab-order or UI redesign is needed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:15:29Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the full connected-player keyboard fixture on the frozen archive in Chromium/WebKit: Copy feedback's timer moves slider focus to player, cancels the held scrub and commits zero seeks. The no-timer control commits once, while menu-owned focus correctly returns to player. Guarding only automatic focus restoration by current menu containment fixes the interference and preserves the existing deadline and replay blur policy. Required menu-owned/unrelated-control, Escape, failed clipboard, newer-menu and cleanup regressions match this low-risk scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:17:05Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        }
+      }
+    },
+    {
+      "id": "P32",
+      "round": 5,
+      "revision": 1,
+      "title": "Hydrate successful partial telemetry after later recorded coverage",
+      "author": "r05",
+      "source_finding": "R05-R4-01",
+      "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "files": [
+        "apps/web/src/printer-history.js",
+        "apps/web/tests/printer-history.test.js",
+        "apps/web/tests/browser-history-reconnect.js",
+        "apps/web/tests/fixtures/history-reconnect.json",
+        "apps/web/tests/run-browser.js",
+        "docs/printer-telemetry.md",
+        "docs/development/testing.md"
+      ],
+      "scope": "Distinguish successful partial telemetry coverage from canceled, pending and genuinely failed requests. Track valid accepted same-session recorded coverage and the successful partial attempt\u2019s coverage/ownership. Only after later recorded coverage proves a requested uncovered target is now a past recorded point may a read reopen that successful partial window for one coalesced hydration; consume eligibility in its owning request. Unchanged coverage and unrecorded future points stay suppressed. Full/cached windows never refetch; pending reads coalesce. Actual HTTP/JSON/timeout failures stay suppressed despite advancing SSE until explicit retry. Preserve P23 cancellation/session/request/same-window late-callback ownership, bounded windows, historical values and current-live separation. No blanket per-SSE retry, render polling/timers, Cast feature/transport, UI, endpoint, storage namespace, decoder or capability changes. Add focused unit and default connected Stats/Cast/PlayerUpdates browser regression (recorder-shaped synthetic fixture payloads permitted), retaining WebKit Cast-ineligible external-clock control; register it and document coverage.",
+      "evidence": "Actual ReplayBuffer generates successful partial HTTP1200\u20131262 and reconnect SSE1339\u20131370. Real Chromium GoogleCastSender/Stats/PlayerUpdates with EventSource-only reconnect and receiver1280 stays blank after2.3s/one request/no local seek events; explicit local seek immediately makes second request and renders80%, cached1290 then renders90% without another request. WebKit external-clock control reproduces without enabling Cast. Genuine HTTP/JSON/timeout and unrecorded-future controls remain suppressed on baseline.",
+      "evidence_path": "test-results/review-2026-10-26/r05/round4-findings.json",
+      "risk": "Moderate async state: conflating successful partial and failed attempts could create per-SSE/render retry loops or release a successor request. Recovery must be tied to accepted same-session coverage and consumed owned eligibility.",
+      "validation_plan": "Successful partial + later coverage hydrates missing past reading once with pending coalescing; unchanged/identical coverage, cached/full windows and unrecorded future make no requests. HTTP/JSON/timeout remain suppressed through advancing SSE until explicit retry. Preserve all P23 cancellation/A-B-A, late callback, replacement-session and bounded-window cases. Durable real Stats+GoogleCastSender+PlayerUpdates+EventSource reconnect regression recovers right reading without local seek, with local-seek/full-cache controls; WebKit uses only external clock and remains Cast-ineligible. Relevant units/docs and both engines must pass.",
       "status": "voting",
       "ballots": {}
     }
@@ -3482,6 +3672,31 @@
       "at": "2026-10-26T06:07:12Z",
       "type": "validation",
       "message": "All26 immutable combined check.sh all completed exit0;199 Python/226 JS/35 docs/Nx builds/cache/graph/site and18 browser suites pass. Root independently reproduced JPEG/prune candidates; no new implementation before voting. Preparing review-only draft PR for CI; no merge, publication of image or deployment."
+    },
+    {
+      "at": "2026-10-26T06:08:25Z",
+      "type": "ballot",
+      "message": "R01 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:13:06Z",
+      "type": "ballot",
+      "message": "R06 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:15:29Z",
+      "type": "ballot",
+      "message": "R09 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:17:05Z",
+      "type": "ballot",
+      "message": "R10 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:18:20Z",
+      "type": "freeze",
+      "message": "Frozen Round5 P32 revision1, distinct from P23 cancellation and unchanged Round4. No new implementation authorized. Review-only branch pushed; GitHub integration PR create returned403, CLI unauthenticated; existing CI triggered through owned codex/review-ci-2026-10-26 branch at1d9174e. No PR created, merge or deployment."
     }
   ],
   "validation": [
@@ -3574,8 +3789,9 @@
         "test-results/review-2026-10-26/retention_26fixes_v1-webkit.log"
       ],
       "environment": "Generated camera only; network-isolated fixture1CPU/384MiB and each browser1CPU/1GiB;128KiB compressed preview RAM forces IndexedDB reads; normal128MiB disk bounds;1GiB server DVR cap. Physical-device behavior unverified.",
-      "stopped_at": "2026-10-26T05:55:00Z",
-      "result": "Audit final assertion confused current retained still count with total captured count; hovering trims stills older than retained DVR footage. No product failure claimed. Exact owned containers stopped; exit137 expected. Replacement pilot and run tracked separately."
+      "result": "Audit final assertion confused current retained still count with total captured count; hovering trims stills older than retained DVR footage. No product failure claimed. Exact owned containers stopped; exit137 expected. Replacement pilot and run tracked separately.",
+      "stopped_before": "2026-10-26T05:55:20Z",
+      "timing_note": "Exact removal instant was not sampled; this is the next recorded clock bound, not an invented event timestamp."
     },
     {
       "summary": "Retention-pruning pilot with corrected capture accounting in both engines",
@@ -3715,5 +3931,15 @@
       ],
       "starting_commit": "95c4acd"
     }
-  ]
+  ],
+  "delivery": {
+    "review_branch": "review/2026-10-26-twelve-hour",
+    "pushed_commit": "1d9174e393ce47f93aa9006d5076bf70004ee522",
+    "ci_branch": "codex/review-ci-2026-10-26",
+    "ci_run": "https://github.com/ewized/layerglass/actions/runs/40278167693",
+    "ci_status": "in_progress at last read",
+    "pull_request": "not created",
+    "pr_creation_limit": "GitHub connector integration403 for create pull request; gh not signed in. Read-only API and SSH push work.",
+    "deployment": "none; configured deploy workflow is main-only and release is v-tag-only"
+  }
 }
