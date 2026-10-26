@@ -31,7 +31,7 @@ jobs:
             -e LAYERGLASS_REVISION="$GITHUB_SHA" \
             -v "$PWD:/app" -w /app node:24-bookworm sh -ec '
               npm ci
-              npx nx run-many -t build --projects=web,site
+              npx nx run-many -t build --projects=layerglass,layerglass-site
               npm --prefix infra/cloudflare ci
               npm --prefix infra/cloudflare test
               node scripts/cloudflare.mjs prepare all

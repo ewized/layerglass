@@ -14,8 +14,8 @@ own hardware without a Cloudflare account.
 
 | Worker | Custom Domain | Nx build output | Purpose |
 | --- | --- | --- | --- |
-| `layerglass-site` | `layer.glass` | `dist/apps/site/` | Product website and install/source links |
-| `layerglass-web` | `app.layer.glass` | `dist/apps/web/` | Browser demo and optional connection to the user's backend |
+| `layerglass-site` | `layer.glass` | `dist/apps/layerglass-site/` | Product website and install/source links |
+| `layerglass-web` | `app.layer.glass` | `dist/apps/layerglass/` | Browser demo and optional connection to the user's backend |
 
 The hosted app must ship without an automatic backend. First visits show Demo,
 Docker and Direct printer choices; valid saved selections open directly. Demo uses
@@ -30,9 +30,9 @@ MQTT TCP connection. Those are Python backend capabilities.
 
 ## Hosting boundaries and freshness
 
-Each [Wrangler configuration](../../infra/cloudflare/web.wrangler.json) contains
+Each [Wrangler configuration](../../infra/cloudflare/layerglass.wrangler.json) contains
 exactly one custom domain. The equivalent
-[website configuration](../../infra/cloudflare/site.wrangler.json) is separate.
+[website configuration](../../infra/cloudflare/layerglass-site.wrangler.json) is separate.
 There is no Worker application code, API route, service binding, R2 bucket, KV
 namespace, analytics binding or access to a printer network. Unknown paths,
 including `/api/backend`, return 404; they are never rewritten to the app HTML.

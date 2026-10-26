@@ -7,7 +7,7 @@ description: Change LayerGlass approved-printer discovery, manufacturer adapters
 
 Read [approved adapters](../../../docs/camera-adapters.md) before changing
 admission, protocols or manufacturer support. Bambu-specific details belong in
-[`providers/bambu/`](../../../apps/backend/providers/bambu/) and its
+[`providers/bambu/`](../../../apps/python-backend/providers/bambu/) and its
 [protocol note](../../../docs/reference/bambu-telemetry.md).
 
 - Discovery starts with approved camera ports, then races bounded identity checks.

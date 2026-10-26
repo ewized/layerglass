@@ -25,12 +25,12 @@ recur through browser polling.
 
 The manufacturer-independent server lives in `app.py`, `cameras.py`,
 `discovery.py`, `identity.py`, and `replay.py`. The ESM player uses `printer-*`
-web components. Manufacturer behavior lives under `apps/backend/providers/`; Bambu MQTT,
+web components. Manufacturer behavior lives under `apps/python-backend/providers/`; Bambu MQTT,
 certificates, model data, announcements, and JPEG framing stay in `bambu/`.
 
 ## Current approval policy
 
-`apps/backend/providers/approved-printers.json` lists approved manufacturers and, for each
+`apps/python-backend/providers/approved-printers.json` lists approved manufacturers and, for each
 stream protocol, its model codes, port, and path. The Bambu adapter currently
 supports native JPEG on port 6000 for approved P1/A1 models and RTSPS on port
 322 for approved X1/X2D/P2S/H2 models. Inventory entries without an approved
@@ -72,7 +72,7 @@ do not grant generic RTSP/HTTP cameras registration, pairing, or playback.
 ## Adding a manufacturer
 
 Implement `providers.base.StreamProvider`, register it in `PROVIDERS` in
-`apps/backend/providers/__init__.py`, and explicitly add its supported models and stream
+`apps/python-backend/providers/__init__.py`, and explicitly add its supported models and stream
 profiles to `approved-printers.json`. Registration alone grants no approval.
 Use the internal RTSP/MJPEG transports when appropriate, or implement a new
 bounded transport probe. Each admission check must validate model and profile.
@@ -148,12 +148,12 @@ inactive while retaining the previous atomic settings file and the old code in
 memory. A later explicit scan or successful setup/forget retries persistence.
 Restarting before a successful save reloads the prior settings file.
 
-`apps/backend/tests/test_identification.py` verifies MQTT responses, manufacturer/model
+`apps/python-backend/tests/test_identification.py` verifies MQTT responses, manufacturer/model
 validation, concurrent races, per-host caching, and model/protocol admission.
-`apps/backend/tests/test_providers.py` covers hidden generic candidates and legacy settings,
+`apps/python-backend/tests/test_providers.py` covers hidden generic candidates and legacy settings,
 approved URL enforcement, explicit adapter approval, migration, and internal
-transport reuse. `apps/web/tests/browser-providers.js` verifies the code-only printer
+transport reuse. `apps/layerglass/tests/browser-providers.js` verifies the code-only printer
 list and API rejection in Chromium and WebKit.
-`apps/backend/tests/test_printer_bindings.py` covers verified replacements,
+`apps/python-backend/tests/test_printer_bindings.py` covers verified replacements,
 quarantine/reload/re-pair/forget, failed persistence, shutdown lock ownership,
 late callbacks, different camera profiles and unchanged/legacy pairing.

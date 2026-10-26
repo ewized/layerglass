@@ -23,7 +23,7 @@ connections, recorded history and telemetry.
 ## Supported printer profile
 
 The browser approval registry is
-[`DIRECT_PROFILES`](../../apps/web/src/backend/direct.js), separate from the
+[`DIRECT_PROFILES`](../../apps/local-backend/src/direct.js), separate from the
 Python service's camera-port approval list. Its initial approved firmware profile
 is **Klipper / Moonraker**, with an enabled `mjpegstreamer` webcam configured in
 Moonraker. This identifies the controller/firmware, rather than guessing a
@@ -120,7 +120,7 @@ response supplies multipart frames.
 **Refresh viewer** starts a new identity check. If an earlier check finishes
 later, it cannot restore an old webcam configuration or replace the current
 connection error.
-[`direct-stream.js`](../../apps/web/src/direct-stream.js) only separates JPEG
+[`direct-stream.js`](../../apps/local-backend/src/stream.js) only separates JPEG
 bytes; the existing native image element decodes them. It bounds frames to
 2 MiB, headers to 8 KiB, and pending rendering to the newest frame. Object URLs
 are revoked on replacement and disconnect. No images enter

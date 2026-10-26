@@ -1,0 +1,45 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "demo-backend",
+  "projectType": "library",
+  "sourceRoot": "apps/demo-backend/src",
+  "tags": [
+    "type:backend",
+    "runtime:browser",
+    "scope:demo"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/scripts/build-browser-backend.mjs"
+      ],
+      "outputs": [
+        "{workspaceRoot}/dist/backends/demo-backend"
+      ],
+      "options": {
+        "command": "node scripts/build-browser-backend.mjs demo-backend"
+      },
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default"
+      ],
+      "outputs": [],
+      "options": {
+        "command": "node --test apps/demo-backend/tests/*.test.js"
+      }
+    }
+  },
+  "implicitDependencies": [
+    "local-backend"
+  ]
+}

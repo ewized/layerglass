@@ -92,9 +92,21 @@ is blocked, but it cannot be remembered across reloads in that case.
 no backend detection by hostname, failed requests or a speculative LAN scan.
 Python-served HTML already knows its backend and retains same-origin startup.
 
+## Nx module ownership
+
+`python-backend` owns the Python service. `demo-backend` owns the simulated
+printer and bundled clip. `local-backend` owns direct-printer admission, native
+MJPEG framing and local-file sessions. The demo reuses its file/session transport
+and adds simulated readings; choosing a file resets the clock and disables those
+readings. Existing backend preference IDs (`python`, `demo`, `direct`) remain
+compatible. A local file remains page-owned and is never saved as a printer.
+The `layerglass` player composes these modules; `layerglass-site` is the marketing
+website. See the [workspace map](workspace.md) for targets and dependency rules.
+
 ## Transport contract
 
-[`apps/web/src/backend/`](../../apps/web/src/backend/) contains native ES modules. Each
+[`apps/layerglass/src/backend/`](../../apps/layerglass/src/backend/) selects native ES-module
+implementations from the independent backend projects. Each
 provider exposes:
 
 - `id`, `label`, and a frozen `capabilities` object.

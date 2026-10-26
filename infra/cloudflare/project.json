@@ -2,41 +2,69 @@
   "name": "cloudflare",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "tags": ["scope:delivery"],
+  "tags": [
+    "scope:delivery"
+  ],
   "targets": {
     "prepare": {
       "executor": "nx:run-commands",
-      "dependsOn": [{ "target": "build", "projects": ["web", "site"] }],
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": [
+            "layerglass",
+            "layerglass-site"
+          ]
+        }
+      ],
       "cache": false,
-      "options": { "command": "node scripts/cloudflare.mjs prepare all" }
+      "options": {
+        "command": "node scripts/cloudflare.mjs prepare all"
+      }
     },
     "test": {
       "executor": "nx:run-commands",
       "cache": false,
-      "options": { "command": "npm --prefix infra/cloudflare test" }
+      "options": {
+        "command": "npm --prefix infra/cloudflare test"
+      }
     },
     "check": {
       "executor": "nx:run-commands",
-      "dependsOn": ["prepare"],
+      "dependsOn": [
+        "prepare"
+      ],
       "cache": false,
-      "options": { "command": "node scripts/cloudflare.mjs check all" }
+      "options": {
+        "command": "node scripts/cloudflare.mjs check all"
+      }
     },
     "dry-run": {
       "executor": "nx:run-commands",
-      "dependsOn": ["prepare"],
+      "dependsOn": [
+        "prepare"
+      ],
       "cache": false,
-      "options": { "command": "node scripts/cloudflare.mjs dry-run all" }
+      "options": {
+        "command": "node scripts/cloudflare.mjs dry-run all"
+      }
     },
     "deploy": {
       "executor": "nx:run-commands",
-      "dependsOn": ["prepare"],
+      "dependsOn": [
+        "prepare"
+      ],
       "cache": false,
-      "options": { "command": "node scripts/cloudflare.mjs deploy all" }
+      "options": {
+        "command": "node scripts/cloudflare.mjs deploy all"
+      }
     },
     "verify": {
       "executor": "nx:run-commands",
       "cache": false,
-      "options": { "command": "node scripts/cloudflare.mjs verify all" }
+      "options": {
+        "command": "node scripts/cloudflare.mjs verify all"
+      }
     }
   }
 }

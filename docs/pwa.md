@@ -10,11 +10,11 @@ tags: [technical]
 The manifest at `/manifest.webmanifest` uses a stable `/` identity and start URL,
 standalone display, unrestricted orientation and the existing dark player theme.
 Opaque 192/512 px PNG icons, a maskable 512 px icon and an Apple 180 px touch icon
-come from `apps/web/src/icons/icon.svg`. The printer/play mark stays inside the
+come from `apps/layerglass/src/icons/icon.svg`. The printer/play mark stays inside the
 maskable safe area. Safari home-screen metadata and the existing safe-area CSS
 support the iPhone player without adding installation UI to the video.
 
-`apps/web/src/pwa.js` registers the root `/service-worker.js` as a native module after
+`apps/layerglass/src/pwa.js` registers the root `/service-worker.js` as a native module after
 the page loads, only in secure contexts. Unsupported browsers and plain LAN HTTP
 continue using the player normally. All dependencies are local; there is no new
 package, bundler, CDN or JavaScript video decoder.
@@ -43,7 +43,7 @@ limits and quota fallback are described in [local-previews.md](local-previews.md
 
 ## Optional offline storage boundary
 
-`apps/web/src/pwa-shell.js` is the complete, explicit allowlist of public UI files.
+`apps/layerglass/src/pwa-shell.js` is the complete, explicit allowlist of public UI files.
 The worker answers only GETs for those exact same-origin URLs without a query
 or Range header. It never intercepts commands, API/SSE, streaming video, HLS,
 JPEG frames, other sites or arbitrary static paths. No runtime response cache
@@ -91,7 +91,7 @@ release and a failed deployment while the player remains open. Start that fixtur
 with `FIXTURE_PWA=1` and `PWA_CACHE_ENABLED=1`. The same tests then disable caching,
 verify immediate migration without interrupting playback, preserve an unrelated
 cache, and check that consecutive reloads fetch the latest HTML and CSS directly.
-For a network-only deployment, run `apps/web/tests/browser-pwa.js` with
+For a network-only deployment, run `apps/layerglass/tests/browser-pwa.js` with
 `PWA_CACHE_ENABLED=0` in the browser test container; it checks a fresh install,
 empty app caches, network responses on reload, and native video playback.
 

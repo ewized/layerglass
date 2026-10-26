@@ -7,120 +7,98 @@ tags: [architecture, development]
 
 [Vault home](../index.md) · [Architecture](overview.md) · [Workflow](../development/workflow.md)
 
-LayerGlass has three applications and a documentation project. Nx is a task
-runner and dependency graph; it does not introduce a browser framework, CommonJS,
-or a mandatory cloud service. The Python backend can still serve the whole local
-viewer in one container. No shared library is invented just to fill a directory.
+LayerGlass has five named projects under `apps/`. Nx manages their independent
+builds, tests and dependencies; the browser projects use native ES modules.
+The two browser backends are embeddable modules and need no running server.
 
-| Project | Source | Targets | Output |
+| Project | Source | Purpose | Output |
 | --- | --- | --- | --- |
-| `backend` | [`apps/backend/`](../../apps/backend/) | `build`, `test`, `serve`, `fixture` | `dist/apps/backend` Python sources and providers |
-| `web` | [`apps/web/`](../../apps/web/) | `build`, `test`, `browser`, `serve`, `preview` | `dist/apps/web` native static app |
-| `site` | [`apps/site/`](../../apps/site/) | `build`, `test`, `preview` | `dist/apps/site` product website |
-| `docs` | This vault | `check` | Link/settings/version validation |
-| `cloudflare` | [`infra/cloudflare/`](../../infra/cloudflare/) | `prepare`, `test`, `check`, `dry-run`, `deploy`, `verify` | Public static hosting configuration |
+| `python-backend` | [`apps/python-backend/`](../../apps/python-backend/) | Optional Python service: discovery, saved printers, telemetry and DVR | `dist/apps/python-backend` source package |
+| `demo-backend` | [`apps/demo-backend/`](../../apps/demo-backend/) | Simulated printer data, preloaded replay and bundled demonstration video | `dist/backends/demo-backend` |
+| `local-backend` | [`apps/local-backend/`](../../apps/local-backend/) | Approved direct-printer connections, MJPEG transport and local-file sessions | `dist/backends/local-backend` |
+| `layerglass` | [`apps/layerglass/`](../../apps/layerglass/) | Camera player, backend selection and Web Components | `dist/apps/layerglass` public static app |
+| `layerglass-site` | [`apps/layerglass-site/`](../../apps/layerglass-site/) | Marketing website, product vision and installation links | `dist/apps/layerglass-site` public website |
+| `docs` | This vault | Link/settings/version validation | No build output |
+| `cloudflare` | [`infra/cloudflare/`](../../infra/cloudflare/) | Hosting checks and delivery of the two public builds | Hosting configuration |
 
-The backend depends on web source because it serves those assets and hashes the
-shell revision. The standalone web build does not depend on Python. Documentation
-validation spans the application files it links to. `nx graph` shows these
-dependencies; `nx show project web --json` exposes resolved targets.
+## Dependencies and ownership
 
-## Running targets
+`local-backend` owns direct-printer identity checks, multipart camera framing and
+the common local-file/session transport. It does not import player or demo code.
+`demo-backend` extends that file transport with its own simulation and sample
+video. Its simulated readings never enter a local file or real direct connection.
+Each module has its own `build` and `test` targets and unit tests.
 
-`./scripts/check.sh all` remains the container-only entrypoint. `workspace` mode
-installs locked dependencies into a disposable container, builds all three
-projects twice, demonstrates local Nx cache hits, validates docs and writes the
-graph to ignored `test-results/project-graph.json`. Python and fixture browser
-checks still run against generated media, never a real printer.
-The website check renders both desktop and mobile widths in Chromium and
-WebKit and checks the actual built assets and links.
-It also inspects the web app's generated service worker. The `site:test`
-target declares both builds as prerequisites, so `nx test site` works from
-a clean checkout.
+`layerglass` depends on both browser modules. Its compatibility entrypoints under
+`src/backend/` keep player imports stable, while implementations live in the
+backend projects. The Python HTTP client stays with the player; the actual Python
+service lives in `python-backend`. That service depends on the player source
+because it can serve the complete viewer in one Docker container.
 
-In an environment with the project's Node dependencies and Docker CLI:
+[`browser-modules.json`](../../apps/layerglass/browser-modules.json) explicitly
+lists the public browser modules. Static builds compose their cached artifacts
+into the player output. The Python viewer serves the same source modules from
+bounded asset roots. Native relative imports work in both layouts, without an
+import map, bundler or second runtime. Only module `src/` files are public;
+Python sources, workspace configuration and tests are outside those roots.
+The service-worker revision includes the modules and its shell allowlist lists
+their executable files. Shell response caching remains disabled for development.
+
+## Targets and checks
 
 ```sh
 npm ci
 npx nx show projects
-npx nx run-many -t build --projects=backend,web,site
-npx nx test web
-npx nx test backend
-npx nx run web:browser
-npx nx run backend:fixture
+npm run build
+npx nx test layerglass
+npx nx test demo-backend
+npx nx test local-backend
+npx nx test python-backend
+npx nx run layerglass:browser
+npx nx run python-backend:fixture
 npx nx run docs:check
 ```
 
-`backend:test` and `web:browser` invoke the Docker check script, so no Python or
-printer dependency needs installing on the host. The Docker runtime contains
-Python and FFmpeg only. For deterministic JavaScript builds and units use the
-locked Node/Nx versions, preferably in a disposable development container.
+Use the [Docker workflow](../development/workflow.md) for project runtimes.
+`npm test` runs the player and both browser-backend test targets.
+`python-backend:test` and `layerglass:browser` delegate to disposable Docker checks.
+`./scripts/check.sh all` runs Python/JavaScript tests, all fixture browser suites,
+documentation and workspace packaging. Its `workspace` mode builds all five
+projects twice to verify cache restoration and exports the project graph.
+`layerglass-site:test` builds the player and website first, then renders desktop
+and mobile layouts in Chromium/WebKit, checks the generated service worker, and
+loads the composed static player/demo without Python requests.
 
-`nx run web:preview` serves the static build at `http://localhost:8101`.
-`nx run site:preview` serves the website at `http://localhost:8102`. These are
-development servers with `no-store` responses and byte-range support for demo
-video. They bind to the container's network interface, so publish only the
-intended loopback port when running in Docker.
+`nx run layerglass:preview` serves the built player at `http://localhost:8101`.
+`nx run layerglass-site:preview` serves the website at `http://localhost:8102`.
+These development servers use fresh responses and support demo-video byte ranges.
+When running in Docker, publish only the intended loopback port.
 
-## Static hosting contract
+## Public hosting and cache policy
 
-- `layer.glass` uses `dist/apps/site`.
-- `app.layer.glass` uses `dist/apps/web`, after the backend selector is integrated.
-- The hosted web build requires a backend choice through its HTML
-  `layerglass-backend="choose"` metadata. First visits offer Demo or Docker;
-  saved selections open directly. Python-served source knows its own backend
-  and retains its same-origin startup.
-- Root files are `index.html`, `manifest.webmanifest` and `service-worker.js`.
-  Browser modules, icons, demo media and hls.js stay under `/static/`.
-- The build computes the service worker's shell revision and substitutes valid
-  JavaScript for both worker placeholders. PWA response caching remains off for
-  active development. IndexedDB thumbnails are a separate, bounded media buffer.
-- A public static host does not proxy private camera feeds. Real-printer
-  discovery, credentials, MQTT and server DVR remain local-backend capabilities.
+`layer.glass` serves `dist/apps/layerglass-site`; `app.layer.glass` serves
+`dist/apps/layerglass`. The hosted player always requires a backend choice on a
+first visit. Its browser backends are composed static assets, not public Python
+services. Discovery, printer codes, real telemetry and DVR stay on the selected
+Python service. See [backend providers](backend-providers.md) and
+[public hosting](../operations/cloudflare.md).
 
-The site links to a hosted sample demo and container installation instructions.
-Building these outputs does not create DNS records, publish them or replace the
-existing prototype deployment. Cloudflare deployment configuration is separate.
-See [public hosting](../operations/cloudflare.md) for the isolated Wrangler
-toolchain, nonsecret CI checks, two scoped domains and deployment configuration.
+Browser-module outputs use `dist/backends/` so the credential-free hosting build
+contains exactly the two public applications under `dist/apps/`. Delivery checks
+continue to reject unexpected public directories, private files and symlinks.
+Cloudflare Worker identities and public domains are deployment identifiers and
+remain stable even though their Nx projects and build paths have been renamed.
 
-## Cache policy
+Only deterministic source/static builds and JavaScript units are cached. Their
+inputs include provider dependencies, build helpers, version metadata and the
+locked Node toolchain. Browser fixtures, discovery, servers and Python socket/
+FFmpeg tests are uncached. Nx Cloud is disabled. `.nx/`, generated outputs,
+recordings, access codes and diagnostic artifacts stay out of commits.
 
-Only deterministic static/source builds and JavaScript units use local Nx task
-caching. Named inputs include project files, shared configuration/lockfiles,
-the product version and the Node version; build helpers are declared inputs.
-Build artifacts are limited to each project's `dist/apps/<project>` directory.
-`.nxignore` also excludes local environment files, Cloudflare development secrets
-and runtime/recording directories from graph inputs. Backend unit checks involve
-sockets, FFmpeg and clocks, so they are not cached.
-Neither browser fixtures, discovery, live servers, previews nor documentation
-checks use task caching. Nx Cloud is disabled; `.nx/`, runtime data, recordings,
-access codes and diagnostic artifacts are ignored and are never cache outputs.
+## Source migration
 
-## Relocation and feature integration
-
-The first workspace commit contains exact Git renames to preserve provenance and
-make concurrent feature branches easier to integrate. The runtime import names
-and public HTTP URLs are unchanged.
-
-| Previous path | Workspace path |
-| --- | --- |
-| `app.py`, `cameras.py`, `discovery.py`, `identity.py`, `replay.py` | `apps/backend/<same filename>` |
-| `providers/`, `requirements.txt` | `apps/backend/<same path>` |
-| `static/` | `apps/web/src/` |
-| Python `tests/*.py`, including the fixture | `apps/backend/tests/` |
-| JavaScript `tests/*`, including browser helpers | `apps/web/tests/` |
-| `scripts/`, `docs/`, `.github/`, Docker and Compose files | Remain at workspace root |
-
-For feature branches based on the flat prototype, merge their behavior changes
-before the exact relocation commit and subsequent workspace tooling commit.
-Git can move edits to renamed files automatically; move newly added files using
-the table, then update filesystem imports in JavaScript tests from `../static/`
-to `../src/`. Browser imports such as `/static/player.js` remain unchanged.
-The backend's default static directory is `apps/web/src`; deployments may
-override it with `LAYERGLASS_STATIC_DIR`. Run the complete fixture checks after
-integration, especially the backend selector and timeline browser regressions.
-
-Nx guidance: [existing projects](https://nx.dev/docs/getting-started/start-with-existing-project),
-[explicit project targets](https://nx.dev/docs/reference/project-configuration),
-and [deterministic caching](https://nx.dev/docs/getting-started/tutorials/caching).
+The previous `apps/backend`, `apps/web` and `apps/site` roots are now
+`apps/python-backend`, `apps/layerglass` and `apps/layerglass-site` respectively.
+Demo and direct-printer implementations moved out of the player into their own
+projects. Existing player module URLs, backend preference IDs, printer identity
+and access-code storage retain their established contracts.

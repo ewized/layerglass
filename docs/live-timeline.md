@@ -74,7 +74,7 @@ interaction choices are specific to this viewer.
   camera requests its own replay frame even at the same timestamp. Temporary
   recording and its storage cap are unchanged.
 
-`apps/web/tests/timeline.test.js` exercises the actual browser controller with a fake
+`apps/layerglass/tests/timeline.test.js` exercises the actual browser controller with a fake
 clock and media inputs. The core regression first failed with a movement from
 50% to 51% after one second; it now remains at 50% through two minutes of matched
 playback and recording. Browser tests additionally check real decoding, capture,

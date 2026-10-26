@@ -76,8 +76,8 @@ task_playwright_image="mcr.microsoft.com/playwright:v${task_playwright_version}-
 run_python() {
   docker run --rm --init --name "${task_prefix}_python" --user "$task_uid:$task_gid" \
     --cidfile "$task_container_dir/python.cid" \
-    -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/app/apps/backend \
-    -v "$task_host_path:/app:ro" -w /app/apps/backend \
+    -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/app/apps/python-backend \
+    -v "$task_host_path:/app:ro" -w /app/apps/python-backend \
     "$task_image" python -B -m unittest discover -s tests -p 'test_*.py' -v \
     2>&1 | tee "$project_root/test-results/python.log"
   docker run --rm --init --name "${task_prefix}_docs" --user "$task_uid:$task_gid" \
@@ -90,7 +90,7 @@ run_javascript() {
   docker run --rm --init --name "${task_prefix}_javascript" --user "$task_uid:$task_gid" \
     --cidfile "$task_container_dir/javascript.cid" \
     -e npm_config_cache=/tmp/npm-cache -v "$task_host_path:/app:ro" -w /app \
-    "$task_playwright_image" sh apps/web/tests/run-js.sh \
+    "$task_playwright_image" sh apps/layerglass/tests/run-js.sh \
     2>&1 | tee "$project_root/test-results/javascript.log"
 }
 
@@ -99,7 +99,7 @@ run_workspace() {
     --cidfile "$task_container_dir/workspace.cid" \
     -e npm_config_cache=/tmp/npm-cache -v "$task_host_path:/app:ro" \
     -v "$task_host_path/test-results:/app/test-results" -w /app \
-    "$task_playwright_image" sh apps/web/tests/run-js.sh --workspace \
+    "$task_playwright_image" sh apps/layerglass/tests/run-js.sh --workspace \
     2>&1 | tee "$project_root/test-results/workspace.log"
 }
 
@@ -110,7 +110,7 @@ run_browsers() {
     -e PYTHONDONTWRITEBYTECODE=1 -e FIXTURE_TELEMETRY=1 -e FIXTURE_DUAL_TELEMETRY=1 \
     -e VIEWER_ALLOWED_ORIGINS=http://localhost:8080 -e VIEWER_BACKEND_ORIGINS=http://127.0.0.1:8080 \
     -e PWA_CACHE_ENABLED=0 -v "$task_host_path:/app:ro" -w /app \
-    "$task_image" python -B apps/backend/tests/fixture_server.py >/dev/null
+    "$task_image" python -B apps/python-backend/tests/fixture_server.py >/dev/null
   task_fixture=$(container_id "$task_container_dir/fixture.cid")
   task_ready=0
   for ((task_attempt=0; task_attempt<30; task_attempt++)); do
@@ -132,7 +132,7 @@ run_browsers() {
     --network "container:$task_fixture" --shm-size=512m \
     -e npm_config_cache=/tmp/npm-cache -e VIEWER_URL=http://127.0.0.1:8080 -e PWA_CACHE_ENABLED=0 \
     -v "$task_host_path:/app:ro" -v "$task_host_path/test-results:/app/test-results" -w /app \
-    "$task_playwright_image" sh apps/web/tests/run-js.sh apps/web/tests/run-browser.js "${task_browser_suites[@]}" \
+    "$task_playwright_image" sh apps/layerglass/tests/run-js.sh apps/layerglass/tests/run-browser.js "${task_browser_suites[@]}" \
     2>&1 | tee "$project_root/test-results/browser.log"
 }
 

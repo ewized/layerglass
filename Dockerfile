@@ -8,12 +8,15 @@ RUN apt-get update \
     && mkdir /data && chown viewer:viewer /data
 
 WORKDIR /app
-COPY apps/backend/requirements.txt /app/apps/backend/requirements.txt
-RUN pip install --no-cache-dir -r apps/backend/requirements.txt
+COPY apps/python-backend/requirements.txt /app/apps/python-backend/requirements.txt
+RUN pip install --no-cache-dir -r apps/python-backend/requirements.txt
 RUN mkdir /buffer && chown viewer:viewer /buffer
-COPY apps/backend/*.py /app/apps/backend/
-COPY apps/backend/providers /app/apps/backend/providers
-COPY apps/web/src /app/apps/web/src
+COPY apps/python-backend/*.py /app/apps/python-backend/
+COPY apps/python-backend/providers /app/apps/python-backend/providers
+COPY apps/layerglass/src /app/apps/layerglass/src
+COPY apps/layerglass/browser-modules.json /app/apps/layerglass/browser-modules.json
+COPY apps/demo-backend/src /app/apps/demo-backend/src
+COPY apps/local-backend/src /app/apps/local-backend/src
 
 # Changing release metadata must not invalidate the FFmpeg/pip layers.
 ARG VERSION=0.1.0
@@ -29,4 +32,4 @@ ENV PYTHONUNBUFFERED=1 PORT=8080
 EXPOSE 8080
 HEALTHCHECK --interval=20s --timeout=4s --start-period=10s --retries=3 \
     CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.environ.get('PORT','8080')+'/healthz',timeout=3).read()"
-CMD ["python", "apps/backend/app.py"]
+CMD ["python", "apps/python-backend/app.py"]
