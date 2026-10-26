@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active:41proposals,40integrated corrections, P38superseded; currentall40CI/hosting PASS. One older-pin native6h run active; JPEGendurance incomplete and causal-diagnostic preparation only. Review deadline16:03:49UTC.",
+  "status": "Active:42frozenproposals/40integrated/P38superseded/P42voting; currentall40CI+hostingPASS. Native6holder-pinrunongoing beyond4h; JPEGdiagnosticpartial, nohour. Deadline16:03:49UTC.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -546,6 +546,17 @@
       ],
       "notes": "One-file native recovery test precondition and diagnostic correction. Original hosted-CI cause remains unproved; all post-error assertions strict.",
       "decision": "P41rev1 approved10of10, implementation began only after7explicit approvals committed at3d7d7aa. Exact single-file scope unchanged."
+    },
+    {
+      "id": 13,
+      "revision": 1,
+      "baseline": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a",
+      "frozen_at": "2026-10-26T13:11:49Z",
+      "slate": "test-results/review-2026-10-26/round-13-slate.json",
+      "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9",
+      "ballots_started": true,
+      "reviewers_completed": [],
+      "notes": "3file localvalidJPEG timelineconsumer eligibility/activation only; lowerprecision/retention separateissue stop clause. No edits/authorworktree before6committed approvals."
     }
   ],
   "proposals": [
@@ -4919,6 +4930,27 @@
         "merged_source_verified": true,
         "validation_limit": "Test-only improvement; historical CI cause remains unproved. Original all39 production source remains unchanged. New normalCI may validate combined40 source."
       }
+    },
+    {
+      "id": "P42",
+      "round": 13,
+      "revision": 1,
+      "title": "Gate local JPEG timeline markers on proven replay coverage",
+      "author": "r03",
+      "source_finding": "R03-FINAL-PRINT-01",
+      "baseline": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a",
+      "files": [
+        "apps/web/src/components/timeline-events.js",
+        "apps/web/tests/browser-timeline-events.js",
+        "docs/timeline-events.md"
+      ],
+      "scope": "For LOCAL JPEG replay only when PageReplay supplies a valid owned descriptor, intersect marker eligibility with current proven replay bounds AND the displayed range. Revalidate that same eligibility on activation so a stale marker/menu cannot commit a clamped earlier seek or emit an unfulfilled timeline-event-seek. Keep marker placement/grouping and negative offsets on the original slider mapping, including frozen scrub/display windows. Keep pending observed summaries until an accepted successor makes their completed held interval seekable; never move event time to still capture time or permanently delete an unseen future event. Only the3listed component/browser-test/doc files may change. Preserve model/global clock/seek/descriptor/recorder/projection semantics, all legacy descriptorless/invalid JPEG, file/H264/remote behavior, disabled controls, session/camera ownership and existing retention. No new requests/retries/timers/hydration/inference/manufacturers/controls or metadata normalization/tolerance. Lower-bound precision and retention are compatibility checks only; an independently demonstrated separate clock-conversion/retention defect requires a separately evidenced revised proposal/fresh votes, not silent scope expansion.",
+      "evidence": "R03 actual production ReplayBuffer telemetry/JPEG metadata plus production event/controller/history clock methods show PAUSE at1002.5 mapped to marker2.5 while slider0..3 but validJPEGbounds0..2. Production seek commits2 and watched history remainsRUNNING. Actual successor1030 completes the held interval: event2.5 becomes valid, precedingstill selected and watched clock1002.5 isPAUSE. Exact component calls establish the consumer admission/activation gap. ReportSHAaa8e150769ac0ddac47955ceae0913a958d8ae2270ff113372d5f18b4da4cdd5;18pinned source and7evidence hashes rootverified. Reproducer IO/render are sinks, not connected native browser proof. Existing23focused unitsPASS; no lower-bound/formatter/provider defect independently established.",
+      "evidence_path": "test-results/review-2026-10-26/r03/final-print-stats-timeline-review.json",
+      "risk": "Wrong replay-mode gating, erasing pending summaries or applying display rather than proven bounds can hide legitimate events or preserve the clamped marker bug. Render-only filtering leaves stale activation possible. Keep exact event/clock identity, original placement and compatibility; source proof still needs connected browser validation.",
+      "validation_plan": "Connected production timeline component in Chromium/WebKit with production-recorder-derived JPEG metadata/history and real native decoded stills: initial0..2proven/0..3slider hides stored2.5PAUSE; stale rendered/menu activation outside currentintersection makes0seek/0unfulfilledemit; accepted1030successor admits same2.5event, pointer/keyboard activation commits exactly1seek to2.5 with same session/imageowner, correct held pixels and PAUSE at1002.5. Removing coveragegate is required negative control recovering original mismatch. Test valid completedJPEG, inclusive actualbounds, realretention, fractional lowerbound compatibility, offscreen/frozen display mappings and pending summary preservation. Legacy descriptorless/invalidJPEG, file/H264/remote anddisabled controls unchanged,0extra telemetry/media requests from render/hover alone. If independent lower-precision/retention issue arises stop without broader edits. Run focused relevantJS plus existing registered browser-timeline-events, JPEGclock and preview-loading bothengines, docslinks; independent exact-final READY before integration. New normalfullCI after voted/tested implementation; no unchanged-source rerun, realprinter/device/deploy.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -6083,6 +6115,16 @@
       "at": "2026-10-26T12:53:13Z",
       "type": "audit_correction",
       "message": "Refreshed only mutable current-status prose identified by R08 after its original snapshot/hashes frozen. Record currentall40normalCI+hostinggreen sourcee6527f1. Voting history/frozen scopes/source/failed evidence unchanged; request exact bookkeeping recheck next."
+    },
+    {
+      "at": "2026-10-26T13:06:42Z",
+      "type": "checkpoint",
+      "message": "Nine-hour checkpoint:current40codeCI+hostinggreen andvotingintegrityrecheckREADY; 3hwindowremains. Native6hongoing beyond4h. NewR03JPEGtimelineprovisional-tailconsumerfindingawaitsformal report/freshvotes; no implementation. OneboundedcausalJPEGdiagnostic failed and recorded explicitunavailable-history\u2192known transition; formalreportpending,nohour."
+    },
+    {
+      "at": "2026-10-26T13:11:49Z",
+      "type": "proposal",
+      "message": "FreezeRound13P42rev1 exact3files afterR03report/source/evidence verification. No transferred approvals or author worktree/edits. Fresh10reviewer ballots now required; threshold6beforeimplementation."
     }
   ],
   "validation": [
@@ -6518,6 +6560,16 @@
       "status": "PASS_METADATA_WITH_BOOKKEEPING_FINDING",
       "summary": "R08bounded independent voting audit verified12frozen slates/120raw files/410explicitvotes409APPROVE1ABSTAIN/10reviewerpaths/root0. All40canonicalintegration parents have>=6exact approvals;38recorded authorparents do too; P34/P35older authorbases limit first-edit timing visibility without proving a violation.97Gitcommits/46source-at-commit hashguards/33peerreferences21reports inspected. No voting discrepancy; oneP3stale-status prosefinding addressed in current topstatus/P36implementation_status/P40implementation.status. Original e93b0bcfledger/96974ea5Markdown snapshots and frozenreportSHA8be3496e54feeb4a9c235a46687f98ea9b44390c4b8a9323fa565e38f2135e39 retained. No votes/frozen contracts/original failures rewritten.",
       "evidence": "test-results/review-2026-10-26/r08/final-vote-integrity-review.json"
+    },
+    {
+      "status": "READY_BOOKKEEPING_RECHECK",
+      "summary": "R08-INTEGRITY-01resolved exact7b66187: topstatus/P36/P40currentprosecorrect, all12slates/120rawballots/410votes/roster/quorum/frozencontractsandoriginalfailedreports unchanged. RootverifiednewreportSHAdcdedf3a0862281ce2fbeb7a2717fb4b68ca0a37abab5ce7fea02d0fd466fa30 andcurrentledger/snapshot/oldreport hashes before further append. Source-onlyprocessrecheck; original first-edit observability/device/runtime limits retained.",
+      "evidence": "test-results/review-2026-10-26/r08/final-vote-integrity-recheck.json"
+    },
+    {
+      "status": "RUNNING_PARTIAL_FOUR_HOURS",
+      "summary": "Nativea5059827run bothengines crossedactual4h with48preview sweeps and16rewind/Livecycles perengine, realretentionpruning/coldIDB reads, unchangednativeplayer/session andbounded128KiBcompressedRAM/8MiBdecoded/16MiBstream. Not6hcompletion/currentall40source or hardwarecertification. CheckpointSHA350625bd85f7215589887fe268f943612ceacaa4b21c72aa1d8298711db82d58.",
+      "evidence": "test-results/review-2026-10-26/root-p37-four-hour-checkpoint.json"
     }
   ],
   "implementation_worktrees": [
