@@ -217,7 +217,7 @@ export class PrinterContextMenu extends PlayerElement {
     button.querySelector('span').textContent = success ? 'Copied' : 'Try copying again';
     button.setAttribute('aria-label', success ? 'Debug info copied' : 'Could not copy debug info. Try again');
     clearTimeout(this.copyTimer);
-    if (success) this.copyTimer = setTimeout(() => this.close(true), 1000);
+    if (success) this.copyTimer = setTimeout(() => this.close(this.contains(this.ownerDocument.activeElement)), 1000);
   }
 
   disconnectedCallback() {

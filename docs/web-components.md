@@ -44,6 +44,13 @@ reattaches playback, Direct refreshes the verified controller/camera connection,
 and Demo reconnects its local player. This does not reload the page or create a
 new recording session.
 
+A rejected Settings backend check restores the submitted address input only
+when that same editor remains open on the visible Backend page and its focus
+was lost to the document during the check. Moving focus, dismissing Settings or
+replacing/disconnecting the editor prevents that restoration. Drafts and errors
+remain available for an explicit retry; a successful selection keeps its normal
+save and reload behavior.
+
 The first-visit backend chooser locks its address during the bounded connection
 check. Keyboard focus moves to Back so Escape and Back can still cancel; a
 failure or timeout restores editing. A cancelled check cannot select or save a
@@ -77,6 +84,10 @@ dismissal returns it to the player. Pointer activation keeps its existing focus
 behavior. These handoffs do not make diagnostics modal or change their sampling
 lifecycle.
 
+Successful Copy debug info feedback still dismisses after one second. It returns
+focus to the player only while the menu retains focus, so a later keyboard action
+on the timeline or another control continues without interruption.
+
 UI actions are synchronous bubbling/composed `CustomEvent`s: `printer-select`,
 `printer-save`, `printer-forget`, `printer-scan`, `player-play`, `settings-toggle`,
 `cast-request`, `fullscreen-toggle`, `backend-save` and `player-action`. The printer list consumes
@@ -101,7 +112,8 @@ safe names, labels, reconnecting editors, one action per gesture, and sampling
 cleanup in Chromium and WebKit. The existing browser suites cover the player
 behavior against generated footage.
 `apps/web/tests/browser-keyboard-focus.js` covers available menu actions,
-keyboard Stats handoffs, held onboarding checks and failed setup focus ownership
+keyboard Stats handoffs, copy-feedback focus ownership, held onboarding checks,
+and rejected printer/backend setup focus ownership
 with actual Chromium/WebKit keyboard events and generated responses.
 
 Platform reference: [WHATWG custom elements and lifecycle requirements](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-element-conformance).

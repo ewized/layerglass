@@ -307,12 +307,236 @@ async function rejectedSetup(browser) {
   } finally { await page.close(); }
 }
 
+async function rejectedBackend(browser, name) {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+  const checks = [];
+  const directChecks = [];
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => {
+    window.backendFocusAttempts = [];
+    const focus = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function(...args) {
+      if (this.id === 'backend-url') window.backendFocusAttempts.push({ connected: this.isConnected });
+      return focus.apply(this, args);
+    };
+    const set = Storage.prototype.setItem;
+    Storage.prototype.setItem = function(key, value) {
+      if (key === 'layerglass-backend' && window.failBackendStorage) throw new DOMException('Generated storage failure', 'QuotaExceededError');
+      return set.call(this, key, value);
+    };
+  });
+  await page.route('**/api/backend', route => { checks.push(route); });
+  await page.route('**/server/info', route => { directChecks.push(route); });
+  try {
+    const demo = new URL(base); demo.searchParams.set('backend', 'demo');
+    await page.goto(demo.href);
+    await page.waitForFunction(() => document.querySelector('#backend-list')?.current?.type === 'demo');
+    const input = page.locator('#backend-url');
+    const options = page.locator('#options-button');
+    const open = async (type = 'python') => {
+      if (!await page.locator('#player-options').isVisible()) { await options.focus(); await page.keyboard.press('Enter'); }
+      if (!await page.locator('[data-settings-page="backends"]').isVisible()) await page.locator('#backends-button').press('Enter');
+      await page.locator(`[data-backend-edit="${type}"]`).press('Enter');
+      await input.fill(origin); await focused(input);
+    };
+    const submit = async (pending = checks) => {
+      const prior = pending.length;
+      await input.focus(); await page.keyboard.press('Enter');
+      await until(() => pending.length === prior + 1, 'Backend check did not start once.');
+      assert.equal(await input.isDisabled(), true);
+      await page.evaluate(() => { window.backendFocusAttempts = []; });
+      return pending[prior];
+    };
+    const failed = async (route, json = { error: 'Generated backend unavailable' }, status = 503) => {
+      await settle(route, json, status);
+      await page.waitForFunction(() => !document.querySelector('#backend-url').disabled &&
+        !document.querySelector('#backend-error').hidden);
+      assert.equal(await input.inputValue(), origin);
+      assert.equal(await page.locator('#selected-backend').textContent(), 'Demo');
+    };
+    await open();
+    await failed(await submit()); await focused(input, 'A rejected Settings check must restore its owned editor.');
+    const retry = await submit();
+    await page.keyboard.press('Enter');
+    assert.equal(checks.length, 2, 'A busy retry must remain one bounded check.');
+    await failed(retry, { id: 'unrelated', protocol_version: 1 }, 200); await focused(input);
+
+    const timeout = await submit();
+    await page.waitForFunction(() => document.querySelector('#backend-error').textContent.includes('timed out'), undefined, { timeout: 10000 });
+    assert.equal(await input.isDisabled(), false); await focused(input);
+    await settle(timeout, {}, 503, true);
+
+    await page.evaluate(() => { window.failBackendStorage = true; });
+    await failed(await submit(), { id: 'python', protocol_version: 1 }, 200);
+    await focused(input); assert.match(await page.locator('#backend-error').textContent(), /Generated storage failure/);
+    await page.evaluate(() => { window.failBackendStorage = false; });
+
+    const beforeInvalid = checks.length;
+    await input.fill('https://generated.invalid/path'); await page.keyboard.press('Enter');
+    await page.locator('#backend-error').waitFor({ state: 'visible' });
+    assert.equal(checks.length, beforeInvalid, 'An invalid origin must not start a check.');
+    await focused(input); await input.fill(origin);
+
+    const moved = await submit(); await options.focus(); await failed(moved); await focused(options);
+    assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), []);
+
+    const dismissed = await submit(); await options.focus(); await page.keyboard.press('Enter');
+    await failed(dismissed);
+    assert.equal(await page.locator('#player-options').isVisible(), false); await focused(options);
+    assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), []);
+
+    await open(); const navigated = await submit();
+    await page.locator('#settings-back').press('Enter'); await failed(navigated);
+    assert.equal(await page.locator('#player-options').evaluate(panel => panel.page), 'root');
+    await focused(page.locator('#backends-button'));
+    assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), []);
+
+    await open(); const hidden = await submit();
+    await page.locator('#player-options').evaluate(panel => { panel.hidden = true; });
+    await page.waitForFunction(() => !document.querySelector('#backend-form').contains(document.activeElement));
+    await failed(hidden);
+    assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), [], 'A hidden editor must not receive even a focus attempt.');
+
+    await open(); const disconnected = await submit();
+    await page.locator('#backend-list').evaluate(list => {
+      window.detachedBackendList = list;
+      window.backendPlaceholder = document.createComment('backend fixture');
+      list.before(window.backendPlaceholder); list.remove();
+    });
+    await page.waitForFunction(() => document.activeElement === document.body);
+    await settle(disconnected, {}, 503);
+    await page.waitForFunction(() => !window.detachedBackendList.busy);
+    assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), [], 'A disconnected editor cannot regain focus.');
+    await page.evaluate(() => window.backendPlaceholder.replaceWith(window.detachedBackendList));
+    assert.equal(await input.inputValue(), origin);
+
+    await open(); const replaced = await submit();
+    await page.locator('#backend-list').evaluate(list => {
+      window.originalBackendInput = list.input;
+      const replacement = list.input.cloneNode(true); replacement.value = list.input.value;
+      list.input.replaceWith(replacement); list.input = replacement;
+    });
+    await page.waitForFunction(() => document.activeElement === document.body);
+    await failed(replaced);
+    assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), [], 'A replacement field does not own the old request.');
+    await page.locator('#backend-list').evaluate(list => { list.input.replaceWith(window.originalBackendInput); list.input = window.originalBackendInput; list.render(); });
+
+    await open(); await options.focus();
+    const unownedIndex = checks.length;
+    await page.locator('#backend-form').evaluate(form => form.requestSubmit());
+    await until(() => checks.length === unownedIndex + 1, 'Unowned fixture check did not start.');
+    await page.evaluate(() => { window.backendFocusAttempts = []; });
+    await failed(checks[unownedIndex]); await focused(options);
+    assert.deepEqual(await page.evaluate(() => window.backendFocusAttempts), []);
+
+    const directSupported = await page.locator('[data-backend-edit="direct"]').isEnabled();
+    if (directSupported) {
+      await open('direct'); await failed(await submit(directChecks)); await focused(input);
+      assert.equal(directChecks.length, 1);
+    }
+    assert.equal(await page.evaluate(() => localStorage.getItem('layerglass-backend')), null);
+
+    await open(); const success = await submit();
+    await settle(success, { id: 'python', protocol_version: 1 });
+    await page.waitForURL(url => !url.searchParams.has('backend'));
+    await page.waitForFunction(() => document.querySelector('#backend-list')?.current?.type === 'python');
+    assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('layerglass-backend'))), { type: 'python', url: origin });
+    assert.equal(await page.locator('#backend-form').evaluate(form => form.hidden), true);
+    assert.deepEqual(errors, []);
+    console.log(`${name}: Settings backend rejection/retry, incompatible/invalid/timeout/storage errors, moved/hidden/disconnected/replaced ownership, ${directSupported ? 'supported Direct failure, ' : ''}and successful reload passed.`);
+  } finally { await page.close(); }
+}
+
+async function copyFeedbackFocus(browser, name) {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => {
+    window.copyMode = 'success';
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: () =>
+      window.copyMode === 'failure' ? Promise.reject(new DOMException('Generated rejection', 'NotAllowedError')) :
+      window.copyMode === 'pending' ? new Promise(resolve => { window.finishCopy = resolve; }) : Promise.resolve() } });
+    Object.defineProperty(document, 'pictureInPictureEnabled', { configurable: true, value: false });
+    HTMLVideoElement.prototype.webkitSupportsPresentationMode = () => false;
+  });
+  try {
+    await page.goto(base);
+    await waitForPlayer(page, ({ app }) => app.video.readyState >= 2 && app.pageReplay.session?.ready &&
+      app.pageReplay.session.end_seconds >= 4, undefined, { timeout: 45000 });
+    await page.evaluate(async () => {
+      const app = await import('/static/player.js');
+      app.video.pause();
+      const bounds = app.pageReplay.bounds(); app.pageReplay.seek((bounds.start + bounds.end) / 2);
+      window.copyFocusOriginal = { video: app.video, decoder: app.hls, token: app.pageReplay.session.session_id };
+      window.copyFocusCommits = 0;
+      window.addEventListener('replaypositionchange', () => window.copyFocusCommits++);
+    });
+    await waitForPlayer(page, ({ app }) => app.video.paused && !app.video.seeking);
+    const player = page.locator('#player');
+    const menu = page.locator('#video-context-menu');
+    const slider = page.locator('#replay-slider');
+    const copy = menu.locator('[data-player-action="copy-debug"]');
+    const open = async () => { await player.focus(); await page.keyboard.press('Shift+F10'); await page.keyboard.press('End'); await focused(copy); };
+    const copied = async () => { await open(); await page.keyboard.press('Enter'); await page.waitForFunction(() => document.querySelector('[data-player-action="copy-debug"] span').textContent === 'Copied'); };
+    const tabTo = async locator => {
+      for (let count = 0; count < 12 && !await locator.evaluate(node => node === document.activeElement); count++) await page.keyboard.press('Tab');
+      await focused(locator);
+    };
+
+    await copied(); await menu.waitFor({ state: 'hidden' }); await focused(player);
+    await copied(); await tabTo(slider);
+    await page.keyboard.down('ArrowRight');
+    await waitForPlayer(page, ({ app }) => app.pageReplay.scrubType === 'keyboard' && app.pageReplay.previewChanged);
+    const target = await slider.inputValue();
+    await menu.waitFor({ state: 'hidden' });
+    await focused(slider, 'Copy feedback must not interrupt the later keyboard scrub.');
+    await waitForPlayer(page, ({ app }) => app.pageReplay.scrubType === 'keyboard');
+    assert.equal(await page.evaluate(() => window.copyFocusCommits), 0);
+    await page.keyboard.up('ArrowRight');
+    assert.equal(await page.evaluate(() => window.copyFocusCommits), 1);
+    await waitForPlayer(page, ({ app, arg: expected }) => !app.video.seeking && Math.abs(app.video.currentTime - expected) < 0.2,
+      Number(target), { timeout: 15000 });
+
+    await copied(); await tabTo(page.locator('#options-button'));
+    await menu.waitFor({ state: 'hidden' }); await focused(page.locator('#options-button'));
+
+    await page.evaluate(() => { window.copyMode = 'failure'; });
+    await open(); await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.querySelector('[data-player-action="copy-debug"] span').textContent === 'Try copying again');
+    await page.waitForTimeout(1100); assert.equal(await menu.isVisible(), true); await focused(copy);
+    await page.evaluate(() => { window.copyMode = 'success'; });
+    await page.keyboard.press('Enter'); await menu.waitFor({ state: 'hidden' }); await focused(player);
+
+    await page.evaluate(() => { window.copyMode = 'pending'; });
+    await open(); await page.keyboard.press('Enter'); await page.waitForFunction(() => window.finishCopy);
+    await page.keyboard.press('Escape'); await focused(player);
+    await open(); await page.evaluate(() => window.finishCopy());
+    await page.waitForTimeout(1100);
+    assert.equal(await menu.isVisible(), true); assert.equal(await copy.locator('span').textContent(), 'Copy debug info');
+    await page.keyboard.press('Escape'); await focused(player);
+
+    await page.evaluate(() => { window.copyMode = 'success'; });
+    await copied(); await tabTo(page.locator('#options-button'));
+    await menu.evaluate(node => { window.disconnectedCopyMenu = node; node.remove(); });
+    await page.waitForTimeout(1100); await focused(page.locator('#options-button'));
+    assert.equal(await page.evaluate(() => window.disconnectedCopyMenu.hidden), true);
+    await player.evaluate(node => node.insertBefore(window.disconnectedCopyMenu, node.querySelector('#player-stats')));
+    await waitForPlayer(page, ({ app }) => app.video === window.copyFocusOriginal.video && app.hls === window.copyFocusOriginal.decoder &&
+      app.pageReplay.session.session_id === window.copyFocusOriginal.token && app.video.paused);
+    assert.deepEqual(errors, []);
+    console.log(`${name}: Copy feedback preserves later keyboard scrub/control focus, owns normal dismissal, and retains failed retry, Escape, late-menu and disconnect cleanup.`);
+  } finally { await page.close(); }
+}
+
 for (const [name, engine] of Object.entries({ chromium, webkit })) {
   const browser = await engine.launch({ headless: true, args: name === 'chromium' ? ['--no-sandbox'] : [] });
   try {
     await menuAndStats(browser);
     await onboarding(browser, name);
     await rejectedSetup(browser);
+    await rejectedBackend(browser, name);
+    await copyFeedbackFocus(browser, name);
     console.log(`${name}: available menu actions, keyboard Stats focus, pending onboarding ownership/cancellation and failed printer-editor focus passed.`);
   } finally { await browser.close(); }
 }

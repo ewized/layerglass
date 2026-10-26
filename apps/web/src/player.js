@@ -115,8 +115,20 @@ $('selected-backend').textContent = backendList.configure(configuration, directB
 $('local-media-label').hidden = !backend.capabilities.localMedia;
 backendList.addEventListener('backend-save', async event => {
   if (backendList.busy) return;
+  const document = backendList.ownerDocument;
+  const focusOwner = backendList.form.contains(document.activeElement) ?
+    { input: backendList.input, form: backendList.form, editor: backendList.editing, moved: false } : null;
+  const focusListeners = new AbortController();
+  let failed = false;
   backendList.error = '';
   backendList.busy = true;
+  if (focusOwner) {
+    const moved = event => {
+      if (event.type === 'keydown' ? event.key === 'Tab' : !focusOwner.form.contains(event.target)) focusOwner.moved = true;
+    };
+    for (const type of ['focusin', 'pointerdown', 'keydown']) document.addEventListener(type, moved,
+      { capture: true, signal: focusListeners.signal });
+  }
   try {
     const config = backendConfig(event.detail);
     if (config.type === 'python') {
@@ -132,13 +144,26 @@ backendList.addEventListener('backend-save', async event => {
     if (next.href === location.href) location.reload();
     else location.assign(next.href);
   } catch (failure) {
+    failed = true;
     backendList.error = ['TimeoutError', 'AbortError'].includes(failure.name) ?
       'Connection timed out. Check the address and try again.' :
       failure instanceof TypeError && /fetch|network|load/i.test(failure.message) ?
         'Cannot reach this backend. Check HTTPS, the allowed frontend origin, and your network permission.' :
         failure instanceof SyntaxError ? 'This address is not a compatible LayerGlass backend.' : failure.message;
     console.warn('[LayerGlass] Backend selection failed', failure.name);
-    backendList.busy = false;
+  } finally {
+    focusListeners.abort();
+    if (failed) {
+      backendList.busy = false;
+      if (focusOwner && !focusOwner.moved && !document.hidden && document.hasFocus() &&
+          [document.body, document.documentElement].includes(document.activeElement) &&
+          backendList.isConnected && backendList.ownerDocument === document &&
+          backendList.form === focusOwner.form && backendList.input === focusOwner.input &&
+          backendList.editing === focusOwner.editor && backendList.contains(focusOwner.form) &&
+          focusOwner.form.contains(focusOwner.input) && !focusOwner.form.hidden &&
+          !playerChrome.panel.hidden && playerChrome.settings.page === 'backends' &&
+          focusOwner.input.getClientRects().length) focusOwner.input.focus({ preventScroll: true });
+    }
   }
 });
 $('local-media').addEventListener('change', async event => {
