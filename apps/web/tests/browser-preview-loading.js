@@ -34,7 +34,8 @@ const server = createServer(async (request, response) => {
   const file = path.startsWith('/static/') && new URL(path.slice('/static/'.length), source);
   if (!file || !file.href.startsWith(source.href)) { response.writeHead(404).end(); return; }
   try {
-    response.writeHead(200, { 'Content-Type': 'text/javascript' }); response.end(await readFile(file));
+    const body = await readFile(file);
+    response.writeHead(200, { 'Content-Type': 'text/javascript' }); response.end(body);
   } catch { response.writeHead(404).end(); }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -51,9 +52,10 @@ try {
     try {
       await page.goto(base);
       await page.waitForFunction(() => window.previewReady);
-      const jpeg = Buffer.from(await page.evaluate(() => {
+      const jpeg = Buffer.from(await page.evaluate(async () => {
         const canvas = document.createElement('canvas'); canvas.width = 960; canvas.height = 360;
         const ctx = canvas.getContext('2d'); ctx.fillStyle = '#20a060'; ctx.fillRect(0, 0, 960, 360);
+        window.previewJpeg = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
         return canvas.toDataURL('image/jpeg').split(',')[1];
       }), 'base64');
       let corrupt = true;
@@ -99,11 +101,118 @@ try {
       await page.waitForTimeout(200);
       assert.equal(await page.evaluate(() => previewTest.history.frames.size), 0);
       assert.equal(await page.evaluate(() => previewTest.preview.painted), false);
+
+      await page.unroute('**/replay/*/preview.jpg?*');
+      const beforeDiskRequests = requests.length;
+      await page.route('**/replay/*/preview.jpg?*', route => { requests.push(route.request().url()); return route.abort(); });
+      await page.evaluate(async () => {
+        const { PreviewHistory } = await import('/static/preview-history.js');
+        window.persistedPreview = async token => {
+          const history = new PreviewHistory({ maxBytes: 1 });
+          const fixture = configurePreview(token, history);
+          fixture.replay.session.preview_fallback = false;
+          for (const time of [10, 70]) history.addFrame(time, previewJpeg);
+          await Promise.all([...history.writes]);
+          if (!history.assets.get('frame:10')?.persisted || history.bytes) throw new Error('Fixture JPEG was not persisted and evicted.');
+          const get = history.disk.get.bind(history.disk);
+          fixture.releases = new Map(); fixture.reads = [];
+          history.disk.get = async (session, key) => {
+            fixture.reads.push(key);
+            const stored = await get(session, key);
+            await new Promise(resolve => fixture.releases.set(key, resolve));
+            return stored;
+          };
+          fixture.release = key => { fixture.releases.get(key)(); fixture.releases.delete(key); };
+          return fixture;
+        };
+        window.clearPersistedPreview = async fixture => {
+          const token = fixture.history.token;
+          fixture.history.setSession(null);
+          await fixture.history.disk.removeSession(token);
+        };
+        (await persistedPreview('late-read')).preview.showPoint({ value: 10 });
+      });
+      const timedOutRead = async key => {
+        await page.waitForFunction(key => previewTest.releases.has(key), key);
+        await page.waitForFunction(() => !previewTest.preview.resolving);
+      };
+      const painted = time => page.waitForFunction(time => previewTest.preview.displayed?.time === time, time, { timeout: 5000 });
+      await timedOutRead('frame:10');
+      await page.evaluate(() => previewTest.release('frame:10'));
+      await painted(10);
+      assert.equal(await page.evaluate(() => previewTest.history.bytes), 0, 'A late paint must also work when the JPEG cannot stay in RAM.');
+
+      await page.evaluate(async () => {
+        await clearPersistedPreview(previewTest);
+        (await persistedPreview('different-target')).preview.showPoint({ value: 10 });
+      });
+      await timedOutRead('frame:10');
+      await page.evaluate(() => previewTest.preview.showPoint({ value: 70 }));
+      await page.waitForFunction(() => previewTest.releases.has('frame:70'));
+      await page.evaluate(() => previewTest.release('frame:10'));
+      await page.waitForTimeout(50);
+      assert.equal(await page.evaluate(() => previewTest.preview.bitmaps.has('frame:10')), false, 'A late old target must not start decoding.');
+      await timedOutRead('frame:70');
+      await page.evaluate(() => previewTest.release('frame:70'));
+      await painted(70);
+
+      await page.evaluate(async () => {
+        await clearPersistedPreview(previewTest);
+        (await persistedPreview('old-disk-session')).preview.showPoint({ value: 10 });
+      });
+      await timedOutRead('frame:10');
+      await page.evaluate(() => {
+        window.oldPreviewTest = previewTest;
+        const { preview, history, replay } = configurePreview('replacement-session');
+        replay.session.preview_fallback = false;
+        history.addFrame(70, previewJpeg); preview.showPoint({ value: 70 });
+      });
+      await painted(70);
+      await page.evaluate(() => oldPreviewTest.release('frame:10'));
+      await page.waitForTimeout(50);
+      assert.equal(await page.evaluate(() => previewTest.preview.displayed.time), 70);
+      assert.equal(await page.evaluate(() => previewTest.preview.bitmaps.has('frame:10')), false, 'An old session must not decode into its replacement.');
+
+      await page.evaluate(async () => {
+        await clearPersistedPreview(oldPreviewTest);
+        (await persistedPreview('hidden-disk-read')).preview.showPoint({ value: 10 });
+      });
+      await timedOutRead('frame:10');
+      await page.evaluate(() => { previewTest.preview.hide(); previewTest.release('frame:10'); });
+      await page.waitForTimeout(50);
+      assert.equal(await page.evaluate(() => previewTest.preview.bitmaps.size), 0, 'A hidden preview must not decode its late completion.');
+      assert.equal(await page.evaluate(() => previewTest.preview.painted), false);
+
+      await page.evaluate(async () => {
+        await clearPersistedPreview(previewTest);
+        (await persistedPreview('coalesced-disk-read')).preview.showPoint({ value: 10 });
+      });
+      await timedOutRead('frame:10');
+      await page.evaluate(() => {
+        window.previewDecodes = 0;
+        if (typeof createImageBitmap === 'function') {
+          const decode = window.createImageBitmap.bind(window);
+          window.createImageBitmap = (...args) => { window.previewDecodes++; return decode(...args); };
+        } else {
+          const decode = HTMLImageElement.prototype.decode;
+          HTMLImageElement.prototype.decode = function() { window.previewDecodes++; return decode.call(this); };
+        }
+        // A second resolution shares the same disk read. Its completion must
+        // retain ownership of the decode lane when the first read arrives late.
+        previewTest.preview.showPoint({ value: 10 });
+        previewTest.release('frame:10');
+      });
+      await painted(10);
+      await page.waitForFunction(() => !previewTest.preview.resolving);
+      assert.deepEqual(await page.evaluate(() => ({ reads: previewTest.reads.length, decodes: previewDecodes })), { reads: 1, decodes: 1 });
+      assert.equal(requests.length, beforeDiskRequests, 'Late local reads in browser-only mode must not fetch a sprite.');
+      assert(await page.evaluate(() => previewTest.preview.bitmapBytes <= 8 * 1024 * 1024));
       assert.deepEqual(await page.evaluate(() => ({ video: document.querySelector('video') === originalVideo,
         count: document.querySelectorAll('video').length, seeks: previewSeeks })), { video: true, count: 1, seeks: 0 });
-      await page.evaluate(() => { previewTest.history.setSession(null); previewTest.preview.reset(); });
+      await page.evaluate(async () => { await clearPersistedPreview(previewTest); previewTest.preview.reset(); });
       assert.deepEqual(errors, []);
       console.log(`${name}: corrupt sprite cooldown, valid retry, local fallback and cancelled response passed.`);
+      console.log(`${name}: late persisted reads, target/session/visibility ownership and coalesced decoding passed.`);
     } finally { await context.close(); await browser.close(); }
   }
 } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }

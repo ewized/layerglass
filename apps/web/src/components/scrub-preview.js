@@ -96,7 +96,6 @@ export class PrinterScrubPreview extends PlayerElement {
     const bitmap = found && this.bitmaps.get(found.asset.key);
     if (bitmap) {
       this.paint(found, bitmap);
-      clearTimeout(this.requestTimer); this.requestTimer = null;
       return;
     }
     // Keep a real, labelled still on screen during a disk read/decode or server
@@ -110,20 +109,37 @@ export class PrinterScrubPreview extends PlayerElement {
     if (!this.resolving) this.resolveLatest();
   }
 
-  async resolveLatest() {
-    const job = { time: this.point.time, epoch: this.epoch, version: this.history.version };
+  currentRead(job) {
+    return !this.hidden && job.epoch === this.epoch && job.version === this.history.version &&
+      job.token === this.token && job.token === this.history.token &&
+      job.token === this.readReplay?.()?.session?.session_id && job.time === this.point?.time;
+  }
+
+  async resolveLatest(loaded = null) {
+    const job = { time: this.point.time, epoch: this.epoch, version: this.history.version, token: this.token };
     this.resolving = job;
     try {
       // IDB can be unavailable or stalled in private/background tabs. Playback
       // must not depend on it; the same missing image may use the server instead.
-      let deadline;
-      const found = await Promise.race([this.history.get(job.time), new Promise(resolve => {
-        deadline = setTimeout(() => resolve(null), 500);
-      })]).finally(() => clearTimeout(deadline));
-      if (job.epoch !== this.epoch || this.hidden) return;
+      let found = loaded;
+      if (!found) {
+        const read = this.history.get(job.time);
+        let deadline, timedOut = false;
+        found = await Promise.race([read, new Promise(resolve => {
+          deadline = setTimeout(() => { timedOut = true; resolve(null); }, 500);
+        })]).finally(() => clearTimeout(deadline));
+        if (timedOut) read.then(late => {
+          if (!late || !this.currentRead(job)) return;
+          // Reuse the returned Blob even if the RAM budget evicted it. A newer
+          // resolution owns the decode lane until it finishes, so never fork it.
+          if (this.resolving) this.changedDuringRead = true;
+          else this.resolveLatest(late);
+        });
+      }
+      if (!this.currentRead(job)) return;
       if (!found) { this.schedule(); return; }
       const bitmap = await this.bitmap(found.asset, job.epoch);
-      if (job.epoch !== this.epoch || this.hidden) return;
+      if (!this.currentRead(job)) return;
       if (!bitmap) {
         // Corrupt/evicted local data can use the same backup as a missing image.
         for (const key of [...found.asset.refs]) this.history.forgetFrame(key);
@@ -172,6 +188,7 @@ export class PrinterScrubPreview extends PlayerElement {
     this.context.drawImage(bitmap, (frame.cell % asset.columns) * width, Math.floor(frame.cell / asset.columns) * height,
       width, height, 0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT);
     this.bitmaps.delete(asset.key); this.bitmaps.set(asset.key, bitmap);
+    clearTimeout(this.requestTimer); this.requestTimer = null;
     this.displayed = { ...frame, asset: asset.key };
     this.painted = true;
     this.updateClock();

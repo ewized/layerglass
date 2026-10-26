@@ -41,6 +41,10 @@ Rapid movement coalesces decoding toward the latest target. A real still remains
 visible during a disk read/decode; the label uses that still's timestamp, with
 `≈` when it is more than five seconds away from the requested position. The
 timestamp stays below the complete image. There is no preview loading spinner.
+After 500 ms an unfinished disk read may use server fallback. If that read later
+finishes, the still can paint without another pointer event, even when its JPEG
+exceeds the RAM cache budget. Only the current session, visible preview and
+requested target can use that completion; it shares the existing decode path.
 
 Missing, evicted or unreadable local frames fall back to the existing server
 sprite endpoint, after local lookup and a short pointer debounce. One JPEG has
@@ -86,3 +90,5 @@ The accelerated 45-minute test checks every five-second timestamp and image
 color with no preview HTTP requests or main-video seeks; it is not a claim of
 a 45-minute physical-phone soak test. Separate checks force RAM eviction, quota
 errors and delayed server fallback, and exercise keyboard/touch/narrow layouts.
+`browser-preview-loading.js` checks corrupt-sprite cooldown and recovery, plus
+delayed IndexedDB reads with current-target, session and visibility ownership.
