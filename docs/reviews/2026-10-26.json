@@ -32,7 +32,7 @@
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "implementing P02-P04 in isolated worktree",
+      "status": "P02-P04 implemented and reviewed; integrated",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json"
     },
@@ -40,7 +40,7 @@
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 1 ballot complete",
+      "status": "implementing P10-P11 in isolated worktree",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json"
     },
@@ -56,7 +56,7 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 1 ballot complete",
+      "status": "implementing P12-P15 in isolated worktree",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json"
     },
@@ -235,7 +235,11 @@
         "worktree": "/workspace/layerglass-review/provider-lifecycles",
         "commit": "bb922f3",
         "validation": "14 backend units, Chromium/WebKit backend-origin including307/308 zero-forwarding regression,35 docs passed",
-        "peer_review": "pending",
+        "peer_review": {
+          "reviewer": "r05",
+          "status": "ready",
+          "evidence": "Independent implementation diff review and37 focused provider units passed; no blockers for P01/P08."
+        },
         "integrated": false
       }
     },
@@ -254,7 +258,7 @@
       "evidence_path": "test-results/review-2026-10-26/r01/",
       "risk": "Low; intentionally removes unusual secret/URL-keyed readings.",
       "validation_plan": "Nested secret/URL key fixtures and safe siblings; no secret or URL in serialized output; existing bounded sanitizer tests.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -330,9 +334,14 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/printer-bindings",
         "commit": "5d9a8a1",
-        "validation": "25 focused tests and documentation validation reported by R03",
-        "peer_review": "pending",
-        "integrated": false
+        "integrated_commit": "552cd4e",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "evidence": "Inspected immutable implementation diffs/lock call graph and independently reran12 current binding lifecycle tests, all passed. Other focused/full backend evidence in R03 handoff."
+        },
+        "validation": "R03:25 P02 tests,61 P03 tests,182 full backend plus2 final targeted cases;35 docs. Root independent12 binding cases passed. Canonical full integration checks pending."
       }
     },
     {
@@ -351,7 +360,7 @@
       "evidence_path": "test-results/review-2026-10-26/r03/",
       "risk": "Low to moderate; private serial must remain intact, including short-code cases.",
       "validation_plan": "Synthetic paired registry checks name/firmware reports, catalog/current/debug/persistence/reload; safe identity unchanged; TLS and subscription serial retained.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -427,9 +436,14 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/printer-bindings",
         "commit": "6b1d75e",
-        "validation": "61 focused tests and documentation validation reported by R03",
-        "peer_review": "pending",
-        "integrated": false
+        "integrated_commit": "28c137a",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "evidence": "Inspected immutable implementation diffs/lock call graph and independently reran12 current binding lifecycle tests, all passed. Other focused/full backend evidence in R03 handoff."
+        },
+        "validation": "R03:25 P02 tests,61 P03 tests,182 full backend plus2 final targeted cases;35 docs. Root independent12 binding cases passed. Canonical full integration checks pending."
       }
     },
     {
@@ -448,7 +462,7 @@
       "evidence_path": "test-results/review-2026-10-26/r03/",
       "risk": "Moderate; pairing lifecycle, active clients and atomic persistence need focused review.",
       "validation_plan": "Pair A then discover B; B cannot use A code or create telemetry before explicit re-pair, including reload. Re-pair B succeeds; repeat A scan/offline restart/metadata delta and unrelated endpoint remain intact; persistence failure covered.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -520,6 +534,18 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/printer-bindings",
+        "commit": "1b99e5a",
+        "integrated_commit": "5587858",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "evidence": "Inspected immutable implementation diffs/lock call graph and independently reran12 current binding lifecycle tests, all passed. Other focused/full backend evidence in R03 handoff."
+        },
+        "validation": "R03:25 P02 tests,61 P03 tests,182 full backend plus2 final targeted cases;35 docs. Root independent12 binding cases passed. Canonical full integration checks pending."
       }
     },
     {
@@ -538,7 +564,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Low; one legitimate initial frame request for the replacement session.",
       "validation_plan": "Unit fixture switches JPEG A/B and seeks same rounded time; assert B frame URL assigned and paused; existing timeline tests.",
-      "status": "implementing",
+      "status": "implemented",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -610,6 +636,13 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/replay-recovery",
+        "commit": "99f2c8c",
+        "validation": "32 focused timeline tests/docs reported by R02",
+        "peer_review": "pending",
+        "integrated": false
       }
     },
     {
@@ -728,7 +761,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Low when limited to kind=file with finite duration.",
       "validation_plan": "Unit tests near EOF and after EOF advance clock; edge and max never exceed duration, no fake end offset; pre-EOF equal-rate replay stays stable; HLS interpolation unchanged.",
-      "status": "implementing",
+      "status": "implemented",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -800,6 +833,13 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/replay-recovery",
+        "commit": "850c861",
+        "validation": "35 focused timeline tests/docs reported by R02",
+        "peer_review": "pending",
+        "integrated": false
       }
     },
     {
@@ -893,8 +933,12 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/provider-lifecycles",
         "commit": "e282bde",
-        "validation": "13 Direct/MJPEG units,35 docs passed; browser compatibility pending",
-        "peer_review": "pending",
+        "validation": "13 Direct/MJPEG units; Chromium/WebKit Direct browser regression and35 docs passed; included in final38 provider units.",
+        "peer_review": {
+          "reviewer": "r05",
+          "status": "ready",
+          "evidence": "Independent implementation diff review and37 focused provider units passed; no blockers for P01/P08."
+        },
         "integrated": false
       }
     },
@@ -914,7 +958,7 @@
       "evidence_path": "test-results/review-2026-10-26/r05/",
       "risk": "Low; cleanup must not duplicate SDK callbacks or sender listeners.",
       "validation_plan": "Fail first script load, succeed on explicit refresh, assert only bounded retry, native picker remains synchronously invoked by click, concurrent initialization shares one active script.",
-      "status": "approved",
+      "status": "implemented",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -986,6 +1030,20 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/provider-lifecycles",
+        "commits": [
+          "6bcd598",
+          "8550da6"
+        ],
+        "integrated": false,
+        "peer_review": {
+          "reviewer": "r05",
+          "status": "correction awaiting re-review",
+          "finding": "Partial framework setup could leave duplicate listeners; bounded rollback correction committed8550da6."
+        },
+        "validation": "38 provider units including partial registration rollback, real-player Chromium Cast same-page recovery/picker,35 docs pass. Official SDK API documentation consulted; no actual sender service/device probe."
       }
     },
     {
@@ -1004,7 +1062,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/",
       "risk": "Low; avoid suppressing a different fallback image or permanently poisoning the preview.",
       "validation_plan": "Fixture corrupt JPEG yields one request during cooldown then valid response paints after expiry; local-corrupt-frame can still fall back to server sprite; target/session cancellation preserved.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1094,7 +1152,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/",
       "risk": "Low; stale completions must not repaint a newer target or closed session.",
       "validation_plan": "Delay a valid persisted read beyond500ms, assert stationary target paints automatically without pointer movement; older target/session completion cannot replace current preview; no second decoder.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1186,7 +1244,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. File reads already open may finish on POSIX; new lookups correctly fail after stop. Delete only the owned generation to preserve a concurrently created replacement.",
       "validation_plan": "Use the existing fake-FFmpeg RecoveryTests fixture: stop/reconfigure/forget a relay, assert its generation path and prior media URL disappear (404); separately assert a replacement generation or sibling directory survives.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1277,7 +1335,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. Cleanup must target only the newly created token and must not remove an archive still leased by other pages.",
       "validation_plan": "Inject ENOSPC on first collection, assert no new token or unused archive remains, restore the copy and assert create succeeds. Also fail a later tab on a shared archive and assert the existing tab/history is intact.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1368,7 +1426,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low to medium. Preserve lock order; _run already holds replay.lock while calling registry.get_relay. Registry forget/configure currently release registry.lock before acquiring replay.lock.",
       "validation_plan": "Deterministically hold ReplayBuffer.lock, start a create, forget the registry/replay while the lock is held, release it, and assert create rejects without retaining a session/archive. Cover the opposite ordering so a forget following a successful create clears that session.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1460,7 +1518,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. FFmpeg emits a monotonic rolling manifest within each generation; keep reset behavior for a genuine reconnect.",
       "validation_plan": "Feed thousands of sequential rolling manifests under a small byte limit and assert seen remains bounded by the manifest window, no duplicate append occurs for unchanged manifests, and reconnect/page-isolation behavior is preserved.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2177,6 +2235,22 @@
     {
       "sha": "59f64d1",
       "summary": "Process checkpoint: six explicit distinct approvals on every revision1 proposal; root votes0."
+    },
+    {
+      "sha": "0c9c5a5",
+      "summary": "Process checkpoint: all220 explicit first-round approvals recorded."
+    },
+    {
+      "sha": "552cd4e",
+      "summary": "P02: omit sensitive telemetry keys; independently reviewed."
+    },
+    {
+      "sha": "28c137a",
+      "summary": "P03: sanitize public printer identity; independently reviewed."
+    },
+    {
+      "sha": "5587858",
+      "summary": "P04: quarantine replacement serial bindings; independently reviewed and12 lifecycle cases rerun."
     }
   ],
   "activity": [
@@ -2294,6 +2368,11 @@
       "at": "2026-10-26T04:38:10Z",
       "type": "balloting complete",
       "message": "All ten reviewers submitted22 explicit exact-scope APPROVE votes each,220 approvals total, zero inferred/root votes. Remaining canonical source freeze ended. Approved implementations remain isolated pending validation and independent diff review."
+    },
+    {
+      "at": "2026-10-26T04:50:42Z",
+      "type": "integration",
+      "message": "Reviewed P02-P04 integrated as552cd4e/28c137a/5587858. Root provider P01/P08 passed R05 review. P09 review found partial initialization listener leak; correction8550da6 tested and awaits re-review. R06 now implementing approved DVR lifecycle fixes; isolated baseline endurance run active."
     }
   ],
   "validation": [
@@ -2302,6 +2381,20 @@
       "status": "passed",
       "log": "test-results/review-baseline-20261026.log",
       "completed_at": "2026-10-26T04:18:52Z"
+    },
+    {
+      "summary": "Root independent review:12 current printer binding lifecycle regressions",
+      "status": "passed",
+      "log": "test-results/review-2026-10-26/root-printer-binding-review.log",
+      "completed_at": "2026-10-26T04:50:42Z"
+    },
+    {
+      "summary": "Pinned baseline generated-camera60-minute endurance run; network isolated and resource capped",
+      "status": "running",
+      "log": "test-results/review-2026-10-26/baseline-soak.log",
+      "source": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
+      "first_sample_at": "2026-10-26T04:43:50.961Z",
+      "duration_seconds": 3600
     }
   ],
   "implementation_worktrees": [
@@ -2337,6 +2430,28 @@
         "P07"
       ],
       "starting_commit": "59f64d1"
+    },
+    {
+      "path": "/workspace/layerglass-review/preview-loading",
+      "branch": "review/preview-loading",
+      "owner": "r04",
+      "proposals": [
+        "P10",
+        "P11"
+      ],
+      "starting_commit": "0c9c5a5"
+    },
+    {
+      "path": "/workspace/layerglass-review/dvr-lifecycles",
+      "branch": "review/dvr-lifecycles",
+      "owner": "r06",
+      "proposals": [
+        "P12",
+        "P13",
+        "P14",
+        "P15"
+      ],
+      "starting_commit": "0c9c5a5"
     }
   ]
 }
