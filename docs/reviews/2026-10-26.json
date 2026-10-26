@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 1 ballot complete",
+      "status": "round1 ballot complete; DVR diff review ready",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json"
     },
@@ -40,7 +40,7 @@
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "implementing P10-P11 in isolated worktree",
+      "status": "round1 ballot complete; preview implemented; reviewing replay recovery",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json"
     },
@@ -48,7 +48,7 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 1 ballot complete",
+      "status": "round1 ballot complete; provider diff review ready after correction",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json"
     },
@@ -56,7 +56,7 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "implementing P12-P15 in isolated worktree",
+      "status": "round1 ballot complete; DVR implementation integrated",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json"
     },
@@ -64,7 +64,7 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 1 ballot complete",
+      "status": "round1 ballot complete; reviewing docs/build contracts",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json"
     },
@@ -80,7 +80,7 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 1 ballot complete",
+      "status": "round1 ballot complete; keyboard focus implementation active",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json"
     },
@@ -158,7 +158,7 @@
       "evidence_path": "test-results/review-2026-10-26/r01/",
       "risk": "Low; installations relying on redirects must enter the final backend origin.",
       "validation_plan": "Unit test forced policy despite caller override; browser 307/308 receivers receive no configure body; normal same-origin/CORS flow remains valid.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -238,9 +238,10 @@
         "peer_review": {
           "reviewer": "r05",
           "status": "ready",
-          "evidence": "Independent implementation diff review and37 focused provider units passed; no blockers for P01/P08."
+          "evidence": "Independent final diff review through8550da6;11 Cast units rerun. Partial SDK initialization listener rollback checked after review correction. P01/P08 separately ready in prior review."
         },
-        "integrated": false
+        "integrated": true,
+        "integrated_commit": "dc1b06c"
       }
     },
     {
@@ -640,9 +641,12 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/replay-recovery",
         "commit": "99f2c8c",
-        "validation": "32 focused timeline tests/docs reported by R02",
-        "peer_review": "pending",
-        "integrated": false
+        "integrated": false,
+        "peer_review": {
+          "reviewer": "r04",
+          "status": "in progress"
+        },
+        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check."
       }
     },
     {
@@ -661,7 +665,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Moderate; asynchronous readiness across continuous, HLS and native paths.",
       "validation_plan": "Extend real-browser recovery fixtures for paused rewind and playing replay, retaining session/video/position or offset. Live recovery still progresses, Chromium/WebKit; unit intent lifecycle.",
-      "status": "implementing",
+      "status": "implemented",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -743,6 +747,16 @@
           "test-results/review-2026-10-26/r02/p06-webkit-paused-replay.json",
           "test-results/review-2026-10-26/r02/p06-webkit-playing-replay.json"
         ]
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/replay-recovery",
+        "commit": "196db2c",
+        "integrated": false,
+        "peer_review": {
+          "reviewer": "r04",
+          "status": "in progress"
+        },
+        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check."
       }
     },
     {
@@ -837,9 +851,12 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/replay-recovery",
         "commit": "850c861",
-        "validation": "35 focused timeline tests/docs reported by R02",
-        "peer_review": "pending",
-        "integrated": false
+        "integrated": false,
+        "peer_review": {
+          "reviewer": "r04",
+          "status": "in progress"
+        },
+        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check."
       }
     },
     {
@@ -857,7 +874,7 @@
       "evidence_path": "test-results/review-2026-10-26/r05/",
       "risk": "Low; no transport/capability expansion.",
       "validation_plan": "Focused production-module fixtures release stale success and failure after a current refresh, asserting identity, error, camera catalog and source remain current; shared ready/refresh still work.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -937,9 +954,10 @@
         "peer_review": {
           "reviewer": "r05",
           "status": "ready",
-          "evidence": "Independent implementation diff review and37 focused provider units passed; no blockers for P01/P08."
+          "evidence": "Independent final diff review through8550da6;11 Cast units rerun. Partial SDK initialization listener rollback checked after review correction. P01/P08 separately ready in prior review."
         },
-        "integrated": false
+        "integrated": true,
+        "integrated_commit": "c27f370"
       }
     },
     {
@@ -958,7 +976,7 @@
       "evidence_path": "test-results/review-2026-10-26/r05/",
       "risk": "Low; cleanup must not duplicate SDK callbacks or sender listeners.",
       "validation_plan": "Fail first script load, succeed on explicit refresh, assert only bounded retry, native picker remains synchronously invoked by click, concurrent initialization shares one active script.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1037,13 +1055,18 @@
           "6bcd598",
           "8550da6"
         ],
-        "integrated": false,
+        "integrated": true,
         "peer_review": {
           "reviewer": "r05",
-          "status": "correction awaiting re-review",
-          "finding": "Partial framework setup could leave duplicate listeners; bounded rollback correction committed8550da6."
+          "status": "ready",
+          "evidence": "Independent final diff review through8550da6;11 Cast units rerun. Partial SDK initialization listener rollback checked after review correction. P01/P08 separately ready in prior review."
         },
-        "validation": "38 provider units including partial registration rollback, real-player Chromium Cast same-page recovery/picker,35 docs pass. Official SDK API documentation consulted; no actual sender service/device probe."
+        "validation": "38 provider units including partial registration rollback, real-player Chromium Cast same-page recovery/picker,35 docs pass. Official SDK API documentation consulted; no actual sender service/device probe.",
+        "integrated_commit": "22d2593",
+        "integrated_commits": [
+          "7d634e9",
+          "22d2593"
+        ]
       }
     },
     {
@@ -1062,7 +1085,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/",
       "risk": "Low; avoid suppressing a different fallback image or permanently poisoning the preview.",
       "validation_plan": "Fixture corrupt JPEG yields one request during cooldown then valid response paints after expiry; local-corrupt-frame can still fall back to server sprite; target/session cancellation preserved.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1134,6 +1157,18 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/preview-loading",
+        "commit": "d3467d3",
+        "integrated_commit": "fb0b97f",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "evidence": "Read production diffs, IDB failure and late-read ownership guards, default browser runner registration and real-browser fixture assertions; no blockers."
+        },
+        "validation": "R04:20 focused units; new preview-loading suite Chromium/WebKit with negative controls; existing preview storage, simulated45-minute native capture and scrub-commit suites passed in both engines;35 docs."
       }
     },
     {
@@ -1152,7 +1187,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/",
       "risk": "Low; stale completions must not repaint a newer target or closed session.",
       "validation_plan": "Delay a valid persisted read beyond500ms, assert stationary target paints automatically without pointer movement; older target/session completion cannot replace current preview; no second decoder.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1224,6 +1259,18 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/preview-loading",
+        "commit": "ce256f5",
+        "integrated_commit": "1b38618",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "evidence": "Read production diffs, IDB failure and late-read ownership guards, default browser runner registration and real-browser fixture assertions; no blockers."
+        },
+        "validation": "R04:20 focused units; new preview-loading suite Chromium/WebKit with negative controls; existing preview storage, simulated45-minute native capture and scrub-commit suites passed in both engines;35 docs."
       }
     },
     {
@@ -1244,7 +1291,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. File reads already open may finish on POSIX; new lookups correctly fail after stop. Delete only the owned generation to preserve a concurrently created replacement.",
       "validation_plan": "Use the existing fake-FFmpeg RecoveryTests fixture: stop/reconfigure/forget a relay, assert its generation path and prior media URL disappear (404); separately assert a replacement generation or sibling directory survives.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1316,6 +1363,19 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/dvr-lifecycles",
+        "commit": "0a357fc",
+        "integrated_commit": "7e860b8",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "r01",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r01/diff-review-p12-p15.json",
+          "evidence": "Independent exact diff review plus33 existing lifecycle/relay/binding cases over current canonical registry and2 additional real registry/replay integration fixtures:35 pass. No lock-order or archive ownership blocker."
+        },
+        "validation": "R06: focused regression negative controls,48 replay/history/lifecycle cases plus12 relay cases;35 docs. R01 independent35 compatibility/integration cases pass."
       }
     },
     {
@@ -1335,7 +1395,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. Cleanup must target only the newly created token and must not remove an archive still leased by other pages.",
       "validation_plan": "Inject ENOSPC on first collection, assert no new token or unused archive remains, restore the copy and assert create succeeds. Also fail a later tab on a shared archive and assert the existing tab/history is intact.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1407,6 +1467,19 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/dvr-lifecycles",
+        "commit": "64ba936",
+        "integrated_commit": "153dfc2",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "r01",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r01/diff-review-p12-p15.json",
+          "evidence": "Independent exact diff review plus33 existing lifecycle/relay/binding cases over current canonical registry and2 additional real registry/replay integration fixtures:35 pass. No lock-order or archive ownership blocker."
+        },
+        "validation": "R06: focused regression negative controls,48 replay/history/lifecycle cases plus12 relay cases;35 docs. R01 independent35 compatibility/integration cases pass."
       }
     },
     {
@@ -1426,7 +1499,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low to medium. Preserve lock order; _run already holds replay.lock while calling registry.get_relay. Registry forget/configure currently release registry.lock before acquiring replay.lock.",
       "validation_plan": "Deterministically hold ReplayBuffer.lock, start a create, forget the registry/replay while the lock is held, release it, and assert create rejects without retaining a session/archive. Cover the opposite ordering so a forget following a successful create clears that session.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1498,6 +1571,19 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/dvr-lifecycles",
+        "commit": "7deb770",
+        "integrated_commit": "25fecdc",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "r01",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r01/diff-review-p12-p15.json",
+          "evidence": "Independent exact diff review plus33 existing lifecycle/relay/binding cases over current canonical registry and2 additional real registry/replay integration fixtures:35 pass. No lock-order or archive ownership blocker."
+        },
+        "validation": "R06: focused regression negative controls,48 replay/history/lifecycle cases plus12 relay cases;35 docs. R01 independent35 compatibility/integration cases pass."
       }
     },
     {
@@ -1518,7 +1604,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. FFmpeg emits a monotonic rolling manifest within each generation; keep reset behavior for a genuine reconnect.",
       "validation_plan": "Feed thousands of sequential rolling manifests under a small byte limit and assert seen remains bounded by the manifest window, no duplicate append occurs for unchanged manifests, and reconnect/page-isolation behavior is preserved.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1590,6 +1676,19 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/dvr-lifecycles",
+        "commit": "bdc2907",
+        "integrated_commit": "9fe489a",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "r01",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r01/diff-review-p12-p15.json",
+          "evidence": "Independent exact diff review plus33 existing lifecycle/relay/binding cases over current canonical registry and2 additional real registry/replay integration fixtures:35 pass. No lock-order or archive ownership blocker."
+        },
+        "validation": "R06: focused regression negative controls,48 replay/history/lifecycle cases plus12 relay cases;35 docs. R01 independent35 compatibility/integration cases pass."
       }
     },
     {
@@ -1608,7 +1707,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/site-independent.log",
       "risk": "Low; an extra declared build prerequisite, no shipped behavior change.",
       "validation_plan": "Actual nx test site from clean dist and isolated cache must build its prerequisites and pass Chromium/WebKit site and worker checks.",
-      "status": "approved",
+      "status": "implemented",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1680,6 +1779,16 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/docs-build-contracts",
+        "commit": "1252200",
+        "integrated": false,
+        "peer_review": {
+          "reviewer": "r07",
+          "status": "in progress"
+        },
+        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately."
       }
     },
     {
@@ -1698,7 +1807,7 @@
       "evidence_path": "test-results/review-2026-10-26/r08/initial-report.json",
       "risk": "Low; bounded input lock with explicit cancellation.",
       "validation_plan": "Real-browser held-probe regression: address disabled, displayed origin exactly matches successful selection, Back/Escape cancel and late result ignored, failure/timeout restore editing; Direct shares lock.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1770,6 +1879,12 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/keyboard-focus",
+        "implementer": "r09",
+        "integrated": false,
+        "peer_review": "pending"
       }
     },
     {
@@ -1787,7 +1902,7 @@
       "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
       "risk": "Negligible; correct existing route text without deployment.",
       "validation_plan": "Compare handler route with corrected guidance, retain isolated HTTP fixture evidence and run documentation validator.",
-      "status": "approved",
+      "status": "implemented",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1859,6 +1974,16 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/docs-build-contracts",
+        "commit": "91db232",
+        "integrated": false,
+        "peer_review": {
+          "reviewer": "r07",
+          "status": "in progress"
+        },
+        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately."
       }
     },
     {
@@ -1876,7 +2001,7 @@
       "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
       "risk": "Negligible; documents current implemented policy without widening it.",
       "validation_plan": "Compare source/isolated CORS evidence and existing backend-origin tests; documentation validator after edit.",
-      "status": "approved",
+      "status": "implemented",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1948,6 +2073,16 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/docs-build-contracts",
+        "commit": "91db232",
+        "integrated": false,
+        "peer_review": {
+          "reviewer": "r07",
+          "status": "in progress"
+        },
+        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately."
       }
     },
     {
@@ -1966,7 +2101,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low; menu focus selection only.",
       "validation_plan": "Real keyboard tests in Chromium/WebKit with Mini disabled, hidden by live-only, enabled, and no available actions. Available actions focus/cycle, Home/End work, no capability change.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2038,6 +2173,12 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/keyboard-focus",
+        "implementer": "r09",
+        "integrated": false,
+        "peer_review": "pending"
       }
     },
     {
@@ -2057,7 +2198,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low; focus handoff must not steal focus after unrelated pointer interactions.",
       "validation_plan": "Keyboard open Stats, assert focus inside; Escape closes and returns player focus. Keyboard Close also restores focus; timers/reconnection/media/session remain valid; pointer interactions stay natural.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2129,6 +2270,12 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/keyboard-focus",
+        "implementer": "r09",
+        "integrated": false,
+        "peer_review": "pending"
       }
     },
     {
@@ -2148,7 +2295,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low to moderate; async ownership/page visibility must be respected.",
       "validation_plan": "Chromium keyboard submission/failure retains draft and restores usable input, deliberate Enter retries once. Moving focus elsewhere, closing editor or navigating away prevents restoration. Successful setup no hidden focus; WebKit behavior unchanged.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2220,6 +2367,12 @@
           "recorded_at": "2026-10-26T04:38:10Z",
           "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/keyboard-focus",
+        "implementer": "r09",
+        "integrated": false,
+        "peer_review": "pending"
       }
     }
   ],
@@ -2251,6 +2404,46 @@
     {
       "sha": "5587858",
       "summary": "P04: quarantine replacement serial bindings; independently reviewed and12 lifecycle cases rerun."
+    },
+    {
+      "sha": "dc1b06c",
+      "summary": "P01: reject redirected backend setup requests; R05 independently reviewed."
+    },
+    {
+      "sha": "c27f370",
+      "summary": "P08: newest Direct readiness probe owns state; R05 reviewed."
+    },
+    {
+      "sha": "7d634e9",
+      "summary": "P09: explicit Cast SDK retry; R05 reviewed with follow-up correction."
+    },
+    {
+      "sha": "22d2593",
+      "summary": "P09: partial SDK initialization listener rollback after peer review."
+    },
+    {
+      "sha": "fb0b97f",
+      "summary": "P10: honor sprite decode cooldown; root diff reviewed."
+    },
+    {
+      "sha": "1b38618",
+      "summary": "P11: late disk preview painting and ownership; root diff reviewed."
+    },
+    {
+      "sha": "7e860b8",
+      "summary": "P12: clean only retired relay generation; R01 reviewed."
+    },
+    {
+      "sha": "153dfc2",
+      "summary": "P13: roll back failed replay creation; R01 reviewed."
+    },
+    {
+      "sha": "25fecdc",
+      "summary": "P14: serialize replay admission with forget; R01 reviewed."
+    },
+    {
+      "sha": "9fe489a",
+      "summary": "P15: bound archive source filename memory; R01 reviewed."
     }
   ],
   "activity": [
@@ -2373,6 +2566,11 @@
       "at": "2026-10-26T04:50:42Z",
       "type": "integration",
       "message": "Reviewed P02-P04 integrated as552cd4e/28c137a/5587858. Root provider P01/P08 passed R05 review. P09 review found partial initialization listener leak; correction8550da6 tested and awaits re-review. R06 now implementing approved DVR lifecycle fixes; isolated baseline endurance run active."
+    },
+    {
+      "at": "2026-10-26T05:02:55Z",
+      "type": "integration",
+      "message": "Twelve of22 all-ten-approved proposals now integrated after independent diff review. Provider partial-init correction resolved. DVR fixes through9fe489a passed independent canonical registry compatibility review. R04 reviewing replay recovery; R07 reviewing docs/build contracts; R09 implementing keyboard focus. Baseline endurance remains active,18 minutes sampled with one session, bounded caches and no HLS playlist/segment requests."
     }
   ],
   "validation": [
@@ -2395,6 +2593,30 @@
       "source": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
       "first_sample_at": "2026-10-26T04:43:50.961Z",
       "duration_seconds": 3600
+    },
+    {
+      "summary": "Final provider correction:38 focused units, Direct in both engines and Chromium Cast same-page SDK retry;35 docs",
+      "status": "passed",
+      "log": "/workspace/layerglass-review/provider-lifecycles/test-results/provider-final-units.log",
+      "recorded_at": "2026-10-26T05:02:55Z"
+    },
+    {
+      "summary": "R04 preview changes: new default browser suite in Chromium/WebKit, negative controls, existing preview/storage/scrub regressions and35 docs",
+      "status": "passed",
+      "log": "/workspace/layerglass-review/preview-loading/test-results/review-2026-10-26/r04/p11-standard-runner.log",
+      "recorded_at": "2026-10-26T05:02:55Z"
+    },
+    {
+      "summary": "R01 independent DVR/registry integration:33 existing and2 additional lock/archive ownership cases",
+      "status": "passed",
+      "log": "test-results/review-2026-10-26/r01/diff-p12-p15-integration.log",
+      "recorded_at": "2026-10-26T05:02:55Z"
+    },
+    {
+      "summary": "Root clean-checkout site:test builds web+site dependencies and passes Chromium/WebKit site checks",
+      "status": "passed",
+      "log": "/workspace/layerglass-review/docs-build-contracts/test-results/clean-site-test-v2.log",
+      "recorded_at": "2026-10-26T05:02:55Z"
     }
   ],
   "implementation_worktrees": [
