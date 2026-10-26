@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 7 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -25,7 +25,8 @@
       "ballot_round5": "test-results/review-2026-10-26/r01/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r01/ballot-round6.json",
       "round7_findings": "test-results/review-2026-10-26/r01/round7-findings.json",
-      "ballot_round7": "test-results/review-2026-10-26/r01/round7-ballot.json"
+      "ballot_round7": "test-results/review-2026-10-26/r01/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r01/round8-ballot.json"
     },
     {
       "id": "r02",
@@ -389,6 +390,7 @@
       "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428",
       "ballots_started": true,
       "reviewers_completed": [
+        "r01",
         "r02",
         "r03",
         "r04",
@@ -3896,7 +3898,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
       "risk": "Moderate shell lifecycle change. Must preserve cleanup when foreground execution is interrupted without treating a name as ownership, and must preserve original status/log/image behavior.",
       "validation_plan": "Actual pre-existing metadata-name canary remains running after failed check exits125; different-name control and reused image unchanged. Later fixture/browser conflict preserves existing conflicting object while cleaning earlier successfully created owned resources. Interrupt successfully created foreground/background checks: only owned immutable IDs removed, signal/failure statuses preserved. Exercise all launch paths with bounded generated fixtures or controlled disposable Docker adapter as appropriate; compare exact diff/options and shell syntax. No duplicate full browser run or real printer/network probe needed.",
-      "status": "implementing",
+      "status": "validated",
       "ballots": {
         "r07": {
           "vote": "APPROVE",
@@ -3967,6 +3969,21 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:31:18Z",
           "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        }
+      },
+      "implementation": {
+        "author_commit": "91e3d2b2c4922857ef6a364e28ddc882522888a1",
+        "peer_review": "test-results/review-2026-10-26/root-p34-peer/diff-review.json",
+        "peer_decision": "READY",
+        "source_sha256": "86eb023081f3885468d9904d8a5f6a697f19e882d8d1a2fa5bdca1fcac2716cd",
+        "validation": {
+          "independent_root": "Actual unchanged Docker CLI original metadata-name-conflict trigger now preserves both own canaries/reused image and still exits125. Reexecuted all24 offline adapter cases across7launches at exact author hash; owned IDs cleaned, foreign identities preserved, status/temp/image controls pass.",
+          "author_evidence": "Inspected author2extended creation-interval cases,6actual Docker lifecycle controls, exact7option comparison/unwritable checkout and Bash/ShellCheck logs.",
+          "logs": [
+            "root-p34-peer/direct-positive.log",
+            "root-p34-peer/adapter.log",
+            "/workspace/layerglass-review/check-container-ownership/test-results/p34/report.json"
+          ]
         }
       }
     },
@@ -4142,6 +4159,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T08:31:18Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Pinned JPEG bounds.current uses end_seconds and Pause copies it without requesting a historical frame; printerPlaybackTime then clamps that saved provisional position against a changing end_time. PreviewCapture labels the decoded image with bounds.current independently of image-request ownership. Saved full-player two-engine evidence confirms fixed blue pixels at position11 acquiring later layer31 while the archive resolves11 to green. The completed-position10 and held-gap controls isolate the mismatch from correct historical target clocks. Approval covers only the frozen JPEG ownership correction, optional bounded descriptor/selector on existing metadata/frame access and listed files. It requires all stated decode/metadata order, pending Pause/Live, precise capture boundary, session/source/reset/recovery, legacy/no-recording, request/capture-bound and selector-admission regressions. A tail subtraction, globally replacing historical target time with capture-start time, silently changing the paused image, changing interval arithmetic or adding an endpoint/permission policy would not satisfy this scope. No safe async algorithm or post-fix pass is inferred from the initial evidence.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:35:25Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
     },
@@ -4206,6 +4230,13 @@
           "rationale": "At frozen PreviewHistory.get:158, peek returns a farther RAM neighbor before nearest can select the closer persisted asset; the component correctly refuses to paint the mismatched target and then stops resolving. My production Web Component plus real IndexedDB rerun reproduced both engines: cold exact 25.066666 lost to warm 20.133333, leaving red pixels and no frame:25 read; evicting only the warm Blob made the same target read once and paint blue, with the same video, zero seeks/preview HTTP/page errors. Approve only the closed four-file nearest-before-storage-tier correction. The validation plan must retain tie behavior, coalesced reads, session/version/asset ownership, bounded compressed/decoded caches, delayed-IDB completion, single decode lane and existing failure/server fallback, while testing both directions and a contiguous forced-eviction sweep. Risk is low/moderate cache selection; merely retaining a warm placeholder without resolving the true target is insufficient. The later 45-minute integrated sweep remains required and does not certify physical-phone behavior.",
           "revision": 1,
           "recorded_at": "2026-10-26T08:31:18Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Pinned PreviewHistory.get returns peek's memory-only neighbor before consulting nearest across retained tiers. The production component subsequently rejects that farther asset when it differs from nearest and stops resolution with no target change. Saved actual IndexedDB/color controls in both engines show cold25.066666 losing to warm20.133333, followed by correct blue painting and one frame25 read when only the warm Blob is evicted. Selecting the closest retained candidate before its storage tier directly fixes this boundary while preserving peek as a labeled placeholder. Approval includes existing nearest tie ordering, coalesced disk reads, ownership/late-IDB and missing/corrupt fallback checks, bounded caches, the four-file limit and the stated post-integration retained-preview sweep. A component rewrite, extra prefetch/HTTP work or merely accepting the farther warm placeholder is outside scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:35:25Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
       }
@@ -4967,6 +4998,11 @@
       "at": "2026-10-26T08:31:18Z",
       "type": "ballot",
       "message": "R10 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:35:25Z",
+      "type": "ballot",
+      "message": "R01 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
