@@ -32,7 +32,7 @@
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "P02-P04 implemented and reviewed; integrated",
+      "status": "independent deeper Round2 printer review then ballot",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json"
     },
@@ -80,7 +80,7 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round1 ballot complete; keyboard focus implementation active",
+      "status": "round1 ballot complete; UI implementation reviewed and integrated",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json"
     },
@@ -88,7 +88,7 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 1 ballot complete",
+      "status": "independently voting on Round2 slate",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json"
     }
@@ -1838,7 +1838,7 @@
       "evidence_path": "test-results/review-2026-10-26/r08/initial-report.json",
       "risk": "Low; bounded input lock with explicit cancellation.",
       "validation_plan": "Real-browser held-probe regression: address disabled, displayed origin exactly matches successful selection, Back/Escape cancel and late result ignored, failure/timeout restore editing; Direct shares lock.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1913,9 +1913,15 @@
       },
       "implementation": {
         "worktree": "/workspace/layerglass-review/keyboard-focus",
-        "implementer": "r09",
-        "integrated": false,
-        "peer_review": "pending"
+        "commit": "76bccee",
+        "integrated_commit": "471838b",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/root-keyboard-focus-review.json"
+        },
+        "validation": "R09:198 JS, browser-keyboard-focus/components/backends in Chromium/WebKit,35 docs; root independently inspected exact source/test/log hashes, combined canonical checks pending."
       }
     },
     {
@@ -2138,7 +2144,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low; menu focus selection only.",
       "validation_plan": "Real keyboard tests in Chromium/WebKit with Mini disabled, hidden by live-only, enabled, and no available actions. Available actions focus/cycle, Home/End work, no capability change.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2213,9 +2219,15 @@
       },
       "implementation": {
         "worktree": "/workspace/layerglass-review/keyboard-focus",
-        "implementer": "r09",
-        "integrated": false,
-        "peer_review": "pending"
+        "commit": "76bccee",
+        "integrated_commit": "471838b",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/root-keyboard-focus-review.json"
+        },
+        "validation": "R09:198 JS, browser-keyboard-focus/components/backends in Chromium/WebKit,35 docs; root independently inspected exact source/test/log hashes, combined canonical checks pending."
       }
     },
     {
@@ -2235,7 +2247,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low; focus handoff must not steal focus after unrelated pointer interactions.",
       "validation_plan": "Keyboard open Stats, assert focus inside; Escape closes and returns player focus. Keyboard Close also restores focus; timers/reconnection/media/session remain valid; pointer interactions stay natural.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2310,9 +2322,15 @@
       },
       "implementation": {
         "worktree": "/workspace/layerglass-review/keyboard-focus",
-        "implementer": "r09",
-        "integrated": false,
-        "peer_review": "pending"
+        "commit": "76bccee",
+        "integrated_commit": "471838b",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/root-keyboard-focus-review.json"
+        },
+        "validation": "R09:198 JS, browser-keyboard-focus/components/backends in Chromium/WebKit,35 docs; root independently inspected exact source/test/log hashes, combined canonical checks pending."
       }
     },
     {
@@ -2332,7 +2350,7 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low to moderate; async ownership/page visibility must be respected.",
       "validation_plan": "Chromium keyboard submission/failure retains draft and restores usable input, deliberate Enter retries once. Moving focus elsewhere, closing editor or navigating away prevents restoration. Successful setup no hidden focus; WebKit behavior unchanged.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2407,9 +2425,15 @@
       },
       "implementation": {
         "worktree": "/workspace/layerglass-review/keyboard-focus",
-        "implementer": "r09",
-        "integrated": false,
-        "peer_review": "pending"
+        "commit": "76bccee",
+        "integrated_commit": "471838b",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/root-keyboard-focus-review.json"
+        },
+        "validation": "R09:198 JS, browser-keyboard-focus/components/backends in Chromium/WebKit,35 docs; root independently inspected exact source/test/log hashes, combined canonical checks pending."
       }
     },
     {
@@ -2561,6 +2585,10 @@
     {
       "sha": "2070a48",
       "summary": "P07: bound finite-file display time at EOF; R04 reviewed."
+    },
+    {
+      "sha": "471838b",
+      "summary": "P17/P20/P21/P22: keyboard focus ownership across setup and diagnostics; root independently reviewed."
     }
   ],
   "activity": [
@@ -2703,6 +2731,11 @@
       "at": "2026-10-26T05:17:41Z",
       "type": "slate frozen",
       "message": "Round2 froze3 exact revision1 candidates P23-P25 atafee31a57de6363ed69f7ffbe113207fafe904ba. No new ballots or source edits yet; ten distinct reviewers will vote with6 required. Audit bookkeeping now validates every ballot revision/hash and immutable frozen scope before writing. R01/R07 initial deeper reviews complete; R03 continuing independently."
+    },
+    {
+      "at": "2026-10-26T05:19:16Z",
+      "type": "integration",
+      "message": "R09 immutable UI commit76bccee reviewed by root and integrated471838b;21 of22 first-round proposals integrated. P06 author reports hidden/offline lifecycle cases pass both engines, awaiting final follow-up and independent re-review. Round2 P23-P25 voting underway; no Round2 code edits authorized yet."
     }
   ],
   "validation": [
