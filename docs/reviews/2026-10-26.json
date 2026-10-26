@@ -33,7 +33,7 @@
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 8 ballot complete",
+      "status": "round 9 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
@@ -43,13 +43,14 @@
       "ballot_round6": "test-results/review-2026-10-26/r02/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r02/round7-ballot.json",
       "round7_findings": "test-results/review-2026-10-26/r02/round7-findings.json",
-      "ballot_round8": "test-results/review-2026-10-26/r02/round8-ballot.json"
+      "ballot_round8": "test-results/review-2026-10-26/r02/round8-ballot.json",
+      "ballot_round9": "test-results/review-2026-10-26/r02/round9-ballot.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 8 ballot complete",
+      "status": "round 9 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
@@ -58,13 +59,14 @@
       "ballot_round5": "test-results/review-2026-10-26/r03/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r03/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r03/round7-ballot.json",
-      "ballot_round8": "test-results/review-2026-10-26/r03/round8-ballot.json"
+      "ballot_round8": "test-results/review-2026-10-26/r03/round8-ballot.json",
+      "ballot_round9": "test-results/review-2026-10-26/r03/round9-ballot.json"
     },
     {
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 8 ballot complete",
+      "status": "round 9 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
@@ -73,13 +75,14 @@
       "ballot_round5": "test-results/review-2026-10-26/r04/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r04/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r04/round7-ballot.json",
-      "ballot_round8": "test-results/review-2026-10-26/r04/round8-ballot.json"
+      "ballot_round8": "test-results/review-2026-10-26/r04/round8-ballot.json",
+      "ballot_round9": "test-results/review-2026-10-26/r04/round9-ballot.json"
     },
     {
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 8 ballot complete",
+      "status": "round 9 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -88,7 +91,8 @@
       "ballot_round5": "test-results/review-2026-10-26/r05/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r05/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r05/round7-ballot.json",
-      "ballot_round8": "test-results/review-2026-10-26/r05/round8-ballot.json"
+      "ballot_round8": "test-results/review-2026-10-26/r05/round8-ballot.json",
+      "ballot_round9": "test-results/review-2026-10-26/r05/round9-ballot.json"
     },
     {
       "id": "r06",
@@ -425,6 +429,10 @@
       "ballots_started": true,
       "reviewers_completed": [
         "r01",
+        "r02",
+        "r03",
+        "r04",
+        "r05",
         "r06",
         "r07",
         "r08",
@@ -433,7 +441,8 @@
       ],
       "notes": "Actual generated failed build deletes pre-existing own image ref. Separate image-ownership scope; no P34 votes inferred.",
       "majority_recorded_at": "2026-10-26T09:02:30Z",
-      "decision": "P38rev1 approved6/10 before any source/product-doc edit,root0; remaining4ballots pending."
+      "decision": "P38rev1 approved10/10; first6recorded and committed before implementation,root0. Author finala8a27a0 awaiting independent peer.",
+      "balloting_completed_at": "2026-10-26T09:20:26Z"
     }
   ],
   "proposals": [
@@ -4222,6 +4231,11 @@
           "recorded_at": "2026-10-26T08:56:14Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
+      },
+      "author_checkpoint": {
+        "status": "implemented awaiting independent exact-final peer",
+        "commit": "93b2f9ae553835788c5057a69cbfbe1fa2c52718",
+        "recorded_at": "2026-10-26T09:20:05Z"
       }
     },
     {
@@ -4390,7 +4404,40 @@
           "revision": 1,
           "recorded_at": "2026-10-26T09:02:30Z",
           "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Pinned source sets image ownership before build and removes the predictable run-id tag on EXIT. The original actual parse-failure probe confirms exit1 before any container launch deletes that pre-existing tag while its separate alias/shared Node ID survive; its script Git blob exactly matches038efc6. Private per-invocation references with creation/completion-time immutable build proof address both premature ownership and shared-run-id collisions. Approval is limited to the two files and frozen successful/failed/interrupted/cached/retagged controls: remove only the still-matching owned reference, preserve aliases/foreign replacements/explicit reused images, and retain all P34 CID/status/log/temp contracts. Removing by image ID or registering ownership only after command return would fail scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:03:32Z",
+          "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Exact038efc6 sets image ownership before build success and unconditionally removes the run-id tag. My isolated actual invalid-Dockerfile control exits1 before creating an image/container yet deletes my pre-existing own canary tag; separate alias/shared Node ID survive (r04/round9-image/probe.log). Private per-invocation refs plus recorded successful-build identity address that distinct ownership error. Cleanup must remove only the still-matching private ref, never the image ID or unrelated aliases/replacements; recording solely after client return misses interruption. Approval includes all frozen same-run, failed/successful/cached/retagged/interrupted build controls, explicit reused-image preservation, all seven P34 CID/log/status/temp contracts, syntax/ShellCheck and docs checks. Only check.sh and the workflow note are authorized; no implementation worktree or other ballots were read.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:08:05Z",
+          "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected baseline 038efc6 source, frozen scope and original probe/logs. The probe copy matches pinned check.sh SHA256 86eb023081f3885468d9904d8a5f6a697f19e882d8d1a2fa5bdca1fcac2716cd. Line 11 shares the default reference by run ID, line 49 claims ownership before building, and lines 38-39 remove that reference without proving a built image. The actual parse-error exit 1 canary proves deletion of the pre-existing own tag before container launch; the control alias and shared Node reference/ID survive. Private invocation references with recorded successful-build identity address this defect and same-run collisions. Approval includes the existing offline validation plan covering successful/failed builds, interruption before client return with 130/143 status, missing ownership identity, cached/shared-ID aliases, foreign replacement, explicit reuse and all seven P34 CID/log/status/options/temp contracts. The closed two-file scope excludes image-ID deletion, pruning and production changes. Frozen canonical hash and pinned Bash syntax verified in network-disabled Docker. No other ballots or implementation trees inspected; no additional image mutation needed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:10:39Z",
+          "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "At pinned038efc6, independently reran actual check.sh with an invalid generated Dockerfile and two task-owned tags of cached Node. Failed build exits1 yet deletes the pre-existing default-tag canary; separate alias/shared ID survive. Private per-invocation references plus creation/completion-time build identity and reference-to-ID verification directly bound this cleanup error. Exact scope preserves explicit reused images/P34 container IDs and requires concurrent, interrupted, cached/shared-alias and foreign-replacement controls; those remain implementation acceptance work, not claimed validated by this ballot.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T09:20:25Z",
+          "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a"
         }
+      },
+      "author_checkpoint": {
+        "status": "implemented awaiting independent exact-final peer",
+        "commit": "a8a27a03df32a26b9a2938440bfcef13b3c6b2e7",
+        "recorded_at": "2026-10-26T09:20:05Z"
       }
     }
   ],
@@ -5213,6 +5260,31 @@
       "at": "2026-10-26T09:02:30Z",
       "type": "ballot",
       "message": "R01 explicit Round9 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:03:32Z",
+      "type": "ballot",
+      "message": "R03 explicit Round9 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:08:05Z",
+      "type": "ballot",
+      "message": "R04 explicit Round9 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:10:39Z",
+      "type": "ballot",
+      "message": "R05 explicit Round9 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T09:20:05Z",
+      "type": "endurance failure",
+      "message": "All26oldsource WebKit3point retained preview timedout11744.298s;first6hrun failfast exit1 andresourcesabsent. No6hpass. P37correctedrun remains active; fullsweep~09:38UTC not yet completed."
+    },
+    {
+      "at": "2026-10-26T09:20:25Z",
+      "type": "ballot",
+      "message": "R02 explicit Round9 ballot imported for all1 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
@@ -5492,8 +5564,20 @@
       ],
       "runner": "test-results/review-2026-10-26/run-retention-scrub-soak-owned.sh",
       "environment": "Same unchanged failed45min scrub-sweep driver, generated H264 native video,1CPU/384MiB fixture and eachbrowser1CPU/1GiB/256MiBshm; networknone/nohostports,128KiBcompressedRAM forcesIDB, normalstoragebudgets/8MiBdecoded/1GiBDVRtarget. Newignored runner records actualimmutableCID ownership; product sources remain pinned.",
-      "limits": "36integratedproposals includingP37; P36JPEG andP38image-ref correction are not in this source. No actual45min/6h or physicalphone result claimed until measured. Originalfailedrun retained, older all26sixhour continues.",
+      "limits": "36integratedproposals includingP37; pendingP36JPEG/P38image-ref correction excluded. No actual45min/6h or physicalphone result claimed until measured. Both earlier failedruns retained; oldall26sixhour has nowfailed11744s.",
       "recorded_at": "2026-10-26T08:54:47Z"
+    },
+    {
+      "summary": "Older all26 six-hour retention run",
+      "status": "failed after 3h16m; not a six-hour pass",
+      "source": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
+      "exec_session": 20470,
+      "recorded_at": "2026-10-26T09:20:05Z",
+      "logs": [
+        "test-results/review-2026-10-26/retention_26fixes_v2-chromium.log",
+        "test-results/review-2026-10-26/retention_26fixes_v2-webkit.log"
+      ],
+      "result": "WebKit failed at11744.298actualseconds: retained preview851.866666 did not paint within4s; no page errors, same video/session and25plannedvideoHTTP/0playlist/0segments/0previewHTTP in last sample. Failfast runner exit1 stopped Chromium after11730sample/replay gesture. This source predates P37. Similar failure is not a proven cause by itself. All3exactownedcontainers absent after runner cleanup."
     }
   ],
   "implementation_worktrees": [
