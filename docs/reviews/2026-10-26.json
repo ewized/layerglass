@@ -3262,7 +3262,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/round4-findings.json",
       "risk": "Moderate: finalizing provisional JPEG tail affects origin, clock and pruning boundaries. A different gap policy or transport would require fresh scope/votes.",
       "validation_plan": "Repeat real HTTP metadata/image/history + production JS clock/row lookup:30.5->31.1 must map1030.5->1031.1/layers30->31. Earlier gap positions cannot show successor image. Cover equal/varying cadence, unchanged capture, reconnect, later tabs during/after gap, trimming held interval and preview bounds; existing HLS/replay/history/preview checks remain passing.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3345,11 +3345,12 @@
       ],
       "approved_at": "2026-10-26T06:25:12Z",
       "implementation": {
-        "worktree": "/workspace/layerglass-review/jpeg-clock-retention",
-        "owner": "r06",
-        "starting_commit": "37f01e9",
-        "integrated": false,
-        "notes": "Only frozen majority-approved scopes; JPEG waiting-page/subsecond controls and prolonged unlink-only writable-append fault required."
+        "author_commit": "32f3241456e17e631cfd5dd01bcd31857f91bf85",
+        "canonical_commit": "29026a8",
+        "followup_commit": "597d2b1",
+        "peer_review": "test-results/review-2026-10-26/r04/p29-p30-followup-review.json",
+        "peer_decision": "READY",
+        "validation": "Independent64 focused Python/35docs and actual HTTP/productionJS clock controls, real nonroot and prolonged unlink-only fault/recovery controls; prior atomicity blocker corrected and old negative controls preserved."
       },
       "implementation_review": {
         "peer": "r04",
@@ -3379,7 +3380,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/round4-findings.json",
       "risk": "Low/moderate ownership/retry boundary; catch-only fix risks unbounded recording, while a stale blocked state risks permanent pause.",
       "validation_plan": "Actual non-root0500->0700 fault must keep worker/health alive and failed file tracked; restore permissions resumes same tokens and trimming automatically. Hold fault across many source updates/ticks to prove bytes/file counts bounded and other-viewer metadata/media responsive. Cover older-page-release path, ordinary multi-viewer retention, preview and printer-history pruning.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -3467,11 +3468,12 @@
       ],
       "approved_at": "2026-10-26T06:25:12Z",
       "implementation": {
-        "worktree": "/workspace/layerglass-review/jpeg-clock-retention",
-        "owner": "r06",
-        "starting_commit": "37f01e9",
-        "integrated": false,
-        "notes": "Only frozen majority-approved scopes; JPEG waiting-page/subsecond controls and prolonged unlink-only writable-append fault required."
+        "author_commit": "01a1245e3799d6278b6cce0590e028b7dd6b119e",
+        "canonical_commit": "079e1e3",
+        "followup_commit": null,
+        "peer_review": "test-results/review-2026-10-26/r04/p29-p30-followup-review.json",
+        "peer_decision": "READY",
+        "validation": "Independent64 focused Python/35docs and actual HTTP/productionJS clock controls, real nonroot and prolonged unlink-only fault/recovery controls; prior atomicity blocker corrected and old negative controls preserved."
       },
       "implementation_review": {
         "peer": "r04",
@@ -3865,6 +3867,18 @@
     {
       "sha": "baea461",
       "summary": "P33: settle native hidden-editor focus before response snapshot while retaining strict guards; independent20-case matrix READY."
+    },
+    {
+      "sha": "29026a8",
+      "summary": "P29: attribute JPEG intervals to held predecessor with proper later-page origins; independently reviewed with atomicity follow-up."
+    },
+    {
+      "sha": "079e1e3",
+      "summary": "P30: keep pruning file ownership and bounded recovery pause; independently READY."
+    },
+    {
+      "sha": "597d2b1",
+      "summary": "P29 follow-up: publish capture state only after JPEG file checks; original peer fault and new actual-maintenance negative controls retained."
     }
   ],
   "activity": [
@@ -4322,6 +4336,11 @@
       "at": "2026-10-26T07:20:14Z",
       "type": "review",
       "message": "P29/P30 complete three-commit series independently READY at02285f6; root verified source hash and inspected final source/test/docs diffs. Prior BLOCKED evidence and original failed control remain unchanged. Ten explicit approvals preceded implementation. Integration authorized without scope expansion."
+    },
+    {
+      "at": "2026-10-26T07:21:01Z",
+      "type": "integration",
+      "message": "32 proposals now independently reviewed and integrated. P32 remains in isolated implementation after seven explicit approvals; original P23 ABSTAIN retained. A separate six-hour newer-source local-preview sweep is prepared to cover every retained still after45actualminutes, complementing the still-running5055adf six-hour three-point fixture. No new full-CI result yet."
     }
   ],
   "validation": [
