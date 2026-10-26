@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 // Representative, fixture-only regressions. Hardware checks remain opt-in.
 const available = [
@@ -31,7 +32,7 @@ if (suites.some(suite => !available.includes(suite))) {
 
 for (const suite of suites) {
   console.log(`\nRunning ${suite}`);
-  const result = spawnSync(process.execPath, [new URL(suite, import.meta.url).pathname], {
+  const result = spawnSync(process.execPath, [fileURLToPath(new URL(suite, import.meta.url))], {
     stdio: 'inherit', env: process.env, timeout: 240_000,
   });
   if (result.error || result.status !== 0) {
