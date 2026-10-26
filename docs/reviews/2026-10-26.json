@@ -16,9 +16,10 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round1 ballot complete; DVR diff review ready",
+      "status": "round 2 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
-      "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json"
     },
     {
       "id": "r02",
@@ -98,7 +99,7 @@
   "rounds": [
     {
       "id": 1,
-      "phase": "implementation",
+      "phase": "integrated; combined validation next",
       "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
       "reviewers_completed": [
         "r01",
@@ -702,7 +703,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Moderate; asynchronous readiness across continuous, HLS and native paths.",
       "validation_plan": "Extend real-browser recovery fixtures for paused rewind and playing replay, retaining session/video/position or offset. Live recovery still progresses, Chromium/WebKit; unit intent lifecycle.",
-      "status": "implementing",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -788,15 +789,22 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/replay-recovery",
         "commit": "196db2c",
-        "integrated": false,
+        "integrated": true,
         "peer_review": {
           "reviewer": "r04",
-          "status": "blocked pending correction",
-          "finding": "Hidden tab during initial-media readiness deadline can return with no decoder and attaching/mediaRestore retained; transport resumes without constructing HLS. Within approved recovery/cancellation scope.",
-          "evidence": "test-results/review-2026-10-26/r04/r02-hidden-readiness-result.json"
+          "status": "ready",
+          "evidence": "R04 independently reran original hidden-deadline trigger in both engines across two accelerated deadlines plus full browser-replay-suspension suite Chromium/WebKit. Same session/video/transport, exact paused position, one decoder/restore seek; no remaining blocker. Ready message2026-10-26T05:29 UTC; final artifact being saved."
         },
-        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check.",
-        "followup": "R02 correcting hidden/offline readiness cancellation after R04 reproduction; no P06 commit integrated yet."
+        "validation": "R02 final209 JS/35 docs and3 focused browser suites both engines; old player.js negative control fails at hidden replay. R04 independently reproduced fix and14 lifecycle cases; physical native Safari HLS remains unverified.",
+        "followup": "R02 correcting hidden/offline readiness cancellation after R04 reproduction; no P06 commit integrated yet.",
+        "commits": [
+          "196db2c",
+          "feff921"
+        ],
+        "integrated_commits": [
+          "73036a0",
+          "e6e834c"
+        ]
       }
     },
     {
@@ -2484,8 +2492,27 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:24:00Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r01": {
+          "vote": "ABSTAIN",
+          "rationale": "The class-only fixture reproduces requested:true after cancellation, but the stated ordinary seek impact is not established: pinned components/stats.js:19-26 calls retry() on replaypositionchange and native seeked, and line64 retries when Stats opens. My real Chromium/WebKit countercase runs production PageReplay.seek, connected PrinterStats and PrinterHistory: A aborts, B loads, seeking back makes the third request and visibly displays A's layer on unchanged code. I need a production-consumer cancellation/return path that remains broken despite those listeners before approving this user-impacting correction; the class-only gap does not substantiate the frozen evidence's claim that only online resets suppression.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:25:56Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
-      }
+      },
+      "additional_evidence": [
+        {
+          "reviewer": "r01",
+          "result": "Counterexample: ordinary local PageReplay.seek dispatches replaypositionchange; actual Stats retries and return-to-A loads correctly in Chromium/WebKit. Root only-online assertion is false.",
+          "evidence": "test-results/review-2026-10-26/r01/ballot-round2-history-consumer.log"
+        },
+        {
+          "reviewer": "r05",
+          "result": "Distinct real consumer: receiver-originated Cast A\u2192B\u2192A has no local replaypositionchange/seeked events; canceled A remains blank after two Stats timer reads with2fetches. Explicit sender seek control creates thirdfetch and restores11% progress. Same frozen history-model scope; no source edits.",
+          "evidence": "test-results/review-2026-10-26/r05/round2-cast-history.log"
+        }
+      ]
     },
     {
       "id": "P24",
@@ -2520,6 +2547,13 @@
           "rationale": "I reran the actual HTTP fixture and confirmed both queued and cooldown Scan responses expose the synthetic saved code and authenticated URL under discovery.found despite a sanitized catalog. Omitting found from only the response copy closes this remaining serialization path without changing private identity, cache, approval, pairing, scheduling or CORS policy; preserving all other progress fields is appropriately testable.",
           "revision": 1,
           "recorded_at": "2026-10-26T05:24:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Actual HTTP fixtures confirm clean catalog output but raw saved-code/authenticated-URL names in the Scan body's found list for both queued and cooldown responses. Omitting found from the public status copy closes that separate output path while preserving internal candidates, verified identity, progress fields and existing origin/header controls. The required real HTTP and unchanged-private-state regressions match the exact scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:25:56Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       }
@@ -2556,6 +2590,13 @@
           "rationale": "browser-site.js resolves its source and builds relative to the checkout but hardcodes screenshots under /app/test-results, matching the real Chromium ENOENT and both-engine positive-control logs. A selectable destination with a checkout-local default fixes independent site:test portability; explicit run-js.sh collector routing and the stated clean non-root Nx/workspace checks prevent losing normal harness artifacts.",
           "revision": 1,
           "recorded_at": "2026-10-26T05:24:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "I independently reran the pinned real site browser test outside /app: it fails at the hardcoded /app screenshot destination, while the identical source passes Chromium/WebKit when a separate writable /app is supplied and writes outside its checkout. A configurable checkout-relative default plus explicit run-js.sh collector preserves the existing harness and fixes this test-only portability failure; the planned actual clean Nx and collector checks cover the bounded change.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:25:56Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       }
@@ -2670,6 +2711,14 @@
     {
       "sha": "471838b",
       "summary": "P17/P20/P21/P22: keyboard focus ownership across setup and diagnostics; root independently reviewed."
+    },
+    {
+      "sha": "73036a0",
+      "summary": "P06: preserve same-session replay across transport/decoder recovery; R04 reviewed with follow-up correction."
+    },
+    {
+      "sha": "e6e834c",
+      "summary": "P06: keep suspended initialization owned and resumable; independent original-trigger and lifecycle suite pass both engines."
     }
   ],
   "activity": [
@@ -2832,6 +2881,16 @@
       "at": "2026-10-26T05:24:15Z",
       "type": "slate frozen",
       "message": "P26 registry snapshot/pairing race frozen separately as Round3 because it arrived after Round2 freeze. No new code edits. P23 counterevidence discovered: Stats already retries on replaypositionchange,seeked and opening; root original only-online assertion was incorrect, production impact being reassessed before any implementation."
+    },
+    {
+      "at": "2026-10-26T05:25:56Z",
+      "type": "ballot",
+      "message": "R01 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:30:36Z",
+      "type": "integration",
+      "message": "All22 all-ten-approved Round1 proposals integrated after independent review. P06 original hidden deadline blocker correctedfeff921, independently ready and integratede6e834c. Preparing immutable source archive for combined full checks. New P23 actual receiver-originated Cast evidence supplements frozen slate without changing scope; normal local seek counterexample preserved. No Round2/3 source implementation yet."
     }
   ],
   "validation": [
