@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active:42frozenproposals/40integrated/P38superseded/P42stopped before edits under required precision stop clause. Currentall40CI+hostingPASS. Older-pin native6h ongoing; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
+  "status": "Active:43frozenproposals/40integrated/P38+P42superseded/P43freshvoting. Currentall40CI+hostingPASS. Older-pin native6h ongoing; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -579,6 +579,18 @@
       ],
       "notes": "3file localvalidJPEG timelineconsumer eligibility/activation only; lowerprecision/retention separateissue stop clause. No edits/authorworktree before6committed approvals.",
       "decision": "All10 fresh APPROVE exact P42rev1. Author then reported required independent lower-precision/retention STOP condition BEFORE tracked edits; source/evidence review in progress. No expanded implementation authorized; approvals cannot transfer."
+    },
+    {
+      "id": 14,
+      "revision": 1,
+      "baseline": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a",
+      "frozen_at": "2026-10-26T13:35:28Z",
+      "slate": "test-results/review-2026-10-26/round-14-slate.json",
+      "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612",
+      "ballots_started": true,
+      "reviewers_completed": [],
+      "decision": "New P43 scope frozen;0fresh ballots. No author worktree/source edits before6fresh committed approvals.",
+      "notes": "Consumer-only precise descriptor view explicitly authorizes local retention/mapping effect, exactly3files. P42STOP/original10approvals preserved; no vote transfer."
     }
   ],
   "proposals": [
@@ -4971,7 +4983,7 @@
       "evidence_path": "test-results/review-2026-10-26/r03/final-print-stats-timeline-review.json",
       "risk": "Wrong replay-mode gating, erasing pending summaries or applying display rather than proven bounds can hide legitimate events or preserve the clamped marker bug. Render-only filtering leaves stale activation possible. Keep exact event/clock identity, original placement and compatibility; source proof still needs connected browser validation.",
       "validation_plan": "Connected production timeline component in Chromium/WebKit with production-recorder-derived JPEG metadata/history and real native decoded stills: initial0..2proven/0..3slider hides stored2.5PAUSE; stale rendered/menu activation outside currentintersection makes0seek/0unfulfilledemit; accepted1030successor admits same2.5event, pointer/keyboard activation commits exactly1seek to2.5 with same session/imageowner, correct held pixels and PAUSE at1002.5. Removing coveragegate is required negative control recovering original mismatch. Test valid completedJPEG, inclusive actualbounds, realretention, fractional lowerbound compatibility, offscreen/frozen display mappings and pending summary preservation. Legacy descriptorless/invalidJPEG, file/H264/remote anddisabled controls unchanged,0extra telemetry/media requests from render/hover alone. If independent lower-precision/retention issue arises stop without broader edits. Run focused relevantJS plus existing registered browser-timeline-events, JPEGclock and preview-loading bothengines, docslinks; independent exact-final READY before integration. New normalfullCI after voted/tested implementation; no unchanged-source rerun, realprinter/device/deploy.",
-      "status": "stopped",
+      "status": "superseded",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -5044,7 +5056,28 @@
           "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
         }
       },
-      "implementation_status": "R02 reports independent fractional clock-conversion and retention defects forbidden by frozen stop clause. No tracked source/docs/tests edits; author worktree remains d4b6abf. Raw STOP report being frozen; root and R03 independent assessment pending. Fresh scope/votes required before any broader implementation."
+      "implementation_status": "Stopped before all tracked edits by its explicit lower-precision/retention stop clause. Root verified STOP report6cc00672...,26manifestentries/7sources and clean d4b6abf worktree. Superseded by NEW P43 precise consumer-view scope with fresh votes; all10 original approvals preserved and NOT transferred."
+    },
+    {
+      "id": "P43",
+      "round": 14,
+      "revision": 1,
+      "title": "Keep local JPEG print events on precise proven replay coverage",
+      "author": "r02",
+      "source_finding": "R03-FINAL-PRINT-01 + R02-P42-COMPAT-01/02",
+      "baseline": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a",
+      "files": [
+        "apps/web/src/components/timeline-events.js",
+        "apps/web/tests/browser-timeline-events.js",
+        "docs/timeline-events.md"
+      ],
+      "scope": "For LOCAL JPEG only when no remote owner exists and PageReplay.jpegDescriptor() returns the current valid owned descriptor (including its stale-sequence guard), construct a nonmutating shallow session view using that returned descriptor's precise start_seconds=start, end_seconds=position and clock. Pass that view only to the component's existing event-history visible() calls so local event mapping and destructive retention use actual recorded coverage, then intersect render AND activation eligibility with that coverage and the displayed slider range. Recompute the current event by ID at activation; seek and emit its freshly validated mapped position, never a cached stale position merely because the ID remains. Keep original controller/model session objects and all global model/clock/seek/descriptor/recorder functions unchanged. Keep group placement and negative offsets on the original slider/display mapping, including frozen gesture windows. Preserve observation timestamps/IDs, pending summaries until successor coverage and offscreen summaries; discard only observations before actual retained footage. No retroactive recovery of already-deleted summaries. Exactly the3listed files may change. Preserve original descriptorless/invalid JPEG, H264/file and remote rendering AND activation behavior, disabled controls, ownership, single committed seek and retention policy. No epsilon/rounding normalization, metadata mutation, new requests/retries/timers/hydration/inference/providers/storage policy or printer controls. Any further material expansion needs a new frozen proposal/fresh votes.",
+      "evidence": "P42rev1 stopped before any tracked edits under its explicit lower-precision stop clause. R02 actual unmodified production recorder emits PAUSE1030.124 for capture1030.1238. Fractional page1020.0006: actual start10.12320000000011 and seekable event10.12340000000006, but legacy clock maps10.123000000000022 below coverage. Fractional epoch1000.0006/page1020.0012: rounded retention clock1030.1246 deletes that valid event, whose precise target10.122799999999984 is archive-selectable. Integer upward/aligned controls pass. Existing model with original session ownership and a component-only precise view corrects all4cases without mutating sessions, preserves offscreen hide/reveal. STOP reportSHA6cc00672f3cec91449620a45fabb88c892e6d86a54dafe373472bc870d83319c; manifestSHA59348a05ddd6d2e6b5a7fc3c60376355f0374a28e0538fb5d1aba242b34f618a; root verified26entries/7sources/clean author tree. R03 source/math assessment independently confirms exactly2visible() callers both in component, compatible unchanged model IDs/precise view, and future summary preservation. Original R03 actual-recorder upper-tail proof/reportSHAaa8e150769ac0ddac47955ceae0913a958d8ae2270ff113372d5f18b4da4cdd5 still applies. Initial bad probe expected unrounded telemetry and is preserved/excluded. These are recorder/model/controller sink proofs, NOT connected native browser validation.",
+      "evidence_path": "test-results/review-2026-10-26/r02/p42-scope-stop-report.json",
+      "risk": "A coverage-only gate hides legitimate events because legacy anchors are rounded; a render-only fix leaves stale activation and destructive retention. A broad model change risks legacy modes. Consumer-only precise views must use the accepted descriptor rather than raw metadata, preserve original session identity and pending summaries, and recompute activation position. Connected native/browser proof remains required; original stopped proposal approvals do not transfer.",
+      "validation_plan": "Connected production timeline component in Chromium/WebKit with actual production-recorder-derived metadata/history and real native decoded JPEGs: initial proven0..2/display0..3 hides stored2.5PAUSE; stale rendered/menu actions outside current intersection make0seek/0unfulfilledemit; successor1030 admits the SAME2.5event, pointer/keyboard each commit exactly1seek2.5 with same session/image ownership, correct held pixels and PAUSE at1002.5. Add BOTH exact fractional-origin/anchor payloads from STOP report; assert current precise event mapping, no deletion of valid retained summaries, unchanged original model/controller sessions and exactly mapped seek/emit. Coverage-gate removal must recover upper-tail clamped marker mismatch; precise-view removal must recover fractional hidden/deleted-event negatives. Test inclusive actual bounds, real pruning, offscreen hide/reveal, frozen original display/group placement, pending summaries and stale cached-position activation. Preserve descriptorless/invalid JPEG, H264/file, remote and disabled behavior;0additional telemetry/media requests on render/hover. Run relevantJS units, registered browser-timeline-events, browser-jpeg-clock and browser-preview-loading both engines, docslinks. Obtain independent exact-final READY before integration, then one new normal fullCI on the tested source. No real printer/device/prod/cloud probes, deploy, relaxed assertions or unchanged-source rerun. Preserve all original failed controls and P42STOP reports.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -6284,6 +6317,11 @@
       "at": "2026-10-26T13:29:17Z",
       "type": "scope-stop",
       "message": "P42 reached10/10 fresh approvals but author discovered separately evidenced fractional lower-clock/retention issue required by exact frozen stop clause. No tracked edits. Root requested exact immutable STOP report and R03 independent source/evidence assessment before any fresh expanded proposal. Prior approvals will not transfer."
+    },
+    {
+      "at": "2026-10-26T13:35:28Z",
+      "type": "freeze",
+      "message": "Root verified R02 P42STOP exact report,26manifestentries/7sources, clean unedited d4b6abf authorworktree; R03 independent source/math assessment supports bounded precise-view candidate. Frozen NEW Round14/P43 with fresh votes, not a P42 resume or transferred approval. Exact3file scope now explicitly authorizes consumer-only precise mapping/retention and fresh-ID activation."
     }
   ],
   "validation": [
