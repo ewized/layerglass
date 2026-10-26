@@ -18,7 +18,7 @@ and [roadmap](docs/product/roadmap.md).
 [layer.glass](https://layer.glass). The demo uses generated footage and simulated
 printer readings. Browser mode also opens local video files; connecting a real
 Bambu printer still needs the Python backend for its LAN protocols and DVR.
-Choose the provider in **Settings → Connection**.
+Choose the provider in **Settings → Backend**.
 
 ## Run it
 

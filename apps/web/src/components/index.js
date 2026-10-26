@@ -3,6 +3,7 @@ import { PrinterControls } from './controls.js';
 import { PrinterScrubPreview } from './scrub-preview.js';
 import { PrinterTimelineMarkers } from './timeline-events.js';
 import { PrinterSettings } from './settings.js';
+import { PrinterBackendList } from './backend-list.js';
 import { PrinterItem, PrinterList } from './printers.js';
 import { PrinterStats } from './stats.js';
 import { PrinterLoading, PrinterCameraView, PrinterPullIndicator, PrinterContextMenu } from './overlays.js';
@@ -16,6 +17,7 @@ export const components = new Map([
   ['printer-controls', PrinterControls],
   ['printer-item', PrinterItem],
   ['printer-list', PrinterList],
+  ['printer-backend-list', PrinterBackendList],
   ['printer-settings', PrinterSettings],
   ['printer-context-menu', PrinterContextMenu],
   ['printer-stats', PrinterStats],

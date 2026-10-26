@@ -20,7 +20,8 @@ There are no new runtime dependencies or build steps.
 | `printer-controls` | Timeline and native buttons; settings/cast/fullscreen action events |
 | `printer-scrub-preview` | Local thumbnail preview and negative Live offset during hover/scrubbing |
 | `printer-timeline-events` | Session-clock event markers, clustered event picker and accessible seek actions |
-| `printer-settings` | Root/Printers/Connection navigation, keyboard access, discovery intent |
+| `printer-settings` | Root/Printers/Backend navigation, keyboard access, discovery intent |
+| `printer-backend-list` | Current-backend checkmark, inline address editing/confirmation and backend selection intent |
 | `printer-list` | Keyed printer reconciliation, editor selection, focus after removal |
 | `printer-item` | Name/IP, inline code input, save/forget actions, per-printer errors |
 | `printer-context-menu` | Placement, keyboard navigation, Mini player/Stats actions |
@@ -33,6 +34,15 @@ playback/replay controllers retain access to their native media and range input.
 The player template is rendered once, so catalog changes never recreate video,
 restart hls.js, or replace the page's recording session. Player landmarks and
 button labels are retained.
+
+Backend selection uses the same row/inline-editor pattern as printers. Opening
+the Backend page shows the current choice without opening an editor. Docker and
+Direct addresses are confirmed beside the input; Demo selects directly. Drafts
+do not replace the current backend until validation succeeds. The root Settings
+page has one Refresh viewer action: Docker restarts its camera relay and
+reattaches playback, Direct refreshes the verified controller/camera connection,
+and Demo reconnects its local player. This does not reload the page or create a
+new recording session.
 
 The camera view samples its existing media into one small decorative canvas for
 the blurred background. Media events and ResizeObserver drive updates without
@@ -54,7 +64,7 @@ details until submitted; they are not interpolated into markup or attributes.
 
 UI actions are synchronous bubbling/composed `CustomEvent`s: `printer-select`,
 `printer-save`, `printer-forget`, `printer-scan`, `player-play`, `settings-toggle`,
-`cast-request`, `fullscreen-toggle` and `player-action`. The printer list consumes
+`cast-request`, `fullscreen-toggle`, `backend-save` and `player-action`. The printer list consumes
 `printer-edit` locally. `apps/web/src/player.js` handles the application/network
 actions; UI elements do not fetch, scan, save credentials, or open recordings.
 Synchronous fullscreen and Cast events retain the original click's browser activation.

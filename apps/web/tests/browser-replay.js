@@ -132,7 +132,6 @@ async function run(name, engine) {
     const beforeRefresh = (await metadata(token)).end_seconds;
     await page.mouse.move(12, 12);
     await page.locator('#options-button').click();
-    await page.locator('[data-settings-target="connection"]').click();
     await page.getByRole('button', { name: 'Refresh viewer', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('#overlay').hidden, undefined, { timeout: 20000 });
     assert.equal(tokens.length, 1, 'Refresh viewer must retain this page’s history.');

@@ -28,7 +28,7 @@ const overlay = $('overlay');
 const statusPill = $('status-pill');
 const statusLabel = $('status-label');
 const streamMessage = $('stream-message');
-const restartButton = $('restart-button');
+const refreshButton = $('refresh-button');
 const playButton = $('play-button');
 const cameraList = $('camera-list');
 const reloadIntent = PlayerReload.consume();
@@ -58,6 +58,7 @@ let polling = false;
 let selectionVersion = 0;
 let restartDeadline = 0;
 let restartRequest = false;
+let refreshingViewer = false;
 let restartingGeneration = null;
 let scanPending = false;
 let settingUp = false;
@@ -109,49 +110,15 @@ selectedCamera = readCamera();
 if (reloadIntent?.cameraId) selectedCamera = reloadIntent.cameraId;
 const playerPullRefresh = new PlayerPullRefresh($('player'), () => PlayerReload.reload(selectedCamera));
 
-const backendType = $('backend-type');
-const backendURL = $('backend-url');
-const backendForm = $('backend-form');
-const backendConfirm = $('backend-confirm');
-const backendError = $('backend-error');
-backendType.value = configuration.type;
-backendType.querySelector('option[value="direct"]').disabled = Boolean(directBrowserError());
-backendURL.value = configuration.url || '';
-function renderBackendForm() {
-  const demo = backendType.value === 'demo';
-  const direct = backendType.value === 'direct';
-  backendForm.dataset.backend = backendType.value;
-  const action = demo ? 'Use demo backend' : 'Save and connect';
-  backendConfirm.setAttribute('aria-label', action);
-  backendConfirm.title = action;
-  backendURL.hidden = demo;
-  backendURL.disabled = demo;
-  backendURL.required = !demo;
-  $('backend-url-label').hidden = demo;
-  $('backend-capabilities').textContent = demo ?
-    'Runs in this browser with generated demo video or a local file. No LAN discovery, printer connection, or server recording.' : direct ?
-    directBrowserError() || 'Connects to an identified Klipper / Moonraker controller with a configured MJPEG webcam. Live only; no recording, rewind, timeline or video PiP. Bambu printers require Docker.' :
-    'Adds approved-printer discovery, saved connections, live telemetry and server-backed replay. No cloud account required.';
-  $('backend-url-label').textContent = direct ? 'Printer / controller address' : 'Backend address';
-  $('local-media-label').hidden = !backend.capabilities.localMedia;
-  restartButton.hidden = !backend.capabilities.serverDvr;
-}
-function clearBackendError() {
-  backendError.hidden = true;
-  backendError.textContent = '';
-  backendURL.removeAttribute('aria-invalid');
-}
-backendType.addEventListener('change', () => { clearBackendError(); renderBackendForm(); });
-backendURL.addEventListener('input', clearBackendError);
-backendForm.addEventListener('submit', async event => {
-  event.preventDefault();
-  if (backendConfirm.disabled) return;
-  clearBackendError();
-  for (const control of [backendType, backendURL, backendConfirm]) control.disabled = true;
-  backendConfirm.setAttribute('aria-busy', 'true');
-  backendConfirm.querySelector('use').setAttribute('href', '#i-refresh');
+const backendList = $('backend-list');
+$('selected-backend').textContent = backendList.configure(configuration, directBrowserError());
+$('local-media-label').hidden = !backend.capabilities.localMedia;
+backendList.addEventListener('backend-save', async event => {
+  if (backendList.busy) return;
+  backendList.error = '';
+  backendList.busy = true;
   try {
-    const config = backendConfig({ type: backendType.value, url: backendURL.value.trim() });
+    const config = backendConfig(event.detail);
     if (config.type === 'python') {
       const candidate = new PythonBackend(config.url);
       const response = await candidate.fetch('/api/backend', { signal: AbortSignal.timeout(6000), cache: 'no-store' });
@@ -165,17 +132,13 @@ backendForm.addEventListener('submit', async event => {
     if (next.href === location.href) location.reload();
     else location.assign(next.href);
   } catch (failure) {
-    backendError.textContent = ['TimeoutError', 'AbortError'].includes(failure.name) ?
+    backendList.error = ['TimeoutError', 'AbortError'].includes(failure.name) ?
       'Connection timed out. Check the address and try again.' :
       failure instanceof TypeError && /fetch|network|load/i.test(failure.message) ?
-        'Cannot reach this backend. Check HTTPS, the allowed frontend origin, and your network permission.' : failure.message;
-    backendError.hidden = false;
-    if (backendType.value !== 'demo') backendURL.setAttribute('aria-invalid', 'true');
+        'Cannot reach this backend. Check HTTPS, the allowed frontend origin, and your network permission.' :
+        failure instanceof SyntaxError ? 'This address is not a compatible LayerGlass backend.' : failure.message;
     console.warn('[LayerGlass] Backend selection failed', failure.name);
-    for (const control of [backendType, backendURL, backendConfirm]) control.disabled = false;
-    backendURL.disabled = backendType.value === 'demo';
-    backendConfirm.removeAttribute('aria-busy');
-    backendConfirm.querySelector('use').setAttribute('href', '#i-check');
+    backendList.busy = false;
   }
 });
 $('local-media').addEventListener('change', async event => {
@@ -190,7 +153,6 @@ $('local-media').addEventListener('change', async event => {
   await loadStatus();
 });
 video.addEventListener('loadedmetadata', () => backend.setDuration?.(video.duration));
-renderBackendForm();
 
 function waiting(title, detail, spinning = true) {
   if (!networkAvailable()) {
@@ -464,12 +426,18 @@ async function attachPlayer(prepared = null) {
 function finishRestart() {
   restartDeadline = 0;
   restartRequest = false;
-  restartButton.disabled = !backend.capabilities.serverDvr || !selectedCamera || ['setup', 'empty'].includes(status?.state);
-  $('restart-label').textContent = 'Restart stream';
-  restartButton.setAttribute('aria-busy', 'false');
+  renderRefreshState();
+}
+
+function renderRefreshState() {
+  const busy = refreshingViewer || restartRequest || Boolean(restartDeadline);
+  refreshButton.disabled = busy || settingUp || !networkAvailable();
+  refreshButton.setAttribute('aria-busy', String(busy));
+  $('refresh-label').textContent = busy ? 'Refreshing…' : 'Refresh viewer';
 }
 
 function renderStatus() {
+  renderRefreshState();
   if (!networkAvailable()) {
     statusPill.classList.remove('live');
     statusPill.classList.add('offline');
@@ -504,9 +472,6 @@ function renderStatus() {
   const unavailable = ['setup', 'empty'].includes(status.state);
   const noStreams = catalog?.discovery.state === 'done' && !catalog.cameras.some(camera => camera.discovered);
   $('empty-scan-button').hidden = !backend.capabilities.discovery || !(status.state !== 'live' && (status.state === 'empty' || noStreams) && catalog?.discovery.state !== 'scanning');
-  restartButton.disabled = !backend.capabilities.serverDvr || unavailable || Boolean(restartDeadline) || restartRequest;
-  restartButton.setAttribute('aria-busy', String(Boolean(restartDeadline) || restartRequest));
-  $('refresh-button').disabled = unavailable;
   PlayerLog.changed('debug', 'Playback status', { state: status.state, viewing: statusLabel.textContent });
   if (unavailable) {
     if (attachedGeneration) detachPlayer();
@@ -580,6 +545,7 @@ function renderCatalog() {
   playerChrome.settings.discoveryEnabled = backend.capabilities.discovery;
   $('scan-button').disabled ||= !backend.capabilities.discovery;
   playerChrome.settings.busy = settingUp;
+  renderRefreshState();
   const selected = choices.find(camera => camera.id === selectedCamera);
   renderPrinterIdentity();
   $('selected-printer').textContent = selected?.name || '—';
@@ -737,43 +703,53 @@ async function forgetPrinter(key) {
   }
 }
 
-$('refresh-button').addEventListener('click', async () => {
+refreshButton.addEventListener('click', async () => {
+  if (refreshingViewer || restartRequest || restartDeadline || settingUp || !networkAvailable()) return;
+  refreshingViewer = true;
   streamFallback = false;
   streamRetryAttempts = 0;
-  if (backend.capabilities.liveOnly) {
-    try { await backend.refresh(); } catch (error) { console.warn('[LayerGlass] Direct printer connection unavailable', error.name); }
-    await loadCatalog();
-    await loadStatus();
-  }
-  if (status?.state === 'live') attachPlayer();
-  else renderStatus();
-  playerChrome.options(false);
-});
-restartButton.addEventListener('click', async () => {
-  if (restartRequest || restartDeadline) return;
-  restartRequest = true;
-  restartButton.disabled = true;
-  restartButton.setAttribute('aria-busy', 'true');
-  console.info('[LayerGlass] Restarting camera stream');
-  restartingGeneration = status?.generation;
+  directRetryAttempts = 0;
+  cancelStreamRetry();
+  clearTimeout(refreshTimer);
+  refreshTimer = null;
+  renderRefreshState();
   const version = selectionVersion;
   try {
-    await post(`/api/restart?camera=${encodeURIComponent(selectedCamera)}`);
-    if (version !== selectionVersion) return;
-    restartRequest = false;
+    const restartStream = backend.capabilities.serverDvr && selectedCamera &&
+      status && !['setup', 'empty', 'unsupported'].includes(status.state);
+    if (restartStream) {
+      restartRequest = true;
+      restartingGeneration = status.generation;
+      console.info('[LayerGlass] Refreshing viewer and camera stream');
+      await post(`/api/restart?camera=${encodeURIComponent(selectedCamera)}`);
+      if (version !== selectionVersion) return;
+      restartRequest = false;
+      selectionVersion += 1;
+      status = { ...status, state: 'reconnecting' };
+      detachPlayer();
+      restartDeadline = Date.now() + 20000;
+      renderStatus();
+      waiting('Restarting the stream', 'Reconnecting to the camera. This may take a few seconds.');
+      loadStatus();
+    } else {
+      if (backend.capabilities.liveOnly) {
+        try { await backend.refresh(); }
+        catch (error) { console.warn('[LayerGlass] Direct printer connection unavailable', error.name); }
+      }
+      await loadCatalog();
+      await loadStatus();
+      if (status?.state === 'live') attachPlayer();
+      else renderStatus();
+    }
     playerChrome.options(false);
-    selectionVersion += 1;
-    status = { ...status, state: 'reconnecting' };
-    detachPlayer();
-    restartDeadline = Date.now() + 20000;
-    renderStatus();
-    waiting('Restarting the stream', 'Reconnecting to the camera. This may take a few seconds.');
-    loadStatus();
   } catch (error) {
     if (version !== selectionVersion) return;
     finishRestart();
-    console.error('[LayerGlass] Restart failed', error.message);
-    streamMessage.textContent = 'Could not restart. Check the NAS connection and try again.';
+    console.error('[LayerGlass] Viewer refresh failed', error.message);
+    streamMessage.textContent = 'Could not refresh. Check the backend connection and try again.';
+  } finally {
+    refreshingViewer = false;
+    renderRefreshState();
   }
 });
 playerChrome.addEventListener('player-play', play);

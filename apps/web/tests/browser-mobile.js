@@ -78,7 +78,7 @@ async function layoutAndDiscovery(browser) {
   await page.waitForFunction(() => document.querySelector('#overlay-title').textContent === 'No printer streams found');
   assert.equal(await page.locator('#camera-list [data-camera-id]').count(), 0);
   assert.equal(await page.locator('#loader').isVisible(), false);
-  assert.equal(await page.locator('#restart-button').isDisabled(), true);
+  assert.equal(await page.locator('#refresh-button').isDisabled(), false);
   await page.getByRole('button', { name: 'Scan for printers', exact: true }).click();
   await page.waitForFunction(() => !document.querySelector('#scan-button').disabled);
   assert(calls.some(call => call.path === '/api/discover'));
@@ -148,9 +148,8 @@ async function layoutAndDiscovery(browser) {
   await page.waitForFunction(key => document.querySelector(`[data-camera-id="${key}"] .printer-select`)?.getAttribute('aria-pressed') === 'true', second.id);
   calls = [];
   await page.locator('#options-button').click();
-  await page.locator('[data-settings-target="connection"]').click();
-  await page.getByRole('button', { name: 'Restart stream', exact: true }).click();
-  await page.waitForFunction(() => document.querySelector('#restart-button').getAttribute('aria-busy') === 'true');
+  await page.getByRole('button', { name: 'Refresh viewer', exact: true }).click();
+  await page.waitForFunction(() => document.querySelector('#refresh-button').getAttribute('aria-busy') === 'true');
   assert(calls.some(call => call.path === '/api/restart' && call.camera === second.id));
 
   statusState = 'live';
@@ -216,13 +215,11 @@ async function realPlayback(browser) {
     return video.videoWidth > 0 && video.getVideoPlaybackQuality().totalVideoFrames > 5 && document.querySelector('#overlay').hidden;
   }, undefined, { timeout: 45000 });
   await page.locator('#options-button').click();
-  await page.locator('[data-settings-target="connection"]').click();
   await page.getByRole('button', { name: 'Refresh viewer', exact: true }).click();
   await page.waitForFunction(() => document.querySelector('#overlay').hidden, undefined, { timeout: 20000 });
   const previous = await page.evaluate(async () => (await (await fetch('/api/status')).json()).generation);
   await page.locator('#options-button').click();
-  await page.locator('[data-settings-target="connection"]').click();
-  await page.getByRole('button', { name: 'Restart stream', exact: true }).click();
+  await page.getByRole('button', { name: 'Refresh viewer', exact: true }).click();
   const deadline = Date.now() + 30000;
   let restarted = false;
   while (Date.now() < deadline) {
@@ -232,7 +229,7 @@ async function realPlayback(browser) {
   }
   assert(restarted, 'The relay must produce a new live generation.');
   await page.waitForFunction(() => document.querySelector('#overlay').hidden &&
-    document.querySelector('#restart-label').textContent === 'Restart stream' && document.querySelector('video').videoWidth > 0,
+    document.querySelector('#refresh-label').textContent === 'Refresh viewer' && document.querySelector('video').videoWidth > 0,
   undefined, { timeout: 30000 });
   assert.deepEqual(errors, []);
   if (process.env.SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/mobile-playback.png`, fullPage: true });

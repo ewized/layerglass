@@ -20,7 +20,7 @@ own hardware without a Cloudflare account.
 The hosted app must ship without an automatic backend. First visits show Demo,
 Docker and Direct printer choices; valid saved selections open directly. Demo uses
 bundled sample video and simulated printer data. Docker connects to an explicitly
-selected HTTPS Python backend. Settings → Connection can change that choice.
+selected HTTPS Python backend. Settings → Backend can change that choice.
 Direct mode supports an identified Klipper/Moonraker MJPEG camera in a compatible
 browser, with live viewing only. Its browser and controller requirements are in
 [backend providers](../architecture/backend-providers.md). Safari/iPhone and

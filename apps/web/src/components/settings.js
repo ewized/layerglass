@@ -22,7 +22,7 @@ export class PrinterSettings extends PlayerElement {
     const panel = this;
     this.panel = this;
     this.page ??= 'root';
-    this.parents = { printers: 'root', connection: 'root' };
+    this.parents = { printers: 'root', backends: 'root' };
     this.back = this.querySelector('#settings-back');
     this.listen(this.querySelector('#scan-button'), 'click', () => this.emit('printer-scan'));
     this.listen(this.back, 'click', () => this.navigate(this.parents[this.page] || 'root', false, true));
@@ -50,6 +50,7 @@ export class PrinterSettings extends PlayerElement {
 
   navigate(page, search = false, focus = false) {
     if (this.page === 'printers' && page !== 'printers') this.querySelector('printer-list').closeEditor();
+    if (this.page === 'backends' && page !== 'backends') this.querySelector('printer-backend-list').closeEditor();
     this.page = page;
     for (const pane of this.panel.querySelectorAll('[data-settings-page]')) pane.hidden = pane.dataset.settingsPage !== page;
     this.back.hidden = page === 'root';
@@ -66,7 +67,7 @@ export class PrinterSettings extends PlayerElement {
 
   updateHeading() {
     this.querySelector('#settings-title').textContent = {
-      root: 'Settings', printers: 'Printers', connection: 'Connection',
+      root: 'Settings', printers: 'Printers', backends: 'Backend',
     }[this.page];
   }
 }

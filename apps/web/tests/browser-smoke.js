@@ -21,14 +21,12 @@ import { chromium } from 'playwright';
     assert.equal(await page.locator('#overlay').isVisible(), false);
     const dimensions = await page.locator('video').evaluate(v => [v.videoWidth, v.videoHeight]);
     await page.locator('#options-button').click();
-    await page.locator('[data-settings-target="connection"]').click();
     await page.getByRole('button', { name: 'Refresh viewer' }).click();
     await page.waitForFunction(() => document.querySelector('#overlay').hidden, undefined, { timeout: 30000 });
     let status = await (await page.request.get(`${base}/api/status`)).json();
     const previous = status.generation;
     await page.locator('#options-button').click();
-    await page.locator('[data-settings-target="connection"]').click();
-    await page.getByRole('button', { name: 'Restart stream' }).click();
+    await page.getByRole('button', { name: 'Refresh viewer' }).click();
     await page.waitForFunction(async old => {
       const s = await (await fetch('/api/status')).json();
       return s.generation !== old && s.state === 'live';

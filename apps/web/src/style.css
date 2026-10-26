@@ -115,17 +115,15 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .settings-heading h2 { flex: 1; min-width: 0; padding-left: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .settings-heading:has(#settings-back:not([hidden])) h2 { padding-left: 0; }
 .settings-page { min-height: 0; padding: 8px; overflow-y: auto; overscroll-behavior: contain; }
-.backend-form { display: grid; grid-template-columns: minmax(0, 1fr) 44px; grid-template-areas: "type-label type-label" "type type" "address-label address-label" "address confirm" "error error" "note note"; align-items: start; gap: 8px; padding: 8px; }
-.backend-form[data-backend="demo"] { grid-template-areas: "type-label type-label" "type confirm" "error error" "note note"; }
-.backend-form label[for="backend-type"] { grid-area: type-label; }
-#backend-type { grid-area: type; }
-#backend-url-label { grid-area: address-label; }
+.backend-row { display: grid; grid-template-columns: minmax(0, 1fr) 44px; align-items: center; gap: 6px; }
+.backend-row[data-backend-row="demo"] > .backend-select { grid-column: 1 / -1; }
+.backend-form { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) 44px; grid-template-areas: "address confirm" "error error" "note note"; align-items: start; gap: 8px; padding: 0 6px 12px; }
 #backend-url { grid-area: address; }
 #backend-confirm { grid-area: confirm; }
 #backend-capabilities { grid-area: note; }
 .backend-error { grid-area: error; margin: 0; color: #ed907d; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
 .backend-form label { font-size: 13px; color: var(--muted); }
-.backend-form input, .backend-form select { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 7px; background: #080a09; color: var(--text); font-size: 16px; }
+.backend-form input { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 7px; background: #080a09; color: var(--text); font-size: 16px; }
 .backend-note { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
 .menu-row { display: flex; align-items: center; width: 100%; min-height: 48px; padding: 10px 12px; gap: 12px; border: 0; border-radius: 7px; background: transparent; color: var(--text); text-align: left; font-size: 14px; }
 .menu-row:hover, .menu-row:focus-visible { background: #ffffff12; }
@@ -154,7 +152,7 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .camera-list .printer-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .printer-label { display: flex; flex-direction: column; gap: 3px; }
 .printer-address { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 12px; }
-.camera-list .printer-state { width: 18px; height: 18px; color: var(--muted); }
+.camera-list .printer-state, .backend-select .printer-state { width: 18px; height: 18px; color: var(--muted); }
 .printer-code-form { grid-area: access; display: flex; align-items: center; gap: 4px; width: min(180px, 44vw); min-width: 0; }
 .printer-code-form input { width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 7px; background: #080a09; color: var(--text); font-size: 16px; }
 .printer-code-save { flex-shrink: 0; }

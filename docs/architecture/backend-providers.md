@@ -43,17 +43,27 @@ backend**, or **Direct printer**. Nothing connects, plays or probes a backend be
 Docker asks for the container's HTTP(S) origin and checks `/api/backend` before
 saving it. Failed or incompatible connections keep the chooser open.
 
-Open **Settings → Connection** to change to **Docker backend**, **Demo**, or
+Open **Settings → Backend** to change to **Docker backend**, **Demo**, or
 **Direct printer (Klipper / Moonraker)** later. Direct mode verifies the controller
 identity and configured webcams, then provides live-only camera playback.
-Confirm the address with the adjacent green checkmark, matching the printer
-access-code input. Demo uses the same checkmark beside its selector. Editing
-does not connect or save; failed checks leave the current backend active and
-show an error below the input row.
+The Backend page uses printer-style rows with a checkmark on the current
+provider. Choose a Docker or Direct row to enter its address inline, or use the
+address icon to edit the current connection. Confirm with the adjacent green
+checkmark, matching the printer access-code input. Selecting Demo switches
+directly; selecting the current Demo simply closes any address editor. Opening
+the menu or editing a draft does not connect or save. Failed checks leave the
+current backend active and show an error below the input row.
 The choice is saved as `layerglass-backend` and a
 reload closes the previous page session. Browser mode also offers a local video
 file picker; the file stays on the device and its object URL is released when
 replaced. Its access does not persist across a reload.
+
+The parent Settings page has one **Refresh viewer** action. For a configured
+Docker camera it restarts the server camera connection and reconnects the
+player; this affects other viewers of that camera as well. Direct mode refreshes
+its approved controller/camera connection, while Demo refreshes local playback.
+Refresh keeps the current page, native video element and replay session. It
+does not submit a restart to providers that lack that capability.
 
 Self-hosted HTML declares `<meta name="layerglass-backend" content="python">`.
 The standalone static build changes that marker to `choose`; it supplies no

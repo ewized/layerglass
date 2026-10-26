@@ -60,7 +60,7 @@ Moonraker `:7125` origin cannot admit a webcam hosted on `:8080`.
 
 ## Setup and browser requirements
 
-Choose **Direct printer** at first launch, or open **Settings → Connection** and
+Choose **Direct printer** at first launch, or open **Settings → Backend** and
 choose **Direct printer (Klipper / Moonraker)**. Enter the reachable controller
 origin. The app verifies it before saving the choice. **Settings → Printers**
 then selects among its verified configured webcams. Camera setup/removal stays

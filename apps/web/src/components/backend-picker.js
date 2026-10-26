@@ -39,7 +39,7 @@ export class PrinterBackendPicker extends PlayerElement {
           <button type="submit" class="button primary"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-connection"/></svg><span>Connect</span><span class="loader" aria-hidden="true" hidden></span></button>
         </form>
       </section>
-      <p class="backend-footnote">Your choice stays in this browser. Change it anytime in Settings → Connection.</p>
+      <p class="backend-footnote">Your choice stays in this browser. Change it anytime in Settings → Backend.</p>
     </div>`;
 
   connectedCallback() {

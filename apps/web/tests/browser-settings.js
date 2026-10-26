@@ -77,10 +77,10 @@ async function run(name, engine) {
     assert.equal(await page.locator('#settings-title').textContent(), 'Settings');
     assert.equal(await page.locator('#player-options use[href="#i-close"]').count(), 0);
     assert.equal(await page.locator('#player-options [data-player-action]').count(), 0);
-    assert.deepEqual(await page.locator('[data-settings-page="root"] [data-settings-target]').evaluateAll(rows => rows.map(row => row.dataset.settingsTarget)), ['printers', 'connection']);
+    assert.deepEqual(await page.locator('[data-settings-page="root"] [data-settings-target]').evaluateAll(rows => rows.map(row => row.dataset.settingsTarget)), ['printers', 'backends']);
     assert.equal(await page.locator('#scan-button').isVisible(), false);
     assert.equal(await page.locator('.printer-code-form input:visible').count(), 0);
-    assert.equal(await page.locator('#refresh-button').isVisible(), false);
+    assert.equal(await page.locator('#refresh-button').isVisible(), true);
     assert.equal(await page.locator('body').innerText().then(text => text.includes('192.168.50.')), false);
     await shot(page, name, 'settings');
     const session = await page.evaluate(async () => {
@@ -140,8 +140,8 @@ async function run(name, engine) {
     await playing(page);
     await page.mouse.move(10, 10);
     await page.locator('#options-button').click();
-    await page.locator('[data-settings-target="connection"]').click();
-    assert.equal(await page.locator('#refresh-button').isVisible(), true);
+    await page.locator('[data-settings-target="backends"]').click();
+    assert.equal(await page.locator('#refresh-button').isVisible(), false);
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#settings-title').textContent(), 'Settings');
     await page.keyboard.press('Escape');

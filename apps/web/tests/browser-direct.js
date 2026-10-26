@@ -103,9 +103,9 @@ try {
         assert.equal(await savedCase.page.locator('#loader').isVisible(), false);
         assert.match(await savedCase.page.locator('#overlay-subtitle').textContent(), /Safari and iPhone.*Docker/);
         await savedCase.page.locator('#options-button').click();
-        await savedCase.page.locator('[data-settings-target="connection"]').click();
-        await savedCase.page.locator('#backend-type').selectOption('demo');
-        await savedCase.page.locator('#backend-form [type="submit"]').click();
+        await savedCase.page.locator('[data-settings-target="backends"]').click();
+        assert.equal(await savedCase.page.locator('[data-backend-select="direct"]').isDisabled(), true);
+        await savedCase.page.locator('[data-backend-select="demo"]').click();
         await waitForPlayer(savedCase.page, ({ app }) => app.pageReplay.session?.kind === 'file' && app.video.currentTime > 1);
         assert.equal(requests.length, 0);
         assert.deepEqual(savedCase.forbidden, []);
@@ -156,6 +156,13 @@ try {
       await page.waitForTimeout(1500);
       assert.equal(requests.filter(path => path === '/webcam/chamber').length, 1, 'Frames arrive on one continuing HTTP response.');
       assert.equal(requests.filter(path => path === '/server/info').length, 2, 'Only explicit selection and page initialization verify identity.');
+      await page.evaluate(async () => { window.previousDirectStream = (await import('/static/player.js')).directStream; });
+      await page.locator('#options-button').click();
+      await page.locator('#refresh-button').click();
+      await waitForPlayer(page, ({ app }) => app.directStream && app.directStream !== window.previousDirectStream &&
+        !app.directStream.failed && document.querySelector('#jpeg').naturalWidth === 320 && document.querySelector('#overlay').hidden);
+      assert.equal(requests.filter(path => path === '/server/info').length, 3, 'Root refresh rechecks the approved controller once.');
+      assert.equal(requests.filter(path => path === '/webcam/chamber').length, 2, 'Root refresh reopens the direct camera once.');
       await page.locator('#options-button').click();
       await page.locator('#printers-button').click();
       assert.equal(await page.locator('printer-item').count(), 2);

@@ -61,14 +61,30 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(await page.locator('#cast-button').isDisabled(), true);
     await page.locator('#options-button').click();
     assert.equal(await page.locator('#printers-button').isVisible(), false);
-    await page.locator('[data-settings-target="connection"]').click();
-    assert.equal(await page.locator('#backend-type').inputValue(), 'demo');
-    assert.match(await page.locator('#backend-capabilities').textContent(), /No LAN discovery/);
-    assert.equal(await page.locator('#restart-button').isVisible(), false);
-    assert.equal(await page.getByRole('button', { name: 'Use demo backend', exact: true }).textContent(), '');
+    assert.equal(await page.locator('[data-settings-page="root"] #refresh-button').isVisible(), true);
+    assert.equal(await page.locator('#restart-button').count(), 0);
+    const demoSession = await page.evaluate(async () => {
+      const app = await import('/static/player.js');
+      window.settingsVideo = app.video;
+      return app.pageReplay.session.session_id;
+    });
+    await page.locator('#refresh-button').click();
+    await page.locator('#player-options').waitFor({ state: 'hidden' });
+    await waitForPlayer(page, ({ app }) => app.video.readyState >= 2 && !app.video.paused);
+    assert.equal(await page.evaluate(async () => (await import('/static/player.js')).pageReplay.session.session_id), demoSession);
+    assert.equal(await page.evaluate(() => document.querySelector('video') === window.settingsVideo), true);
+    await page.locator('#options-button').click();
+    await page.locator('[data-settings-target="backends"]').click();
+    assert.equal(await page.locator('#settings-title').textContent(), 'Backend');
+    assert.equal(await page.locator('#backend-list select').count(), 0);
+    assert.equal(await page.locator('[data-backend-select="demo"]').getAttribute('aria-pressed'), 'true');
+    assert.equal(await page.locator('[data-backend-select="demo"] .printer-state').isVisible(), true);
+    assert.equal(await page.locator('#backend-form').isVisible(), false, 'Backend selection must not force an address editor open.');
+    assert.equal(await page.locator('#refresh-button').isVisible(), false);
+    await page.screenshot({ path: `/app/test-results/backend-list-${name}.png` });
     // Match the printer access-code interaction: editing does not connect;
     // one adjacent icon confirms, with errors below the whole input row.
-    await page.locator('#backend-type').selectOption('python');
+    await page.locator('[data-backend-select="python"]').click();
     await page.locator('#backend-url').fill(base);
     await page.evaluate(() => {
       window.backendTestFetch = window.fetch;
@@ -86,7 +102,7 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     await page.getByRole('button', { name: 'Save and connect', exact: true }).click();
     assert.equal(await page.locator('#backend-confirm').isDisabled(), true);
     assert.equal(await page.locator('#backend-url').isDisabled(), true);
-    assert.equal(await page.locator('#backend-type').isDisabled(), true);
+    assert.equal(await page.locator('#backend-list [data-backend-select]').evaluateAll(buttons => buttons.every(button => button.disabled)), true);
     assert.equal(await page.locator('#backend-confirm').getAttribute('aria-busy'), 'true');
     await page.evaluate(() => document.querySelector('#backend-form').requestSubmit());
     assert.equal(await page.evaluate(() => window.backendTestRequests), 1, 'Pending confirmation must not submit twice.');
@@ -117,7 +133,8 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert.equal(await page.locator('#backend-url').getAttribute('aria-invalid'), null);
     await page.evaluate(() => { window.fetch = window.backendTestFetch; });
     await page.locator('#backend-url').fill('not a backend address');
-    await page.locator('#backend-type').selectOption('demo');
+    await page.locator('[data-backend-select="demo"]').click();
+    assert.equal(await page.locator('#backend-form').isVisible(), false);
     assert.equal(await page.locator('#backend-url').isDisabled(), true);
     assert.equal(await page.locator('#backend-form').evaluate(form => form.checkValidity()), true,
       'A hidden invalid address draft must not prevent selecting Demo.');
@@ -195,16 +212,56 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     assert((await Promise.all(headers)).some(value => value.cookie?.includes('fixture-proxy-session=present')),
       'Same-origin backend requests preserve a reverse-proxy session cookie.');
     await normalPage.locator('#options-button').click();
-    await normalPage.locator('[data-settings-target="connection"]').click();
+    assert.equal(await normalPage.locator('#selected-backend').textContent(), 'Docker backend');
+    const beforeRefresh = await normalPage.evaluate(async () => {
+      const app = await import('/static/player.js');
+      window.settingsVideo = app.video;
+      return { session: app.pageReplay.session.session_id, generation: app.status.generation };
+    });
+    let restartCalls = 0;
+    let releaseRestart;
+    let sawFailedRestart;
+    const interceptedRestart = new Promise(resolve => { sawFailedRestart = resolve; });
+    const failedRestart = route => {
+      restartCalls++;
+      releaseRestart = () => route.fulfill({ status: 503, json: { error: 'Fixture restart unavailable' } });
+      sawFailedRestart();
+    };
+    await normalPage.route('**/api/restart?*', failedRestart);
+    await normalPage.locator('#refresh-button').click();
+    await interceptedRestart;
+    assert.equal(await normalPage.locator('#refresh-button').getAttribute('aria-busy'), 'true');
+    assert.equal(await normalPage.locator('#refresh-button').isDisabled(), true);
+    await normalPage.locator('#refresh-button').dispatchEvent('click');
+    assert.equal(restartCalls, 1, 'A pending refresh must not restart the camera twice.');
+    await releaseRestart();
+    await normalPage.waitForFunction(() => !document.querySelector('#refresh-button').disabled);
+    assert.equal(await normalPage.locator('#refresh-button').getAttribute('aria-busy'), 'false');
+    assert.equal(await normalPage.evaluate(async () => (await import('/static/player.js')).pageReplay.session.session_id), beforeRefresh.session);
+    await normalPage.unroute('**/api/restart?*', failedRestart);
+    const restarted = normalPage.waitForResponse(response => new URL(response.url()).pathname === '/api/restart');
+    await normalPage.locator('#refresh-button').click();
+    assert.equal((await restarted).status(), 202);
+    await waitForPlayer(normalPage, ({ app }, generation) => app.status.generation !== generation &&
+      app.status.state === 'live' && app.video.readyState >= 2 && !app.video.paused &&
+      document.querySelector('#refresh-button').getAttribute('aria-busy') === 'false', beforeRefresh.generation, { timeout: 45000 });
+    assert.equal(await normalPage.evaluate(() => document.querySelector('video') === window.settingsVideo), true);
+    assert.equal(await normalPage.evaluate(async () => (await import('/static/player.js')).pageReplay.session.session_id), beforeRefresh.session,
+      'The combined refresh restarts the camera without opening a new page recording.');
+    await normalPage.locator('#options-button').click();
+    await normalPage.locator('[data-settings-target="backends"]').click();
+    assert.equal(await normalPage.locator('[data-backend-select="python"]').getAttribute('aria-pressed'), 'true');
+    assert.equal(await normalPage.locator('[data-backend-select="python"] .printer-state').isVisible(), true);
+    assert.equal(await normalPage.locator('#backend-form').isVisible(), false);
+    await normalPage.locator('[data-backend-edit="python"]').click();
     await normalPage.locator('#backend-url').fill('not a backend address');
-    await normalPage.locator('#backend-type').selectOption('demo');
     await Promise.all([
       normalPage.waitForEvent('domcontentloaded'),
-      normalPage.locator('#backend-form [type="submit"]').click(),
+      normalPage.locator('[data-backend-select="demo"]').click(),
     ]);
     await waitForPlayer(normalPage, ({ app }) => app.pageReplay.session?.kind === 'file' && app.video.currentTime > 1);
     assert.equal(await normalPage.evaluate(async () => (await import('/static/backend/index.js')).backend.id), 'demo');
     await normal.close();
-    console.log(`${name}: Python remains the self-hosted default; Connection switches to the browser provider`);
+    console.log(`${name}: root refresh restarts once, recovers from failure and retains recording; Backend list switches to Demo`);
   } finally { await browser.close(); }
 }

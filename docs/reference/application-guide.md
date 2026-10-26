@@ -173,8 +173,10 @@ The **Settings** gear opens above the bottom
 toolbar, with icon rows and back navigation. **Printers** contains discovery,
 selection, and access-code setup. An empty printer list shows skeleton rows
 while discovery is running, then displays results as they arrive. Known printers
-remain visible during subsequent scans. **Connection** contains Refresh viewer and
-Restart stream. Close settings with the gear, a tap on the video, or Escape.
+remain visible during subsequent scans. **Backend** selects Docker, Demo or
+Direct from printer-style rows, with inline address confirmation and a checkmark
+on the current choice. The parent Settings menu contains one **Refresh viewer**
+action. Close settings with the gear, a tap on the video, or Escape.
 All settings stay within the player, including fullscreen.
 The scrub bar uses the same 6 px track, 16 px handle and 44 px interaction area
 on every screen size, with shared browser styling and a fill that follows the
@@ -266,7 +268,10 @@ selected-text copy fallback. Details and sources are in
 - **Live** returns to the current camera feed.
 - The playback timer appears only when watching past footage and shows a negative
   offset from live, such as `−0:32`. Live playback has no timer or total duration.
-- **Refresh viewer** reconnects only the current browser player and keeps its buffer.
+- **Refresh viewer**, in the main Settings menu, reconnects playback and keeps
+  this page's buffer. With a configured Docker camera it also restarts the
+  camera connection for all viewers. Direct mode refreshes its controller and
+  live camera; Demo refreshes local playback. It does not reload the page.
 - **Pull down on the video** on mobile, then release when prompted, to reload
   the whole page and return to live playback with a fresh buffer. A temporary
   indicator appears inside the player during the gesture. Short pulls, timeline
@@ -275,7 +280,6 @@ selected-text copy fallback. Details and sources are in
   player consumes that intent on reload and starts muted, inline video once
   media is ready. If the browser requires a tap, **Play live view** remains
   available. No footage or access codes are carried in this state.
-- **Restart stream** stops and restarts the camera connection for all viewers.
 - **Fullscreen** requests fullscreen for the whole player, retaining its custom
   toolbar, timeline, and settings. On iPhone, where whole-player fullscreen is
   unavailable, tapping the button requests native **video fullscreen** instead.

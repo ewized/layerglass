@@ -42,7 +42,9 @@ export const settingsTemplate = `
       </div>
       <div data-settings-page="root" class="settings-page">
         <button id="printers-button" class="menu-row" data-settings-target="printers"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-printer"/></svg><span>Printers</span><span id="selected-printer" class="menu-value"></span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <button class="menu-row" data-settings-target="connection"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-connection"/></svg><span>Connection</span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <button id="backends-button" class="menu-row" data-settings-target="backends"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-connection"/></svg><span>Backend</span><span id="selected-backend" class="menu-value"></span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <button id="refresh-button" class="menu-row menu-separator"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg><span id="refresh-label">Refresh viewer</span></button>
+        <span id="stream-message" class="sr-only" role="status" aria-live="polite">Connecting to the camera…</span>
       </div>
       <div data-settings-page="printers" class="settings-page" hidden>
         <div id="printer-skeleton" class="printer-skeleton" aria-hidden="true" hidden>
@@ -54,21 +56,31 @@ export const settingsTemplate = `
 
         <span id="discovery-message" class="sr-only" role="status" aria-live="polite"></span>
       </div>
-      <div data-settings-page="connection" class="settings-page" hidden>
-        <form id="backend-form" class="backend-form">
-          <label for="backend-type">Backend</label>
-          <select id="backend-type" name="type"><option value="python">Docker backend</option><option value="demo">Demo</option><option value="direct">Direct printer (Klipper / Moonraker)</option></select>
-          <label for="backend-url" id="backend-url-label">Backend address</label>
-          <input id="backend-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com" aria-describedby="backend-capabilities backend-error">
-          <button id="backend-confirm" class="icon-button primary" type="submit" title="Save and connect" aria-label="Save and connect"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></button>
-          <p id="backend-error" class="backend-error" role="alert" hidden></p>
-          <p id="backend-capabilities" class="backend-note"></p>
-        </form>
+      <div data-settings-page="backends" class="settings-page" hidden>
+        <printer-backend-list id="backend-list" role="group" aria-label="Backends"></printer-backend-list>
         <label id="local-media-label" class="menu-row" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>Open local video</span><input id="local-media" type="file" accept="video/*" class="sr-only"></label>
-        <span id="stream-message" class="sr-only" role="status" aria-live="polite">Connecting to the camera…</span>
-        <button id="refresh-button" class="menu-row"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg><span>Refresh viewer</span></button>
-        <button id="restart-button" class="menu-row"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-restart"/></svg><span id="restart-label">Restart stream</span></button>
       </div>
+`;
+
+export const backendListTemplate = `
+<div class="backend-row" data-backend-row="python">
+  <button type="button" class="menu-row backend-select" data-backend-select="python" aria-pressed="false"><span class="printer-label"><span class="printer-name">Docker backend</span><span class="printer-address" data-backend-address="python">Discovery, recordings and telemetry</span></span><svg class="printer-state" viewBox="0 0 24 24" aria-hidden="true" hidden><use href="#i-check"/></svg></button>
+  <button type="button" class="icon-button" data-backend-edit="python" aria-label="Edit Docker backend address" title="Backend address"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-connection"/></svg></button>
+</div>
+<div class="backend-row" data-backend-row="demo">
+  <button type="button" class="menu-row backend-select" data-backend-select="demo" aria-pressed="false"><span class="printer-label"><span class="printer-name">Demo</span><span class="printer-address">Simulated camera and printer</span></span><svg class="printer-state" viewBox="0 0 24 24" aria-hidden="true" hidden><use href="#i-check"/></svg></button>
+</div>
+<div class="backend-row" data-backend-row="direct">
+  <button type="button" class="menu-row backend-select" data-backend-select="direct" aria-pressed="false"><span class="printer-label"><span class="printer-name">Direct printer</span><span class="printer-address" data-backend-address="direct">Klipper / Moonraker · live only</span></span><svg class="printer-state" viewBox="0 0 24 24" aria-hidden="true" hidden><use href="#i-check"/></svg></button>
+  <button type="button" class="icon-button" data-backend-edit="direct" aria-label="Edit direct printer address" title="Printer address"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-connection"/></svg></button>
+</div>
+<form id="backend-form" class="backend-form" hidden>
+  <label for="backend-url" id="backend-url-label" class="sr-only">Backend address</label>
+  <input id="backend-url" name="url" type="url" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" placeholder="https://printer.example.com" aria-describedby="backend-capabilities backend-error" required disabled>
+  <button id="backend-confirm" class="icon-button primary" type="submit" title="Save and connect" aria-label="Save and connect"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></button>
+  <p id="backend-error" class="backend-error" role="alert" hidden></p>
+  <p id="backend-capabilities" class="backend-note"></p>
+</form>
 `;
 
 export const printerTemplate = `
