@@ -34,7 +34,7 @@
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
@@ -46,13 +46,14 @@
       "round7_findings": "test-results/review-2026-10-26/r02/round7-findings.json",
       "ballot_round8": "test-results/review-2026-10-26/r02/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r02/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r02/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r02/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r02/round11-ballot.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
@@ -63,13 +64,14 @@
       "ballot_round7": "test-results/review-2026-10-26/r03/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r03/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r03/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r03/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r03/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r03/round11-ballot.json"
     },
     {
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
@@ -80,7 +82,8 @@
       "ballot_round7": "test-results/review-2026-10-26/r04/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r04/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r04/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r04/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r04/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r04/round11-ballot.json"
     },
     {
       "id": "r05",
@@ -138,7 +141,7 @@
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -149,13 +152,14 @@
       "ballot_round7": "test-results/review-2026-10-26/r08/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r08/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r08/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r08/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r08/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r08/round11-ballot.json"
     },
     {
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -166,13 +170,14 @@
       "ballot_round7": "test-results/review-2026-10-26/r09/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r09/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r09/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r09/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r09/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r09/round11-ballot.json"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -184,7 +189,8 @@
       "ballot_round7": "test-results/review-2026-10-26/r10/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r10/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r10/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r10/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r10/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r10/round11-ballot.json"
     }
   ],
   "rounds": [
@@ -487,8 +493,17 @@
       "slate": "test-results/review-2026-10-26/round-11-slate.json",
       "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c",
       "ballots_started": true,
-      "reviewers_completed": [],
-      "notes": "P40actualrecorder/bothengineIDB precision/retention finding. OutsideP36scope; sixfreshvotes beforeanycomponent/test/product-docedit. Originalsynthetic/initialattempt andexactprimary/countercontrol retained."
+      "reviewers_completed": [
+        "r02",
+        "r03",
+        "r04",
+        "r08",
+        "r09",
+        "r10"
+      ],
+      "notes": "P40actualrecorder/bothengineIDB precision/retention finding. OutsideP36scope; sixfreshvotes beforeanycomponent/test/product-docedit. Originalsynthetic/initialattempt andexactprimary/countercontrol retained.",
+      "majority_recorded_at": "2026-10-26T10:20:35Z",
+      "decision": "P40rev1 approved6/10 beforeimplementation;4remainingballots pending,root0."
     }
   ],
   "proposals": [
@@ -4662,8 +4677,58 @@
       "evidence_path": "test-results/review-2026-10-26/r04/merged-preview-review-1.json",
       "risk": "Moderate client boundary correction across several consumers. A partial fix can still hide/drop the exact first capture or reject a valid fallback, while a global change can weaken other transports or real retention. Gate on valid local JPEG precision and preserve all legacy/remote/other-mode and ownership behavior; source/evidence and tests must cover both rounding directions and genuine retention advancement.",
       "validation_plan": "Keep the exact old-source actual-recorder primary negative and aligned-fixture diagnostic control immutable. In Chromium and WebKit, real native-decoded JPEG PreviewCapture/toBlob/PreviewHistory/PreviewStorage/actual IDB must retain the precisely owned cold first frame and disk row and paint it with zero preview HTTP; do not merely change fixture session.start_seconds in the corrected primary. Include an actual upward-rounding recorder payload and a downward-rounding case, page/retained-first start, precise end/provisional-tail boundary and valid local-JPEG gating. Verify legacy/no-descriptor JPEG,H264,file/demo and remote behavior remains unchanged. Actual retained-start advancement must still exclude/prune older captures and hide invalid preview points; delayed backup from before the new retained start/session must not repopulate/paint current history, while a valid precise-start backup can be accepted. Retain existing corrupt-sprite cooldown/recovery,500ms delayed-IDB fallback/late-local ownership, adjacent warm/cold and forward/return P37 controls, same native video/zero main seeks and no extra main-media request on hover. Focused relevant JS units, complete existing browser-preview-loading and browser-jpeg-clock suites both engines, Bash/diff/scope as relevant and35docs. No full duplicate suite, physical device/LAN/registry/service or credential probes; root owns final combined check and preserves active native six-hour fixture.",
-      "status": "voting",
-      "ballots": {}
+      "status": "implementing",
+      "ballots": {
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Fresh review of pinned 5b51ab7 source and frozen scope confirms the consumer reintroduces legacy rounded bounds for point/sheet selection, trim, clock hiding and late fallback. My preserved primary test using actual recorder metadata deletes the captured frame and IDB data at position 10.123677999999927 and fetches one sprite at 10.124 in both engines; the aligned fixture control retains and paints the local frame with zero HTTP. Targets are unchanged since that verified source. The three-file correction is sufficient only when gated to valid local descriptor-backed JPEG and applied consistently, without numeric tolerance or changes to remote, legacy, H264 or file behavior. Approval requires actual upward/downward payloads, genuine retention advancement and stale/valid delayed fallback controls plus existing P10/P11/P36/P37 regressions and stated checks. Original negatives, synthetic/one-byte qualifications and six-hour fixture remain preserved. No prior votes transfer; no implementation or new probes were performed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:11:59Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Fresh independent assessment of pinned5b51ab7 component, PageReplay descriptor/bounds, PreviewCapture/history and existing suite/docs, plus actual recorder payload and native-JPEG/real-IDB browser fixture/results. The precise accepted capture10.123677999999927 is below legacy10.124; component clipping/trim/clock/fallback checks reintroduce that rounded bound. Both original engine cases delete the persisted frame and request one valid server sheet; aligning only the fixture legacy bound retains the local frame/row with zero HTTP. Relevant source is unchanged from the evidenced76334ef, and metadata/fixture/results hashes match. Consistent actual bounds gated to valid local JPEG descriptors address this specific cross-consumer mismatch without tolerance or backend/storage changes. Approval includes all frozen validation: unchanged actual-recorder primary and diagnostic controls, both rounding directions, precise end/page/retained-first bounds, genuine retention pruning and stale versus valid fallback acceptance, legacy/H264/file/demo/remote counter-cases, prior cooldown/late-IDB/P37 ownership/cache regressions, same video/zero main seeks or hover media requests, both complete named browser suites, affected units and35docs. Only the three listed files are approved. Canonical Python sorted compact ensure_ascii hash independently verified; no new application/runtime probes or source edits. Verification: r08/round11-verification.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:11:59Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned component showPoint/trim, sheet construction, clock and late-load checks reapply rounded session bounds after PageReplay has precise proven JPEG bounds. Actual unchanged recorder payload starts10.123677999999927 versus legacy10.124; preserved native-decode/real-IDB controls in both engines lose frame:10 and its disk row and fetch one sheet, while the aligned-field diagnostic retains them with zeroHTTP. Source and artifact hashes match and relevant files are unchanged from the evidence baseline. The exact three-file correction is justified when gated to valid local descriptor JPEG and applied consistently, with no epsilon or weakened actual retention. Both rounding directions, real retention/late fallback and legacy/remote/other-mode controls remain required implementation acceptance; this is a fresh vote.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:16:49Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Fresh inspection of5b51ab7 source and exact recorder/native-JPEG/real-IDB evidence confirms the component replaces proven start10.123677999999927 with rounded10.124, trims frame:10 and its disk row, then makes avoidable fallback HTTP in both engines. The aligned-fixture diagnostic preserves that capture with zero HTTP; it is not a substitute corrected primary. Consistent actual bounds for valid local descriptor JPEGs address the demonstrated consumer gap across clipping/sheets/trim/clock/late acceptance. Approval is limited to the three frozen files and requires both rounding directions, real retention advancement/stale fallback exclusion, precise-end handling and unchanged legacy/H264/file/remote/P37 ownership/cache behavior. No blanket tolerance, altered page exclusion or prior-vote transfer is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:18:06Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Fresh review at pinned5b51ab7 confirms the component reapplies rounded session.start_seconds to point/sheet/trim/clock and late-fallback checks while local descriptor-backed bounds/capture use the precise start. Actual-recorder10.123677999999927 versus10.124 evidence consumes the unchanged primary metadata: native capture is persisted/cold with its IDB row, then both engines delete it and issue one valid server fallback; changing only the diagnostic fixture bound retains the local image/row with zero HTTP. No blank, wrong-pixel or main-player consequence is inferred. Approve this exact three-file consumer correction and full regression plan, gated to valid local descriptor JPEG bounds and applied consistently at every listed boundary. Upward/downward rounding, true retained-start advancement, precise end/tail, valid and stale late backups and unchanged legacy/H264/file/demo/remote behavior are essential. Preserve P37 selection, cache/decode/ownership/fallback pacing, labels and one-commit UI behavior; no global epsilon, weakened retention, backend change or prior P36/P37 vote transfer.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:19:16Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Pinned PageReplay/PreviewCapture accept the precise local JPEG start, but scrub-preview reintroduces session.start_seconds in point/sheet clipping, trim, clock validity and late-server acceptance. I independently read the unchanged actual ReplayBuffer later payload (10.123677999999927 versus rounded 10.124), native capture/real-IDB harness and both-engine results: the old consumer deletes the valid frame:10 asset and disk row and requests one valid server sheet; aligning only the fixture legacy start retains that capture with zero HTTP. This proves avoidable local-data loss/fallback, not blank or incorrect pixels. Approve only the closed three-file valid-local-descriptor JPEG boundary correction, with no epsilon or weakening of page/retention exclusion. Require unchanged primary payload, both rounding directions, precise start/end/provisional coverage, actual retained-start advancement and stale versus valid delayed results, plus legacy/H264/file/demo/remote controls. Preserve P37 closest selection, budgets, 500 ms IDB/late-local ownership, fallback pacing/cooldowns, gestures and the single main video; run both complete focused browser suites and stated unit/docs checks. This fresh approval does not transfer any P36/P37 vote or accept an untested partial fix.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:20:35Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        }
+      },
+      "implementation": {
+        "author": "r04",
+        "worktree": "/workspace/layerglass-review/jpeg-preview-bounds",
+        "branch": "review/jpeg-preview-bounds",
+        "authorized_at": "2026-10-26T10:20:35Z",
+        "authorization": "Sixfresh explicitAPPROVE forP40rev1 beforecomponent/test/productdoc edits; originalP36/P37votesnottransferred; root0."
+      }
     }
   ],
   "commits": [
@@ -5623,6 +5688,46 @@
       "at": "2026-10-26T10:09:22Z",
       "type": "P40freshscopefrozen",
       "message": "SavedR04findinghash andallreviewedruntime10hashesverifiedunchangedafterP39. Actualrecorderpayload/browserIDBproof frozen for3fileP40. No componentedits before6freshvotes; P36/P37votes do nottransfer. Root0."
+    },
+    {
+      "at": "2026-10-26T10:11:59Z",
+      "type": "ballot",
+      "message": "R04 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:11:59Z",
+      "type": "ballot",
+      "message": "R08 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:16:49Z",
+      "type": "ballot",
+      "message": "R02 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:18:06Z",
+      "type": "ballot",
+      "message": "R03 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:18:06Z",
+      "type": "JPEGQAplanreview",
+      "message": "R06separate1hJPEGnativeimage/recordedstats/BlobURL/IDB/32MiBDVR planreviewed; onlyUNEXECUTEDignoredharnesspreparationauthorized. No pilot/longrununtilrootseparateexplicitfollowup withfinalP40source. Existinga505P37sixhourfixtureunchanged."
+    },
+    {
+      "at": "2026-10-26T10:19:16Z",
+      "type": "ballot",
+      "message": "R09 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:20:35Z",
+      "type": "ballot",
+      "message": "R10 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:20:35Z",
+      "type": "P40authorized",
+      "message": "SixfreshP40APPROVE savedbeforeany3filecomponent/test/docedit. Exactfrozen5b51target3bytesunchanged. AuthorR04newisolatedworktree followscommittedauthorization. Rootdoesnotvote; preserveallactual/syntheticnegatives/6hrun."
     }
   ],
   "validation": [
