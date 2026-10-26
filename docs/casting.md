@@ -23,6 +23,11 @@ If that initial load fails or times out, its script and callback are cleaned up.
 **Refresh viewer** can try loading the SDK again on the same page after
 connectivity returns. Concurrent initialization shares one attempt; there is no
 SDK retry timer. A successfully prepared sender keeps its existing listeners.
+If framework setup fails partway through, its listeners are removed before an
+explicit retry can attach a fresh set. This uses the SDK's
+[controller](https://developers.google.com/cast/docs/reference/web_sender/cast.framework.RemotePlayerController#removeEventListener)
+and [context](https://developers.google.com/cast/docs/reference/web_sender/cast.framework.CastContext#removeEventListener)
+listener-removal methods.
 
 The custom Cast button invokes `CastContext.requestSession()` directly in its
 click event. A selected receiver loads the same-origin network HLS URL using

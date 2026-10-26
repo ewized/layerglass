@@ -101,6 +101,38 @@ test('Cast SDK timeout restores a previous callback and leaves loading retryable
   assert.equal(view.__onGCastApiAvailable, currentCallback, 'Successful loading keeps the vendor callback behavior.');
 });
 
+test('partial Cast framework setup rolls back its listeners before an explicit retry', async () => {
+  for (const stage of ['setOptions', 'addEventListener']) {
+    const { view, sender } = await loaderHarness();
+    const sdk = installCastFixture(view);
+    const context = view.cast.framework.CastContext.getInstance();
+    const original = context[stage];
+    context[stage] = function(...args) {
+      if (stage === 'addEventListener') original.apply(this, args);
+      throw new Error('Synthetic partial Cast framework failure.');
+    };
+    await sender.initializing;
+    const abandoned = sdk.controller;
+    assert.equal(sender.state, 'unavailable');
+    assert.equal(sender.initializing, null);
+    assert.equal(context.listeners.get('session').length, 0);
+    assert.equal(abandoned.listeners.get('change').length, 0);
+    assert.equal(sender.context, null);
+    context[stage] = original;
+    sender.setSource(path);
+    await sender.initializing;
+    assert.equal(sender.ready, true);
+    assert.equal(context.listeners.get('session').length, 1);
+    assert.equal(sdk.controller.listeners.get('change').length, 1);
+    let changes = 0;
+    sender.changed = () => changes++;
+    abandoned.emit('change');
+    assert.equal(changes, 0);
+    context.emit('session');
+    assert.equal(changes, 1, 'One SDK session event produces one callback after retry.');
+  }
+});
+
 test('Google Cast sends the network live playlist and identity, never a decoder blob', async () => {
   const { sender, sdk, replay, video } = await harness();
   assert.equal(sender.ready, true);

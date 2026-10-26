@@ -76,12 +76,23 @@ export class GoogleCastSender {
       this.context = framework.CastContext.getInstance();
       this.remote = new framework.RemotePlayer();
       this.controller = new framework.RemotePlayerController(this.remote);
-      this.controller.addEventListener(framework.RemotePlayerEventType.ANY_CHANGE, () => this.sync());
-      this.context.addEventListener(framework.CastContextEventType.SESSION_STATE_CHANGED, () => this.sync());
-      this.context.setOptions({ receiverApplicationId: window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-        autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.TAB_AND_ORIGIN_SCOPED, resumeSavedSession: false });
-      this.state = 'ready';
-      this.changed();
+      const controller = this.controller, context = this.context;
+      const playerEvent = framework.RemotePlayerEventType.ANY_CHANGE;
+      const sessionEvent = framework.CastContextEventType.SESSION_STATE_CHANGED;
+      const sync = () => this.sync();
+      try {
+        controller.addEventListener(playerEvent, sync);
+        context.addEventListener(sessionEvent, sync);
+        context.setOptions({ receiverApplicationId: window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+          autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.TAB_AND_ORIGIN_SCOPED, resumeSavedSession: false });
+        this.state = 'ready';
+        this.changed();
+      } catch (error) {
+        controller.removeEventListener(playerEvent, sync);
+        context.removeEventListener(sessionEvent, sync);
+        this.context = this.remote = this.controller = null;
+        throw error;
+      }
     }).catch(error => {
       this.initializing = null;
       this.state = 'unavailable';

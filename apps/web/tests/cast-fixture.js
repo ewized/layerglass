@@ -4,6 +4,7 @@ export function installCastFixture(view = window) {
   class Observable {
     constructor() { this.listeners = new Map(); }
     addEventListener(type, fn) { const values = this.listeners.get(type) || []; values.push(fn); this.listeners.set(type, values); }
+    removeEventListener(type, fn) { this.listeners.set(type, (this.listeners.get(type) || []).filter(value => value !== fn)); }
     emit(type) { for (const fn of this.listeners.get(type) || []) fn({ type }); }
   }
   const fixture = view.castFixture = { requests: [], loads: [], controls: [], stops: 0,
