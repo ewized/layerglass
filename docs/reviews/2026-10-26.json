@@ -123,7 +123,7 @@
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 8 ballot complete",
+      "status": "round 9 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
@@ -132,7 +132,8 @@
       "ballot_round5": "test-results/review-2026-10-26/r08/ballot-round5.json",
       "ballot_round6": "test-results/review-2026-10-26/r08/ballot-round6.json",
       "ballot_round7": "test-results/review-2026-10-26/r08/round7-ballot.json",
-      "ballot_round8": "test-results/review-2026-10-26/r08/round8-ballot.json"
+      "ballot_round8": "test-results/review-2026-10-26/r08/round8-ballot.json",
+      "ballot_round9": "test-results/review-2026-10-26/r08/round9-ballot.json"
     },
     {
       "id": "r09",
@@ -414,7 +415,9 @@
       "slate": "test-results/review-2026-10-26/round-9-slate.json",
       "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a",
       "ballots_started": true,
-      "reviewers_completed": [],
+      "reviewers_completed": [
+        "r08"
+      ],
       "notes": "Actual generated failed build deletes pre-existing own image ref. Separate image-ownership scope; no P34 votes inferred."
     }
   ],
@@ -4218,7 +4221,7 @@
       "evidence_path": "test-results/review-2026-10-26/root-preview-adjacent/finding.json",
       "risk": "Low/moderate cache selection correction. Preserving only a nearby warm placeholder without resolving the true target would hide the bug; rejecting a late read or reintroducing duplicate decode/HTTP work could regress P11. Keep compressed and decoded limits and session ownership.",
       "validation_plan": "Deterministic units: exact cold vs nearby hot, closer non-exact cold vs farther hot, tie behavior unchanged, coalesced identical disk reads, missing asset and session reset. Actual Chromium/WebKit Web Component+real IndexedDB with distinct decoded colors must replace warm placeholder with correct nearest cold image without additional pointer event, seek/video creation/server preview HTTP. Both directions and a contiguous retained-still sweep under bounded RAM; delayed IDB, stale session/target and corrupt/sprite fallback regressions remain passing. Independently rerun original adjacent-color negative against old module and corrected source. After integration repeat actual45min full retained-preview sweep under resource caps and preserve original failure; do not claim physical-phone or unmeasured zero-latency guarantees.",
-      "status": "implementing",
+      "status": "validated",
       "ballots": {
         "r03": {
           "vote": "APPROVE",
@@ -4283,6 +4286,18 @@
           "recorded_at": "2026-10-26T08:50:26Z",
           "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
         }
+      },
+      "implementation": {
+        "author_commit": "42ea018987ee26972c3f35c05ffba058a03f9fa9",
+        "peer_review": "test-results/review-2026-10-26/r05/p37-diff-review.json",
+        "peer_decision": "READY",
+        "source_sha256": {
+          "apps/web/src/preview-history.js": "fc86eac43bb3532a553df8f2ab8af932e34649a02488521ce4be97bcf47adb75",
+          "apps/web/tests/preview-history.test.js": "634069e90f3603aca9c8277323b3e9ca275a0c7d5ec2658dbf6fb6c1b0d283d3",
+          "apps/web/tests/browser-preview-loading.js": "3265a980b06bd046ec6e8812c3a0f72903d37dfce542b73b7b2f1999319ab827",
+          "docs/local-previews.md": "b4ea387bba34d745bb0acd52dd56793f60b2dc4445cf7c6304a959a91d0da1fd"
+        },
+        "validation": "Independent29focusedunits, actual original corrected adjacentcolor consumer and registered Chromium/WebKit loading/held/corrupt/late/24steprealIDB suite pass; oldmodule negatives retained. Actual45min/6h integration run pending."
       }
     },
     {
@@ -4303,7 +4318,15 @@
       "risk": "Moderate shell lifecycle correction. Removing by image ID can affect aliases; tracking only after docker build returns misses interruption. Private refs plus verified build identity must preserve both boundaries without weakening P34 cleanup. If another actor replaces the private ref, preserve it rather than force-remove shared image IDs.",
       "validation_plan": "Repeat original actual failed-build own-tag canary: old default-named ref/control/shared image survive and build still exits1. Actual successful minimal offline generated build cleans only its created private ref, leaving reused image and other aliases unchanged. Two checks with same run id use distinct owned refs. Controlled interruption after actual successful build/identity recording but before client return cleans owned ref and preserves130/143 status; failed/partial build without owned identity removes no existing image. Foreign replacement of private tag survives; cached-build/shared-ID aliases survive. All7 P34 launch options, conflict/interrupt/name replacement/container log/cleanup contracts remain passing; modes and explicit reused-image path unchanged. Bash/ShellCheck, meaningful focused lifecycle controls and35docs. Saved original negative must remain failing before correction. No full duplicate browser test, real printer or registry/network probe required.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected pinned038efc6 check.sh/workflow, its P34 container-identity delta, and the original actual failed-build own-tag canary/probe/logs. Image ownership is set before build success, so failure removes an existing default reference without creating an image or container. My original-script offline adapter independently reproduced build exit1, zero container launches and default-reference removal; explicit reused-image and JavaScript/workspace controls performed no image removal, preserved immutable container cleanup and removed temporary directories. Private per-invocation references plus verified successful-build identity directly address this separate ownership defect. Approval includes all frozen actual-build, same-run concurrency, pre-client-return interruption, partial/no-identity failure, foreign replacement and cached/shared-ID alias controls, as well as all P34 status/log/options/cleanup regressions, syntax/ShellCheck and docs checks. Removing shared image IDs or trusting a planned tag would violate this vote. No implementation or real shared references were changed. Own evidence: r08/round9-controls.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:52:28Z",
+          "slate_sha256": "f155e8df35cdac96c7021f03d372ceefd4449c54af131539736d7ba655ec961a"
+        }
+      }
     }
   ],
   "commits": [
@@ -5086,6 +5109,11 @@
       "at": "2026-10-26T08:50:26Z",
       "type": "ballot",
       "message": "R08 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:52:28Z",
+      "type": "ballot",
+      "message": "R08 explicit Round9 ballot imported for all1 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
