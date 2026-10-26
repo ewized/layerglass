@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active:43frozenproposals/41integrated/P38+P42superseded. P43exactintegration405f846 and peer/sourceguardsPASS; new normalall41CI pending publication. Earlierall40CI+hostingPASS. Native6h earlierpinongoing beyond5h; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
+  "status": "Active finalhour:43frozenproposals/41integrated/P38+P42superseded. All41normalCI+hostingPASS on862c01d, independentlyverified. Earliera505native6hPASS/source+cleanupindependentlyverified. Outcome note finaltextNO_FINDINGS/36docsPASS. JPEG longstressincomplete. Continue reviewuntil16:03:49UTC; no futurecompletion claim.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -588,7 +588,7 @@
         "r10"
       ],
       "notes": "3file localvalidJPEG timelineconsumer eligibility/activation only; lowerprecision/retention separateissue stop clause. No edits/authorworktree before6committed approvals.",
-      "decision": "All10 fresh APPROVE exact P42rev1. Author then reported required independent lower-precision/retention STOP condition BEFORE tracked edits; source/evidence review in progress. No expanded implementation authorized; approvals cannot transfer."
+      "decision": "All10 fresh APPROVE exact P42rev1; explicit lower-precision stop demonstrated before tracked edits. Superseded by NEW P43 after fresh scope/votes; original ballots remain unchanged/untransferred. Old author tree clean atd4b6abf, no integration."
     },
     {
       "id": 14,
@@ -610,7 +610,7 @@
         "r09",
         "r10"
       ],
-      "decision": "All10 fresh explicitAPPROVE P43rev1. Implementation only after6fresh approvals committed1eaa2b4 before new authorworktree creation. All earlierP42votes preserved and nottransferred. Exact-final connectedbrowser/independentREADY still required.",
+      "decision": "All10 fresh APPROVE exact P43rev1; initial6committed1eaa before new author worktree. Independent exactR03READY/R09NO_FINDINGS acceptance3ca precedes405integration; newnormal41sourceCI40337893030+hosting40337893048PASS on862c01d. No P42 vote transfer; source audit verified.",
       "notes": "Consumer-only precise descriptor view explicitly authorizes local retention/mapping effect, exactly3files. P42STOP/original10approvals preserved; no vote transfer."
     }
   ],
@@ -5170,7 +5170,7 @@
           "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
         }
       },
-      "implementation_status": "Integrated exact reviewed e596587 as405f846; all3postmergehashes identical, no other non-audit delta to greenall40sourcee652. IndependentR03nativeREADY/R09sourceNO_FINDINGS and authorchecks passed. New normal combined-sourceCI next; longnative6h remains earlierpin.",
+      "implementation_status": "Integrated405f846, exact3files preserved; independentR03READY/R09NO_FINDINGS and new normalall41CI40337893030 on862c01dPASS. Full218Python/263JS/35docs/20browser/Nx plus both-engine precision/native recovery logged. Earlier-pin6h stillongoing; no final-source endurance claim.",
       "implementation": {
         "author_head": "e5965875f3a55954908b786d0f4e910256e46933",
         "author_base": "1eaa2b4393dc8133b0f17bff0973ee3dbd96d96e",
@@ -6539,6 +6539,31 @@
       "at": "2026-10-26T14:15:01Z",
       "type": "integration",
       "message": "Guarded P43cherry-pick405f846 after committed exactpeer acceptance3ca0655. Exact3filehashes preserved, allotherapp/test/build/productdocs unchanged vsall40CIe652.41corrections integrated;2superseded drafts unintegrated. Preparing one normalCI on newtestedcombinedsource, not rerunningunchangedsource."
+    },
+    {
+      "at": "2026-10-26T14:16:07Z",
+      "type": "publication",
+      "message": "Published testedall41source862c01d to primaryreviewbranch and codex/review-ci branch. GitHubAPIconfirms one newnormalCI40337893030 +hosting40337893048 bothinprogress; no rerun/deploy/mainmerge. Initial snapshot saved."
+    },
+    {
+      "at": "2026-10-26T14:26:58Z",
+      "type": "final-integration-audit",
+      "message": "R08 report3a8739351fd02297eca6b0bc70ad99ac3ac6629a3710e2f5bc2f44bfcd595fc2 verified, nofindingswithinfinalsource/processscope. Root additionallyperformed finite IEEE-double large-epoch boundary arithmetic spotcheck (not projectruntime/actualrecorder proof): no new reproducer found; no source/proposal change or universalprecision claim."
+    },
+    {
+      "at": "2026-10-26T14:38:32Z",
+      "type": "bookkeeping-correction",
+      "message": "Root found top-level delivery fields still reporting original1d9174e/CI40278167693failure-under-investigation despite later pass records. Preserved verbatim old fields in historical_publication_snapshots; updated mutable current delivery to testedpublished41source862c01d/currentCI+hostingSUCCESS, keptall40 and originalrawfailures unchanged. Also closed mutableRound13/14decision prose; no frozen contract/ballot/source change."
+    },
+    {
+      "at": "2026-10-26T14:56:16Z",
+      "type": "native-endurance-complete",
+      "message": "Six-hour native run finishedactual21600s bothengines,full finalassertions/exec0/source246Gitblob/exact3CIDabsence verified. Rootauditparser initiallystopped on expectedlowercaseabsence; preservednegativeandfixedonlycasehandling, no runtime rerun. Source-specific finalreportbc62...frozen; R04independent reviewrequested. Physicalhardware/JPEG/latestsource/generalspinnerclaimnotmade."
+    },
+    {
+      "at": "2026-10-26T15:04:59Z",
+      "type": "eleven-hour-checkpoint",
+      "message": "Actual11hpassed, roughly1hremaining.41integrated/43frozen/430explicitvotes(root0), all41CI+hostingPASS, earlier-source6hPASS independentlyverified, finaloutcometextreview/doclinksPASS. LongJPEGstressremainsincomplete. No new runtimepending or deployment; continueboundedfinalconsistencyreviewuntil16:03:49UTC."
     }
   ],
   "validation": [
@@ -7021,6 +7046,46 @@
     {
       "status": "POSTINTEGRATION_EXACT_SOURCE_PASS",
       "summary": "P43 integrated as405f846 only after acceptancecommit3ca0655. Root verifies all3final file hashes equal author/peer exact source and only those3files plus2audit-ledger files differ from greenall40e652. Author118JS/35docs/3browser suites bothengines/nativepositive+negative and independentR03/R09 checks recorded; new normalCI to validate fullcombined41source."
+    },
+    {
+      "status": "IN_PROGRESS",
+      "summary": "New normal all41-sourceCI40337893030 and credential-free hosting40337893048 started14:15:06UTC on published862c01d320d5fdec20ad3f956148d657c17c5935. Both review refs updated exactly once after new tested/peer-reviewed P43source; prior all40green/oldfailure unchanged. Not yetPASS and no deployment."
+    },
+    {
+      "status": "FINAL_INTEGRATION_INTEGRITY_NO_FINDINGS",
+      "summary": "Independent R08 final source/process delta atpublished862c01d report3a873935... NO_FINDINGS. All43scopes/430votes preserved; P43peeracceptance3ca precedes integration405, exact3files and remainingdependencies matchauthor/canonical. Rootverified4machineartifacts/4Git-ledgersnapshots/18source-at-commit hashes. Source/Git first-uncommitted-edit observability limits retained; finalCI/endurance stillpending at snapshot."
+    },
+    {
+      "status": "ALL41_NORMAL_CI_AND_HOSTING_PASS",
+      "summary": "New normalCI40337893030 job121624284195 SUCCESS on862c01d, updated14:31:00UTC:218Python/263JS/35docs/Nxbuild+3of3repeatcache/20browser suites. Both-engineP43fractional and strictnativepaused/playing recovery PASS. Hosting40337893048SUCCESS/no deployment. ExactBOM/finalLF logfile314789bytes SHA3f690a64... preserved; finalsnapshotSHAc855106a96a19f6b60621949ff71df7e8768c46d7be9dc9fa8ecda784450d924,artifact12659236048. Prior failures/longrun source limits retained."
+    },
+    {
+      "status": "INDEPENDENT_CURRENT_CI_EVIDENCE_NO_FINDINGS",
+      "summary": "R07 all41CI evidence review832921b4... NO_FINDINGS. Independently re-fetched official job log: exact314789UTF8bytes/314196UTF16units/BOM/LF match, run/jobs/artifact head862 verified;218Python/263JS/35docs/Nx3of3/20browser/P41+P43bothengines allPASS. Root verified6evidence receipts and source hash list. Current audit-only delivery correction independently confirmed; oldCI/JPEG/olderpin6h kept separate. No runtime/rerun/deploy."
+    },
+    {
+      "status": "OUTCOME_DRAFT_SOURCE_NO_FINDINGS",
+      "summary": "R10 outcome draft reviewee3a7564... NO_FINDINGS for exactdraft4795c4b4..., intended finalpath links/counts/sourceCI/stop distinctions and limits. Rootverified14evidence/7pinnedsource hashes. Draft expressly doesNOTcertify6h or12hcompletion; native outcome paragraph and final deadline wording/finaldocsvalidation stillpending."
+    },
+    {
+      "status": "EARLIER_SOURCE_NATIVE_SIX_HOURS_PASS",
+      "summary": "Actual21600s nativeH264 run completed bothengines onearlierpina5059827(36corrections/P37), exec69498exit0 at14:53:19. Each71preview sweeps/23rewind-Livecycles/4319captures,359samples,onesession/video,0pageerrors/HLS/spriteHTTP,actualretentionpruning and caps. Rootverified246archiveGitblobs and3exactownedCIDabsence. Finalreportbc62b218...; independentR04evidenceauditpending. Full45min sweep overlay0 only; maxselectedpreview157msC/1341msW, notuniversalinstant/no-spinner. Notlatest41source endurance; earlierfailedsources/JPEGRAWFAIL unchanged. Initialauditreceiptcasingguardfailure preserved/corrected without runtime rerun."
+    },
+    {
+      "status": "OUTCOME_DOCUMENTATION_PASS",
+      "summary": "Human outcome note added atdocs/reviews/2026-10-26-outcome.md; focused Docker docs validator passes36linkedMarkdown/vault/version checks, exactownedCIDabsent. Note preserves earlier-pin6h vsfinal41CI, incompleteJPEGstress and hardware/Gitlimits; activewindowwording retaineduntil16:03:49. FinalR10textrecheck/independentR04enduranceauditpending; no fullCI retry."
+    },
+    {
+      "status": "INDEPENDENT_NATIVE_SIX_HOUR_PASS_NO_FINDINGS",
+      "summary": "R04 earlier-source native6h audit8852c649... PASS/NO_FINDINGS. Independently verified246archivedblobs/modes, both455recordlogs/all359samples/71sweeps/23cycles/4319captures, actualretention/coldIDB/caps and3CIDabsence. Rootverified21evidence hashes. Earlier36fix/P37sourcea505 only;157/1341msselectedlatencies,45minsampledoverlay0/metadata/DVRtarget/hardware/latestsource limits retained. Read-only rootcasing/R04Gitdelimiter audit-tool errors preserved; no runtime rerun."
+    },
+    {
+      "status": "FINAL_OUTCOME_TEXT_NO_FINDINGS",
+      "summary": "R10 finaltextd14c91da... NO_FINDINGS for exactoutcome72dc3bfe...; rootverified16doc/evidence/complete-log hashes. Onlynativeparagraph changed fromrevieweddraft, finalsourceCI/laternativepin/JPEGlimits correct,36docsvalidatorpassed. Activewindowwording NOT a future12hcompletioncertification; actualclosingwording mustwaituntil16:03:49UTC."
+    },
+    {
+      "status": "OUTCOME_NAVIGATION_DOCS_PASS",
+      "summary": "Focused Docker docscheck after addingledger Outcome-link passes36documents/vault/version; exactv2CIDabsent. Source/native/CIclaims unchanged; fullCIbranch deliberatelyremains tested862. Finalpostdeadlinewording stillpending."
     }
   ],
   "implementation_worktrees": [
@@ -7183,14 +7248,14 @@
   ],
   "delivery": {
     "review_branch": "review/2026-10-26-twelve-hour",
-    "pushed_commit": "1d9174e393ce47f93aa9006d5076bf70004ee522",
+    "pushed_commit": "862c01d320d5fdec20ad3f956148d657c17c5935",
     "ci_branch": "codex/review-ci-2026-10-26",
-    "ci_run": "https://github.com/ewized/layerglass/actions/runs/40278167693",
-    "ci_status": "failure at keyboard-focus programmatic-dismissal assertion; under investigation",
+    "ci_run": "https://github.com/ewized/layerglass/actions/runs/40337893030",
+    "ci_status": "success on tested41source862c01d; normalCI40337893030+hosting40337893048",
     "pull_request": "not created",
     "pr_creation_limit": "GitHub connector integration403 for create pull request; gh not signed in. Read-only API and SSH push work.",
     "deployment": "none; configured deploy workflow is main-only and release is v-tag-only",
-    "published_review_head": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a",
+    "published_review_head": "862c01d320d5fdec20ad3f956148d657c17c5935",
     "all40_ci": {
       "CI": 40322511914,
       "hosting": 40322511869,
@@ -7203,6 +7268,34 @@
       "log": "test-results/review-2026-10-26/github-ci-40322511914.log",
       "log_sha256": "d8aed849ef827d340192ba62a492d81274555d7931bab7037e1c7651b5e2db25",
       "artifact_id": 12649843164
-    }
-  }
+    },
+    "historical_publication_snapshots": [
+      {
+        "recorded_at": "2026-10-26T14:38:32Z",
+        "label": "Verbatim older delivery fields found stale during final bookkeeping; preserved as historical records, no current-failure/cause claim.",
+        "fields": {
+          "pushed_commit": "1d9174e393ce47f93aa9006d5076bf70004ee522",
+          "ci_run": "https://github.com/ewized/layerglass/actions/runs/40278167693",
+          "ci_status": "failure at keyboard-focus programmatic-dismissal assertion; under investigation",
+          "published_review_head": "e6527f1d5fb8779d1f03f62e402c0813c15dee7a"
+        }
+      }
+    ],
+    "all41_ci": {
+      "CI": 40337893030,
+      "job": 121624284195,
+      "hosting": 40337893048,
+      "status": "success",
+      "source": "862c01d320d5fdec20ad3f956148d657c17c5935",
+      "CI_status": "success",
+      "hosting_status": "success",
+      "summary": "test-results/review-2026-10-26/root-all41-ci-final.json",
+      "summary_sha256": "c855106a96a19f6b60621949ff71df7e8768c46d7be9dc9fa8ecda784450d924",
+      "log": "test-results/review-2026-10-26/github-ci-40337893030.log",
+      "log_sha256": "3f690a64e516514b54ac08892900b4520d231605d8f29ad4c3d3dc1704d3b4fe",
+      "artifact_id": 12659236048
+    },
+    "publication_policy": "Primary review branch may advance for audit-only notes after finalCI; CI branch remains on tested41code862c01d. Do not trigger redundant fullCI for unchanged non-audit source."
+  },
+  "outcome_note": "docs/reviews/2026-10-26-outcome.md"
 }
