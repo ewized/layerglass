@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active until 2026-10-26 16:03:49 UTC: 45 frozen proposals, 450 explicit ballots, 41 integrated, P38/P42 superseded; P44/P45 exact author commits independently READY, acceptance being committed before integration. New combined full CI pending; previous all41 CI passed. Earlier-source native six-hour PASS; long JPEG stress incomplete.",
+  "status": "Active until 2026-10-26 16:03:49 UTC: 45 frozen proposals/15 rounds, 450 explicit ballots (449 APPROVE/1 ABSTAIN), 43 independently accepted improvements integrated; P38/P42 superseded. New normal combined43-source CI to be published now; prior all41 CI success stays source-specific. Earlier a505 native six-hour PASS, long JPEG stress incomplete. No deployment or future completion claim.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -643,7 +643,7 @@
         "r09",
         "r10"
       ],
-      "decision": "All10fresh explicitAPPROVE P44/P45 exactrev1; initial6committedf065beforebothauthorworktreecreation. Finalauthorcommits97714cf(P44)/e9ba83f(P45)awaitindependentexactfinalREADY, notintegrated.",
+      "decision": "All10 fresh APPROVE each; initial6committedf065 beforeworktrees; exact independent R05P44READY/R03P45READY acceptance committed087b before2ce88b5+7ee5ad8 integration. All11finalfiles equal reviewed authors. NewnormalcombinedCI pending.",
       "notes": "Two independently reproduced final-hour ownership findings; exact closed scopes and deadline-safe validation/checkpoint policy."
     }
   ],
@@ -5256,7 +5256,7 @@
       "evidence_path": "test-results/review-2026-10-26/r04/final-interaction-review.json",
       "risk": "Guarding only completion or deletion misses stale writes; non-atomic guards may race queued IDB work; retained per-key queues can grow. Failed replacements must not cold-read old pixels under new metadata. Keep optional legacy API behavior and exact usage state. Existing prior approvals do not transfer.",
       "validation_plan": "Keep original failing fixture/control immutable. Add registered meaningful unit and actual-IDB/native JPEG regressions both engines for held conversion after replacement, stale completed-write cleanup after newer row, no replacement, failed replacement, old reads/sessions, repeated replacements/different keys, byte/count agreement and bounded writes. Native cold scrub must paint exact blue11.5 from local disk with0preview HTTP and same session/one video. Include mutation-removal negatives proving both stale overwrite and stale delete protections. Run relevant preview-history units plus registered browser-preview-storage and browser-preview-loading both engines, P37 nearest/coalesced/late reads/P40 precise bounds existing cases, docs links. Independent exact-final peer READY before integration; one new normal combined fullCI after all new corrections, no unchanged-source retry or relaxed assertion. No real printer, cloud, credentials or deployment. Stop starting work16:03:49UTC and safely park incomplete validation/source rather than rush.",
-      "status": "validated",
+      "status": "committed",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -5342,7 +5342,11 @@
         "peer_status": "READY",
         "accepted_at": "2026-10-26T15:47:10Z",
         "root_evidence_hashes_verified": 34,
-        "integration": "PENDING; acceptance committed before cherry-pick"
+        "integration": "PENDING; acceptance committed before cherry-pick",
+        "integration_commit": "2ce88b5147873d42eb4becfc3c3313674b9df96a",
+        "acceptance_commit": "087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
+        "integrated_at": "2026-10-26T15:48:17Z",
+        "combined_ci": "PENDING new normal run; no current-source fullCI pass yet"
       }
     },
     {
@@ -5365,7 +5369,7 @@
       "evidence_path": "test-results/review-2026-10-26/r06/final-interaction-review.json",
       "risk": "Simply retaining a failed archive can revive missing/pre-page media; simply catching while creating new dirs preserves leak. Cleanup must keep ownership across partial recursive failure, refuse admission until resolved, preserve sibling reads and not replace original create errors. Expected HTTP cleanup failure semantics are explicitly changed only on failed close/forget. No old P30 vote transfer.",
       "validation_plan": "Preserve exact old-source failure/ordinary control. Add non-root actual permission-fault HTTP/worker regression: final close returns503 with retired token, failed repeated creates503/no new archive dirs or increasing history, sibling token/media responsive, restore deletion and automatic cleanup removes exact old directory then new create records normally without old footage. Cover partial recursive removal, already absent path, expiry, forget, failed initial-create rollback retaining original error, worker alive and conservative accounted bytes, cleanup recovery and successful controls. Run backend replay/lifecycle, printer-history, scrub-preview, HTTP/provider/forget-related regressions and docs links in Docker. Independent exact-final peer READY before integration; one new normal combined fullCI after corrections, no hardware/network probes, credentials/deploy or broadened source. Deadline16:03:49UTC: stop starting work and safely park incomplete work/validation.",
-      "status": "validated",
+      "status": "committed",
       "ballots": {
         "r04": {
           "vote": "APPROVE",
@@ -5451,7 +5455,11 @@
         "peer_status": "READY",
         "accepted_at": "2026-10-26T15:47:10Z",
         "root_evidence_hashes_verified": 17,
-        "integration": "PENDING; acceptance committed before cherry-pick"
+        "integration": "PENDING; acceptance committed before cherry-pick",
+        "integration_commit": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
+        "acceptance_commit": "087bca47b1195c49a1ce505ba2aa6abc9193b2dd",
+        "integrated_at": "2026-10-26T15:48:17Z",
+        "combined_ci": "PENDING new normal run; no current-source fullCI pass yet"
       }
     }
   ],
@@ -5627,6 +5635,14 @@
     {
       "sha": "405f846fa29912d4925fe1a181f5dccdd5b87746",
       "summary": "P43: precise valid-owned JPEG event view at both component calls, fresh mapped-ID activation; exact3files, independently READY before integration."
+    },
+    {
+      "sha": "2ce88b5147873d42eb4becfc3c3313674b9df96a",
+      "summary": "fix(previews): own persisted asset mutations (P44)"
+    },
+    {
+      "sha": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
+      "summary": "fix(replay): retain retired archive cleanup ownership"
     }
   ],
   "activity": [
@@ -6907,6 +6923,11 @@
       "at": "2026-10-26T15:47:10Z",
       "type": "independent-final-acceptance",
       "message": "Exact P44/R05READY and P45/R03READY accepted after root report/source/evidence hash guards. Commit this acceptance before any cherry-pick. Six fresh approvals committed f065 before worktrees; all10fresh votes retained4df. Root never votes; no scope changes or product edits."
+    },
+    {
+      "at": "2026-10-26T15:48:17Z",
+      "type": "integration",
+      "message": "P44 integrated2ce88b5 and P45 integrated7ee5ad8 onlyAFTER exact peerREADY accepted/committed087b. Root verified11finalsourcefiles byte-identical to reviewed authors,10freshvotes each/six-vote parent. Current43improvements. Preparing one newnormal fullCI oncombinedsource; do not transfer priorall41CI or earliernative6hpass."
     }
   ],
   "validation": [
@@ -7445,6 +7466,10 @@
     {
       "summary": "P45 exact author e9ba83ffc5be7e7e22f4083fc5a587d3c318e82d independently READY byR03, reportSHAc73a197768fae60b3bfcaea0c2ce3e88d23c3f59d0c67036e3b5b69b02e6e623; root verified source/evidence receipts,10fresh approvals and six-vote committed worktree parent; no integration yet. 150focusedbackendchecks/36docs/strongshutdown; ownnonrootHTTPpermissionworkerfinal/baselinecontrols.",
       "status": "READY"
+    },
+    {
+      "summary": "R08 all15slates/45scopes/150rawballotfiles/450explicitvotes independentlyverified; stale mutable count finding preserved43337444 and separately corrected/current-snapshot recheckREADY9f241e52. Prior-snapshot41integrated/2pending does not infer lateracceptance; root now records actual integration separately. No runtime.",
+      "status": "NO_FINDINGS after bookkeeping correction"
     }
   ],
   "implementation_worktrees": [
@@ -7672,7 +7697,13 @@
       "log_sha256": "3f690a64e516514b54ac08892900b4520d231605d8f29ad4c3d3dc1704d3b4fe",
       "artifact_id": 12659236048
     },
-    "publication_policy": "Primary review branch may advance for audit-only notes after finalCI; CI branch remains on tested41code862c01d. Do not trigger redundant fullCI for unchanged non-audit source."
+    "publication_policy": "Primary review branch may advance for audit-only notes after finalCI; CI branch remains on tested41code862c01d. Do not trigger redundant fullCI for unchanged non-audit source.",
+    "pending_all43": {
+      "code_commit": "7ee5ad8599f4c826e88ea648ffe7e4e08a8c8499",
+      "status": "Author/focused and independent exact-final validation passed; publishing one new normal combined fullCI now. No new fullCI result yet.",
+      "changed_files_verified": 11,
+      "prior_all41_ci_preserved": true
+    }
   },
   "outcome_note": "docs/reviews/2026-10-26-outcome.md"
 }
