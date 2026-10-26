@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "implementing approved round 1",
+  "status": "P34/P35 implementing after majority; P36/P37 voting; endurance and independent review continuing",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -23,98 +23,111 @@
       "ballot_round3": "test-results/review-2026-10-26/r01/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r01/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r01/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r01/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r01/ballot-round6.json",
+      "round7_findings": "test-results/review-2026-10-26/r01/round7-findings.json"
     },
     {
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "round 6 ballot complete",
+      "status": "round 7 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
       "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r02/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r02/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r02/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r02/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r02/ballot-round6.json",
+      "ballot_round7": "test-results/review-2026-10-26/r02/round7-ballot.json",
+      "round7_findings": "test-results/review-2026-10-26/r02/round7-findings.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 6 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r03/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r03/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r03/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r03/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r03/ballot-round6.json",
+      "ballot_round7": "test-results/review-2026-10-26/r03/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r03/round8-ballot.json"
     },
     {
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 6 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r04/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r04/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r04/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r04/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r04/ballot-round6.json",
+      "ballot_round7": "test-results/review-2026-10-26/r04/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r04/round8-ballot.json"
     },
     {
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 6 ballot complete",
+      "status": "round 8 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r05/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r05/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r05/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r05/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r05/ballot-round6.json",
+      "ballot_round7": "test-results/review-2026-10-26/r05/round7-ballot.json",
+      "ballot_round8": "test-results/review-2026-10-26/r05/round8-ballot.json"
     },
     {
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 6 ballot complete",
+      "status": "round 7 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r06/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r06/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r06/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r06/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r06/ballot-round6.json",
+      "round7_findings": "test-results/review-2026-10-26/r06/round7-findings.json",
+      "ballot_round7": "test-results/review-2026-10-26/r06/round7-ballot.json"
     },
     {
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 6 ballot complete",
+      "status": "round 7 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r07/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r07/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r07/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r07/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r07/ballot-round6.json",
+      "ballot_round7": "test-results/review-2026-10-26/r07/round7-ballot.json"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 6 ballot complete",
+      "status": "round 7 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
       "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r08/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r08/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r08/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r08/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r08/ballot-round6.json",
+      "ballot_round7": "test-results/review-2026-10-26/r08/round7-ballot.json"
     },
     {
       "id": "r09",
@@ -133,14 +146,16 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 6 ballot complete",
+      "status": "round 7 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r10/ballot-round3.json",
       "ballot_round4": "test-results/review-2026-10-26/r10/ballot-round4.json",
       "ballot_round5": "test-results/review-2026-10-26/r10/ballot-round5.json",
-      "ballot_round6": "test-results/review-2026-10-26/r10/ballot-round6.json"
+      "ballot_round6": "test-results/review-2026-10-26/r10/ballot-round6.json",
+      "round7_findings": "test-results/review-2026-10-26/r10/round7-findings.json",
+      "ballot_round7": "test-results/review-2026-10-26/r10/round7-ballot.json"
     }
   ],
   "rounds": [
@@ -343,8 +358,34 @@
       "slate": "test-results/review-2026-10-26/round-7-slate.json",
       "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6",
       "ballots_started": true,
-      "reviewers_completed": [],
-      "notes": "Two independently reproduced delivery defects; actual controls are negative baseline evidence, not implementation. No votes inferred from findings."
+      "reviewers_completed": [
+        "r02",
+        "r03",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08",
+        "r10"
+      ],
+      "notes": "Two independently reproduced delivery defects; actual controls are negative baseline evidence, not implementation. No votes inferred from findings.",
+      "majority_recorded_at": "2026-10-26T08:16:45Z",
+      "decision": "P34/P35 revision1 approved8/10 before source edits; root0. Remaining2 ballots pending."
+    },
+    {
+      "id": 8,
+      "revision": 1,
+      "baseline": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "frozen_at": "2026-10-26T08:14:31Z",
+      "slate": "test-results/review-2026-10-26/round-8-slate.json",
+      "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428",
+      "ballots_started": true,
+      "reviewers_completed": [
+        "r03",
+        "r04",
+        "r05"
+      ],
+      "notes": "P36 full-player JPEG image-clock mismatch and P37 actual45min cold-preview selection failure, with root independent generated controls. Root proposes P37 and contributes no votes."
     }
   ],
   "proposals": [
@@ -3842,8 +3883,65 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
       "risk": "Moderate shell lifecycle change. Must preserve cleanup when foreground execution is interrupted without treating a name as ownership, and must preserve original status/log/image behavior.",
       "validation_plan": "Actual pre-existing metadata-name canary remains running after failed check exits125; different-name control and reused image unchanged. Later fixture/browser conflict preserves existing conflicting object while cleaning earlier successfully created owned resources. Interrupt successfully created foreground/background checks: only owned immutable IDs removed, signal/failure statuses preserved. Exercise all launch paths with bounded generated fixtures or controlled disposable Docker adapter as appropriate; compare exact diff/options and shell syntax. No duplicate full browser run or real printer/network probe needed.",
-      "status": "voting",
-      "ballots": {}
+      "status": "implementing",
+      "ballots": {
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "The actual pinned check exited125 on a metadata-name conflict before creating any container, then its EXIT trap removed my already-running canary; a separately named canary and reused image survived. The planned-name array therefore does not establish ownership. The frozen immutable creation-record scope addresses this across all launch paths while explicitly covering foreground interruption and later name reuse, without broad cleanup or image-tag expansion. Approval includes the required real collision, later-stage, interruption/status/log and replacement-name controls; merely moving registration after foreground completion would not satisfy it.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:04:12Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "At exact a239c0c, check.sh records planned names before creation and cleanup removes them by name. My actual offline conflict reproduction exited 125 and deleted the pre-existing running metadata-name canary despite creating no metadata object; a differently named control and reused Node image survived (r10/round7-ownership-original.json and round7-check-conflict.log). Approve only creation-time immutable ownership records for all seven launch paths. Validation must preserve conflicting containers and later same-name replacements, clean successfully created foreground/background resources on failure and interruption, and retain command flags, logs, exit/signal status and existing image handling. Cidfile/equivalent coverage during foreground execution is essential; after-completion registration is insufficient. This is a material shared-daemon safety fix with moderate lifecycle risk, bounded to check.sh and ignored controls.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:07:29Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "At pinned a239c0c, check.sh records planned names before creation on every launch path and cleanup removes those names unconditionally. My actual unchanged-script Docker control independently returned125 for a metadata name conflict and deleted only my deliberately colliding pre-existing canary; a different-name canary and the reused Node image survived. The exact scope correctly requires immutable creation-time ownership across foreground interruption, later fixture/browser conflicts, and name reuse, while preserving original statuses/options/logs/image behavior. Merely recording names or appending an ID only after a foreground run would not satisfy this approved correction. Evidence: r02/round7/check-ownership.sh, check-ownership-result.json and check-ownership-check.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:10:39Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected pinned a239c0c check.sh and actual immutable-id canary evidence: names enter cleanup before Docker creation, and a rejected metadata name is subsequently removed. My network-none adapter reproduced exit125 plus attempted removal of the rejected planned name at every one of the seven launch paths; reused-image handling remained untouched. Creation-time immutable identity records address both the foreground interruption interval and later name reuse. Approval includes the entire frozen validation plan: actual conflict/replacement preservation, later-stage cleanup, foreground/background interruption and status preservation, all launch paths, logs/options and image ownership. Merely recording names or identities after foreground completion would fail this approved scope. Independent controls: r08/round7-controls.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:11:42Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Pinned check.sh records every planned name before creation and cleanup removes by name (23-24,49-52 and later launch paths). My actual offline canary reproduces exit125 with the pre-existing conflicting container deleted; a different-name canary and reused image survive. Scope correctly requires creation-time immutable ownership for all launch paths, foreground interruption and later name reuse, without widening image/runtime ownership. Required conflict, replacement, interrupt, status and options controls are necessary safeguards for this moderate lifecycle change. Own evidence: r06/round7-p34-canary.log; details r06/round7-vote-evidence.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:13:31Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned a239c0c check.sh records planned names before docker run creates anything, then EXIT cleanup forcibly removes every such name. I inspected both original actual-canary harnesses/logs: name-conflict exit125 creates no metadata object, yet deletes the prior owned canary; separate controls and reused images survive. Immutable creation-time identity records address that demonstrated ownership error and preserve later same-name replacements. I approve the exact single-file scope and its existing all-launch-path, foreground-interruption, later-conflict and signal/status controls. Planned names or records taken only after foreground completion would be insufficient, as the frozen scope explicitly states.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:16:45Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Pinned check.sh records every planned container name before Docker creation and cleanup removes those names unconditionally. Inspected actual R07 canary evidence shows metadata conflict125 creates nothing yet deletes the pre-existing running canary, while the unrelated control and reused image survive. Creation-time immutable identity records address this demonstrated ownership failure across all seven launch paths, including foreground interruption and later name reuse. Approval includes the frozen conflict/interrupt/status/log/image-preservation controls; planned-name ownership or registration only after foreground completion would not satisfy it.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:16:45Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Pinned check.sh records planned names before Docker creation and removes those names unconditionally. My isolated actual metadata conflict reproduced exit125 deleting my pre-existing canary while preserving a differently named control and reused image (r04/round7-check/collision.log). Creation-time immutable ownership records across every launch path are the necessary bounded correction; recording only after foreground completion would miss interruption. Approval includes all frozen collision/replacement, foreground/background interrupt, status/log/options and image-preservation controls. Only scripts/check.sh is authorized; no broader image-tag ownership claim.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:16:45Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        }
+      }
     },
     {
       "id": "P35",
@@ -3861,8 +3959,165 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
       "risk": "Low subprocess path conversion. Use fileURLToPath rather than ad hoc substitution; preserve existing child failures/timeouts and suite selection.",
       "validation_plan": "Actual registered self-contained history reconnect suite passes in plain, spaced and literal-percent checkout paths in both engines. Unknown suite still exits2. Ordinary child failure and timeout/error propagation remain intact; inspect unchanged default list, environment, inherited stdio and240000ms timeout. Use ignored isolated generated fixture controls, not production devices.",
+      "status": "implementing",
+      "ballots": {
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "The actual registered history suite passes Chromium/WebKit in a plain checkout, fails MODULE_NOT_FOUND for its percent-encoded spaced pathname, and passes directly from that same spaced checkout. A fresh literal-percent control also fails at Layer%25Glass while the suite file exists; unknown-suite handling still exits2. fileURLToPath is the bounded native ESM correction at this subprocess boundary. Standard Docker CI already uses an unspaced temporary copy, so this approval is limited to direct-runner portability. Preserve default ordering, allowlist, inherited environment/stdio,240000ms timeout and failure/error propagation, with the frozen validation controls.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:04:12Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Pinned run-browser.js:34 passes URL.pathname directly to spawnSync. My offline rerun of the original actual history suite produced plain exit 0, spaced exit 1/MODULE_NOT_FOUND, literal-percent exit 1/MODULE_NOT_FOUND, spaced-direct exit 0 and unknown-suite exit 2; successful cases exercised both Chromium and WebKit (r10/round7-runner-original/runner-paths.json). This isolates URL escaping at the runner boundary rather than a fixture failure. Approve fileURLToPath in this file only, preserving allowlist/default order, environment, inherited stdio, 240000 ms timeout and child failure/error propagation. Validation must pass the registered actual suite from all three native paths and retain unknown-suite exit 2 plus ordinary failure/timeout controls. The regular Docker wrapper uses an unspaced temporary copy, so this does not claim normal CI is broken. Risk is low and no product capability changes.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:07:29Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned run-browser.js passes URL.pathname directly to spawnSync at34, preserving URL escapes. My offline actual registered history reconnect suite passed from a plain path in Chromium/WebKit, failed MODULE_NOT_FOUND from spaced and literal-percent paths, and passed when the same suite was invoked directly from the spaced path; unknown selections still exited2 in all three locations. fileURLToPath is the narrow native-ESM conversion required here. Preserve the allowlist/default ordering, inherited environment/stdio,240000ms timeout and existing status/error propagation exactly; no claim that the normal temporary-copy Docker wrapper is broken. Evidence: r02/round7/runner-paths.mjs, runner-paths-results.json and runner-paths.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:10:39Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected the pinned runner and actual Chromium/WebKit suite evidence. My original-source sentinel controls passed from a plain path, failed MODULE_NOT_FOUND from spaced and literal-percent paths, and passed direct invocation at each path; unknown selection remained2, child exit7 propagated, and child environment was inherited. fileURLToPath independently resolved both escaped paths to the exact existing child filename, so the proposed single-boundary correction is sufficient without suite or product changes. Approval includes actual registered history-suite validation in both engines and all three paths, unchanged ordering/allowlist/environment/stdio/240000ms timeout, and child failure/error/timeout propagation. The normal wrapper's unspaced temporary path is a supported counter-case, not a claimed CI regression. Independent controls: r08/round7-controls.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:11:42Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Pinned run-browser.js:34 passes URL.pathname to spawnSync. My actual selected suite passes through the plain runner and directly from spaced/literal-percent copies in Chromium and WebKit, while both encoded-path runner invocations fail MODULE_NOT_FOUND; unknown-suite remains2. Generated spawn controls confirm the unchanged default19 order, inherited stdio/env,240000ms timeout and child failure7/timeout1/signal1 propagation. Native fileURLToPath is a minimal bounded correction; scope preserves those contracts and explicitly requires real-suite success in all three paths. No standard Docker CI failure is claimed. Own evidence: r06/round7-p35-paths-final.log and round7-runner-contract.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:13:31Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned run-browser.js passes new URL(...).pathname directly to spawnSync. Original actual-browser logs show plain runner success, spaced and literal-percent MODULE_NOT_FOUND paths containing %20/%25, direct spaced-suite success in both engines, and unknown-suite exit2. That separates subprocess path conversion from the fixture or normal unspaced Docker wrapper. Node fileURLToPath is the bounded native ESM correction. The existing validation plan preserves the allowlist/order, inherited environment/stdio,240000ms timeout and child error/status propagation while testing all three real path cases; no broader product or fixture change is needed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:16:45Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Inspected pinned runner and actual R07 plain/spaced/direct browser controls isolate MODULE_NOT_FOUND to URL.pathname escaping. An independent controlled subprocess probe confirms encoded space and literal-percent arguments, correct builtin fileURLToPath conversion, all19 default suites/order, unknown-suite2, child-failure7 and timeout-error1 with unchanged environment/inherited stdio/240000ms timeout. The scoped native ESM conversion fixes that boundary without changing fixtures or implying standard unspaced Docker CI was broken; actual post-fix both-engine path controls remain required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:16:45Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Independently ran the unchanged pinned runner and actual history reconnect suite: plain checkout passes all four Chromium/WebKit cases, spaced and literal-percent paths fail MODULE_NOT_FOUND with %20/%25, direct spaced suite passes, unknown suite exits2 (r04/round7-runner.log). fileURLToPath correctly converts both paths without ad hoc decoding. The one-file scope preserves allowlist/order, inherited environment/stdio, 240000ms timeout and child/error status behavior; frozen positive and failure/timeout controls remain required. Standard copied Docker paths already work, so this is a direct-runner portability correction.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:16:45Z",
+          "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6"
+        }
+      }
+    },
+    {
+      "id": "P36",
+      "round": 8,
+      "revision": 1,
+      "title": "Keep JPEG pause, recorded readings and local previews on an owned decoded frame time",
+      "author": "r02",
+      "source_finding": "R02-R7-01",
+      "baseline": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "files": [
+        "apps/web/src/player.js",
+        "apps/web/src/replay.js",
+        "apps/web/src/printer-history.js",
+        "apps/web/src/preview-history.js",
+        "apps/backend/replay.py",
+        "apps/backend/app.py",
+        "apps/backend/tests/test_replay.py",
+        "apps/web/tests/timeline.test.js",
+        "apps/web/tests/printer-history.test.js",
+        "apps/web/tests/preview-history.test.js",
+        "apps/web/tests/browser-jpeg-clock.js",
+        "apps/web/tests/fixtures/jpeg-clock.json",
+        "apps/web/tests/run-browser.js",
+        "docs/video-delivery.md",
+        "docs/printer-telemetry.md",
+        "docs/local-previews.md"
+      ],
+      "scope": "Correct JPEG displayed/requested-time ownership only. The current archive end includes a one-second provisional tail and is not the decoded image's timestamp. Bind the JPEG image request/completion to the current camera, page session and request revision plus a proven media position/capture identity. Live pause must retain the actual owned still and its corresponding recorded clock, without a later metadata update moving that paused reading. Historical seeks/previews targeting an otherwise provisional future interval must clamp to proven recorded coverage or retain a valid owned selection rather than claim that unproven future timestamp for the old pixels. Local preview capture must label only the image that actually decoded for its owning position; it must not pair an old image with newer metadata or a pending seek's target. Preserve ordinary completed held-frame intervals and their progressing wall clock. Preserve the approved backend JPEG gap policy and bounded latest tail, unchanged legacy fields/URLs, session first-frame/opened_at/retention restrictions, bounded capture/request rate, one native video element/decoder, one committed gesture seek, recorded-only telemetry, Live, source/session reset and same-session replay recovery. Optional narrowly scoped internal JPEG frame descriptors and an optional selector on the existing JPEG frame endpoint are allowed only if needed to prove which capture a request will deliver; no new endpoint/provider, browser permission, public transport, capture loop, storage migration or product feature. Closed allowed-file list: optional files need not change. This is a closed allowed-file list, not a requirement to edit every optional file. A materially different API, new endpoint, CORS/header permission change, storage migration, provider capability change, extra file scope or capture/playback policy requires a revision before implementation. Prefer a descriptor on existing session metadata plus an immutable selector on the existing JPEG endpoint if needed. A legacy metadata response without that optional descriptor must remain compatible and must not invent proof of decoded-image identity. Keep all backend JPEG interval/gap/origin/first-frame arithmetic from P29/P31 unchanged except any narrowly necessary optional descriptor/selection access; do not collapse the gap or change the one-second internal provisional tail. A stable historical target inside a completed interval retains that target's existing wall clock, including while its image is held through a gap. Do not globally replace historical target time with capture-start time. Do not silently swap a paused still for a newer one merely to make it agree with an incorrectly saved future clock. Preserve the user's paused image intent using the owned position. No native HLS/continuous decoder construction, direct-browser/MJPEG policy, Cast capability, backend credential handling, printer control or storage namespace change.",
+      "evidence": "R02 generated actual ReplayBuffer metadata/history and distinct JPEGs, then pinned full player.js/PythonBackend/PlayerUpdates/SSE/Stats in Chromium/WebKit. Blue capture1030 paused at provisional11 stays blue while green1030.25 changes recorded time/layer. Archiveat11 is green; local preview labels blue as11. Root independently reproduced the exact full-player subsecond case AND a fixture-only normal one-second successor1031 in both engines;0pageerrors,1session/nativevideo, explicitLivegreen. Async lifecycle races are specified acceptance requirements, not initial validated algorithm.",
+      "evidence_path": "test-results/review-2026-10-26/r02/round7-p36-proposed-scope.json",
+      "risk": "Moderate JPEG-only lifecycle/data ownership correction. The high-risk mistakes are timestamp-only association, label/clock publication before decode, stale completion after a source switch, incorrect treatment of completed held intervals, rounding across capture boundaries, and increasing request rate. The draft deliberately requires independent regression evidence for those cases before integration.",
+      "validation_plan": "Reproduce the frozen full-player negative in Chromium/WebKit with real generated JPEG decoding and actual ReplayBuffer payloads: page opens1020; blue capture1030; Pause; green1030.25; later capture1031.5. Corrected paused clock/position/rendered reading and cached preview must remain associated with blue. Verify normal one-second cadence and positive subsecond cadence, including non-half-second and non-millisecond capture positions. Do not pass the check by relying on rounded timestamps that select the preceding capture accidentally. Check explicit historical targets both inside a completed held interval and beyond the latest proven capture in the provisional tail; verify resulting archive-selected pixels, recorded time and thumbnail label agree. Hold a live image response, advance metadata, then finish the old image; reverse the order with a newer image/older metadata. Only proven owning request/completion may publish the displayed time or capture a thumbnail. Metadata alone is not an image identity. Hold an old JPEG completion across a committed seek, explicit Live, camera/session change, close and same-session reattachment. No stale callback may mutate the new source's display clock or preview history. Keep the same native video node and one page session across recovery. Test pause/play and explicit Live while a JPEG image is pending. Completed-history replay, the original thirty-second held-frame gap, later-page minimum/negative clock anchor and prior-page media exclusion must remain correct. During held pointer/key/wheel preview changes issue no intermediate main-image seeks; one release commits one target. Keep existing request/capture bounds and session-scoped deduplication. Verify optional descriptor/selector rejection and legacy-at compatibility without exposing prior-session footage or changing provider/origin boundaries. Standard no-recording live fallback must remain available without presenting an invented historical clock. Run focused affected units, the new bounded two-engine fixture and docs checks; a final core combined check belongs to integration. No real-device/LAN/external request or repeated stress run is needed.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Independent pinned ReplayBuffer generation and full player/PythonBackend/SSE/Stats rerun reproduced both engines keeping blue pixels at paused11 while metadata moves recorded time1030->1030.25 and layer30->31; the archive at11 is green and local preview labels blue11. One session/video and explicit Live controls passed. The frozen request/completion ownership scope addresses the demonstrated provisional-tail misuse without changing completed held-interval wall clocks or replacing the paused still. Approval includes exact nonrounded capture identity, pending/stale ordering, source/session/recovery guards, bounded requests/capture, legacy metadata and optional selector/session-boundary tests. The asynchronous algorithm remains to be validated; metadata-only association, global capture-start clocks, extra files/API permissions or changed P29 arithmetic would exceed approval.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:21:17Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "I generated fresh exact-a239 ReplayBuffer payloads and independently reproduced the full-player normal1s successor in Chromium/WebKit: paused position11/blue pixels stay fixed while recorded time1030->1031 and rendered layer30->31; archive11 is green, thumbnail incorrectly labels blue11, explicit Live is green, one session/video and no pageerrors (r04/round8-jpeg-normal). Source confirms provisional end is copied on pause and used by capture; inspected subsecond evidence too. The closed16-file scope is justified only for owned JPEG request/decode time, optional immutable descriptor/selector and its regressions. SSE metadata or end-1 alone cannot prove decoded identity. Approval requires every frozen race, exact nonrounded identity, legacy/no-recording, completed-held-gap, page-origin/privacy, gesture/request-bound and recovery control; P29/P31 arithmetic and P23/P32 cache policy must remain unchanged.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:21:17Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned JPEG Live bounds include the provisional tail; Pause saves that end while the decoded image stays fixed, printerPlaybackTime then follows the increasing end_time clamp, and PreviewCapture labels the old image with bounds.current. I inspected the actual recorder generator/full-player fixture and validated both engines' original subsecond and normal-one-second artifacts: blue pixels remain unchanged at position11 while recorded time/layer advances, and archive11 is green, with one session/video and no pageerrors. The closed16-file scope correctly requires proven camera/session/request/decode ownership rather than end-minus-one or timestamp-only association. It preserves completed held-interval wall clocks, backend gap/tail/origin arithmetic, legacy compatibility, recorded-only telemetry, P23/P32 policy, one decoder and one committed seek. I approve its existing detailed asynchronous-order, pending pause/Live, stale completion, precise boundary, retention, legacy/selector and recovery validation plan; the initial evidence does not itself claim those algorithms are implemented or verified.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:21:18Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        }
+      }
+    },
+    {
+      "id": "P37",
+      "round": 8,
+      "revision": 1,
+      "title": "Resolve the closest retained preview before selecting its storage tier",
+      "author": "root",
+      "source_finding": "ROOT-R7-PREVIEW-NEIGHBOR",
+      "baseline": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "files": [
+        "apps/web/src/preview-history.js",
+        "apps/web/tests/preview-history.test.js",
+        "apps/web/tests/browser-preview-loading.js",
+        "docs/local-previews.md"
+      ],
+      "scope": "Correct PreviewHistory.get so the globally closest eligible retained frame/asset is selected before deciding whether its Blob comes from RAM or IndexedDB. A farther RAM neighbor within five seconds must not suppress loading the closer persisted frame. Preserve public peek/nearest placeholder use, labeled still retention, bounded LRU/decoded caches, pending read coalescing, session/version/asset ownership, missing/evicted/decode failure handling, late-IDB behavior, single decode lane and existing server fallback/cooldown. No new prefetch, HTTP request loop, decoder, storage schema/namespace, capture cadence or UI control. Add focused unit and actual Web Component/IndexedDB browser regressions for adjacent warm/cold selection and a short contiguous sweep under forced eviction; update only corresponding local-preview note. Only the four listed files may change; no production scrub-preview component change is needed within this scope.",
+      "evidence": "Actual bac0827 generated-camera sweep ran2711.739s with540 retained native stills then failed at25.066666 within4s,0pageerrors or previewHTTP. Root reproduced current all33 production PreviewHistory+scrub-preview with real IndexedDB/distinct red and blue JPEGs in Chromium/WebKit. Cold exact25.066666 is globallynearest; hot20.133333 within5s is returned by get; component refuses mismatched asset and resolution stops with stale red displayed. Evict only hot Blob and same request reads frame25 once and paints blue; samevideo,0seeks/HTTP/pageerrors. Failure and original logs retained; WebKit long run was stopped by fail-fast, so no completed45min WebKit claim.",
+      "evidence_path": "test-results/review-2026-10-26/root-preview-adjacent/finding.json",
+      "risk": "Low/moderate cache selection correction. Preserving only a nearby warm placeholder without resolving the true target would hide the bug; rejecting a late read or reintroducing duplicate decode/HTTP work could regress P11. Keep compressed and decoded limits and session ownership.",
+      "validation_plan": "Deterministic units: exact cold vs nearby hot, closer non-exact cold vs farther hot, tie behavior unchanged, coalesced identical disk reads, missing asset and session reset. Actual Chromium/WebKit Web Component+real IndexedDB with distinct decoded colors must replace warm placeholder with correct nearest cold image without additional pointer event, seek/video creation/server preview HTTP. Both directions and a contiguous retained-still sweep under bounded RAM; delayed IDB, stale session/target and corrupt/sprite fallback regressions remain passing. Independently rerun original adjacent-color negative against old module and corrected source. After integration repeat actual45min full retained-preview sweep under resource caps and preserve original failure; do not claim physical-phone or unmeasured zero-latency guarantees.",
+      "status": "voting",
+      "ballots": {
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "Independent real IndexedDB/production component rerun reproduced both engines selecting warm20.133333 while nearest25.066666 stays cold; resolution stops with red pixels and no frame25 read. Evicting only the warm Blob makes the same target read frame25 once and paint blue, with the same video, zero seeks/previewHTTP/pageerrors. Selecting the nearest retained candidate before its storage tier corrects the source mismatch without component changes. Approval includes existing nearest tie order, bounded/coalesced reads, stale-session/target and late-IDB ownership, placeholders/fallback and the frozen both-direction/short-sweep regressions; a further real45min integration sweep remains required without erasing the original failure.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:21:17Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Independent real-IDB production-component runs on exact a239 in both engines reproduce warm20.133333 suppressing closer cold25.066666: get returns the warm neighbor without reading frame25, correct component equality guard rejects it and resolution stops. Evicting only warm Blob reads frame25 once and paints blue, zero seeks/previewHTTP/errors (r04/round7-preview-finding-review.json). Closest selection before RAM/IDB is the minimal four-file correction; peek placeholders and ownership/decode/fallback guards must remain. Approval includes both directions, tie/coalescing/missing/session controls, contiguous bounded-RAM sweep, old/new negative control, existing delayed-IDB/corrupt regressions and integration45min repeat with original failure preserved. No completed45min WebKit or physical-phone claim is supported.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:21:17Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned PreviewHistory.get returns a memory-only peek before choosing the global nearest asset; scrub-preview correctly refuses that farther asset but then has no new target/completion to trigger recovery. My independent bounded a239c0c rerun with the actual component and real IndexedDB reproduces both engines: cold exact25.066666 is nearest, hot20.133333 prevents frame25 reads and leaves red; evicting only the hot Blob makes one frame25 read paint blue, with the same video and zero seeks/HTTP/pageerrors. Selecting the nearest eligible asset before its storage tier is the narrow model correction; public placeholder peek and the component need no policy change. The frozen tie, coalescing, eviction, session/asset, delayed-IDB, single-decode, corruption/fallback and contiguous-sweep controls preserve P11 and storage bounds. I approve that plan including the later capped45-minute integration rerun, without claiming a completed WebKit long run or physical-phone latency.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T08:21:18Z",
+          "slate_sha256": "1a3ba423033c74b70c3e42b6b79835ca642a15ca29c7acd8c61d38a137fd5428"
+        }
+      }
     }
   ],
   "commits": [
@@ -4527,6 +4782,71 @@
       "at": "2026-10-26T08:01:29Z",
       "type": "round7-frozen",
       "message": "P34/P35 exact one-file delivery scopes frozen after independent root reproduction. No implementation before6explicit reviewers; root0. All33 combined check now passed; no GitHub-green or production deployment claim."
+    },
+    {
+      "at": "2026-10-26T08:04:12Z",
+      "type": "ballot",
+      "message": "R07 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:07:29Z",
+      "type": "ballot",
+      "message": "R10 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:10:39Z",
+      "type": "ballot",
+      "message": "R02 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:11:42Z",
+      "type": "ballot",
+      "message": "R08 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:13:31Z",
+      "type": "ballot",
+      "message": "R06 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:14:31Z",
+      "type": "round8-frozen",
+      "message": "P36/P37 exact scopes frozen; two-browser image-color consumer negatives preserved, including normal JPEG cadence. No implementation before6distinct approvals. Failed45min sweep retained; remaining older-source six-hour run is not full-sweep evidence."
+    },
+    {
+      "at": "2026-10-26T08:16:45Z",
+      "type": "ballot",
+      "message": "R05 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:16:45Z",
+      "type": "ballot",
+      "message": "R03 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:16:45Z",
+      "type": "ballot",
+      "message": "R04 explicit Round7 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:18:09Z",
+      "type": "github-ci-success",
+      "message": "All33 source1a66f5c passed unmodified hosted CI40289515625. Public review branches published; no main merge, release/image publication or live deployment."
+    },
+    {
+      "at": "2026-10-26T08:21:17Z",
+      "type": "ballot",
+      "message": "R03 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:21:17Z",
+      "type": "ballot",
+      "message": "R04 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T08:21:18Z",
+      "type": "ballot",
+      "message": "R05 explicit Round8 ballot imported for all2 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
@@ -4714,7 +5034,7 @@
     },
     {
       "summary": "Second six-hour native-video/local-preview sweep on independently reviewed32-proposal snapshotbac0827",
-      "status": "running",
+      "status": "failed full preview sweep; investigating",
       "source": "bac0827674b667ee6f6545b21fb626392d3332f8",
       "first_samples": {
         "chromium": "2026-10-26T07:21:09.096Z",
@@ -4732,7 +5052,9 @@
         "codex__layerglass_review_retention_phase2_sweep_v1_20261026_chromium",
         "codex__layerglass_review_retention_phase2_sweep_v1_20261026_webkit"
       ],
-      "exec_session": 55778
+      "exec_session": 55778,
+      "recorded_at": "2026-10-26T08:08:22Z",
+      "result": "Chromium ran2711.739actual seconds; at45min retained540native stills and failed to paint target25.066666 within4s during full sweep.0pageerrors, same decoder/session, video5/playlist0/segments0/previewHTTP0 before failure. Fail-fast runner removed its exact fixture/browsers, ending WebKit before its full sweep. Original logs retained; no six-hour or full-sweep pass claimed. Separate all26 six-hour run continues unchanged."
     },
     {
       "summary": "R04 independent P32 exact final diff:94consumerunits/35docs/4registered browsercases pass; old module fails and generated fixtures match actual recorder",
@@ -4761,6 +5083,24 @@
         "test-results/review-2026-10-26/root-round7-delivery/runner-paths.json"
       ],
       "result": "Name-conflict check125 deletes only pre-existing own conflicting canary; own separate control and reused image survive. Actual history registered runner plain passes, spaces/percent fail MODULE_NOT_FOUND, spaced direct suite passes, unknown selection2. Own canaries and runner removed; no unrelated service touched."
+    },
+    {
+      "summary": "Unmodified GitHub Actions complete CI for all33 snapshot",
+      "status": "passed",
+      "source": "1a66f5c02c44b453ba46ae30b2f93e40861eda9e",
+      "run_id": 40289515625,
+      "job_id": 121461004924,
+      "url": "https://github.com/ewized/layerglass/actions/runs/40289515625",
+      "recorded_at": "2026-10-26T08:18:09Z",
+      "result": "GitHub API completed/success;normal hosted runner, no local audit proxy. Earlier failed40278167693 retained. This result predates P34-P37 implementation.",
+      "log": "test-results/review-2026-10-26/github-ci-40289515625.log"
+    },
+    {
+      "summary": "R04 independent cold-neighbor preview defect and closed-file correction-scope review",
+      "status": "confirmed",
+      "source": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "evidence": "test-results/review-2026-10-26/r04/round7-preview-finding-review.json",
+      "recorded_at": "2026-10-26T08:21:18Z"
     }
   ],
   "implementation_worktrees": [
