@@ -26,24 +26,27 @@
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "implementing P05-P07 in isolated worktree",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r02/",
-      "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r02/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r02/ballot-round3.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "round 2 ballot complete",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
       "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
-      "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json"
+      "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r03/ballot-round3.json"
     },
     {
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "round 3 ballot complete",
+      "status": "P23 independent diff READY; idle",
       "initial_report": "test-results/review-2026-10-26/r04/",
       "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r04/ballot-round2.json",
@@ -63,7 +66,7 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 3 ballot complete",
+      "status": "independent Round4 backend review active at4f6f6be",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
@@ -83,9 +86,11 @@
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "round 1 ballot complete",
+      "status": "independent Round4 workspace/provider review active at1af28b1",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json",
-      "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r08/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r08/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r08/ballot-round3.json"
     },
     {
       "id": "r09",
@@ -101,10 +106,11 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 2 ballot complete",
+      "status": "independent Round4 documentation review active atdf663ea",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
-      "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json"
+      "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r10/ballot-round3.json"
     }
   ],
   "rounds": [
@@ -157,11 +163,19 @@
     },
     {
       "id": 2,
-      "phase": "voting",
+      "phase": "integrated; combined validation in progress",
       "baseline": "afee31a57de6363ed69f7ffbe113207fafe904ba",
       "reviewers_completed": [
         "r01",
-        "r07"
+        "r02",
+        "r03",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08",
+        "r09",
+        "r10"
       ],
       "ballots_started": true,
       "frozen_at": "2026-10-26T05:17:41Z",
@@ -172,11 +186,13 @@
       ],
       "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd",
       "slate_path": "test-results/review-2026-10-26/round-2-slate.json",
-      "notes": "Initial deeper independent reports from R01/R07 plus a coordinator reproduction; the coordinator does not vote. Additional independent deep reviews continue. No Round2 implementation authorized yet."
+      "notes": "All exact frozen revisions reached the six-reviewer majority before implementation. Original ballots and corrected P23 consumer evidence retained.",
+      "balloting_completed_at": "2026-10-26T05:50:58Z",
+      "decision": "P23 approved9/10 with1 ABSTAIN; P24/P25 approved10/10. Root votes0."
     },
     {
       "id": 3,
-      "phase": "voting",
+      "phase": "integrated; combined validation in progress",
       "baseline": "7f2a8cf2e6136a9b41a62e847ff1dab8cc4a57ad",
       "frozen_at": "2026-10-26T05:24:15Z",
       "proposal_ids": [
@@ -185,7 +201,21 @@
       "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788",
       "slate_path": "test-results/review-2026-10-26/round-3-slate.json",
       "ballots_started": true,
-      "notes": "Separate immutable follow-up slate for R03 concurrency finding; Round2 remains unchanged."
+      "notes": "All exact frozen revisions reached the six-reviewer majority before implementation. Original ballots and corrected P23 consumer evidence retained.",
+      "reviewers_completed": [
+        "r01",
+        "r02",
+        "r03",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08",
+        "r09",
+        "r10"
+      ],
+      "balloting_completed_at": "2026-10-26T05:50:58Z",
+      "decision": "P26 approved10/10; root votes0."
     }
   ],
   "proposals": [
@@ -808,7 +838,7 @@
           "report": "test-results/review-2026-10-26/r04/p06-followup-independent-review.json"
         },
         "validation": "R02 final209 JS/35 docs and3 focused browser suites both engines; old player.js negative control fails at hidden replay. R04 independently reproduced fix and14 lifecycle cases; physical native Safari HLS remains unverified.",
-        "followup": "R02 correcting hidden/offline readiness cancellation after R04 reproduction; no P06 commit integrated yet.",
+        "followup": "Resolved before integration: feff921 keeps readiness owned through hidden/offline deadlines; R04 reproduced original trigger and all14 lifecycle cases in both engines.",
         "commits": [
           "196db2c",
           "feff921"
@@ -2489,7 +2519,7 @@
       "evidence_path": "test-results/review-2026-10-26/root-round2-findings.json",
       "risk": "Low/moderate asynchronous ownership; careless resets can introduce render-driven request loops or let stale callbacks damage new requests.",
       "validation_plan": "Cancelled A, successful B, return A loads its recorded reading once; repeated reads while pending do not duplicate, late A promises and replacement sessions remain isolated, actual failures/timeouts stay suppressed until retry, windows remain bounded.",
-      "status": "approved",
+      "status": "committed",
       "ballots": {
         "r10": {
           "vote": "APPROVE",
@@ -2546,6 +2576,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:35:41Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "I reject the original only-online/local-seek explanation: production Stats retries on local seek and opening. However, I independently reran the corrected actual-component Chromium Cast fixture against frozen afee31a: receiver A/B/A issued only two requests, no local seek events, and returned to blank Stats with cancelled A still requested; an explicit app seek made the third fetch and restored 11%. This is the existing history cancellation-ownership defect covered by the unchanged scope. Approve releasing only aborted/superseded unfinished eligibility, with same-window/session/late-finally isolation, no pending-read duplication, bounded windows, and preserved real-failure/timeout suppression until retry. No new Cast behavior is approved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:37Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned Cast receiver A/B/A reproduced two requests, zero local replay/seeked events, cancelled A still requested and blank Stats; a local app seek made the third fetch and recovered. The ordinary-local-seek/only-online claim is false, but this receiver path supports the same frozen model cancellation scope. Retaining request/session ownership, bounded windows and real-failure suppression makes the proposed eligibility reset appropriately narrow.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:38Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       },
       "additional_evidence": [
@@ -2559,7 +2603,20 @@
           "result": "Distinct real consumer: receiver-originated Cast A\u2192B\u2192A has no local replaypositionchange/seeked events; canceled A remains blank after two Stats timer reads with2fetches. Explicit sender seek control creates thirdfetch and restores11% progress. Same frozen history-model scope; no source edits.",
           "evidence": "test-results/review-2026-10-26/r05/round2-cast-history.log"
         }
-      ]
+      ],
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/history-cancellation",
+        "owner": "r05",
+        "commit": "896b481",
+        "integrated_commit": "df663ea",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "r04",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r04/p23-diff-review.json"
+        },
+        "validation": "Independent63 focused units/23 history cases,35 docs, Chromium real Stats/Cast and WebKit synthetic receiver adapter pass; previous module fails5 new cases. Local-seek counterexample preserved; no physical Cast claim."
+      }
     },
     {
       "id": "P24",
@@ -2580,7 +2637,7 @@
       "evidence_path": "test-results/review-2026-10-26/r01/round2-findings.json",
       "risk": "Low; undocumented clients using discovery.found must use the existing camera catalog. Internal identity and pairing must remain untouched.",
       "validation_plan": "Real HTTP Scan with synthetic URL/saved-code name omits found and secrets in queued/cooldown cases, preserves every other progress/queued/retry property, private candidates/serial/model unchanged, catalog stays sanitized, CORS/header rejection/admission and pairing fixtures pass.",
-      "status": "approved",
+      "status": "committed",
       "ballots": {
         "r10": {
           "vote": "APPROVE",
@@ -2637,7 +2694,34 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:35:41Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "The frozen handler serializes Discovery.status() directly, including raw found candidates, while the catalog removes found and separately sanitizes printer identity. My network-none HTTP rerun against afee31a reproduced the URL/code-bearing Scan body in both queued and cooldown cases with exact allowed CORS; catalog remained clean and private metadata unchanged. Omitting found from the public status copy is a narrow boundary fix. Approve with preservation of every other progress/queued/retry field, private serial/model/candidate state, pairing behavior and existing origin/header controls, plus the stated HTTP and documentation regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:37Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned real HTTP cooldown and queued Scan responses expose the synthetic saved code and authenticated source URL under raw found while the catalog redacts them. Omitting found from a copied status object closes this specific projection without changing private candidates, identity, scheduling, headers or CORS. The stated progress-preservation and private-state regressions match the risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:38Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/scan-public-progress",
+        "owner": "r01",
+        "commit": "e485463",
+        "integrated_commit": "5de5ff3",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/root-scan-catalog-review.json"
+        },
+        "validation": "Author67 focused Python cases/35 docs and two failing-before HTTP controls; root inspected private/public boundaries and independently passed combined22 CORS/binding cases with P26."
       }
     },
     {
@@ -2658,7 +2742,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round2-findings.json",
       "risk": "Low test-only path change; temporary-source cleanup must not discard screenshots expected in the host collector.",
       "validation_plan": "Actual clean Nx site:test outside /app as non-root passes Chromium/WebKit and writes selected/checkout screenshots, no writes to an unrelated /app. Normal run-js.sh --workspace still exports screenshots to its mounted ignored collector; docs check passes.",
-      "status": "approved",
+      "status": "committed",
       "ballots": {
         "r10": {
           "vote": "APPROVE",
@@ -2715,7 +2799,34 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:35:41Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "I independently ran the actual afee31a site browser check after both real static builds as uid1000 from /tmp/source: Chromium reached screenshot and failed ENOENT at /app/test-results/site-1440.png. The source otherwise resolves its checkout relatively, so a configurable output with a checkout-local ignored default fixes the independent target. Keeping run-js.sh's mounted collector explicit preserves temporary-copy artifacts. Approve the exact test-only scope with clean alternate-path non-root Nx/Chromium/WebKit validation, no unrelated /app writes, retained normal workspace collection and docs validation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:37Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Exact pinned source under non-root UID1000 outside /app fails at screenshot ENOENT after both required builds; identical source passes both engines only when an unrelated writable /app is supplied and writes there. A checkout-relative configurable destination plus explicit run-js workspace collector fixes this test-only path defect while preserving assertions, prerequisites and shipped behavior.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:38Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/site-artifacts",
+        "owner": "root",
+        "commit": "ff7b2ed",
+        "integrated_commit": "1af28b1",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "r07",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r07/p25-diff-review.json"
+        },
+        "validation": "Actual clean Nx site:test outside /app as non-root passes both engines with default/selected paths; normal workspace wrapper collects screenshots. Unrelated /app sentinel preserved. R07 independent diff review READY."
       }
     },
     {
@@ -2736,7 +2847,7 @@
       "evidence_path": "test-results/review-2026-10-26/r03/round2-findings.json",
       "risk": "Low/moderate lock-order change; registry already reads discovery.status under its lock elsewhere, and discovery producers do not call registry. Retired telemetry shutdown must stay outside registry.lock to avoid joining callbacks under it.",
       "validation_plan": "Queue catalog while registry.lock is held, finish new verified B discovery and B setup, release caller; it must read current B only after lock entry and keep B code/serial active both in memory and after reload. No stale source reactivation/quarantine; concurrent unchanged metadata and retired callbacks remain deadlock-free; binding/discovery/history and docs checks pass.",
-      "status": "approved",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2779,7 +2890,48 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:35:41Z",
           "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r08": {
+          "vote": "APPROVE",
+          "rationale": "I reproduced the queued catalog race from frozen 7f2a8cf: after B was configured with no quarantine, the delayed A snapshot changed persisted serial back to A and quarantined B's new code. Taking status only after registry.lock gives snapshot selection and binding mutation a consistent ordering. I inspected Discovery locking: registry already calls status under its lock elsewhere, and discovery producers do not call registry. Approve the specified one-boundary change with retired-client shutdown outside the lock, persisted/reloaded B retention, unchanged/offline/legacy behavior, deadlock/callback ordering and focused binding/discovery/history/docs regressions; no scan or retry expansion.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:37Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Pinned queued-A/replacement-and-pair-B fixture reverted current and persisted serial to A and quarantined B's new code. Reading the discovery snapshot after registry.lock serializes selection with pairing mutations under the existing lock direction; discovery producers do not acquire the registry lock. The exact scope retains client shutdown outside that lock and requires persisted/reloaded binding and callback-order regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:38Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "My independent offline reproduction shows an old catalog snapshot A applying after explicit replacement-B setup, reverting the saved identity and quarantining B's new code. Taking Discovery.status inside the existing registry mutation lock prevents that stale input from preceding the transaction; the scratch-only candidate retained B. The frozen scope preserves client close outside the lock, existing admission and offline/legacy behavior, with deterministic persisted/reload and callback-order regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:38Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Provenance: I initially observed the later canonical checkout's ordering, then switched to git show/archive of frozen baseline 7f2a8cf and based this vote on its source and an independent network-isolated reproduction. The queued A snapshot applies after explicit B setup, makes B unconfigured, persists A's serial and quarantines B's new code. Acquiring registry.lock before selecting the snapshot gives this catalog transaction the needed ordering boundary. Frozen configure/forget already use registry-to-discovery lock order, discovery producers do not call registry, and retired-client close remains outside registry.lock. Baseline callback-shutdown and unchanged/offline-binding tests also passed independently. Approve the exact scope and required queued-reader, persisted/reloaded binding, concurrent metadata/callback and focused regression/documentation checks; no scan, retry or identity-policy expansion is needed.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:45:38Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
         }
+      },
+      "implementation": {
+        "worktree": "/workspace/layerglass-review/catalog-ordering",
+        "owner": "r03",
+        "commit": "f316bb6",
+        "integrated_commit": "4f6f6be",
+        "integrated": true,
+        "peer_review": {
+          "reviewer": "root",
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/root-scan-catalog-review.json"
+        },
+        "validation": "Author114 focused backend cases/35 docs, deterministic persisted/reloaded B-binding regression and original-code failure. Root reviewed lock ordering and independently passed22 combined CORS/binding cases with P24."
       }
     }
   ],
@@ -2879,6 +3031,22 @@
     {
       "sha": "e6e834c",
       "summary": "P06: keep suspended initialization owned and resumable; independent original-trigger and lifecycle suite pass both engines."
+    },
+    {
+      "sha": "df663ea",
+      "summary": "P23: Restore cancelled historical telemetry window eligibility; exact diff independently reviewed."
+    },
+    {
+      "sha": "5de5ff3",
+      "summary": "P24: Keep private discovery results out of public Scan responses; exact diff independently reviewed."
+    },
+    {
+      "sha": "1af28b1",
+      "summary": "P25: Route website test screenshots portably; exact diff independently reviewed."
+    },
+    {
+      "sha": "4f6f6be",
+      "summary": "P26: Serialize discovery snapshots with printer pairing mutations; exact diff independently reviewed."
     }
   ],
   "activity": [
@@ -3116,6 +3284,41 @@
       "at": "2026-10-26T05:35:57Z",
       "type": "quorum",
       "message": "P23 now7 approvals plus1 abstention; P24/P25 each8 approvals; P26 now6 approvals. All exact rev1 scopes eligible for implementation, root0. False P23 local/online premise explicitly corrected in new voter rationales with actual receiver-originated Cast evidence. First-round full snapshot stopped on WebKit fixture-cookie assertion; no production fix inferred before environment/control comparison."
+    },
+    {
+      "at": "2026-10-26T05:45:37Z",
+      "type": "ballot",
+      "message": "R08 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:45:37Z",
+      "type": "ballot",
+      "message": "R08 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:45:38Z",
+      "type": "ballot",
+      "message": "R02 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:45:38Z",
+      "type": "ballot",
+      "message": "R02 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:45:38Z",
+      "type": "ballot",
+      "message": "R03 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:45:38Z",
+      "type": "ballot",
+      "message": "R10 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:50:58Z",
+      "type": "integration",
+      "message": "All26 exact approved corrections integrated after independent diff review;260 explicit ballots retained (259 APPROVE,1 ABSTAIN; root0). New6-hour two-engine generated-camera retention run started at all26 source. Baseline real60-minute run passed. Deeper independent reviews continue."
     }
   ],
   "validation": [
@@ -3133,11 +3336,13 @@
     },
     {
       "summary": "Pinned baseline generated-camera60-minute endurance run; network isolated and resource capped",
-      "status": "running",
+      "status": "passed",
       "log": "test-results/review-2026-10-26/baseline-soak.log",
       "source": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
       "first_sample_at": "2026-10-26T04:43:50.961Z",
-      "duration_seconds": 3600
+      "duration_seconds": 3600,
+      "completed_at": "2026-10-26T05:43:48Z",
+      "result": "3600 actual seconds/60 samples;719 captured stills,5 paused rewinds18\u201344ms,1 page/session/video,0 HLS playlist/segment requests,11 total video requests matching initial+rewind+Live;3.58MB final previews/4.75MB peak stream cache;0 page errors/failures. Baseline source, not fixed-source endurance evidence."
     },
     {
       "summary": "Final provider correction:38 focused units, Direct in both engines and Chromium Cast same-page SDK retry;35 docs",
@@ -3173,12 +3378,38 @@
     },
     {
       "summary": "Immutable combined first-round check.sh all with build, units, docs, Nx/site and all18 browser suites",
-      "status": "stopped at browser assertion; investigation active",
+      "status": "stopped at audit harness artifact; browser-only rerun active",
       "source": "75a0479",
       "log": "test-results/review-2026-10-26/round1-full.log",
       "started_at": "2026-10-26T05:30:37Z",
       "environment": "Archive snapshot, disposable runtime image, optional non-loopback browser HTTP blocked by audit-only Playwright preload; native online behavior and production source unchanged.",
-      "failure": "WebKit browser-backends request.allHeaders did not include expected same-origin fixture cookie. Investigating audit routing effect versus application behavior before source changes. Python196 and docs35 plus JS/workspace/site completed; first3 browser suites passed both engines, backend suite passed Chromium."
+      "failure": "WebKit Playwright routing hides cookie in request.allHeaders although actual loopback HTTP receives it. Isolated no-hook, SDK-only routing and proxy controls reproduced this; unchanged actual PythonBackend.fetch and cookie assertion pass with proxy isolation in both engines. No product/test assertion weakened.",
+      "control_logs": [
+        "test-results/review-2026-10-26/cookie-routing-control.log",
+        "test-results/review-2026-10-26/cookie-proxy-control.log"
+      ],
+      "browser_retry": "test-results/review-2026-10-26/round1-browser-proxy.log",
+      "completed_stages": "196 Python tests,214 JavaScript tests,35 linked docs, Nx backend/web/site builds, build-cache restore, graph and site browser checks passed. Full browser stage is a separate active rerun."
+    },
+    {
+      "summary": "Root independent combined P24 public-scan and P26 registry-ordering regression check",
+      "status": "passed",
+      "source": "4f6f6be",
+      "result": "22 CORS/binding cases; exact production diff and author reports independently reviewed.",
+      "log": "test-results/review-2026-10-26/root-scan-catalog-review.log",
+      "recorded_at": "2026-10-26T05:50:58Z"
+    },
+    {
+      "summary": "Pinned all26-fix six-hour native-video/local-preview retention run in Chromium and WebKit",
+      "status": "running",
+      "source": "df663ead6cfda57bd95d43f0547214c462129919",
+      "duration_seconds": 21600,
+      "started_at": "2026-10-26T05:50:58Z",
+      "logs": [
+        "test-results/review-2026-10-26/retention_26fixes_v1-chromium.log",
+        "test-results/review-2026-10-26/retention_26fixes_v1-webkit.log"
+      ],
+      "environment": "Generated camera only; network-isolated fixture1CPU/384MiB and each browser1CPU/1GiB;128KiB compressed preview RAM forces IndexedDB reads; normal128MiB disk bounds;1GiB server DVR cap. Physical-device behavior unverified."
     }
   ],
   "implementation_worktrees": [
@@ -3236,6 +3467,42 @@
         "P15"
       ],
       "starting_commit": "0c9c5a5"
+    },
+    {
+      "path": "/workspace/layerglass-review/history-cancellation",
+      "branch": "review/history-cancellation",
+      "owner": "r05",
+      "proposals": [
+        "P23"
+      ],
+      "starting_commit": "95c4acd"
+    },
+    {
+      "path": "/workspace/layerglass-review/scan-public-progress",
+      "branch": "review/scan-public-progress",
+      "owner": "r01",
+      "proposals": [
+        "P24"
+      ],
+      "starting_commit": "0a656f2"
+    },
+    {
+      "path": "/workspace/layerglass-review/site-artifacts",
+      "branch": "review/site-artifacts",
+      "owner": "root",
+      "proposals": [
+        "P25"
+      ],
+      "starting_commit": "0a656f2"
+    },
+    {
+      "path": "/workspace/layerglass-review/catalog-ordering",
+      "branch": "review/catalog-ordering",
+      "owner": "r03",
+      "proposals": [
+        "P26"
+      ],
+      "starting_commit": "95c4acd"
     }
   ]
 }
