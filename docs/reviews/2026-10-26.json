@@ -62,22 +62,25 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "independent Round4 remote/provider pass active",
+      "status": "round 4 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
-      "ballot_round3": "test-results/review-2026-10-26/r05/ballot-round3.json"
+      "ballot_round3": "test-results/review-2026-10-26/r05/ballot-round3.json",
+      "ballot_round4": "test-results/review-2026-10-26/r05/ballot-round4.json"
     },
     {
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 4 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r06/ballot-round3.json",
-      "ballot_round4": "test-results/review-2026-10-26/r06/ballot-round4.json"
+      "ballot_round4": "test-results/review-2026-10-26/r06/ballot-round4.json",
+      "ballot_round5": "test-results/review-2026-10-26/r06/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r06/ballot-round6.json"
     },
     {
       "id": "r07",
@@ -106,12 +109,14 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 4 ballot complete",
+      "status": "round 6 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
       "ballot_round3": "test-results/review-2026-10-26/r09/ballot-round3.json",
-      "ballot_round4": "test-results/review-2026-10-26/r09/ballot-round4.json"
+      "ballot_round4": "test-results/review-2026-10-26/r09/ballot-round4.json",
+      "ballot_round5": "test-results/review-2026-10-26/r09/ballot-round5.json",
+      "ballot_round6": "test-results/review-2026-10-26/r09/ballot-round6.json"
     },
     {
       "id": "r10",
@@ -232,7 +237,7 @@
     },
     {
       "id": 4,
-      "phase": "majority approved; remaining ballots continue",
+      "phase": "all ten ballots recorded; approved implementation and independent review",
       "baseline": "5055adf9e3aeb29743802ba37acfb2a97c3654e4",
       "frozen_at": "2026-10-26T06:03:54Z",
       "proposal_ids": [
@@ -247,14 +252,20 @@
       "ballots_started": true,
       "reviewers_completed": [
         "r01",
+        "r02",
+        "r03",
+        "r04",
+        "r05",
         "r06",
+        "r07",
         "r08",
         "r09",
         "r10"
       ],
       "notes": "Five exact deeper-review corrections frozen. R01 independent108-request API/SSE pass found no material new defect; independent R05/R07 passes continue. Later candidates do not alter this slate.",
       "majority_recorded_at": "2026-10-26T06:25:12Z",
-      "decision": "P27-P31 revision1 each have7 explicit APPROVE of10; first six (R01/R06/R09/R10/R03/R02) were recorded before implementation. Root0."
+      "decision": "P27-P31 revision1 each have10 explicit APPROVE of10. First six approvals were recorded before implementation. Root0. P29 independent review found an atomic append-failure issue within the approved scope; not integrated pending correction.",
+      "balloting_completed_at": "2026-10-26T07:01:19Z"
     },
     {
       "id": 5,
@@ -268,7 +279,10 @@
       "slate_path": "test-results/review-2026-10-26/round-5-slate.json",
       "ballots_started": true,
       "reviewers_completed": [
-        "r05"
+        "r04",
+        "r06",
+        "r08",
+        "r10"
       ],
       "notes": "Independent R05 successful-partial/SSE reconnect finding arrived after frozen Round4; separate scope and ballots preserve that slate."
     },
@@ -284,7 +298,8 @@
       "slate_path": "test-results/review-2026-10-26/round-6-slate.json",
       "ballots_started": true,
       "reviewers_completed": [
-        "r09"
+        "r04",
+        "r06"
       ],
       "notes": "Independent read-only native-focus traces explain CI-only timing failure. No test assertion or product source changed before fresh voting."
     }
@@ -3087,6 +3102,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:50:28Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned5055adf player.js disables the submitted Settings address and never restores owned focus on failure. I reran the full production fixture: Chromium ends on body and cannot Escape/retry; WebKit retains focus, and100 reconnects emit one action. The frozen same-request/editor/visible-page ownership checks and movement/dismissal negatives bound restoration without changing validation, drafts, provider or success behavior. I approve the existing cross-engine validation plan.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:01:19Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
       },
       "approved_at": "2026-10-26T06:25:12Z",
@@ -3178,6 +3200,13 @@
           "rationale": "I inspected the retained-fragment floor and limited metadata and independently repeated all three storage controls on pinned5055adf: a1MiB target retains1.5MiB across two current fragments or2MiB for one oversized fragment with limited=false, while ordinary older-fragment trimming removes history and sets limited=true. The installation cap and maximum-total-storage wording overpromise existing behavior. The two-note documentation-only scope accurately distinguishes a retained-video target from a filesystem quota, preserves defaults/runtime/lease/durability, and explicitly forbids an invented fixed overrun or other-disk-usage guarantee. Revised prose and container docs validation are required.",
           "revision": 1,
           "recorded_at": "2026-10-26T06:50:28Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned pruning deliberately preserves each archive's last fragment, while the two docs call REPLAY_MAX_MB a total maximum. My5055adf rerun retains1.5MiB across two current fragments and2MiB in one under a valid1MiB setting, both limited=false; ordinary old-fragment trimming succeeds and sets limited. Documentation-only target/quota clarification accurately describes existing behavior without inventing an overrun bound; the stated controls and docs check are sufficient.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:01:19Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
       },
@@ -3282,6 +3311,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:50:28Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "I reproduced on5055adf through real ReplayBuffer/JPEG/history HTTP and production JS: forward30.5->31.1 maps1059.5->1031.1 and layers59->31 because the successor image receives the preceding30s gap. Finalizing the preceding still's hold and appending the successor at its capture time corrects that attribution. I approve this exact policy and its existing atomic-tail, later-tab/origin, trimming, preview, cadence and HLS controls; no different gap policy or transport is authorized.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:01:19Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
       },
       "additional_evidence": [
@@ -3383,6 +3419,13 @@
           "rationale": "Both pinned active-fragment prune paths dequeue before unlink and background pruning lies outside its storage-error catch. My actual non-root0500-to0700 rerun leaves a9-byte file untracked, kills the worker and keeps health503/end6 after later media should reach10. Unlink-before-dequeue and narrowly handled OSError with owned retry/bounded pause address the demonstrated fault. The0500 case also prevents writes, so it alone cannot prove prolonged-error bounds: approval specifically requires unlink-only prolonged-fault tests while collection would otherwise succeed, many source updates/ticks, bounded tracked and physical files/bytes, and responsive other-viewer metadata/media. Preserve current-fragment floor, tokens, release-path ownership, normal multi-viewer priority and telemetry/preview eviction; catch-and-append growth or permanent pause is excluded.",
           "revision": 1,
           "recorded_at": "2026-10-26T06:50:28Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The pinned paths dequeue before unlink, and background _prune lies outside the storage-error catch. My actual non-root5055adf0500->0700 rerun leaves a9-byte orphan, dead worker, health503 and end6 rather than10 after recovery. The frozen unlink-before-ownership-change and bounded prune-before-further-collection behavior address both accounting and liveness. Its prolonged-fault, older-page-release, other-viewer and automatic-recovery tests are essential and already included; catch-and-append growth is excluded.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:01:19Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
       },
@@ -3490,6 +3533,13 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:50:28Z",
           "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Pinned overlays.js unconditionally close(true)s at the copy deadline. I reran the real connected player in Chromium/WebKit: Copy->Tab->held-arrow loses slider focus to player and commits0, while the no-timer control commits1 and menu-owned dismissal correctly restores player. Checking current menu focus at auto-dismissal is the bounded correction; the frozen Escape, late/newer-menu, failure and cleanup controls preserve explicit ownership and existing replay blur cancellation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:01:19Z",
+          "slate_sha256": "6349af1a8ef954733c098c0dbfa6ac4bf26c1aef1ec7999130a44dd7255c7f80"
         }
       },
       "approved_at": "2026-10-26T06:25:12Z",
@@ -3545,6 +3595,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T06:50:28Z",
           "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Independently generated recorder payloads from archived 5055adf and reran real Stats/PlayerUpdates/EventSource consumers: Chromium production Cast and WebKit external-clock control both remain blank at recorded epoch1280 after reconnect, one successful partial request and zero local seek events; explicit local seek fetches 80%, then cached1290 gives 90% without another request. The unrecorded-future control makes no request. Separate HTTP/JSON/timeout controls stay suppressed through advancing SSE and 60 reads until explicit retry. Source read/requested handling explains the successful-partial gap. Approve only the frozen accepted same-session coverage plus request-owned consumed eligibility model, preserving P23 cancellation/late-owner and failure suppression; all specified durable browser/unit negative cases and default registration are required. Evidence: r06/round5-evidence/browser.log and outages.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:54:33Z",
+          "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Pinned 5055adf source leaves requested=true after a valid successful partial HTTP range; later SSE coverage in a different window cannot hydrate its now-recorded gap. My independent offline rerun reproduces blank receiver1280 in connected Chromium GoogleCastSender/Stats/PlayerUpdates/EventSource with one request and no local seek events, while explicit seek recovers80% with a second request and cached1290 stays at two. WebKit external-clock control reproduces without enabling Cast. HTTP/JSON/timeout controls remain suppressed after advancing SSE and60 reads until explicit retry. Approve the exact moderate-risk scope and regression plan: eligibility must derive only from valid accepted same-session later coverage, distinguish successful partial attempts from failures/cancellation, be consumed by one owned coalesced hydration, and preserve future/full/cache suppression plus P23 successor/session/late-callback and bounded-window guarantees. No blanket SSE/render retries or transport changes.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:00:10Z",
+          "slate_sha256": "0eec8c1d4445bb5188c31af534c0d8b1b8c9b26bb19a28e31cba300d64dfc1e4"
         }
       },
       "additional_evidence": [
@@ -3578,6 +3642,20 @@
           "rationale": "I inspected pinned1d9174e's immediate closeEditor/activeElement snapshot and the production revision/editing/visibility restoration guards, then independently executed the exact unchanged rejectedSetup function (SHA256b67abdfc102833cd0e402c9e3fc6bce2cdf4d1b4cb0227a71a9d8231c982afc9) twice per engine/scheduling mode. All four immediate runs pass; one of two120ms-held runs fails in each engine. Both failures show a disabled hidden input becoming body through trusted native blur before response release, zero application focus calls, unchanged advanced revision, editingCamera=null and still-hidden editor. This supports only a test lifecycle barrier. Approval strictly requires observable native/render dismissal outside the same hidden form and the settled node snapshot while the response remains held, then unchanged strict node equality plus same-editor closed/hidden guards across rejection. Immediate/delayed actual-player controls must pass and injected response-driven wrong focus and editor reopening must still fail. Snapshot-after-response, weakened assertions, blind delay and any production/P22/P27/P31 focus-policy change are excluded; preserve all other request/draft/error/keyboard scenarios and both engines.",
           "revision": 1,
           "recorded_at": "2026-10-26T06:51:53Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Independently reexecuted the exact pinned rejectedSetup body, SHA256 b67abdfc102833cd0e402c9e3fc6bce2cdf4d1b4cb0227a71a9d8231c982afc9, with every original assertion. Chromium passed all four immediate/four held controls; WebKit reproduced one immediate and one held failure. The held trace proves trusted native blur from disabled hidden input to body before response release, zero application focus calls, advanced editorRevision and editingCamera=null. player.js:738-743 already excludes restoration into that dismissed editor. The frozen test-only observable settling checkpoint is justified only while the response remains held and before taking the snapshot. Approval requires strict same-node equality and closed/hidden same-editor guards, preserved original scenarios/request counts, and wrong-visible-focus/reopen injections that still fail. No production policy change is approved. Evidence: r06/round6-evidence/original-traces.json and analysis.json.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T06:57:12Z",
+          "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "The exact unchanged rejectedSetup function at CI head1d9174e reproduced the immediate-snapshot failure3/4 Chromium and1/4 WebKit runs when the fifth response was held120ms. All four failing traces show trusted native blur from the disabled hidden input to body before response release, zero application focus() calls, advanced editorRevision and editingCamera=null; immediate controls pass4/4 per engine. Source guards already invalidate response restoration after closeEditor. Approve only the frozen test scheduling correction and validation: observe native dismissal and capture activeElement while the response remains held, then retain strict node equality and explicit same-editor closed/hidden guards across rejection. Injected visible-focus and editor-reopen controls must still fail; all other keyboard/request-count cases and both engines remain required. This evidence does not justify production focus-policy changes, post-response snapshots, weakened assertions or a fixed-sleep substitute.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T07:00:10Z",
           "slate_sha256": "18c04113709ad7f2f70ec6b431a8c26035caafd8b14160809b46e6993bf1ecc5"
         }
       }
@@ -4076,6 +4154,36 @@
       "at": "2026-10-26T06:51:53Z",
       "type": "review",
       "message": "R06 author reports P29/P30 complete as32f3241/01a1245 after212 Python/226 JS/docs plus actual HTTP/clock and fault controls. Root inspected final source/test/docs diff; independent R04 final review assigned before canonical integration. Current six-hour5055adf fixture continues with one page/session/decoder per engine and bounded stores after50 minutes; no final endurance result claimed."
+    },
+    {
+      "at": "2026-10-26T06:54:33Z",
+      "type": "ballot",
+      "message": "R06 explicit Round5 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T06:57:12Z",
+      "type": "ballot",
+      "message": "R06 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:00:10Z",
+      "type": "ballot",
+      "message": "R09 explicit Round5 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:00:10Z",
+      "type": "ballot",
+      "message": "R09 explicit Round6 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:01:19Z",
+      "type": "ballot",
+      "message": "R05 explicit Round4 ballot imported for all5 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T07:02:05Z",
+      "type": "review",
+      "message": "P27/P31 exact6985a1a diff independently READY after root connected Chromium/WebKit checks, including held keyboard scrub and failure focus ownership. First isolated runner reported native offline; actual same-page offline/online control proves harness prerequisite, with original failure retained. P29 remains held: R04 found capture-reference mutation before failed successor stat, violating approved atomicity. R06 correction will require independent re-review; P30 no identified blocker."
     }
   ],
   "validation": [
@@ -4242,6 +4350,12 @@
         "test-results/review-2026-10-26/retention_sweep_pilot_v1-webkit.log"
       ],
       "source": "c084772"
+    },
+    {
+      "summary": "Root independent P27/P31 exact implementation diff and connected two-engine consumer controls",
+      "status": "passed",
+      "evidence": "test-results/review-2026-10-26/root-p27-p31-diff-review.json",
+      "author_commit": "6985a1a23dc32b66d17eb833a943f556f064e6d0"
     }
   ],
   "implementation_worktrees": [
