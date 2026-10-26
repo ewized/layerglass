@@ -32,9 +32,10 @@
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "independent deeper Round2 printer review then ballot",
+      "status": "round 2 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r03/",
-      "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r03/ballot-round2.json"
     },
     {
       "id": "r04",
@@ -88,9 +89,10 @@
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "independently voting on Round2 slate",
+      "status": "round 2 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
-      "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json"
     }
   ],
   "rounds": [
@@ -159,6 +161,19 @@
       "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd",
       "slate_path": "test-results/review-2026-10-26/round-2-slate.json",
       "notes": "Initial deeper independent reports from R01/R07 plus a coordinator reproduction; the coordinator does not vote. Additional independent deep reviews continue. No Round2 implementation authorized yet."
+    },
+    {
+      "id": 3,
+      "phase": "voting",
+      "baseline": "7f2a8cf2e6136a9b41a62e847ff1dab8cc4a57ad",
+      "frozen_at": "2026-10-26T05:24:15Z",
+      "proposal_ids": [
+        "P26"
+      ],
+      "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788",
+      "slate_path": "test-results/review-2026-10-26/round-3-slate.json",
+      "ballots_started": true,
+      "notes": "Separate immutable follow-up slate for R03 concurrency finding; Round2 remains unchanged."
     }
   ],
   "proposals": [
@@ -2455,7 +2470,22 @@
       "risk": "Low/moderate asynchronous ownership; careless resets can introduce render-driven request loops or let stale callbacks damage new requests.",
       "validation_plan": "Cancelled A, successful B, return A loads its recorded reading once; repeated reads while pending do not duplicate, late A promises and replacement sessions remain isolated, actual failures/timeouts stay suppressed until retry, windows remain bounded.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the two-window cancellation fixture against unchanged baseline source: A is aborted, B returns layer 2, then A remains requested:true with pending:null and only two fetches. Releasing suppression solely for unfinished superseded requests addresses this missing historical data without adding polling. Approve the exact ownership guards and deterministic same-window late-callback, replacement-session, duplicate-pending, bounded-window and real-failure/timeout regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:19:43Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I inspected PrinterHistory ownership and reran the offline fixture: cancelled A remains requested:true after B loads, so returning to A issues only two total requests instead of three and supplies no reading. Releasing suppression only for superseded unfinished work fixes that case while the exact scope preserves real failure/timeout suppression, bounded windows, and current-request/session ownership against late callbacks.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:24:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        }
+      }
     },
     {
       "id": "P24",
@@ -2477,7 +2507,22 @@
       "risk": "Low; undocumented clients using discovery.found must use the existing camera catalog. Internal identity and pairing must remain untouched.",
       "validation_plan": "Real HTTP Scan with synthetic URL/saved-code name omits found and secrets in queued/cooldown cases, preserves every other progress/queued/retry property, private candidates/serial/model unchanged, catalog stays sanitized, CORS/header rejection/admission and pairing fixtures pass.",
       "status": "voting",
-      "ballots": {}
+      "ballots": {
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently reran the real HTTP fixture: the sanitized catalog excludes the synthetic code/URL, but both queued and cooldown Scan responses disclose them in discovery.found to the explicitly allowed origin; private candidates remain unchanged and no device probe runs. Omitting found from a copied public progress object matches the existing catalog boundary. Approve preservation of other fields, CORS/header policy, internal admission/binding data and the specified HTTP/pairing regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:19:43Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the actual HTTP fixture and confirmed both queued and cooldown Scan responses expose the synthetic saved code and authenticated URL under discovery.found despite a sanitized catalog. Omitting found from only the response copy closes this remaining serialization path without changing private identity, cache, approval, pairing, scheduling or CORS policy; preserving all other progress fields is appropriately testable.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:24:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        }
+      }
     },
     {
       "id": "P25",
@@ -2497,6 +2542,42 @@
       "evidence_path": "test-results/review-2026-10-26/r07/round2-findings.json",
       "risk": "Low test-only path change; temporary-source cleanup must not discard screenshots expected in the host collector.",
       "validation_plan": "Actual clean Nx site:test outside /app as non-root passes Chromium/WebKit and writes selected/checkout screenshots, no writes to an unrelated /app. Normal run-js.sh --workspace still exports screenshots to its mounted ignored collector; docs check passes.",
+      "status": "voting",
+      "ballots": {
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Independently archived the exact afee31a baseline into a non-root network-isolated container outside /app, built both real static outputs and reproduced Chromium failing at the hardcoded /app/test-results screenshot. A selectable destination with a checkout-relative ignored default fixes this test portability error. Approve the exact scope retaining run-js.sh's mounted collector, both engines/viewports/build prerequisites and validation through clean Nx plus normal workspace harness paths.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:19:43Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "browser-site.js resolves its source and builds relative to the checkout but hardcodes screenshots under /app/test-results, matching the real Chromium ENOENT and both-engine positive-control logs. A selectable destination with a checkout-local default fixes independent site:test portability; explicit run-js.sh collector routing and the stated clean non-root Nx/workspace checks prevent losing normal harness artifacts.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:24:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        }
+      }
+    },
+    {
+      "id": "P26",
+      "round": 3,
+      "revision": 1,
+      "title": "Serialize discovery snapshots with printer pairing mutations",
+      "author": "r03",
+      "source_finding": "R03-R2-C1",
+      "baseline": "7f2a8cf2e6136a9b41a62e847ff1dab8cc4a57ad",
+      "files": [
+        "apps/backend/cameras.py",
+        "apps/backend/tests/test_printer_bindings.py",
+        "docs/camera-adapters.md"
+      ],
+      "scope": "Take Discovery.status after acquiring registry.lock in _catalog so snapshot selection and the catalog identity/quarantine transaction have one ordering boundary. Keep retired-client close outside registry.lock. Preserve current snapshot policy, explicit setup/forget, approved manufacturer admission, private pairing retention, unchanged-serial/offline/legacy behavior, scan scheduling and read-only telemetry. Add a deterministic queued-catalog versus replacement-and-repair regression including persisted/reloaded binding and lock/callback ordering; document the serialization guarantee. No retries, scans, commands or identity migration.",
+      "evidence": "An offline deterministic fixture queues an old catalog snapshot A outside registry.lock, then verifies and explicitly configures replacement B before releasing the queued caller. The caller reverts persisted serial to A and quarantines B code. Scratch-only move of status read under existing lock retains configured B with no quarantine;79 focused printer/discovery/history tests pass on baseline.",
+      "evidence_path": "test-results/review-2026-10-26/r03/round2-findings.json",
+      "risk": "Low/moderate lock-order change; registry already reads discovery.status under its lock elsewhere, and discovery producers do not call registry. Retired telemetry shutdown must stay outside registry.lock to avoid joining callbacks under it.",
+      "validation_plan": "Queue catalog while registry.lock is held, finish new verified B discovery and B setup, release caller; it must read current B only after lock entry and keep B code/serial active both in memory and after reload. No stale source reactivation/quarantine; concurrent unchanged metadata and retired callbacks remain deadlock-free; binding/discovery/history and docs checks pass.",
       "status": "voting",
       "ballots": {}
     }
@@ -2736,6 +2817,21 @@
       "at": "2026-10-26T05:19:16Z",
       "type": "integration",
       "message": "R09 immutable UI commit76bccee reviewed by root and integrated471838b;21 of22 first-round proposals integrated. P06 author reports hidden/offline lifecycle cases pass both engines, awaiting final follow-up and independent re-review. Round2 P23-P25 voting underway; no Round2 code edits authorized yet."
+    },
+    {
+      "at": "2026-10-26T05:19:43Z",
+      "type": "ballot",
+      "message": "R10 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:24:00Z",
+      "type": "ballot",
+      "message": "R03 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:24:15Z",
+      "type": "slate frozen",
+      "message": "P26 registry snapshot/pairing race frozen separately as Round3 because it arrived after Round2 freeze. No new code edits. P23 counterevidence discovered: Stats already retries on replaypositionchange,seeked and opening; root original only-online assertion was incorrect, production impact being reassessed before any implementation."
     }
   ],
   "validation": [
