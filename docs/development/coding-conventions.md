@@ -5,7 +5,7 @@ tags: [development, typescript, conventions]
 
 # TypeScript and browser conventions
 
-This note is the canonical coding guide. The [agent skill](../../.agents/skills/layerglass-typescript/SKILL.md)
+This note is the canonical coding guide. The [agent skill](skills/layerglass-typescript/SKILL.md)
 routes here; it does not keep a second copy. Compiler, formatter and lint settings
 in the repository are executable policy. See [testing](testing.md) for commands,
 [workflow](workflow.md) for commits and [workspace](../architecture/workspace.md)
