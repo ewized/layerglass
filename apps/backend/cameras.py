@@ -6,10 +6,12 @@ import logging
 import os
 from pathlib import Path
 import threading
+from urllib.parse import unquote, urlsplit
 
 from discovery import Discovery, endpoint
 from identity import display_name, identity
 from providers import APPROVED, BY_ID, approved_camera, describe, validate_source, validate_transport_source
+from providers.telemetry import public_stats, sanitized_identity
 
 
 LOG = logging.getLogger('printer-camera')
@@ -126,6 +128,11 @@ class CameraRegistry:
                 camera.update(BY_ID[camera['provider']].public(camera))
                 camera['configured'] = bool(self._source_camera(key))
                 camera['name'] = display_name(self.identities.get(key, {}), camera['host'], key)
+                # Approval/model mapping use the private identity above. Only
+                # its public projection may redact a code inside a serial/model.
+                for field in ('name', 'firmware', 'serial', 'model', 'model_name'):
+                    if field in camera:
+                        camera[field] = public_stats(camera[field], secrets=self._secrets(key))
             preferred = self.default_id if self.default_id in cameras else next(
                 (key for key in self.sources if key in cameras and cameras[key]['configured']), None)
             self.default_id = preferred
@@ -170,7 +177,7 @@ class CameraRegistry:
         with self.lock:
             if source is not None and self.sources.get(key) != source:
                 return
-            updated = dict(self.identities.get(key, {}), **identity(values))
+            updated = sanitized_identity(dict(self.identities.get(key, {}), **values), secrets=self._secrets(key))
             if updated == self.identities.get(key, {}):
                 return
             self.identities[key] = updated
@@ -178,6 +185,9 @@ class CameraRegistry:
                 self._save(self.sources, self.forgotten)
             except OSError:
                 LOG.warning('Could not save printer identity.')
+
+    def _secrets(self, key):
+        return (unquote(urlsplit(self.sources.get(key, '')).password or ''),)
 
     def status(self, key=None):
         if not key:

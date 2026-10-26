@@ -213,6 +213,43 @@ class PrinterTests(unittest.TestCase):
         self.send({'print': {'device': {'name': 'Enclosure printer'}}})
         self.assertEqual(self.identities[-1], {'name': 'Enclosure printer'})
 
+    def test_display_identity_is_redacted_before_callback_and_truncation(self):
+        reports = [
+            {'print': {'dev_name': 'Printer private-code ' + SOURCE}},
+            {'print': {'device': {'name': 'Printer ' + SOURCE}}},
+            {'info': {'device_name': 'Printer private-code'}},
+            {'info': {'module': [{'name': 'ota', 'sw_ver': 'Version private-code ' + SOURCE}]}},
+        ]
+        for report in reports:
+            with self.subTest(report=report):
+                self.send(report)
+                encoded = json.dumps([self.identities[-1], self.printer.identity, self.printer.status()])
+                self.assertNotIn('private-code', encoded)
+                self.assertNotIn('rtsps://', encoded)
+                self.assertIn('[redacted]', encoded)
+        self.send({'print': {'dev_name': 'x' * 124 + 'private-code'}})
+        self.assertEqual(self.identities[-1]['name'], 'x' * 124 + '[red')
+        self.assertEqual(self.printer.identity['serial'], SERIAL)
+
+    def test_short_codes_do_not_redact_private_tls_or_topic_identity(self):
+        updates = []
+        printer = PrinterTelemetry(SOURCE.replace('private-code', '2'),
+                                   saved={'model': 'N6', 'serial': SERIAL},
+                                   on_identity=updates.append, client_factory=Client)
+        self.addCleanup(printer.close)
+        printer.start()
+        connection = SimpleNamespace(getpeercert=lambda: {'subject': ((('commonName', SERIAL),),)})
+        printer.client.on_socket_open(printer.client, None, connection)
+        printer._identity({'name': 'Room 2', 'firmware': '2.0'})
+        printer.client.on_connect(printer.client, None, None, 0, None)
+        self.assertEqual(printer.identity['serial'], SERIAL)
+        self.assertEqual(printer.identity['model'], 'N6')
+        self.assertEqual(updates[-1], {'name': 'Room [redacted]', 'firmware': '[redacted].0'})
+        self.assertEqual(printer.client.subscriptions, [f'device/{SERIAL}/report'])
+        wrong = SimpleNamespace(getpeercert=lambda: {'subject': ((('commonName', '20P000000000002'),),)})
+        with self.assertRaises(ssl.SSLError):
+            printer.client.on_socket_open(printer.client, None, wrong)
+
     def test_wrong_topics_and_malformed_or_oversized_messages_are_ignored(self):
         self.send({'print': {'mc_percent': 99}}, 'device/another-printer/report')
         self.send([])

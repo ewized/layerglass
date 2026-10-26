@@ -4,6 +4,8 @@ import json
 import math
 import re
 
+from identity import identity
+
 
 MAX_BYTES = 64 * 1024
 MAX_NODES = 4096
@@ -11,6 +13,12 @@ MAX_DEPTH = 16
 OMIT = object()
 PRIVATE = re.compile(r'password|passwd|passphrase|accesscode|secret|token|credential|authorization|apikey')
 URL = re.compile(r'\b[a-z][a-z\d+.-]*://[^\s]+', re.I)
+
+
+def sanitized_identity(values, secrets=()):
+    """Clean display fields before truncation; retain private pairing identifiers."""
+    return identity({key: public_stats(value, secrets=secrets) if key in ('name', 'firmware') else value
+                     for key, value in values.items()})
 
 
 def public_stats(value, secrets=(), *, max_bytes=MAX_BYTES, max_nodes=MAX_NODES):

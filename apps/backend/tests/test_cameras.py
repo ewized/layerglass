@@ -18,6 +18,7 @@ from urllib.request import Request, urlopen
 from app import Settings, ViewerServer
 from cameras import CameraRegistry
 from providers.bambu.jpeg import JpegRelay
+from providers.bambu.telemetry import PrinterTelemetry
 from discovery import Discovery, endpoint as stream_endpoint, scan_networks
 from providers import probe as transport_probe
 
@@ -237,6 +238,48 @@ class RegistryTests(unittest.TestCase):
         self.registry.discovery.found[0]['name'] = 'Renamed on printer'
         self.registry.discovery.finished_at = time.time()
         self.assertEqual(self.registry.catalog()['cameras'][0]['name'], 'Renamed on printer')
+
+    def test_reported_public_identity_is_sanitized_in_catalog_store_and_reload(self):
+        key = endpoint(SOURCE)['id']
+        self.registry.catalog()
+        self.registry._remember_identity(key, {'serial': '20P000000000001'})
+        self.registry.get_relay(key)
+        callback = self.registry.telemetry[key].on_identity
+        printer = PrinterTelemetry(SOURCE, saved=self.registry.identities[key], on_identity=callback)
+        self.registry.telemetry[key] = printer
+        printer._print({'dev_name': 'Printer fixture-secret ' + SOURCE})
+        printer._identity({'firmware': 'Version fixture-secret ' + SOURCE})
+        catalog = self.get('/api/cameras')
+        status = self.get('/api/status?camera=' + key)
+        saved = json.loads(self.registry.store.read_text())
+        reloaded = CameraRegistry(Settings(SOURCE), FakeRelay)
+        public = json.dumps([catalog, status, saved['identities'], reloaded.catalog()])
+        self.assertNotIn('fixture-secret', public)
+        self.assertNotIn('rtsps://', public)
+        self.assertIn('[redacted]', public)
+        self.assertEqual(self.registry.identities[key]['serial'], '20P000000000001')
+        self.assertEqual(reloaded.identities[key]['model'], 'N6')
+
+    def test_old_public_identity_is_redacted_on_projection_without_changing_private_ids(self):
+        self.registry.catalog()
+        key = endpoint(SOURCE)['id']
+        self.registry._save(self.registry.sources, self.registry.forgotten,
+                            identities={key: {'model': 'N6', 'serial': '20P000000000001',
+                                              'name': 'Printer fixture-secret ' + SOURCE,
+                                              'firmware': 'Version fixture-secret'}})
+        reloaded = CameraRegistry(Settings(SOURCE), FakeRelay)
+        self.assertNotIn('fixture-secret', json.dumps(reloaded.catalog()))
+        self.assertNotIn('rtsps://', json.dumps(reloaded.catalog()))
+        self.assertEqual(reloaded.identities[key]['serial'], '20P000000000001')
+        self.assertEqual(reloaded.identities[key]['model'], 'N6')
+        short_source = SOURCE.replace('fixture-secret', '2')
+        self.registry._save({key: short_source}, self.registry.forgotten,
+                            identities={key: {'model': 'N6', 'serial': '20P000000000001'}})
+        short = CameraRegistry(Settings(short_source), FakeRelay)
+        camera = short.catalog()['cameras'][0]
+        self.assertEqual(short.identities[key]['serial'], '20P000000000001')
+        self.assertEqual(short._source_camera(key)['model_name'], 'Bambu Lab X2D')
+        self.assertIn('[redacted]', camera['serial'])
 
     def test_configuration_persists_privately_and_restart_is_scoped_to_selection(self):
         first = endpoint(SOURCE)['id']

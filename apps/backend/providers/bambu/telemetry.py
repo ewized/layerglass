@@ -13,9 +13,9 @@ from urllib.parse import unquote, urlsplit
 import paho.mqtt.client as mqtt
 
 
-from identity import SERIAL, display_name, identity, text
+from identity import SERIAL, display_name, text
 from ..policy import APPROVED
-from ..telemetry import public_stats, merge_report
+from ..telemetry import public_stats, merge_report, sanitized_identity
 
 MODELS = json.loads(Path(__file__).with_name('models.json').read_text())
 
@@ -81,7 +81,7 @@ class PrinterTelemetry:
     def __init__(self, source, saved=None, on_identity=None, client_factory=None):
         self.host = urlsplit(source).hostname
         self.code = unquote(urlsplit(source).password or '')
-        self.identity = identity(saved or {})
+        self.identity = sanitized_identity(saved or {}, secrets=(self.code,))
         self.on_identity = on_identity
         self.lock = threading.Lock()
         self.client = None
@@ -132,15 +132,16 @@ class PrinterTelemetry:
             self.client.loop_stop()
 
     def _identity(self, update):
+        update = sanitized_identity(update, secrets=(self.code,))
         with self.lock:
             if self.closed:
                 return
-            updated = dict(self.identity, **identity(update))
+            updated = dict(self.identity, **update)
             if updated == self.identity:
                 return
             self.identity = updated
         if self.on_identity:
-            self.on_identity(identity(update))
+            self.on_identity(update)
 
     def _socket_open(self, client, userdata, connection):
         certificate = connection.getpeercert()

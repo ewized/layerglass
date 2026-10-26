@@ -36,6 +36,12 @@ and large IDs. Public copies are independent of the live merged state. No full
 unfiltered MQTT messages or connection credentials are returned. Stats show
 connection failures and stale reports, retaining the last known readings.
 
+Reported display names and firmware use the same URL/code filtering before
+their identity callback, length limit and persistence. The catalog also filters
+public identity values from older saved records. Private verified serial/model
+values remain intact for certificate pinning, topic matching and model mapping;
+redaction of a public label never changes that authentication identity.
+
 TLS verifies the bundled Bambu CA chain. Bambu certificates use their serial as
 the certificate name. A Paho socket-open callback validates that identity before
 MQTT CONNECT sends credentials; later connections must match the saved serial.
