@@ -4,40 +4,49 @@ on:
   push:
     branches: [main, 'codex/**']
   pull_request:
-  workflow_call:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Finish an in-progress production publication before the next main run.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   check:
-    name: Container and browser checks
-    runs-on: ubuntu-24.04
-    timeout-minutes: 25
-    steps:
-      - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Validate workflow syntax
-        run: >-
-          docker run --rm --name codex__layerglass_actionlint__${{ github.run_id }}
-          -v "$PWD:/repo:ro" -w /repo rhysd/actionlint:1.7.12 -color
-      - name: Validate Compose configuration
-        run: |
-          docker compose config --quiet
-          docker compose -f compose.dev.yaml config --quiet
-      - name: Build and test
-        run: ./scripts/check.sh all
-      - name: Upload diagnostic artifacts
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: check-results
-          path: test-results/
-          if-no-files-found: ignore
-          retention-days: 7
+    name: Source checks
+    uses: ./.github/workflows/checks.yml
+    permissions:
+      contents: read
+
+  hosting:
+    name: Build and validate public assets
+    uses: ./.github/workflows/cloudflare-check.yml
+    permissions:
+      contents: read
+
+  deploy-sites:
+    name: Deploy production sites
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    needs: [check, hosting]
+    uses: ./.github/workflows/cloudflare.yml
+    with:
+      artifact-id: ${{ needs.hosting.outputs.artifact-id }}
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    permissions:
+      contents: read
+
+  publish-image:
+    name: Publish production Docker image
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    needs: [check, hosting]
+    uses: ./.github/workflows/publish-image.yml
+    with:
+      channel: main
+    permissions:
+      contents: read
+      packages: write

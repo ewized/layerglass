@@ -154,30 +154,32 @@ issuance/DNS propagation may need time before verification can pass.
 
 ## GitHub delivery
 
-The [GitHub deployment settings file](github-deployment.md) lists the exact two
-secret names, their environment, the repository enable variable and token scope.
+The [GitHub deployment settings](github-deployment.md) list the two secrets and
+production environment. No repository enable variable is required.
 
-The [public hosting checks](../../.github/workflows/cloudflare-check.yml) run on
-relevant main pushes and pull requests without credentials. They build both
-static apps, exercise hosting-policy tests, run Wrangler dry-runs and verify
-headers, JavaScript MIME and unknown-route behavior against its local asset
-engine. No private LAN or physical printer is involved.
+The [CI entrypoint](../../.github/workflows/ci.yml) runs reusable source and
+[hosting checks](../../.github/workflows/cloudflare-check.yml) once per pipeline.
+Hosting builds both static apps, checks policy and routing with local Wrangler,
+then records all file hashes and the full Git revision in one uploaded artifact.
+These checks have no deployment credentials and also run for branches and PRs.
 
-The [public deployment workflow](../../.github/workflows/cloudflare.yml) is
-disabled until repository variable `CLOUDFLARE_DEPLOY_ENABLED=true` is configured.
-It skips harmlessly while that variable is absent. Enabling it requires
-`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets in the
-`cloudflare-production` GitHub environment; create that environment and restrict
-its deployment branch to `main`. Repository secrets are an alternative if the
-environment intentionally inherits them. No secrets are required by public PR
-checks. Do not use `pull_request_target` to deploy untrusted branch code.
+After both checks pass on `main`, the
+[website publishing job](../../.github/workflows/cloudflare.yml) downloads that
+exact artifact by ID, verifies its revision and complete file manifest, and
+publishes both domains without rebuilding. It checks HTTPS, headers, module MIME,
+404 routing and public entrypoint bytes against the validated output. The same
+main pipeline also publishes the Docker image; see [CI/CD](../development/ci-cd.md).
 
-When enabled, main pushes and manual runs validate source through reusable CI,
-build the static apps, test/check/dry-run hosting, then deploy the two domains.
-The workflow verifies the resulting HTTPS endpoints. Configure the secrets and
-branch restriction before setting the enable variable. Committing the workflow
-does not itself configure the GitHub environment, supply secrets, or establish a
-Cloudflare GitHub Builds connection.
+Set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in `cloudflare-production`,
+restrict the environment to `main`, and avoid per-run approval requirements for
+unattended delivery. Missing secrets fail clearly instead of skipping deployment.
+The former `CLOUDFLARE_DEPLOY_ENABLED` variable is ignored. Deployment summaries
+record source commits and targets; Wrangler prints Worker version IDs.
+
+Use Actions → CI → Run workflow on `main` for a fresh validation/deployment.
+After a publishing-only failure, fix credentials or permissions and rerun failed
+jobs to reuse the successful validation artifact. Branch/PR runs never publish.
+No `pull_request_target` job deploys untrusted code or receives printer secrets.
 
 ## Rollback and inventory
 

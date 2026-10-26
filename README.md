@@ -59,14 +59,16 @@ docker compose -f compose.dev.yaml up --build
 - [Architecture](docs/architecture/overview.md) · [Approved printer adapters](docs/camera-adapters.md)
 - [Nx workspace and targets](docs/architecture/workspace.md) — Python backend, native web app and product website.
 - [Backend providers](docs/architecture/backend-providers.md) · [Timeline events](docs/timeline-events.md) · [Cloudflare hosting](docs/operations/cloudflare.md)
-- [GitHub deployment settings](docs/operations/github-deployment.md) — the secrets and repository variable needed to publish the site and app.
+- [GitHub deployment settings](docs/operations/github-deployment.md) — the two secrets needed for automatic site and app deployment.
 - [AGENTS.md](AGENTS.md) — project guidelines and task-specific skill router.
 
 Commits use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 This repository imports the working prototype in logical parts; the
 [import record](docs/decisions/0001-prototype-import.md) explains that history.
-Passing version tags can publish `ghcr.io/ewized/layerglass` images; deployments
-remain an explicit operator action.
+Successful `main` pipelines automatically deploy the website/app and publish
+`ghcr.io/ewized/layerglass:latest` plus a commit-specific image tag. Version tags
+publish versioned images in the separate `stable` channel. Local installation
+operators choose when to pull and apply an image; see [CI/CD](docs/development/ci-cd.md).
 
 Project home: [layer.glass](https://layer.glass). A project license has not yet
 been selected. Bundled third-party code retains its [license notices](apps/web/src/vendor/LICENSE).

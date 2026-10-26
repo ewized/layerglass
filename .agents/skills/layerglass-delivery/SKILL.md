@@ -31,6 +31,12 @@ targets, paths and static-hosting outputs.
   never attach those checks to a runner with access to someone's printer LAN.
 - Pin workflow actions by full commit SHA. Keep dependency updates reviewable.
   Do not put credentials in build args, logs, labels, caches or artifacts.
+- CI is the main/branch/PR entrypoint. Its reusable source and hosting checks run
+  once; successful main commits automatically publish both public sites and a
+  multi-architecture Docker image. Promote the validated static artifact by ID
+  and verify its revision/hashes instead of rebuilding it during deployment.
+- Main owns the rolling `latest`/`sha-*` image channel. Version tags own the
+  version/`release-sha-*`/`stable` channel and must not replace main `latest`.
 - Keep `VERSION`, package metadata and Compose's default image version aligned.
   A matching `v` tag reruns CI before publishing amd64/arm64 images to GHCR.
   Image publication does not deploy to an installation.

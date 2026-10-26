@@ -7,83 +7,71 @@ tags: [operations, github, cloudflare, delivery]
 
 [Vault home](../index.md) · [Cloudflare hosting](cloudflare.md) · [CI/CD](../development/ci-cd.md)
 
-For `ewized/layerglass`, the
-[Deploy public sites workflow](../../.github/workflows/cloudflare.yml) needs
-**two secrets and one repository variable**. It publishes `layer.glass` and
-`app.layer.glass` to Cloudflare Workers Static Assets.
+The [CI workflow](../../.github/workflows/ci.yml) automatically deploys
+`layer.glass` and `app.layer.glass` and publishes the production Docker image
+after a main-branch commit passes both source and hosting checks. No enable
+variable or manual deployment action is required.
 
-## 1. Add the two secrets
+## Cloudflare secrets
 
 Open [repository Settings → Environments](https://github.com/ewized/layerglass/settings/environments),
-create/select **`cloudflare-production`**, then add these **Environment secrets**:
+create/select **`cloudflare-production`**, and add these **Environment secrets**:
 
-| Secret name | Value to enter |
+| Secret name | Value |
 | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | A dedicated Cloudflare deployment API token with access to the two Workers below. |
-| `CLOUDFLARE_ACCOUNT_ID` | The Cloudflare account ID that owns both Workers and the `layer.glass` zone. Use the account ID, not the zone ID. |
+| `CLOUDFLARE_API_TOKEN` | A Cloudflare deployment API token allowed to update the two Workers below |
+| `CLOUDFLARE_ACCOUNT_ID` | The account ID owning both Workers and the `layer.glass` zone; not a zone ID |
 
-Copy the account ID from your Cloudflare account; the
-[official lookup instructions](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/)
-show where to find it.
+The [dotenv template](../../infra/cloudflare/.env.example) lists the same keys.
+GitHub does not read that file automatically. Enter actual values in the GitHub
+settings; keep filled local files outside the checkout. Find the account ID with
+[Cloudflare's account lookup guide](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/).
 
-The existing [dotenv template](../../infra/cloudflare/.env.example) lists these
-same two keys. Its blank values are placeholders. GitHub does not read this
-file automatically; enter the names and actual values in GitHub settings.
-Keep any filled local copy outside the checkout.
+Restrict the environment's **Deployment branches and tags** to `main`. Leave
+per-deployment reviewer approvals off when unattended continuous deployment is
+wanted. Repository-level secrets with the same names are supported too;
+environment secrets take precedence in the publishing job. GitHub documents
+[environment availability and protections](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).
 
-Configure this environment's **Deployment branches and tags** to allow the
-`main` branch. Repository-level Actions secrets with the same names are also
-supported by the workflow; environment secrets keep the deployment credentials
-scoped to the publishing job. GitHub plan availability for private repositories
-is described in its
-[environment guide](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).
+The old `CLOUDFLARE_DEPLOY_ENABLED` repository variable is no longer read and can
+be removed. Missing secrets now fail the deployment job with the two required
+names, while branch and PR checks remain credential-free.
 
-## 2. Add the enable variable
+## Cloudflare token permissions
 
-Open [Settings → Secrets and variables → Actions → Variables](https://github.com/ewized/layerglass/settings/variables/actions)
-and add this **repository variable**:
-
-| Variable name | Value |
-| --- | --- |
-| `CLOUDFLARE_DEPLOY_ENABLED` | `true` |
-
-Use the lowercase value `true`. This is a variable, not a secret, and must be
-available at repository scope: the workflow checks it before its validation
-jobs run, outside the `cloudflare-production` environment. An absent value or
-`false` leaves deployment skipped. Add the credentials before enabling it.
-
-## 3. Give the Cloudflare token deployment access
-
-For the existing installation, use an account-owned token with **Workers Editor**
-access to these Workers in the selected account:
+Prefer a dedicated deployment token for the selected account and these Workers:
 
 | Worker | Custom Domain |
 | --- | --- |
 | `layerglass-site` | `layer.glass` |
 | `layerglass-web` | `app.layer.glass` |
 
-Changing Custom Domains also needs **Zone → Workers Routes → Write** for the
-`layer.glass` zone. Updating an existing Worker without changing its domain
-connection needs only the Worker Editor role. Creating a missing Worker needs
-Workers product-level Admin for initial setup; these two Workers already exist.
-Cloudflare documents these
-[roles and token scopes](https://developers.cloudflare.com/workers/authorization/workers/).
+Use Workers Editor access to update existing Workers. Changing their Custom
+Domains also needs **Zone → Workers Routes → Write** for `layer.glass`.
+Creating a missing Worker requires product-level permission for initial setup.
+See [Cloudflare token roles](https://developers.cloudflare.com/workers/authorization/workers/).
+No zone-wide routing changes or unrelated Workers belong in this deployment.
 
-## 4. Run deployment
+## Docker publication
 
-The application and deployment workflow must be merged into `main`. Once the
-secrets and variable are set, a push to `main` deploys after CI and hosting checks
-pass. For an existing commit, open **Actions → Deploy public sites → Run workflow**
-and select **`main`**. Manual runs from other branches are skipped as well.
+Image jobs use GitHub's automatic `GITHUB_TOKEN` with `packages: write`. Do not
+add a PAT, registry-password secret or `GITHUB_TOKEN` secret. A successful main
+pipeline publishes `ghcr.io/ewized/layerglass:latest` and a `sha-*` tag; matching
+version tags publish versioned images and the separate `stable` channel.
+See the [channel and rollback table](../development/ci-cd.md).
 
-Inspect the **Publish website and demo app** job, including its final HTTPS
-verification step. This workflow deploys only the public static apps. Backend
-runtime configuration and per-printer access codes stay on your own hardware.
+The publisher verifies amd64/arm64 manifests and prints the exact image digest
+in its job summary. Inspect GHCR package visibility and Actions access on first
+publication. An existing local Docker container is updated by its operator.
 
-## Container releases
+## First run and recovery
 
-The [Release image workflow](../../.github/workflows/release.yml) uses GitHub's
-automatic `GITHUB_TOKEN` with `packages: write` to publish GHCR images. You do
-not need to create a PAT, registry-password secret or `GITHUB_TOKEN` secret.
-Image publication follows a matching `v*` version tag and does not update your
-local Docker container. See [CI/CD](../development/ci-cd.md) for that release flow.
+Merge the workflow into `main` after configuring the secrets. The resulting CI
+run validates once, promotes the validated website/app artifact, and publishes
+the Docker image. Review both publication jobs and their summaries.
+
+For an existing main commit, use **Actions → CI → Run workflow → main**.
+After correcting a credential or permission failure, **Re-run failed jobs**
+reuses successful validation and its artifact; a full rerun rebuilds them.
+Expired artifacts need a full rerun. Publication from other branches and pull
+requests is disabled.

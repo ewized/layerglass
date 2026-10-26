@@ -1,53 +1,34 @@
 name: Public hosting checks
 
 on:
-  push:
-    branches: [main, 'codex/**']
-    paths:
-      - 'infra/cloudflare/**'
-      - 'scripts/cloudflare.mjs'
-      - 'scripts/build-static.mjs'
-      - 'apps/web/**'
-      - 'apps/site/**'
-      - 'package*.json'
-      - 'nx.json'
-      - 'VERSION'
-      - '.github/workflows/cloudflare*.yml'
-  pull_request:
-    paths:
-      - 'infra/cloudflare/**'
-      - 'scripts/cloudflare.mjs'
-      - 'scripts/build-static.mjs'
-      - 'apps/web/**'
-      - 'apps/site/**'
-      - 'package*.json'
-      - 'nx.json'
-      - 'VERSION'
-      - '.github/workflows/cloudflare*.yml'
   workflow_call:
+    outputs:
+      artifact-id:
+        description: Immutable ID of the validated public assets
+        value: ${{ jobs.hosting.outputs.artifact-id }}
 
 permissions:
   contents: read
-
-concurrency:
-  group: hosting-check-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   hosting:
     name: Static apps and Cloudflare assets
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    outputs:
+      artifact-id: ${{ steps.assets.outputs.artifact-id }}
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Validate public hosting without credentials
+      - name: Build and validate public hosting without credentials
         run: |
           docker run --rm --init --name codex__layerglass_hosting_check__${{ github.run_id }} \
             --user "$(id -u):$(id -g)" -e npm_config_cache=/tmp/npm-cache \
             -e NX_DAEMON=false -e NX_NO_CLOUD=true -e WRANGLER_SEND_METRICS=false \
+            -e LAYERGLASS_REVISION="$GITHUB_SHA" \
             -v "$PWD:/app" -w /app node:24-bookworm sh -ec '
               npm ci
               npx nx run-many -t build --projects=web,site
@@ -57,4 +38,14 @@ jobs:
               node scripts/cloudflare.mjs check all
               node scripts/cloudflare.mjs dry-run all
               npm --prefix infra/cloudflare run test:local
+              node scripts/delivery.mjs prepare "$LAYERGLASS_REVISION"
+              node scripts/delivery.mjs verify "$LAYERGLASS_REVISION"
             '
+      - name: Preserve the validated assets
+        id: assets
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: public-assets-${{ github.sha }}-${{ github.run_attempt }}
+          path: dist/apps/
+          if-no-files-found: error
+          retention-days: 7

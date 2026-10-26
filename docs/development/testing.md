@@ -35,9 +35,14 @@ Pass representative suite names to focus a browser run, for example
 | Media/platform UI | `media.test.js`, `cast-sender.test.js`, browser fullscreen/Google Cast suites |
 | Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
 | Keyboard focus and pending editors | `browser-keyboard-focus.js` (Chromium/WebKit keyboard navigation, Stats, onboarding cancellation and rejected setup) |
+| Delivery artifacts and public routing | `infra/cloudflare/tests/delivery.test.mjs`, `hosting.test.mjs`, local Wrangler checks |
 | Shell/update behavior | `test_pwa.py`, `pwa.test.js`, browser PWA suite |
 
 The selected browser list is maintained in [`apps/web/tests/run-browser.js`](../../apps/web/tests/run-browser.js).
+GitHub CI also runs the independent hosting workflow: it tests artifact source
+identity, tampered/missing/extra files, private output and symlink rejection,
+public-byte verification, headers and real 404 routing before publication.
+
 Each suite has a bounded timeout. It includes real native-video decoding,
 pause/resume, media-worker continuity, SSE/recovery, real IndexedDB reads and
 writes, and a 540-point simulated 45-minute thumbnail sweep with zero preview

@@ -1,78 +1,85 @@
 name: Deploy public sites
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      artifact-id:
+        description: Immutable validated artifact from this CI run
+        required: true
+        type: string
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
 
 permissions:
   contents: read
 
-concurrency:
-  group: cloudflare-production
-  cancel-in-progress: false
-
 jobs:
-  validate:
-    name: Validate deployment source
-    if: vars.CLOUDFLARE_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/ci.yml
-    permissions:
-      contents: read
-
-  validate-hosting:
-    name: Validate static hosting
-    if: vars.CLOUDFLARE_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/cloudflare-check.yml
-    permissions:
-      contents: read
-
   deploy:
-    name: Publish website and demo app
-    needs: [validate, validate-hosting]
+    name: Publish website and app
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    environment: cloudflare-production
+    concurrency:
+      group: cloudflare-production
+      cancel-in-progress: false
+    environment:
+      name: cloudflare-production
+      url: https://app.layer.glass
     steps:
-      - name: Check out tested source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Build, validate and dry-run static hosting
-        run: |
-          docker run --rm --init --name codex__layerglass_cf_build__${{ github.run_id }} \
-            --user "$(id -u):$(id -g)" -e npm_config_cache=/tmp/npm-cache \
-            -e NX_DAEMON=false -e NX_NO_CLOUD=true -e WRANGLER_SEND_METRICS=false \
-            -v "$PWD:/app" -w /app node:24-bookworm sh -ec '
-              npm ci
-              npx nx run-many -t build --projects=web,site
-              npm --prefix infra/cloudflare ci
-              npm --prefix infra/cloudflare test
-              node scripts/cloudflare.mjs prepare all
-              node scripts/cloudflare.mjs check all
-              node scripts/cloudflare.mjs dry-run all
-            '
       - name: Check deployment credentials
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
-            echo 'Configure both Cloudflare environment secrets before enabling deployments.' >&2
+            echo 'Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in the cloudflare-production environment.' >&2
             exit 1
           fi
-      - name: Deploy the two public domains
+      - name: Check out the validated source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Download the validated public assets
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ inputs.artifact-id }}
+          path: dist/apps
+      - name: Verify artifact and deploy both domains
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           docker run --rm --init --name codex__layerglass_cf_deploy__${{ github.run_id }} \
-            --user "$(id -u):$(id -g)" \
+            --user "$(id -u):$(id -g)" -e npm_config_cache=/tmp/npm-cache \
             -e CLOUDFLARE_API_TOKEN -e CLOUDFLARE_ACCOUNT_ID \
-            -e WRANGLER_SEND_METRICS=false -v "$PWD:/app" -w /app \
-            node:24-bookworm node scripts/cloudflare.mjs deploy all
-      - name: Verify HTTPS, headers and static-only routing
+            -e LAYERGLASS_REVISION="$GITHUB_SHA" -e WRANGLER_SEND_METRICS=false \
+            -v "$PWD:/app" -w /app node:24-bookworm sh -ec '
+              npm --prefix infra/cloudflare ci
+              node scripts/delivery.mjs verify "$LAYERGLASS_REVISION"
+              node scripts/cloudflare.mjs check all
+              node scripts/cloudflare.mjs deploy all
+              node scripts/delivery.mjs verify "$LAYERGLASS_REVISION"
+            '
+      - name: Verify deployed HTTPS, headers and exact asset bytes
         run: |
           docker run --rm --init --name codex__layerglass_cf_verify__${{ github.run_id }} \
-            --user "$(id -u):$(id -g)" -v "$PWD:/app:ro" -w /app \
-            node:24-bookworm node scripts/cloudflare.mjs verify all
+            --user "$(id -u):$(id -g)" -e LAYERGLASS_REVISION="$GITHUB_SHA" \
+            -v "$PWD:/app:ro" -w /app node:24-bookworm sh -ec '
+              node scripts/cloudflare.mjs verify all
+              node scripts/delivery.mjs published "$LAYERGLASS_REVISION"
+            '
+      - name: Record deployment
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          {
+            echo '### Production websites'
+            echo "Source: $SOURCE_SHA"
+            echo '- https://layer.glass'
+            echo '- https://app.layer.glass'
+            echo 'Published the validated CI artifact and verified its public entrypoint bytes.'
+          } >> "$GITHUB_STEP_SUMMARY"

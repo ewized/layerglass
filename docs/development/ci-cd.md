@@ -1,73 +1,101 @@
 ---
-title: CI and container releases
+title: Continuous integration and delivery
 tags: [development, delivery]
 ---
 
-# CI and container releases
+# Continuous integration and delivery
 
-[Vault home](../index.md) · [Workflow](workflow.md)
+[Vault home](../index.md) · [Workflow](workflow.md) · [GitHub settings](../operations/github-deployment.md)
 
-## Continuous integration
+## Main is the production branch
 
-[`ci.yml`](../../.github/workflows/ci.yml) runs on pushes to `main` and `codex/**`
-topic branches, and on pull requests. It is reusable by the release workflow.
-Topic branches can be validated before a pull request exists. It validates both Compose
-files and workflow syntax, builds the runtime container, then runs Python,
-JavaScript and representative Chromium/WebKit checks. The README badge points
-to this workflow. Artifacts expire after seven days.
+Every successful `main` pipeline deploys the product website and app to Cloudflare
+and publishes a Docker image to GHCR. Pull requests and `codex/**` branch pushes
+run the same source and hosting checks without production credentials or writes.
+The README badge links to the [CI entrypoint](../../.github/workflows/ci.yml).
+There is no deployment-enable variable. Missing credentials fail the publishing
+job explicitly instead of silently skipping production.
 
-Checks use GitHub-hosted Ubuntu runners with read-only repository permissions.
-The camera/telemetry fixture is generated locally in disposable containers;
-there are no printer credentials, LAN runners or deployment secrets. External
-actions are pinned by commit SHA. Dependabot proposes weekly action, npm and
-Python dependency updates. Review vendored hls.js separately using its recorded
-version/hashes and license notices.
+| Workflow | Responsibility |
+| --- | --- |
+| [CI](../../.github/workflows/ci.yml) | Main/branch/PR entrypoint; waits for both check jobs before production publication |
+| [Source checks](../../.github/workflows/checks.yml) | Compose/actionlint, Docker build, Python/JavaScript, Nx and all registered browser suites |
+| [Hosting checks](../../.github/workflows/cloudflare-check.yml) | Build both static apps once; test hosting; record a source/file manifest; upload the validated artifact |
+| [Website deployment](../../.github/workflows/cloudflare.yml) | Download that artifact by immutable ID; verify hashes; deploy both domains and verify public bytes |
+| [Image publication](../../.github/workflows/publish-image.yml) | Shared amd64/arm64 Docker build, GHCR publication and digest/platform verification |
+| [Versioned release](../../.github/workflows/release.yml) | Validate a matching version tag, then call the same image publisher in the release channel |
 
-The actions run on Node.js 24 using GitHub-hosted Ubuntu runners. Keep that
-runtime requirement in mind before introducing self-hosted runners. The check
-script reads the exact Playwright package version to select the matching
-[browser container](https://playwright.dev/docs/docker), so a dependency update
-cannot leave the browser binaries on an older release.
+Source and hosting checks run in parallel on GitHub-hosted Ubuntu runners.
+Generated Docker fixtures need no printer, private LAN runner or deployment
+secrets. Actions use full commit pins; Node, Playwright, Nx and Wrangler run in
+containers. Dependabot proposes dependency updates separately.
 
-## Versioned image publication
+After both checks pass on `main`, website deployment and image publication run
+in parallel. An in-progress main pipeline is not canceled by another merge.
+Publication jobs are serialized for their production targets. Branch/PR runs
+can cancel superseded checks. Keep topic branches short-lived; merge reviewed
+changes and delete their remote branches after integration.
 
-[`release.yml`](../../.github/workflows/release.yml) responds to `v*` tags. Before
-publishing it reruns the reusable CI workflow for that exact tagged source and
-checks that the tag matches `VERSION`. Package versions must agree as well.
+## Build once, promote the validated files
 
-1. Update `VERSION`, both package metadata files, the Dockerfile build-argument
-   default and Compose's default image version together.
-2. Review and merge the release change; check CI.
-3. Create an annotated matching version tag, for example `v0.1.0`, and push it.
-4. Inspect the Release image run and the resulting GHCR package before deployment.
+The hosting job prepares `dist/apps/site` and `dist/apps/web`, including security
+and freshness headers. [The delivery helper](../../scripts/delivery.mjs) writes a
+manifest outside the public directories containing the full Git SHA and every
+asset's SHA-256 and size. It rejects unexpected output directories, private
+configuration and symlinks. The manifest and both builds form one immutable
+GitHub artifact; diagnostics and public assets are separate artifacts.
 
-The release job uses the repository's automatic `GITHUB_TOKEN` with
-`packages: write`; no personal access token is required. It builds Linux amd64
-and arm64 images, with provenance/SBOM attestations and OCI source/version/revision
-labels. Tags include the exact version and commit SHA. Stable releases also
-update `latest`; prereleases do not. Treat published version tags as immutable.
+Production downloads the exact artifact ID from the successful hosting job.
+It checks the source SHA and complete file set before publishing. It installs
+only the locked deployment toolchain and does not rebuild the applications.
+The Cloudflare helper verifies routing/headers; the delivery helper also checks
+that public HTML, bootstrap and service-worker bytes match the validated files.
+The deployment summary records the source revision and both production URLs.
+Artifacts expire after seven days; rerun the pipeline if an old artifact expired.
 
-The initial source import does not push a release tag or claim an existing image.
-On first publication, verify the GHCR package visibility/settings permit the
-intended users to pull it. Repository Actions/package policies may need to allow
-publication. A workflow file alone cannot guarantee those account-level settings.
+## Docker channels
 
-## Deployment and rollback
+| Trigger | Published tags |
+| --- | --- |
+| Successful main pipeline | `latest`, `sha-FULL_COMMIT_SHA` |
+| Matching version tag, for example `v0.1.0` | `0.1.0`, `release-sha-FULL_COMMIT_SHA`, plus `stable` for a non-prerelease |
 
-Image publication does not deploy to a NAS or replace an existing container.
-An operator selects a tested version in `LAYERGLASS_VERSION`, backs up `/data`,
-then runs `docker compose pull` and `docker compose up -d --no-build`.
-Roll back by selecting the prior tested image version and recreating the service,
-accounting for any future data migrations in that release's notes.
+Images live at `ghcr.io/ewized/layerglass` and contain Linux amd64 and arm64
+platforms, provenance/SBOM attestations, and OCI source/version/revision labels.
+The job verifies both architectures and records the exact image digest for
+rollback. Use a digest when an installation needs an immutable image reference.
+Versioned releases cannot overwrite the rolling main `latest` channel.
 
-Never put access codes or live stream URLs in workflow variables, build args or
-image labels. Current Compose deployments use their own `.env` and local volumes.
+GitHub's automatic `GITHUB_TOKEN` gets `packages: write` only in publishing jobs;
+no PAT or registry-password secret is needed. On first publication, inspect the
+GHCR package's visibility and repository access settings for the intended users.
+Publishing an image does not recreate an operator's existing installation.
 
-## Public website and demo
+For a versioned release, update `VERSION`, package metadata, the Dockerfile
+build-argument default and Compose default version together. Merge and validate,
+then create an annotated matching `v*` tag. The tag pipeline revalidates that
+exact source and refuses a tag/version mismatch. Treat version tags as immutable.
 
-Cloudflare hosts the separate static product website and demo app. Its
-[deployment guide](../operations/cloudflare.md) covers exact domain scopes,
-containerized build/check/dry-run commands, a gated GitHub workflow and rollback.
-Use [GitHub deployment settings](../operations/github-deployment.md) for the
-required secrets, repository variable and setup steps.
-Public hosting never deploys a Python backend or receives private camera feeds.
+## Deployment recovery and rollback
+
+Both [Cloudflare secrets](../operations/github-deployment.md) belong in the
+`cloudflare-production` environment, restricted to `main`. For continuous
+deployment, that environment must not require a manual approval on each run.
+The only production domains are `layer.glass` and `app.layer.glass`; no Python
+backend, printer credentials or private camera feeds enter public hosting.
+
+If one publication job fails, the other may have succeeded. Inspect both job
+summaries. Fix credentials or permissions, then rerun failed jobs to reuse the
+successful checks and artifact. Actions → CI → Run workflow on `main` performs
+a fresh complete validation and publication when that is preferable.
+
+Revert a faulty source change through Git and merge the revert into `main` to
+ship the prior behavior through the same checks. For urgent website rollback,
+select the prior version of each exact Worker as described in
+[Cloudflare operations](../operations/cloudflare.md). Follow with the source
+revert so the next automatic deployment preserves that rollback.
+
+For Docker installations, select the recorded prior image tag/digest, back up
+`/data`, pull and recreate the service. The installation operator chooses this
+update; account for future data migrations in release notes. Never put access
+codes, stream URLs or tokens in image labels, build arguments or artifacts.
