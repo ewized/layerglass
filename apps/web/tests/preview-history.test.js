@@ -8,9 +8,9 @@ const settle = history => Promise.all([...history.writes]);
 function diskStore() {
   const rows = new Map(), removed = [];
   return { available: true, rows, removed,
-    put: async row => { rows.set(row.session + row.key, row); return true; },
+    put: async (row, { current = () => true } = {}) => { if (!current()) return false; rows.set(row.session + row.key, row); return true; },
     get: async (token, key) => rows.get(token + key),
-    remove: async (token, key) => rows.delete(token + key),
+    remove: async (token, key, owner) => { if (owner === undefined || rows.get(token + key)?.owner === owner) rows.delete(token + key); },
     removeSession: async token => { removed.push(token); for (const [key, row] of rows) if (row.session === token) rows.delete(key); },
   };
 }
@@ -201,6 +201,103 @@ test('missing disk assets drop stale metadata and bounded frame history trims th
   disk.rows.clear();
   assert.equal(await h.get(15, 0), null);
   assert.deepEqual(h.keys, [20, 25]);
+});
+
+test('a retired conversion cannot overwrite a newer retained capture in the same bucket', async () => {
+  const disk = diskStore(), releases = [];
+  const put = disk.put;
+  disk.put = (row, guard) => new Promise(resolve => releases.push(async () => resolve(await put(row, guard))));
+  const h = new PreviewHistory({ disk, maxBytes: 1 }); h.setSession(session('page'));
+  const old = h.addFrame(10.123678, blob(1));
+  h.trim(11.5);
+  const next = h.addFrame(11.5, blob(2));
+  assert.notEqual(next.owner, old.owner);
+  await releases[1](); await Promise.resolve();
+  await releases[0](); await settle(h);
+  assert.equal(h.assets.get('frame:10'), next);
+  assert.equal(disk.rows.get('pageframe:10').owner, next.owner);
+  assert.equal(new Uint8Array(await (await h.get(11.5)).asset.blob.arrayBuffer())[0], 2);
+  assert.equal(h.writes.size, 0);
+});
+
+test('cleanup of an already committed retired write cannot delete its replacement', async () => {
+  const disk = diskStore(), put = disk.put;
+  let complete;
+  disk.put = async (row, guard) => {
+    const saved = await put(row, guard);
+    if (!complete) return new Promise(resolve => { complete = () => resolve(saved); });
+    return saved;
+  };
+  const h = new PreviewHistory({ disk, maxBytes: 1 }); h.setSession(session('page'));
+  h.addFrame(10.123678, blob(1)); await Promise.resolve(); await Promise.resolve();
+  h.trim(11.5);
+  const next = h.addFrame(11.5, blob(2)); await Promise.resolve(); await Promise.resolve();
+  complete(); await settle(h);
+  assert.equal(disk.rows.get('pageframe:10').owner, next.owner);
+  assert.equal(new Uint8Array(await (await h.get(11.5)).asset.blob.arrayBuffer())[0], 2);
+});
+
+test('a replacement cold read cannot coalesce with its retired asset read', async () => {
+  const disk = diskStore(), h = new PreviewHistory({ disk, maxBytes: 1 }); h.setSession(session('page'));
+  h.addFrame(10.1, blob(1)); await settle(h);
+  const oldRow = disk.rows.get('pageframe:10'), get = disk.get;
+  let release, calls = 0;
+  disk.get = (...args) => ++calls === 1 ? new Promise(resolve => { release = resolve; }) : get(...args);
+  const oldRead = h.get(10.1);
+  h.trim(11.5); const replacement = h.addFrame(11.5, blob(2)); await settle(h);
+  const newRead = h.get(11.5);
+  release(oldRow);
+  assert.equal(await oldRead, null);
+  const found = await newRead;
+  assert.equal(calls, 2);
+  assert.equal(found.frame.time, 11.5);
+  assert.equal(new Uint8Array(await found.asset.blob.arrayBuffer())[0], 2);
+  assert.equal(h.assets.get('frame:10'), replacement);
+  assert.equal(disk.rows.get('pageframe:10').owner, replacement.owner);
+  assert.equal(h.pending.size, 0);
+});
+
+test('a failed cold replacement never reads pixels from an old write', async () => {
+  const disk = diskStore(), put = disk.put;
+  let complete;
+  disk.put = async (row, guard) => {
+    if (complete) return false;
+    const saved = await put(row, guard);
+    return new Promise(resolve => { complete = () => resolve(saved); });
+  };
+  const h = new PreviewHistory({ disk, maxBytes: 1 }); h.setSession(session('page'));
+  h.addFrame(10.1, blob(1)); await Promise.resolve(); await Promise.resolve();
+  h.trim(11.5); h.addFrame(11.5, blob(2)); complete(); await settle(h);
+  assert.equal(await h.get(11.5), null);
+  assert.equal(disk.rows.size, 0);
+  assert.equal(h.frames.size, 0);
+});
+
+test('mismatched stored ownership cannot supply old pixels under newer metadata', async () => {
+  const disk = diskStore(), h = new PreviewHistory({ disk, maxBytes: 1 }); h.setSession(session('page'));
+  h.addFrame(10.1, blob(2)); await settle(h);
+  disk.rows.set('pageframe:10', { owner: 'retired', blob: blob(1) });
+  assert.equal(await h.get(10.1), null);
+  assert.equal(h.frames.size, 0);
+});
+
+test('retired and new sessions keep bounded independent writes across repeated replacement', async () => {
+  const disk = diskStore(), releases = [], put = disk.put;
+  disk.put = (row, guard) => new Promise(resolve => releases.push(async () => resolve(await put(row, guard))));
+  const h = new PreviewHistory({ disk, maxBytes: 1 }); h.setSession(session('old'));
+  for (let at = 0; at < 20; at++) {
+    h.addFrame(at / 100, blob(at)); h.trim((at + 1) / 100);
+  }
+  assert.equal(h.writes.size, 8);
+  h.setSession(session('new'));
+  for (const release of releases) await release();
+  await settle(h);
+  assert.equal(disk.rows.size, 0); assert.equal(h.writes.size, 0);
+  for (const at of [10, 20, 30]) {
+    h.addFrame(at, blob(at)); await releases.at(-1)(); await settle(h);
+    assert.equal((await h.get(at)).frame.time, at);
+  }
+  assert(h.bytes <= h.maxBytes);
 });
 
 function captureFixture() {

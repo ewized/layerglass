@@ -60,7 +60,7 @@ export class PreviewHistory {
     if (!asset || asset.refs.size) return;
     this.assets.delete(asset.key);
     if (this.hot.delete(asset.key)) this.bytes -= asset.size;
-    this.disk?.remove(this.token, asset.key);
+    this.disk?.remove(this.token, asset.key, asset.owner);
   }
 
   trim(start) {
@@ -86,6 +86,7 @@ export class PreviewHistory {
     const accepted = frames.filter(frame => capture || !this.frames.get(frame.bucket)?.capture);
     if (!accepted.length) return null;
     const asset = { key, blob, size: blob.size, columns, rows, refs: new Set(),
+      owner: crypto.getRandomValues(new Uint32Array(4)).join('-'),
       writing: Boolean(this.disk && this.writes.size < 8), persisted: false };
     this.assets.set(key, asset);
     for (const frame of accepted) {
@@ -100,12 +101,13 @@ export class PreviewHistory {
     this.evict();
     if (asset.writing) {
       const token = this.token, version = this.version;
-      const write = this.disk.put({ session: token, key, blob, columns, rows, frames: accepted }).catch(() => false);
+      const write = this.disk.put({ session: token, key, blob, columns, rows, frames: accepted, owner: asset.owner },
+        { current: () => version === this.version && this.assets.get(key) === asset }).catch(() => false);
       this.writes.add(write);
       write.then(saved => {
         asset.writing = false;
         if (version !== this.version || this.assets.get(key) !== asset) {
-          if (saved) this.disk.remove(token, key);
+          if (saved) this.disk.remove(token, key, asset.owner);
           return;
         }
         asset.persisted = saved;
@@ -167,14 +169,14 @@ export class PreviewHistory {
     const { asset } = found;
     const version = this.version;
     let pending = this.pending.get(asset.key);
-    if (!pending) {
-      pending = this.disk.get(this.token, asset.key).catch(() => null);
+    if (!pending || pending.asset !== asset) {
+      pending = { asset, read: this.disk.get(this.token, asset.key).catch(() => null) };
       this.pending.set(asset.key, pending);
     }
-    const stored = await pending;
+    const stored = await pending.read;
     if (this.pending.get(asset.key) === pending) this.pending.delete(asset.key);
     if (version !== this.version || this.assets.get(asset.key) !== asset) return null;
-    if (!stored?.blob) {
+    if (!stored?.blob || stored.owner !== asset.owner) {
       for (const key of [...asset.refs]) this.forgetFrame(key);
       return null;
     }

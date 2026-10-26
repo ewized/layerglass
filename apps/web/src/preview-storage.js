@@ -48,7 +48,7 @@ export class PreviewStorage {
     return this.ready;
   }
 
-  async put(record) {
+  async put(record, { current = () => true } = {}) {
     const generation = this.generation;
     if (!this.available || this.suspended || record.blob.size > this.maxBytes) return false;
     try {
@@ -62,20 +62,25 @@ export class PreviewStorage {
       const db = await this.open();
       if (!db || !this.available || blob.size > this.maxBytes) return false;
       if (this.suspended || generation !== this.generation) return false;
-      await new Promise((resolve, reject) => {
+      const saved = await new Promise((resolve, reject) => {
         const tx = db.transaction(['images', 'metadata'], 'readwrite');
         const images = tx.objectStore('images');
         const metadata = tx.objectStore('metadata');
-        tx.oncomplete = resolve;
+        let written = false;
+        tx.oncomplete = () => resolve(written);
         tx.onabort = () => reject(tx.error || new Error('Preview write aborted'));
         const previous = images.get([record.session, record.key]);
         previous.onsuccess = () => {
           const state = metadata.get('usage');
           state.onsuccess = () => {
+            // Ownership can change while conversion/opening or this queued
+            // transaction waits. Check at the actual mutation, without await.
+            if (this.suspended || generation !== this.generation || !current()) return;
             const usage = state.result || { bytes: 0, count: 0 };
             usage.bytes += record.blob.size - (previous.result?.size || 0);
             if (!previous.result) usage.count++;
             images.put({ ...fields, data, type: blob.type, size: blob.size, created: Date.now() });
+            written = true;
             const cursor = images.index('created').openCursor();
             cursor.onsuccess = () => {
               const entry = cursor.result;
@@ -93,7 +98,7 @@ export class PreviewStorage {
           };
         };
       });
-      return true;
+      return saved;
     } catch (error) {
       if (generation === this.generation) this.fail(error);
       return false;
@@ -140,7 +145,7 @@ export class PreviewStorage {
     } catch (error) { this.fail(error); return null; }
   }
 
-  async removeWhere({ session, key, before } = {}) {
+  async removeWhere({ session, key, before, owner } = {}) {
     const db = await this.open();
     if (!db) return;
     try {
@@ -161,6 +166,7 @@ export class PreviewStorage {
           request.onsuccess = () => {
             const cursor = request.result;
             if (!cursor) { metadata.put(usage, 'usage'); return; }
+            if (owner !== undefined && cursor.value.owner !== owner) { cursor.continue(); return; }
             usage.bytes = Math.max(0, usage.bytes - cursor.value.size);
             usage.count = Math.max(0, usage.count - 1);
             cursor.delete();
@@ -172,5 +178,5 @@ export class PreviewStorage {
   }
 
   removeSession(session) { return this.removeWhere({ session }); }
-  remove(session, key) { return this.removeWhere({ session, key }); }
+  remove(session, key, owner) { return this.removeWhere({ session, key, owner }); }
 }

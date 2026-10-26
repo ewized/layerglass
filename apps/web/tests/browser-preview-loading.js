@@ -127,6 +127,109 @@ const server = createServer(async (request, response) => {
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${server.address().port}`;
 
+async function checkWriteOwnership(page, requests, name) {
+  for (const scenario of ['ordered', 'conversion', 'completion', 'read']) {
+    const count = requests.length;
+    const result = await page.evaluate(async scenario => {
+      const { PreviewHistory, PreviewCapture } = await import('/static/preview-history.js');
+      const { PageReplay } = await import('/static/replay.js');
+      const preview = document.querySelector('printer-scrub-preview'), video = originalVideo;
+      const image = document.createElement('img'); document.body.append(image);
+      const token = 'write-owner-' + scenario;
+      const session = { session_id: token, camera_id: '1234567890abcdef', kind: 'jpeg', ready: true,
+        start_seconds: 10.124, end_seconds: 21,
+        jpeg_frame: { sequence: 1, start: 10.123678, position: 20, time: 1040, clock: [{ position: -20, time: 1000 }] } };
+      const replay = Object.assign(Object.create(PageReplay.prototype), { session, video, image, version: 0,
+        backend: { id: 'python' }, paused: true, followLive: false, position: 10.123678,
+        imageFrame: null, imageLoading: false, timeline: { edge: 21 } });
+      const history = new PreviewHistory({ maxBytes: 1 });
+      const capture = new PreviewCapture(history, video, image, () => replay);
+      preview.configure(() => replay, history, capture); preview.slider.disabled = false;
+      const urls = [], removals = [];
+      const remove = history.disk.remove.bind(history.disk);
+      history.disk.remove = (...args) => { const task = remove(...args); removals.push(task); return task; };
+      const originalRead = history.disk.readBytes.bind(history.disk), originalPut = history.disk.put.bind(history.disk);
+      let firstRead = true, firstPut = true, release, oldRead;
+      history.disk.readBytes = async blob => {
+        const bytes = await originalRead(blob);
+        if (firstRead) { firstRead = false; if (scenario === 'conversion') await new Promise(resolve => release = resolve); }
+        return bytes;
+      };
+      history.disk.put = async (...args) => {
+        const first = firstPut; firstPut = false;
+        const saved = await originalPut(...args);
+        if (first && scenario === 'completion') await new Promise(resolve => release = resolve);
+        return saved;
+      };
+      const until = async predicate => {
+        const end = performance.now() + 4000;
+        while (!predicate()) { if (performance.now() > end) throw Error('Owned replacement deadline'); await new Promise(requestAnimationFrame); }
+      };
+      const publish = async (position, color) => {
+        replay.imageFrame = null;
+        const canvas = document.createElement('canvas'); canvas.width = 320; canvas.height = 180;
+        const ctx = canvas.getContext('2d'); ctx.fillStyle = color; ctx.fillRect(0, 0, 320, 180);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
+        const url = URL.createObjectURL(blob); urls.push(url); image.src = url; await image.decode();
+        replay.imageFrame = { session: token, camera: session.camera_id, version: 0, position, time: 1020 + position, url };
+        replay.position = position; capture.lastAttempt = -Infinity;
+        image.dispatchEvent(new Event('replayimagechange'));
+      };
+      try {
+        await publish(10.123678, '#ff0000');
+        await until(() => Boolean(history.assets.get('frame:10')) &&
+          (scenario === 'ordered' || scenario === 'read' ? history.assets.get('frame:10').persisted : typeof release === 'function'));
+        const old = history.assets.get('frame:10');
+        if (scenario === 'read') {
+          const get = history.disk.get.bind(history.disk); let first = true;
+          history.disk.get = async (...args) => {
+            const row = await get(...args);
+            if (first) { first = false; await new Promise(resolve => release = resolve); }
+            return row;
+          };
+          oldRead = history.get(10.123678);
+          await until(() => typeof release === 'function');
+        }
+        replay.session = { ...session, start_seconds: 11.5, jpeg_frame: { ...session.jpeg_frame, sequence: 2, start: 11.5 } };
+        history.trim(replay.jpegDescriptor().start); await Promise.all(removals);
+        if (history.frames.has(10)) throw Error('Actual trim did not retire the old frame');
+        await publish(11.5, '#0000ff');
+        await until(() => history.assets.get('frame:10')?.persisted);
+        const replacement = history.assets.get('frame:10'), before = await history.disk.get(token, 'frame:10');
+        if (!before || replacement === old || replacement.blob || before.frames[0].time !== 11.5) throw Error('Replacement not actually persisted/cold');
+        if (scenario === 'read') {
+          history.maxBytes = 32 * 1024 * 1024;
+          preview.showPoint({ value: 11.5 });
+          await until(() => preview.displayed?.asset === 'frame:10' && !preview.resolving);
+        }
+        release?.();
+        if (oldRead && await oldRead !== null) throw Error('Retired read revived an old asset');
+        await Promise.all([...history.writes]); await Promise.all(removals);
+        const row = await history.disk.get(token, 'frame:10');
+        if (!row || row.owner !== replacement.owner) throw Error('Old write or cleanup replaced the owned disk row');
+        const a = new Uint8Array(await before.blob.arrayBuffer()), b = new Uint8Array(await row.blob.arrayBuffer());
+        if (a.length !== b.length || !a.every((value, index) => value === b[index])) throw Error('Owned disk bytes changed');
+        history.maxBytes = 32 * 1024 * 1024;
+        preview.showPoint({ value: 11.5 });
+        await until(() => preview.displayed?.asset === 'frame:10' && !preview.resolving);
+        return { scenario, time: preview.displayed.time, ownerMatches: row.owner === replacement.owner,
+          rowBytes: row.blob.size, bytesUnchanged: true, cold: true, diskHits: history.diskHits,
+          pixel: [...preview.context.getImageData(160, 90, 1, 1).data],
+          captured: history.captured, pendingWrites: history.writes.size, session: replay.session.session_id,
+          oneVideo: document.querySelectorAll('video').length === 1 };
+      } finally {
+        capture.close(); preview.reset(); history.setSession(null); await history.disk.removeSession(token);
+        for (const url of urls) URL.revokeObjectURL(url); image.remove();
+      }
+    }, scenario);
+    assert.equal(result.time, 11.5); assert(result.ownerMatches && result.bytesUnchanged && result.cold && result.oneVideo);
+    assert.equal(result.captured, 2); assert.equal(result.diskHits, 1); assert.equal(result.pendingWrites, 0);
+    assert(result.pixel[2] > 200 && result.pixel[0] < 30 && result.pixel[1] < 30);
+    assert.equal(requests.length, count, 'Owned replacement must paint locally without backup HTTP');
+    console.log('P44 ' + JSON.stringify({ engine: name, ...result, previewHttp: 0 }));
+  }
+}
+
 async function checkJpegBounds(page, jpeg, requests, name) {
   await page.unroute('**/replay/*/preview.jpg?*');
   const initialRequests = requests.length;
@@ -634,6 +737,7 @@ try {
       assert.deepEqual(await page.evaluate(() => ({ video: document.querySelector('video') === originalVideo,
         count: document.querySelectorAll('video').length, seeks: previewSeeks })), { video: true, count: 1, seeks: 0 });
       await checkJpegBounds(page, jpeg, requests, name);
+      await checkWriteOwnership(page, requests, name);
       assert.deepEqual(await page.evaluate(() => ({ video: document.querySelector('video') === originalVideo,
         count: document.querySelectorAll('video').length, seeks: previewSeeks })), { video: true, count: 1, seeks: 0 });
       assert.deepEqual(errors, []);
