@@ -352,9 +352,20 @@ async function attachPlayer(prepared = null) {
   if (status.media_url) {
     // Browser/demo media uses the same native decoder and custom controls, with
     // no Python relay, HLS polling, or network-discovery side effects.
-    video.src = status.media_url;
-    video.disableRemotePlayback = true;
-    play();
+    try {
+      const source = backend.prepareMedia ? await backend.prepareMedia() : status.media_url;
+      if (version !== selectionVersion) return;
+      if (pageHidden || !playerVisible()) { attachedGeneration = null; pageReplay.mediaReady(); return; }
+      video.src = source;
+      video.disableRemotePlayback = true;
+      play();
+    } catch (error) {
+      if (version !== selectionVersion) return;
+      pageReplay.mediaReady();
+      console.warn('[LayerGlass] Demo video unavailable', error.name);
+      waiting('Loading the demo', 'Retrying the sample video.');
+      scheduleRefresh();
+    }
     return;
   }
   if (status.jpeg_url) {

@@ -20,6 +20,14 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     // Any accidental Python dependency fails immediately in browser-only mode.
     await page.route('**/api/**', route => route.abort());
     await page.route('**/replay/**', route => route.abort());
+    // Match static hosts that ignore byte ranges. The demo must still open its
+    // preloaded position and seek natively after one complete clip download.
+    await page.route(base + '/static/demo/printer.mp4', async route => {
+      const headers = { ...route.request().headers() };
+      delete headers.range;
+      const response = await route.fetch({ headers });
+      await route.fulfill({ status: 200, headers: { 'Content-Type': 'video/mp4' }, body: await response.body() });
+    });
     // Match the standalone build with no host-provided backend or saved choice.
     await page.route(base + '/', async route => {
       const response = await route.fetch();
@@ -57,6 +65,8 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
     await waitForPlayer(page, ({ app }) => app.video.currentTime > 2 && app.video.readyState >= 2 &&
       app.pageReplay.session?.kind === 'file' && document.querySelector('#overlay').hidden, null, { timeout: 15000 });
     assert.equal(await page.locator('video').count(), 1);
+    assert(await page.locator('video').evaluate(video => video.currentSrc.startsWith('blob:')),
+      'The bundled clip must be natively seekable even when its host ignores Range requests.');
     await waitForPlayer(page, ({ app }) => app.video.currentTime >= 179 && app.pageReplay.session.end_seconds >= 180 &&
       document.querySelector('#timeline-events').groups?.flatMap(group => group.events).length === 3);
     assert(await page.locator('video').evaluate(video => video.currentTime < 195), 'The demo opens at its preloaded live edge.');
@@ -97,11 +107,14 @@ for (const [name, engine] of Object.entries({ chromium, webkit })) {
       window.settingsVideo = app.video;
       return app.pageReplay.session.session_id;
     });
+    const demoDownloads = requests.filter(path => path.endsWith('/demo/printer.mp4')).length;
     await page.locator('#refresh-button').click();
     await page.locator('#player-options').waitFor({ state: 'hidden' });
     await waitForPlayer(page, ({ app }) => app.video.readyState >= 2 && !app.video.paused);
     assert.equal(await page.evaluate(async () => (await import('/static/player.js')).pageReplay.session.session_id), demoSession);
     assert.equal(await page.evaluate(() => document.querySelector('video') === window.settingsVideo), true);
+    assert.equal(requests.filter(path => path.endsWith('/demo/printer.mp4')).length, demoDownloads,
+      'Refresh must reuse the prepared demo clip instead of downloading it again.');
     await page.locator('#options-button').click();
     await page.locator('[data-settings-target="backends"]').click();
     assert.equal(await page.locator('#settings-title').textContent(), 'Backend');

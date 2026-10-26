@@ -10,9 +10,10 @@ const json = (body, status = 200) => new Response(JSON.stringify(body), {
 export class DemoBackend {
   constructor({ clock = () => Date.now() / 1000, duration = 300,
     prebufferSeconds = Math.min(180, duration * 0.6),
+    fetcher = (...args) => fetch(...args),
     media = new URL('../demo/printer.mp4', import.meta.url).href } = {}) {
     this.id = 'demo'; this.label = 'Browser demo'; this.capabilities = DEMO_CAPABILITIES;
-    this.clock = clock; this.duration = duration; this.media = media;
+    this.clock = clock; this.duration = duration; this.media = media; this.fetcher = fetcher;
     // The bundled demonstration has recorded history before the visit. Real
     // recordings and user-selected files still begin at their own page load.
     this.started = clock() - Math.max(0, Math.min(duration, prebufferSeconds));
@@ -22,7 +23,41 @@ export class DemoBackend {
   resolve(path) { return path; }
   elapsed() { return Math.max(0, Math.min(this.duration, this.clock() - this.started)); }
 
+  async prepareMedia() {
+    if (this.local) return this.media;
+    if (!this.mediaLoading) {
+      // Some static hosts return the entire MP4 even for a Range request. A
+      // page-owned Blob makes this small bundled clip seekable in the native
+      // decoder on those hosts too, with one download shared by refreshes.
+      const controller = this.mediaController = new AbortController();
+      this.mediaLoading = (async () => {
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+          const response = await this.fetcher(this.media, { cache: 'no-store', signal: controller.signal });
+          if (!response.ok || !response.headers.get('Content-Type')?.startsWith('video/mp4')) throw new Error('Demo video unavailable');
+          const blob = await response.blob();
+          controller.signal.throwIfAborted();
+          if (!blob.size) throw new Error('Demo video unavailable');
+          return this.demoURL = URL.createObjectURL(blob);
+        } finally {
+          clearTimeout(timeout);
+          if (this.mediaController === controller) this.mediaController = null;
+        }
+      })();
+    }
+    const loading = this.mediaLoading;
+    try { return await loading; }
+    catch (error) {
+      if (this.mediaLoading === loading) this.mediaLoading = null;
+      throw error;
+    }
+  }
+
   setLocalMedia(file) {
+    this.mediaController?.abort();
+    this.mediaController = this.mediaLoading = null;
+    if (this.demoURL) URL.revokeObjectURL(this.demoURL);
+    this.demoURL = null;
     if (this.localURL) URL.revokeObjectURL(this.localURL);
     this.media = this.localURL = URL.createObjectURL(file);
     this.duration = Infinity;

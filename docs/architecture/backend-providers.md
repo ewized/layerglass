@@ -42,9 +42,12 @@ window until the simulated clock reaches them. Reloading starts a fresh demo
 session with the same preloaded history. Opening a local file starts a fresh
 buffer at zero and replaces the simulated readings with no telemetry or print
 events. Neither source is admitted as a network printer.
-The Python-served viewer also supports byte-range requests for the bundled MP4,
-so its native video element can open at that same preloaded position and seek
-without a second decoder or downloading through a custom playback pipeline.
+The small bundled clip is downloaded once into a page-owned Blob and played by
+the same native video decoder. This preserves seeking on static hosts that
+ignore byte-range requests, including the current public asset host. Refresh
+reuses that Blob; selecting a local file cancels/releases it. This is temporary
+page memory, not PWA or persistent media caching. The Python-served viewer also
+honors byte ranges for clients opening its bundled MP4 asset directly.
 
 ## Selecting a provider
 
@@ -96,6 +99,8 @@ provider exposes:
   are resolved centrally, while continuous binary responses pass through.
 - `events(path)`, returning an EventSource-compatible subscription with
   `addEventListener`, `onerror`, `readyState` and `close`.
+- Optional `prepareMedia()`, returning a native playable URL. Demo uses this to
+  prepare its small clip once, and returns an already-selected local file directly.
 
 The existing update envelope is retained:
 `{version: 1, catalog, status, session_id, replay, telemetry}`. Direct mode uses

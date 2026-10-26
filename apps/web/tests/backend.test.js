@@ -191,6 +191,62 @@ test('local files start a fresh empty buffer without demo telemetry or seeded ev
   } finally { URL.revokeObjectURL(backend.localURL); }
 });
 
+test('demo prepares one native seekable Blob when the static host returns a full 200 response', async () => {
+  const requests = [];
+  const backend = new DemoBackend({ media: 'https://demo.test/printer.mp4', fetcher: async (url, options) => {
+    requests.push({ url, options });
+    return new Response(new Blob(['bundled demo'], { type: 'video/mp4' }));
+  } });
+  const [first, second] = await Promise.all([backend.prepareMedia(), backend.prepareMedia()]);
+  assert.equal(first, second);
+  assert(first.startsWith('blob:'));
+  assert.equal(await (await fetch(first)).text(), 'bundled demo');
+  assert.equal(await backend.prepareMedia(), first);
+  assert.equal(requests.length, 1, 'Concurrent loads and refreshes reuse one download.');
+  assert.equal(requests[0].url, 'https://demo.test/printer.mp4');
+  assert.equal(requests[0].options.cache, 'no-store');
+  backend.setLocalMedia(new Blob(['local file']));
+  try {
+    await assert.rejects(fetch(first), 'Selecting a local file releases the bundled clip.');
+    assert.equal(await backend.prepareMedia(), backend.localURL);
+    assert.equal(requests.length, 1);
+  } finally { URL.revokeObjectURL(backend.localURL); }
+});
+
+test('replacing a pending demo download aborts it and cannot replace the chosen local file', async () => {
+  let finish;
+  let signal;
+  const backend = new DemoBackend({ fetcher: (_url, options) => {
+    signal = options.signal;
+    return new Promise(resolve => { finish = resolve; });
+  } });
+  const pending = backend.prepareMedia();
+  backend.setLocalMedia(new Blob(['chosen file']));
+  try {
+    assert.equal(signal.aborted, true);
+    finish(new Response(new Blob(['old demo'], { type: 'video/mp4' })));
+    await assert.rejects(pending, { name: 'AbortError' });
+    assert.equal(backend.demoURL, null);
+    assert.equal(await backend.prepareMedia(), backend.localURL);
+  } finally { URL.revokeObjectURL(backend.localURL); }
+});
+
+test('failed or wrong-type demo responses remain retryable instead of poisoning the prepared clip', async () => {
+  let count = 0;
+  const backend = new DemoBackend({ fetcher: async () => {
+    count++;
+    if (count === 1) return new Response('unavailable', { status: 503 });
+    if (count === 2) return new Response('<html>not a video</html>', { headers: { 'Content-Type': 'text/html' } });
+    return new Response(new Blob(['demo video'], { type: 'video/mp4' }));
+  } });
+  await assert.rejects(backend.prepareMedia(), /Demo video unavailable/);
+  await assert.rejects(backend.prepareMedia(), /Demo video unavailable/);
+  const prepared = await backend.prepareMedia();
+  assert.equal(count, 3);
+  assert.equal(await (await fetch(prepared)).text(), 'demo video');
+  URL.revokeObjectURL(prepared);
+});
+
 test('demo event sources release their update timer on close', async () => {
   const backend = new DemoBackend();
   const events = backend.events('/api/events');
