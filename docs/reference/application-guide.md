@@ -403,7 +403,10 @@ and [HLS client behavior](https://www.rfc-editor.org/rfc/rfc8216#section-6.3.4).
 
 Keep this viewer on your LAN. Every user who can reach its web port can view
 cameras, scan the configured subnets, save access codes, and reconnect relays.
-Cross-origin mutations are rejected.
+Untrusted cross-origin mutations are rejected. An exact origin listed in
+`VIEWER_ALLOWED_ORIGINS` can use the viewer and setup APIs; POST requests still
+require `X-Viewer-Request: 1`. See
+[hosted frontend configuration](../architecture/backend-providers.md#hosted-app-connecting-to-a-local-container).
 RTSPS uses TLS encryption and accepts the printer's self-signed certificate;
 the video relay does not verify the camera certificate. Admission to discovery
 requires a separate manufacturer-verified identity check.

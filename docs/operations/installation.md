@@ -58,7 +58,7 @@ or the host's published port. The portable Compose file does not require a
 particular proxy network or hostname. For Unraid, set `LAYERGLASS_URL` to the
 desired viewer URL to customize its WebUI label.
 
-Disable response buffering for `/events` and continuous `/replay/` responses;
+Disable response buffering for `/api/events` and continuous `/replay/` responses;
 allow long-lived connections and preserve streaming response headers. Do not
 cache API/media responses. Cast receivers must also reach the HTTPS media URL
 and trust its certificate. Optional Google Cast uses Google's sender SDK.
