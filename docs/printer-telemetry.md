@@ -97,8 +97,10 @@ Telemetry clients share one connection per saved camera. Each supplies
 through its callback. Losing telemetry does not restart or interrupt video.
 Credentials stay paired with that printer on the server. Shared public-field
 filtering removes credentials, stream URLs, unsafe object keys and non-finite
-values. A snapshot is bounded to 64 KiB, 4,096 nodes and 16 nested levels, with
-individual strings limited to 2,048 characters. Large integer identifiers are
+values. Entries whose keys contain a saved code or URL are omitted too, before
+they consume the public snapshot budget. A snapshot is bounded to 64 KiB,
+4,096 nodes and 16 nested levels, with individual strings limited to 2,048
+characters. Large integer identifiers are
 sent as strings so browser numbers cannot round them. These are diagnostic
 readings, not an unfiltered MQTT capture.
 

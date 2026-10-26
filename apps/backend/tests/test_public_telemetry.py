@@ -27,6 +27,20 @@ class PublicTelemetryTests(unittest.TestCase):
         self.assertEqual(result, {'id': str(2 ** 64 - 1), 'enabled': False})
         json.dumps(result, allow_nan=False)
 
+    def test_sensitive_object_keys_are_omitted_before_copying_or_budgeting(self):
+        code = '30862741'
+        source = f'rtsps://bblp:{code}@192.0.2.1:322/streaming/live/1'
+        data = {'readings': {code: 'value', f'sensor_{code}': {'value': 1},
+                             source: 'camera', 'https://camera.example/live': 'camera',
+                             'safe': [{'id': 0, 'value': False}]}, 'good': 123}
+        result = public_stats(data, secrets=('', code))
+        self.assertEqual(result, {'readings': {'safe': [{'id': 0, 'value': False}]}, 'good': 123})
+        encoded = json.dumps(result)
+        self.assertNotIn(code, encoded)
+        self.assertNotIn('://', encoded)
+        self.assertEqual(public_stats({code: ['x' * 2048] * 100, 'safe': 0},
+                                     secrets=(code,), max_bytes=64, max_nodes=4), {'safe': 0})
+
     def test_size_depth_and_node_limits_bound_ever_growing_reports(self):
         result = public_stats({str(index): 'x' * 1000 for index in range(10000)}, max_bytes=4096)
         self.assertLessEqual(len(json.dumps(result).encode()), 4096)

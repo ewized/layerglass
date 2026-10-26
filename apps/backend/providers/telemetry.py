@@ -28,6 +28,8 @@ def public_stats(value, secrets=(), *, max_bytes=MAX_BYTES, max_nodes=MAX_NODES)
             for key, child in item.items():
                 if not isinstance(key, str) or len(key) > 128:
                     continue
+                if URL.search(key) or any(secret and secret in key for secret in secrets):
+                    continue
                 compact = re.sub(r'[^a-z0-9]', '', key.lower())
                 if PRIVATE.search(compact) or compact in ('raw', 'private', 'username', 'pwd', 'auth', 'proto', 'prototype', 'constructor'):
                     continue
