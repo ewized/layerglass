@@ -754,7 +754,9 @@
         "integrated": false,
         "peer_review": {
           "reviewer": "r04",
-          "status": "in progress"
+          "status": "blocked pending correction",
+          "finding": "Hidden tab during initial-media readiness deadline can return with no decoder and attaching/mediaRestore retained; transport resumes without constructing HLS. Within approved recovery/cancellation scope.",
+          "evidence": "test-results/review-2026-10-26/r04/r02-hidden-readiness-result.json"
         },
         "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check."
       }
@@ -1707,7 +1709,7 @@
       "evidence_path": "test-results/review-2026-10-26/r07/site-independent.log",
       "risk": "Low; an extra declared build prerequisite, no shipped behavior change.",
       "validation_plan": "Actual nx test site from clean dist and isolated cache must build its prerequisites and pass Chromium/WebKit site and worker checks.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1783,12 +1785,15 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/docs-build-contracts",
         "commit": "1252200",
-        "integrated": false,
+        "integrated": true,
         "peer_review": {
           "reviewer": "r07",
-          "status": "in progress"
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r07/diff-review-docs-build-contracts.json",
+          "evidence": "Exact diff and clean Nx evidence inspected, independent35-document validator and network-none SSE/CORS loopback policy cases pass."
         },
-        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately."
+        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately.",
+        "integrated_commit": "fd0306d"
       }
     },
     {
@@ -1902,7 +1907,7 @@
       "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
       "risk": "Negligible; correct existing route text without deployment.",
       "validation_plan": "Compare handler route with corrected guidance, retain isolated HTTP fixture evidence and run documentation validator.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -1978,12 +1983,15 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/docs-build-contracts",
         "commit": "91db232",
-        "integrated": false,
+        "integrated": true,
         "peer_review": {
           "reviewer": "r07",
-          "status": "in progress"
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r07/diff-review-docs-build-contracts.json",
+          "evidence": "Exact diff and clean Nx evidence inspected, independent35-document validator and network-none SSE/CORS loopback policy cases pass."
         },
-        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately."
+        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately.",
+        "integrated_commit": "277ac95"
       }
     },
     {
@@ -2001,7 +2009,7 @@
       "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
       "risk": "Negligible; documents current implemented policy without widening it.",
       "validation_plan": "Compare source/isolated CORS evidence and existing backend-origin tests; documentation validator after edit.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2077,12 +2085,15 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/docs-build-contracts",
         "commit": "91db232",
-        "integrated": false,
+        "integrated": true,
         "peer_review": {
           "reviewer": "r07",
-          "status": "in progress"
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r07/diff-review-docs-build-contracts.json",
+          "evidence": "Exact diff and clean Nx evidence inspected, independent35-document validator and network-none SSE/CORS loopback policy cases pass."
         },
-        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately."
+        "validation": "Root:35 docs and actual empty-temp clean site:test --skip-nx-cache; both prerequisite builds and Chromium/WebKit site worker checks pass. Initial wrong Nx executable path failed before Nx; corrected run logged separately.",
+        "integrated_commit": "277ac95"
       }
     },
     {
@@ -2444,6 +2455,14 @@
     {
       "sha": "9fe489a",
       "summary": "P15: bound archive source filename memory; R01 reviewed."
+    },
+    {
+      "sha": "277ac95",
+      "summary": "P18/P19: correct SSE route and allowed-origin guidance; R07 independently reviewed."
+    },
+    {
+      "sha": "fd0306d",
+      "summary": "P16: declare site test web build dependency; R07 reviewed clean-run evidence."
     }
   ],
   "activity": [
@@ -2571,6 +2590,11 @@
       "at": "2026-10-26T05:02:55Z",
       "type": "integration",
       "message": "Twelve of22 all-ten-approved proposals now integrated after independent diff review. Provider partial-init correction resolved. DVR fixes through9fe489a passed independent canonical registry compatibility review. R04 reviewing replay recovery; R07 reviewing docs/build contracts; R09 implementing keyboard focus. Baseline endurance remains active,18 minutes sampled with one session, bounded caches and no HLS playlist/segment requests."
+    },
+    {
+      "at": "2026-10-26T05:06:00Z",
+      "type": "review",
+      "message": "R07 docs/build ready; P16/P18/P19 integrated. R04 independently found P06 hidden-readiness timeout blocker; P06 held for correction, P05/P07 ready pending final review record. Root reproduced a distinct cancelled telemetry-window retry defect for Round2 proposals only; no unvoted source edits. R07 starting deeper delivery review pinned tofd0306d."
     }
   ],
   "validation": [
