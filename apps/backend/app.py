@@ -789,7 +789,10 @@ class ViewerHandler(BaseHTTPRequestHandler):
             if not self.server.replay:
                 return self._json(404, {'error': 'Page history is unavailable.'})
             if close_match:
-                self.server.replay.release(close_match[1])
+                try:
+                    self.server.replay.release(close_match[1])
+                except OSError:
+                    return self._json(503, {'error': 'The rewind buffer cleanup is temporarily unavailable.'})
                 return self._json(200, {'ok': True})
             key = payload.get('camera_id')
             if not isinstance(key, str) or not re.fullmatch(r'[a-f0-9]{16}', key):
@@ -833,7 +836,10 @@ class ViewerHandler(BaseHTTPRequestHandler):
             except OSError:
                 return self._json(500, {'error': 'Could not forget the printer.'})
             if self.server.replay:
-                self.server.replay.forget(key)
+                try:
+                    self.server.replay.forget(key)
+                except OSError:
+                    return self._json(503, {'error': 'The rewind buffer cleanup is temporarily unavailable.'})
             return self._json(200, {'ok': True})
         if registry:
             key = parse_qs(parsed.query).get('camera', [None])[0] or registry.catalog()['default_camera_id']

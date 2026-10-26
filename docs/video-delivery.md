@@ -84,6 +84,18 @@ to resume with the same page tokens; the next collected media clears the error.
 The ordinary one-current-fragment-per-camera floor remains a retention target,
 including when that current fragment alone exceeds the configured byte value.
 
+After the final page lease retires, the archive keeps ownership of its exact
+directory and conservative byte accounting until recursive deletion succeeds.
+Partial cleanup failures are retried before more collection or page allocation;
+a new page cannot reuse a partly removed archive. Retired page tokens stay invalid,
+while sibling viewers can still read their retained media and metadata. HTTP close
+or forget returns 503 if cleanup fails after retiring the leases; creation keeps
+its existing 503 storage-failure response. Direct release/forget calls still raise
+the cleanup error, and failed creation preserves its original exception.
+Restored storage permissions let maintenance remove the retired archive and admit
+a fresh page. Shutdown logs a cleanup failure while allowing other clients to
+close; deletion is not guaranteed if permissions never recover or the process exits.
+
 The application loads native ES modules through one `type="module"` entry.
 Its hls.js ESM dependency uses the pinned standalone `hls.worker.js` for
 transmuxing. Both files and source maps come from the same integrity-verified

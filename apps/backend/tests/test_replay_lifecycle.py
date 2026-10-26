@@ -71,10 +71,98 @@ class ReplayPruningTests(unittest.TestCase):
         with urlopen(self.base + path, timeout=2) as response:
             return response.read()
 
+    def post(self, path, payload=None):
+        request = Request(self.base + path, data=json.dumps(payload or {}).encode(),
+                          headers={'X-Viewer-Request': '1'})
+        try:
+            with urlopen(request, timeout=2) as response:
+                return response.status, json.load(response)
+        except HTTPError as error:
+            with error:
+                return error.code, json.load(error)
+
     def assert_tracked(self):
         files = {item.file for item in self.archive.fragments}
         self.assertEqual(files, set(self.archive.directory.iterdir()))
         self.assertEqual(sum(item.size for item in self.archive.fragments), sum(file.stat().st_size for file in files))
+        self.assertFalse(self.worker_errors)
+
+    def test_final_release_fault_blocks_new_directories_and_recovers_with_sibling(self):
+        if os.geteuid() == 0:
+            self.skipTest('The real directory permission fault requires a non-root runtime.')
+        other = 'fedcba0987654321'
+        with patch.object(self.registry, 'get_relay', side_effect=lambda key: self.source if key in (CAMERA, other) else None):
+            sibling = self.replay.create(other)['session_id']
+            with self.replay.lock:
+                directory = self.archive.directory
+                files = {item.file for item in self.archive.fragments}
+                accounted = sum(item.size for archive in self.replay.archives.values() for item in archive.fragments)
+                directory.chmod(0o500)
+            try:
+                code, payload = self.post(f'/api/sessions/{self.token}/close')
+                self.assertEqual((code, payload), (503, {'error': 'The rewind buffer cleanup is temporarily unavailable.'}))
+                self.assertIsNone(self.replay.status(self.token))
+                self.assertIs(self.replay.archives[CAMERA], self.archive)
+                self.wait_for(lambda: self.archive.error is not None)
+                directories = set(self.replay.root.iterdir())
+                for last in range(6, 12):
+                    with self.replay.lock:
+                        self.source.publish(range(last - 2, last + 1))
+                        # New directories remain writable; admission must be
+                        # fenced by pending cleanup, not a failed new write.
+                        probe = self.replay.root / 'writable-new-directory'
+                        probe.mkdir()
+                        probe.rmdir()
+                    self.assertEqual(self.post('/api/sessions', {'camera_id': CAMERA})[0], 503)
+                    with self.replay.lock:
+                        self.assertEqual(set(self.replay.root.iterdir()), directories)
+                        self.assertEqual(set(directory.iterdir()), files)
+                        self.assertEqual(sum(item.size for archive in self.replay.archives.values()
+                                             for item in archive.fragments), accounted)
+                    began = time.monotonic()
+                    self.assertTrue(json.loads(self.http(f'/api/sessions/{sibling}'))['ready'])
+                    self.assertEqual(self.http(f'/replay/{sibling}/segment-0.ts'), b'frame-a-3')
+                    self.assertLess(time.monotonic() - began, 1)
+                    self.assertTrue(self.replay.thread.is_alive())
+            finally:
+                with self.replay.lock:
+                    directory.chmod(0o700)
+            self.wait_for(lambda: CAMERA not in self.replay.archives)
+            self.assertFalse(directory.exists())
+            with self.replay.lock:
+                self.source.publish([20, 21, 22])
+            code, page = self.post('/api/sessions', {'camera_id': CAMERA})
+            self.assertEqual(code, 201)
+            self.assertTrue(page['ready'])
+            self.assertIsNot(self.replay.archives[CAMERA], self.archive)
+            self.assertNotEqual(self.replay.archives[CAMERA].directory, directory)
+            self.assertEqual(self.http(f"/replay/{page['session_id']}/segment-0.ts"), b'frame-a-22')
+            self.assertIsNone(self.replay.status(self.token))
+            self.assertIsNotNone(self.replay.status(sibling))
+            self.assertFalse(self.worker_errors)
+
+    def test_http_forget_cleanup_failure_returns_503_after_retirement(self):
+        if os.geteuid() == 0:
+            self.skipTest('The real directory permission fault requires a non-root runtime.')
+
+        def forget(key):
+            self.assertEqual(key, CAMERA)
+            self.registry.source = None
+
+        self.archive.directory.chmod(0o500)
+        try:
+            with patch.object(self.registry, 'forget', side_effect=forget, create=True):
+                code, payload = self.post(f'/api/cameras/{CAMERA}/forget')
+            self.assertEqual((code, payload), (503, {'error': 'The rewind buffer cleanup is temporarily unavailable.'}))
+            self.assertIsNone(self.registry.source)
+            self.assertIsNone(self.replay.status(self.token))
+            self.assertIs(self.replay.archives[CAMERA], self.archive)
+            self.assertEqual(self.post('/api/sessions', {'camera_id': CAMERA})[0], 409)
+        finally:
+            with self.replay.lock:
+                self.archive.directory.chmod(0o700)
+        self.wait_for(lambda: not self.replay.archives)
+        self.assertFalse(self.archive.directory.exists())
         self.assertFalse(self.worker_errors)
 
     def test_real_cap_unlink_failure_keeps_worker_and_ownership_then_recovers(self):
@@ -203,6 +291,83 @@ class ReplayLifecycleTests(unittest.TestCase):
         # injected failures or deliberately held locks.
         self.replay.root.mkdir(parents=True)
         self.addCleanup(self.replay.close)
+
+    def test_partial_retired_cleanup_keeps_accounting_and_refuses_reuse(self):
+        token = self.replay.create(CAMERA)['session_id']
+        archive = self.replay.archives[CAMERA]
+        self.source.publish([3, 4, 5])
+        self.replay._collect(archive, self.source)
+        accounted = sum(item.size for item in archive.fragments)
+        failure = OSError(errno.EIO, 'Fixture partial recursive deletion.')
+
+        def partial(directory):
+            self.assertEqual(directory, archive.directory)
+            archive.fragments[0].file.unlink(missing_ok=True)
+            raise failure
+
+        with patch('replay.shutil.rmtree', side_effect=partial):
+            with self.assertRaises(OSError) as error:
+                self.replay.release(token)
+            self.assertIs(error.exception, failure)
+            self.assertIsNone(self.replay.status(token))
+            self.assertIsNone(self.replay.media(token, sequence=1))
+            self.assertIs(self.replay.archives[CAMERA], archive)
+            self.assertEqual(sum(item.size for item in archive.fragments), accounted)
+            self.assertLess(sum(path.stat().st_size for path in archive.directory.iterdir()), accounted)
+            for _ in range(3):
+                with self.assertRaises(OSError):
+                    self.replay.create(CAMERA)
+                self.assertFalse(self.replay.sessions)
+                self.assertEqual(list(self.replay.root.iterdir()), [archive.directory])
+        self.replay._prune()
+        self.assertFalse(archive.directory.exists())
+        self.source.publish([20, 21, 22])
+        page = self.replay.create(CAMERA)
+        self.assertIsNot(self.replay.archives[CAMERA], archive)
+        self.assertEqual(self.replay.media(page['session_id'], sequence=0).read_bytes(), b'frame-a-22')
+
+    def test_expired_final_lease_keeps_failed_cleanup_for_retry(self):
+        token = self.replay.create(CAMERA)['session_id']
+        archive = self.replay.archives[CAMERA]
+        self.replay.sessions[token].touched -= self.replay.timeout + 1
+        with patch('replay.shutil.rmtree', side_effect=PermissionError(errno.EACCES, 'Fixture cleanup denied.')):
+            with self.assertLogs('printer-camera', level='WARNING'):
+                self.assertFalse(self.replay._prune_recording())
+            self.assertFalse(self.replay.sessions)
+            self.assertIs(self.replay.archives[CAMERA], archive)
+            self.assertTrue(archive.directory.exists())
+        self.replay._prune()
+        self.assertFalse(self.replay.archives)
+        self.assertFalse(archive.directory.exists())
+
+    def test_direct_forget_preserves_cleanup_error_after_retiring_all_tokens(self):
+        tokens = [self.replay.create(CAMERA)['session_id'] for _ in range(2)]
+        archive = self.replay.archives[CAMERA]
+        failure = PermissionError(errno.EACCES, 'Fixture cleanup denied.')
+        with patch('replay.shutil.rmtree', side_effect=failure):
+            with self.assertRaises(PermissionError) as error:
+                self.replay.forget(CAMERA)
+            self.assertIs(error.exception, failure)
+            self.assertTrue(all(self.replay.status(token) is None for token in tokens))
+            self.assertIs(self.replay.archives[CAMERA], archive)
+        self.replay._prune()
+        self.assertFalse(self.replay.archives)
+
+    def test_failed_initial_metadata_keeps_cleanup_owner_and_original_error(self):
+        failure = ValueError('Fixture original metadata failure.')
+        with patch.object(self.replay, '_metadata', side_effect=failure), \
+                patch('replay.shutil.rmtree', side_effect=OSError(errno.EIO, 'Fixture cleanup failure.')):
+            with self.assertLogs('printer-camera', level='WARNING'), self.assertRaises(ValueError) as error:
+                self.replay.create(CAMERA)
+            self.assertIs(error.exception, failure)
+            self.assertFalse(self.replay.sessions)
+            archive = self.replay.archives[CAMERA]
+            self.assertTrue(archive.fragments[0].file.exists())
+            with self.assertRaises(OSError):
+                self.replay.create(CAMERA)
+            self.assertEqual(list(self.replay.root.iterdir()), [archive.directory])
+        self.replay._prune()
+        self.assertFalse(self.replay.archives)
 
     def test_failed_initial_copy_does_not_consume_viewer_slots(self):
         failure = OSError(errno.ENOSPC, 'Fixture storage is full.')

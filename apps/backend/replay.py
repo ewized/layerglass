@@ -113,7 +113,10 @@ class ReplayBuffer:
             self.thread.join(timeout=5)
         with self.lock:
             self.sessions.clear()
-            self._prune()
+            # Shutdown must still let the registry close its relay/telemetry
+            # clients if temporary history cannot be removed. Keep ownership;
+            # a stopped worker cannot promise a later retry in this process.
+            self._prune_recording()
 
     def create(self, camera):
         with self.lock:
@@ -623,7 +626,15 @@ class ReplayBuffer:
         for camera, archive in list(self.archives.items()):
             active = [session.first for session in self.sessions.values() if session.camera == camera]
             if not active:
-                shutil.rmtree(archive.directory, ignore_errors=True)
+                # Retired history still owns its directory and conservative
+                # byte accounting until removal succeeds. Raising also fences
+                # collection and new-page admission through their existing
+                # prune paths, so a partial failure cannot be reused or orphaned.
+                try:
+                    shutil.rmtree(archive.directory)
+                except FileNotFoundError:
+                    if archive.directory.exists():
+                        raise  # A child disappeared; retry the remaining tree.
                 del self.archives[camera]
                 continue
             while archive.fragments and archive.fragments[0].sequence < min(active):

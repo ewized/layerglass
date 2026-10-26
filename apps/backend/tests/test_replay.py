@@ -78,6 +78,41 @@ class JpegReplayTests(unittest.TestCase):
         with self.replay.lock:
             self.replay._collect(self.replay.archives[CAMERA], self.source)
 
+    def test_retired_already_absent_directory_releases_ownership(self):
+        archive = self.replay.archives[CAMERA]
+        archive.fragments[0].file.unlink()
+        archive.directory.rmdir()
+        self.replay.release(self.token)
+        self.assertFalse(self.replay.sessions)
+        self.assertFalse(self.replay.archives)
+
+    def test_missing_child_during_retired_cleanup_keeps_remaining_tree(self):
+        archive = self.replay.archives[CAMERA]
+        with patch('replay.shutil.rmtree', side_effect=FileNotFoundError(errno.ENOENT, 'Fixture missing child.')):
+            with self.assertRaises(FileNotFoundError):
+                self.replay.release(self.token)
+            self.assertFalse(self.replay.sessions)
+            self.assertIs(self.replay.archives[CAMERA], archive)
+        self.replay._prune()
+        self.assertFalse(archive.directory.exists())
+        self.assertFalse(self.replay.archives)
+
+    def test_shutdown_cleanup_fault_keeps_ownership_without_interrupting_shutdown(self):
+        archive = self.replay.archives[CAMERA]
+        self.replay.thread.start()
+        self.assertTrue(self.replay.thread.is_alive())
+        with patch('replay.shutil.rmtree', side_effect=PermissionError(errno.EACCES, 'Fixture shutdown cleanup failure.')):
+            with self.assertLogs('printer-camera', level='WARNING'):
+                self.replay.close()
+            self.assertTrue(self.replay.stop_event.is_set())
+            self.assertFalse(self.replay.thread.is_alive())
+            self.assertFalse(self.replay.sessions)
+            self.assertIs(self.replay.archives[CAMERA], archive)
+            self.assertTrue(archive.fragments[0].file.exists())
+        # A live worker was stopped; only this explicit later cleanup retries.
+        self.replay.close()
+        self.assertFalse(self.replay.archives)
+
     def test_owned_jpeg_descriptor_and_selector_keep_precise_completed_positions(self):
         self.capture(1030.123456)
         snapshot = self.replay.status(self.token)
