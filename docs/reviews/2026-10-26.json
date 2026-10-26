@@ -63,17 +63,21 @@
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round1 ballot complete; DVR implementation integrated",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
-      "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r06/ballot-round3.json"
     },
     {
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round1 ballot complete; reviewing docs/build contracts",
+      "status": "round 3 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
-      "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json"
+      "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
+      "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
+      "ballot_round3": "test-results/review-2026-10-26/r07/ballot-round3.json"
     },
     {
       "id": "r08",
@@ -2485,7 +2489,7 @@
       "evidence_path": "test-results/review-2026-10-26/root-round2-findings.json",
       "risk": "Low/moderate asynchronous ownership; careless resets can introduce render-driven request loops or let stale callbacks damage new requests.",
       "validation_plan": "Cancelled A, successful B, return A loads its recorded reading once; repeated reads while pending do not duplicate, late A promises and replacement sessions remain isolated, actual failures/timeouts stay suppressed until retry, windows remain bounded.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r10": {
           "vote": "APPROVE",
@@ -2527,6 +2531,20 @@
           "rationale": "I reproduced the receiver-driven Cast A/B/A failure with connected production Stats, PageReplay, PrinterHistory and GoogleCastSender at afee31a: cancelled A stays requested with no pending owner, two timer reads produce no third request, and Stats remains blank. The ordinary local-seek explanation is false; my Chromium/WebKit control recovered through existing retry events. The unchanged scope correctly repairs cancellation eligibility in the history model. I approve its request/session ownership, pending deduplication, bounded-cache and genuine-failure/timeout suppression regressions; the documented trigger must reflect the receiver path.",
           "revision": 1,
           "recorded_at": "2026-10-26T05:33:10Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The original only-online/ordinary-local-seek claim is false: Stats retries on local replaypositionchange, seeked and opening. However, I independently reran the actual Stats/Replay/History/Sender browser fixture against frozen afee31a. Receiver A/B/A produced two requests, zero local seek events and blank Stats; a local app seek produced the third request and the recorded reading. Source leaves the intentionally aborted window requested after its request ends. The unchanged cancellation-model scope addresses this supported path. Approval includes ownership/late-result/session isolation, pending deduplication, bounded windows and real-failure/timeout suppression regressions. Evidence: r06/round2-cast.log and r05/round2-cast-history.mjs.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Approve the exact cancelled-request eligibility scope on the independently reproduced Cast receiver A/B/A path: two requests leave Stats blank, while a local sender seek fetches A and restores it. I reject the frozen evidence's only-online and ordinary-local-seek premises: connected Stats retries on seeked, replaypositionchange and opening, and my Chromium/WebKit local A/B/A runs recover. The corrected trigger fits the unchanged model scope. Require the receiver consumer regression, preserve working local/outage behavior, and enforce the specified late-request/session ownership, timeout suppression and window bounds.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:41Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       },
@@ -2605,6 +2623,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:33:10Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The Scan handler directly serializes Discovery.status including raw found candidates, whereas catalog omits found and sanitizes public fields. My independent offline real-HTTP rerun reproduced clean catalog JSON but the synthetic saved code and authenticated URL in both queued and cooldown Scan responses, with valid configured CORS and unchanged private metadata. Omitting found from a status copy is a narrow public-envelope fix. Approval includes exact progress/queued/retry comparisons, private serial/model/cache preservation, pairing and origin/header regressions. Evidence: r06/round23-python.log and r01/round2-discovery-payload.py.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "I reproduced both actual HTTP queued and cooldown responses from the pinned afee31a source: the clean catalog contrasts with saved-code and full URL disclosure under discovery.found. Omitting found from a public status copy matches the existing catalog envelope and leaves private pairing inputs intact. Require comparison of every remaining progress property, original candidate/serial/model immutability, normal catalog/pairing behavior and the existing CORS/header policy.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:41Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       }
     },
@@ -2669,6 +2701,20 @@
           "revision": 1,
           "recorded_at": "2026-10-26T05:33:10Z",
           "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "browser-site resolves source/build paths relative to its checkout but hardcodes screenshots under /app. My independent non-root frozen-source runs built both artifacts and reached the actual Chromium screenshot failure outside /app; adding an unrelated writable /app let Chromium/WebKit pass and wrote screenshots there. These reruns execute the real browser/build scripts, not Nx. A caller-selected destination with a checkout-local default corrects the dependency. Approval includes the specified clean Nx site:test and normal temporary-copy workspace artifact-collection checks, both engines and documentation validation. Evidence: r06/round2-site-negative.log and r06/round2-site-positive.log.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:00Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "I rechecked the exact afee31a source independently of authorship; the website test and temporary-copy harness are unchanged from my real-browser negative and positive fixtures. Hardcoded /app output breaks alternate checkouts or writes into another tree. The selected-output/default-checkout scope fixes that without weakening assertions. Require actual clean Nx Chromium/WebKit checks outside /app and verification that normal run-js workspace screenshots still reach its mounted collector.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:41Z",
+          "slate_sha256": "e040f236a63a46743fec04146967055509b15b6c9fc83fa8d090e2c3516e82bd"
         }
       }
     },
@@ -2690,7 +2736,7 @@
       "evidence_path": "test-results/review-2026-10-26/r03/round2-findings.json",
       "risk": "Low/moderate lock-order change; registry already reads discovery.status under its lock elsewhere, and discovery producers do not call registry. Retired telemetry shutdown must stay outside registry.lock to avoid joining callbacks under it.",
       "validation_plan": "Queue catalog while registry.lock is held, finish new verified B discovery and B setup, release caller; it must read current B only after lock entry and keep B code/serial active both in memory and after reload. No stale source reactivation/quarantine; concurrent unchanged metadata and retired callbacks remain deadlock-free; binding/discovery/history and docs checks pass.",
-      "status": "voting",
+      "status": "approved",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -2718,6 +2764,20 @@
           "rationale": "At 7f2a8cf I reproduced a queued catalog snapshot A reverting explicitly repaired B to unconfigured A, quarantining B's new code and persisting A's serial. _catalog reads discovery before registry.lock, so the requested ordering correction closes the demonstrated race. Discovery producers do not call registry, and retired client close already occurs outside the registry lock. I approve the exact snapshot-order scope and its persistence/reload, unchanged/offline identity and callback/deadlock regressions; client shutdown must remain outside the lock.",
           "revision": 1,
           "recorded_at": "2026-10-26T05:33:10Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "_catalog captures discovery before registry.lock, then applies that old identity snapshot to the latest binding. My independent deterministic rerun against frozen 7f2a8cf changed configured B back to A and quarantined B's new code; the exact scratch-only move of status under the existing lock retained B and its saved identity. Discovery producers do not call registry, and registry already reads discovery.status while locked elsewhere, so the scope does not introduce a reverse producer dependency. Approval includes persisted/reloaded B ownership, unchanged metadata, binding/discovery/history and retired-callback lock-order regressions, keeping client close outside registry.lock. Evidence: r06/round23-python.log and r03/round2-probes.py.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:00Z",
+          "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "I reproduced the stale-snapshot race from pinned 7f2a8cf: successfully configured B becomes unconfigured and the persisted identity reverts to A. The scratch-only change taking status under registry.lock retains B and avoids false quarantine. Existing callers already use registry-to-discovery lock order, and inspected discovery producers do not call the registry. Require the queued-catalog/current-snapshot and persisted/reloaded B regression, preserve shutdown outside registry.lock, and pass callback/deadlock, unchanged-binding, discovery/history and documentation checks.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T05:35:41Z",
           "slate_sha256": "8ab85ff5ed9d6dc5652540a15580e872a5df75ad474c2c46e1ce848d4f43b788"
         }
       }
@@ -3031,6 +3091,31 @@
       "at": "2026-10-26T05:33:10Z",
       "type": "quorum",
       "message": "P24 andP25 each now have6 explicit distinct APPROVE votes and can be implemented. P23 has5 approvals plus1 abstention and remains unapproved; new Cast consumer evidence preserved, local-seek counterexample retained. P26 has4 approvals and remains unapproved. Root0/no votes inferred. All22 Round1 combined checks running on immutable75a0479."
+    },
+    {
+      "at": "2026-10-26T05:35:00Z",
+      "type": "ballot",
+      "message": "R06 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:35:00Z",
+      "type": "ballot",
+      "message": "R06 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:35:41Z",
+      "type": "ballot",
+      "message": "R07 explicit Round2 ballot imported for all3 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:35:41Z",
+      "type": "ballot",
+      "message": "R07 explicit Round3 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T05:35:57Z",
+      "type": "quorum",
+      "message": "P23 now7 approvals plus1 abstention; P24/P25 each8 approvals; P26 now6 approvals. All exact rev1 scopes eligible for implementation, root0. False P23 local/online premise explicitly corrected in new voter rationales with actual receiver-originated Cast evidence. First-round full snapshot stopped on WebKit fixture-cookie assertion; no production fix inferred before environment/control comparison."
     }
   ],
   "validation": [
@@ -3088,11 +3173,12 @@
     },
     {
       "summary": "Immutable combined first-round check.sh all with build, units, docs, Nx/site and all18 browser suites",
-      "status": "running",
+      "status": "stopped at browser assertion; investigation active",
       "source": "75a0479",
       "log": "test-results/review-2026-10-26/round1-full.log",
       "started_at": "2026-10-26T05:30:37Z",
-      "environment": "Archive snapshot, disposable runtime image, optional non-loopback browser HTTP blocked by audit-only Playwright preload; native online behavior and production source unchanged."
+      "environment": "Archive snapshot, disposable runtime image, optional non-loopback browser HTTP blocked by audit-only Playwright preload; native online behavior and production source unchanged.",
+      "failure": "WebKit browser-backends request.allHeaders did not include expected same-origin fixture cookie. Investigating audit routing effect versus application behavior before source changes. Python196 and docs35 plus JS/workspace/site completed; first3 browser suites passed both engines, backend suite passed Chromium."
     }
   ],
   "implementation_worktrees": [
