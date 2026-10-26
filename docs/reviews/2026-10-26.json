@@ -612,6 +612,18 @@
       ],
       "decision": "All10 fresh APPROVE exact P43rev1; initial6committed1eaa before new author worktree. Independent exactR03READY/R09NO_FINDINGS acceptance3ca precedes405integration; newnormal41sourceCI40337893030+hosting40337893048PASS on862c01d. No P42 vote transfer; source audit verified.",
       "notes": "Consumer-only precise descriptor view explicitly authorizes local retention/mapping effect, exactly3files. P42STOP/original10approvals preserved; no vote transfer."
+    },
+    {
+      "id": 15,
+      "revision": 1,
+      "baseline": "607ceddd8f3e88f009445e533dd6891a221e5fdf",
+      "frozen_at": "2026-10-26T15:23:44Z",
+      "slate": "test-results/review-2026-10-26/round-15-slate.json",
+      "slate_sha256": "45580c2f67efa0a43b5783146dbeb3dad8bc93cf0d3fe9e2f9c37a994f1aff70",
+      "ballots_started": true,
+      "reviewers_completed": [],
+      "decision": "Fresh voting; no implementation authorized.",
+      "notes": "Two independently reproduced final-hour ownership findings; exact closed scopes and deadline-safe validation/checkpoint policy."
     }
   ],
   "proposals": [
@@ -5201,6 +5213,53 @@
           "docs/timeline-events.md": "4ca8b37fe5983310eda7531fc27c359ba1313458e3798ff33c4d53d29e0c1162"
         }
       }
+    },
+    {
+      "id": "P44",
+      "round": 15,
+      "revision": 1,
+      "title": "Keep persisted preview writes and deletion owned by each asset generation",
+      "author": "r04",
+      "source_finding": "R04-FINAL-01",
+      "baseline": "607ceddd8f3e88f009445e533dd6891a221e5fdf",
+      "files": [
+        "apps/web/src/preview-history.js",
+        "apps/web/src/preview-storage.js",
+        "apps/web/tests/preview-history.test.js",
+        "apps/web/tests/browser-preview-loading.js",
+        "apps/web/tests/browser-preview-storage.js",
+        "docs/local-previews.md"
+      ],
+      "scope": "Within PreviewHistory/PreviewStorage only, guard BOTH delayed writes and deletions by particular asset/write ownership when a logical session/key is reused. An obsolete asset must neither overwrite nor delete the replacement, including conversion/transaction/completion and trim/forget/session-switch boundaries. Conditional mutation must remain valid at the actual IndexedDB transaction, not just before an await. An additive internal per-write row ownership field and optional guarded mutation arguments are allowed; preserve database name/version/schema/key paths and legacy unguarded storage calls. Preserve compressed bytes/usage accounting, maxBytes/maxRecords, eight pending-write backpressure, bounded RAM/queues, nearest/tie/coalescing/late-read policies, genuine quota/failure fallback and cleanup. No new media streams/requests, capture cadence, clock/retention/budget policy, public UI, session namespace, storage permission, dependencies or migration. Exactly the six listed files may change. Any material expansion needs fresh scope/votes.",
+      "evidence": "Exact607cedd source is app-identical to green CI862. Both Chromium/WebKit production PreviewCapture admits native red10.123678, actual trim11.5 removes it, then native blue11.5 legitimately reuses frame:10. Holding original real byte-conversion completion until blue is persisted/cold, then releasing it leaves same newer RAM asset persisted=true but deletes actual1121-byte row; production component cold read drops blue and fetches/paints one green fallback. Unchanged-order controls keep matching blue/time/bytes with diskHits1 and zero preview HTTP. Forced scheduling proves admissibility, not natural incidence. Root independently inspected mutation paths, verified17 source/evidence hashes and report e5d7794f91bef12350650727853985b15ebeed3162f2829d7b9dbe3fb75de915; no edits. Suppressing cleanup alone lets stale put overwrite the newer row and is insufficient.",
+      "evidence_path": "test-results/review-2026-10-26/r04/final-interaction-review.json",
+      "risk": "Guarding only completion or deletion misses stale writes; non-atomic guards may race queued IDB work; retained per-key queues can grow. Failed replacements must not cold-read old pixels under new metadata. Keep optional legacy API behavior and exact usage state. Existing prior approvals do not transfer.",
+      "validation_plan": "Keep original failing fixture/control immutable. Add registered meaningful unit and actual-IDB/native JPEG regressions both engines for held conversion after replacement, stale completed-write cleanup after newer row, no replacement, failed replacement, old reads/sessions, repeated replacements/different keys, byte/count agreement and bounded writes. Native cold scrub must paint exact blue11.5 from local disk with0preview HTTP and same session/one video. Include mutation-removal negatives proving both stale overwrite and stale delete protections. Run relevant preview-history units plus registered browser-preview-storage and browser-preview-loading both engines, P37 nearest/coalesced/late reads/P40 precise bounds existing cases, docs links. Independent exact-final peer READY before integration; one new normal combined fullCI after all new corrections, no unchanged-source retry or relaxed assertion. No real printer, cloud, credentials or deployment. Stop starting work16:03:49UTC and safely park incomplete validation/source rather than rush.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P45",
+      "round": 15,
+      "revision": 1,
+      "title": "Retain failed inactive archive cleanup ownership and block new allocation until retry succeeds",
+      "author": "r06",
+      "source_finding": "R06-FINAL-INTERACTION-01",
+      "baseline": "607ceddd8f3e88f009445e533dd6891a221e5fdf",
+      "files": [
+        "apps/backend/replay.py",
+        "apps/backend/app.py",
+        "apps/backend/tests/test_replay_lifecycle.py",
+        "apps/backend/tests/test_replay.py",
+        "docs/video-delivery.md"
+      ],
+      "scope": "Fix only inactive/final-lease recursive archive cleanup lifecycle. Keep exact archive/directory and conservative byte accounting until deletion actually succeeds, including partial deletion or already-absent directory. Existing maintenance cleanup-before-collection and create admission must retry pending cleanup before allocating or collecting more footage, preventing a backlog of newly orphaned directories. Never reuse a retired partially removed archive or expose its prior footage to a new page. Preserve old-token invalidation, sibling metadata/media responsiveness, active-fragment unlink-before-bookkeeping behavior, one-current-fragment floor, locks/thread order and successful release/forget/create/rollback semantics. On expected OSError cleanup failure, HTTP close and forget return explicit503 with a generic rewind-cleanup-unavailable message after token retirement, rather than unhandled disconnect or false success; create retains its existing503 behavior. Direct replay release/forget OSError propagation and rollback original-exception behavior remain compatible. Update the corresponding vault note accurately, without promising eventual deletion if permissions never recover or process exits. No general startup sweep, disk quota redesign, new public control, storage path/config/dependency, registry/pairing change or unrelated response change. Exactly the five listed files may change. Material expansion needs fresh scope/votes.",
+      "evidence": "Exact607cedd actual non-root offline Docker production HTTP/worker fixture: three final release cycles with each owned archive temporarily chmod0500 leave16384-byte files while rmtree(ignore_errors=True) drops archive ownership. Restore0700 before two maintenance ticks/new create; actual bytes32768->49152->65536 under32768cap while accounting16384. Sibling unchanged token/media responds. After all close zero archives/sessions but49152orphan bytes survive prune/close. Ordinary no-fault removal control succeeds. Only final release runtime reproduced; expiry/forget/rollback/partial paths need new tests. Root inspected source, verified7 pinned source hashes+52artifact manifest entries, report00a33e3c9d8619de26bc5045400d3058096134608d746d29f81cdf3c12f79609. No product edits.",
+      "evidence_path": "test-results/review-2026-10-26/r06/final-interaction-review.json",
+      "risk": "Simply retaining a failed archive can revive missing/pre-page media; simply catching while creating new dirs preserves leak. Cleanup must keep ownership across partial recursive failure, refuse admission until resolved, preserve sibling reads and not replace original create errors. Expected HTTP cleanup failure semantics are explicitly changed only on failed close/forget. No old P30 vote transfer.",
+      "validation_plan": "Preserve exact old-source failure/ordinary control. Add non-root actual permission-fault HTTP/worker regression: final close returns503 with retired token, failed repeated creates503/no new archive dirs or increasing history, sibling token/media responsive, restore deletion and automatic cleanup removes exact old directory then new create records normally without old footage. Cover partial recursive removal, already absent path, expiry, forget, failed initial-create rollback retaining original error, worker alive and conservative accounted bytes, cleanup recovery and successful controls. Run backend replay/lifecycle, printer-history, scrub-preview, HTTP/provider/forget-related regressions and docs links in Docker. Independent exact-final peer READY before integration; one new normal combined fullCI after corrections, no hardware/network probes, credentials/deploy or broadened source. Deadline16:03:49UTC: stop starting work and safely park incomplete work/validation.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -6564,6 +6623,16 @@
       "at": "2026-10-26T15:04:59Z",
       "type": "eleven-hour-checkpoint",
       "message": "Actual11hpassed, roughly1hremaining.41integrated/43frozen/430explicitvotes(root0), all41CI+hostingPASS, earlier-source6hPASS independentlyverified, finaloutcometextreview/doclinksPASS. LongJPEGstressremainsincomplete. No new runtimepending or deployment; continueboundedfinalconsistencyreviewuntil16:03:49UTC."
+    },
+    {
+      "at": "2026-10-26T15:14:12Z",
+      "type": "final-hour-interaction-review",
+      "message": "R01 finalnewP43ownership/securityauditNO_FINDINGS, exact7sourcesverified. Remainingwindowassigned bounded current-source interaction reviews toR04storage-clock/R05frontend-provider-history/R06backend-concurrency; concrete new scope stillrequiresfresh6votequorum, no implementation preauthorized, NO_FINDINGS valid. Targetfindings15:35, harddeadline16:03:49UTC."
+    },
+    {
+      "at": "2026-10-26T15:23:44Z",
+      "type": "freeze",
+      "message": "Root verified R04 same-key persisted mutation and R06 final-lease directory cleanup findings/source/fixtures. NEW exact Round15 P44/P45 scopes frozen; each requires6fresh committed approvals before any author worktree/edit. No prior votes transfer."
     }
   ],
   "validation": [
@@ -7086,6 +7155,10 @@
     {
       "status": "OUTCOME_NAVIGATION_DOCS_PASS",
       "summary": "Focused Docker docscheck after addingledger Outcome-link passes36documents/vault/version; exactv2CIDabsent. Source/native/CIclaims unchanged; fullCIbranch deliberatelyremains tested862. Finalpostdeadlinewording stillpending."
+    },
+    {
+      "status": "P43_FINAL_SOURCE_SECURITY_NO_FINDINGS",
+      "summary": "R01 finalownership/security source-only review41faad12... atpublished607cedd NO_FINDINGS. Rootverified7exactsource hashes; returneddescriptor/stalesequence/remote/session-camera-version/currentmapped-ID/text-numericDOMsurfaces inspected beforepeerconclusions. Only3auditpaths differ fromacceptedauthor/CIcode. No runtime/physicaldevice claim."
     }
   ],
   "implementation_worktrees": [
