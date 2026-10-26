@@ -334,6 +334,17 @@
       "majority_recorded_at": "2026-10-26T07:08:02Z",
       "decision": "P33revision1 approved10/10. Firstsix recorded before test edits, root0. R07 immediate/held all-pass counter-case preserved; observed native rendering checkpoint and strict negative controls required.",
       "balloting_completed_at": "2026-10-26T07:39:58Z"
+    },
+    {
+      "id": 7,
+      "revision": 1,
+      "baseline": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "frozen_at": "2026-10-26T08:01:29Z",
+      "slate": "test-results/review-2026-10-26/round-7-slate.json",
+      "slate_sha256": "0841701bb828f1a76b56d92c9a51f01c5a6696766b63cfef411140f50e919fd6",
+      "ballots_started": true,
+      "reviewers_completed": [],
+      "notes": "Two independently reproduced delivery defects; actual controls are negative baseline evidence, not implementation. No votes inferred from findings."
     }
   ],
   "proposals": [
@@ -3814,6 +3825,44 @@
         "peer_decision": "READY",
         "validation": "Only fifth test case changes;16 independent immediate/delayed positive passes and4 intentionally injected failures at strict guards in both engines. Author standard keyboard passes. No production change."
       }
+    },
+    {
+      "id": "P34",
+      "round": 7,
+      "revision": 1,
+      "title": "Clean up only containers created by the check invocation",
+      "author": "r07",
+      "source_finding": "R07-R7-C1",
+      "baseline": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "files": [
+        "scripts/check.sh"
+      ],
+      "scope": "Track immutable Docker container identity/ownership only when this check invocation actually creates it, and remove only those owned identities during normal, failure and interrupt cleanup. Cover existing metadata, Python, docs, JavaScript, workspace, fixture and browser launch paths, including interruption during foreground execution and Docker name-conflict failure before creation. Creation-time cidfiles or equivalent verified immutable records must cover that interval; recording a planned name or only recording after foreground completion is insufficient. Preserve command options, exit/signal status, logs, owned-image cleanup and reused-image preservation. A pre-existing conflicting container and a later replacement reusing a name must survive. No production Compose/runtime change, renaming/removal of existing conflicting objects, broad prefix cleanup, image-tag ownership expansion, image publication or new product capability. Only scripts/check.sh is edited; disposable ignored ownership controls provide validation.",
+      "evidence": "R07 actual pinned check.sh receives name-conflict exit125 before creating metadata object, then deletes a pre-existing task-owned running canary by name. A separate canary and reused image survive. Root independently reproduced the same behavior at pinned all33 source, with only its own immutable-id-trapped canaries and reused Node image.",
+      "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
+      "risk": "Moderate shell lifecycle change. Must preserve cleanup when foreground execution is interrupted without treating a name as ownership, and must preserve original status/log/image behavior.",
+      "validation_plan": "Actual pre-existing metadata-name canary remains running after failed check exits125; different-name control and reused image unchanged. Later fixture/browser conflict preserves existing conflicting object while cleaning earlier successfully created owned resources. Interrupt successfully created foreground/background checks: only owned immutable IDs removed, signal/failure statuses preserved. Exercise all launch paths with bounded generated fixtures or controlled disposable Docker adapter as appropriate; compare exact diff/options and shell syntax. No duplicate full browser run or real printer/network probe needed.",
+      "status": "voting",
+      "ballots": {}
+    },
+    {
+      "id": "P35",
+      "round": 7,
+      "revision": 1,
+      "title": "Pass native filesystem paths to the browser suite subprocess",
+      "author": "r07",
+      "source_finding": "R07-R7-C2",
+      "baseline": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "files": [
+        "apps/web/tests/run-browser.js"
+      ],
+      "scope": "Convert each suite file URL using Node fileURLToPath before passing it as the subprocess argument. Preserve suite allowlist, default ordering, environment,240000ms timeout, inherited stdio and exit/error propagation. Native ESM only. No browser fixture, production source, endpoint, transport or documentation change; only apps/web/tests/run-browser.js is edited.",
+      "evidence": "Pinned registered runner passes actual history reconnect suite from plain path, but fails MODULE_NOT_FOUND from spaced path because URL.pathname retains %20. Same actual suite invoked directly from spaced path passes. Root independently reproduced plain0, spaced1, literal-percent1, spaced-direct0, unknown-suite2 using actual Chromium/WebKit HTTP/SSE consumers. Standard Docker wrapper copies to unspaced temporary path, so existing normal CI is not claimed broken; this predates P32.",
+      "evidence_path": "test-results/review-2026-10-26/r07/round7-findings.json",
+      "risk": "Low subprocess path conversion. Use fileURLToPath rather than ad hoc substitution; preserve existing child failures/timeouts and suite selection.",
+      "validation_plan": "Actual registered self-contained history reconnect suite passes in plain, spaced and literal-percent checkout paths in both engines. Unknown suite still exits2. Ordinary child failure and timeout/error propagation remain intact; inspect unchanged default list, environment, inherited stdio and240000ms timeout. Use ignored isolated generated fixture controls, not production devices.",
+      "status": "voting",
+      "ballots": {}
     }
   ],
   "commits": [
@@ -4473,6 +4522,11 @@
       "at": "2026-10-26T07:39:58Z",
       "type": "ballots-complete",
       "message": "All330 explicit ballots now recorded for33 exactproposals:329APPROVE/1ABSTAIN/0REJECT. OriginalR01P23ABSTAIN retained. Every integratedchange crossed6/10 beforeimplementation and received independentdiff review. Immutablea239c0c completecheck runs; ongoing6h sources5055adf andbac0827 remain distinct. FreshRound7 independentR01frontend/R10documentation/R07delivery reviews started at a239c0c; no newcandidateimplemented or invented."
+    },
+    {
+      "at": "2026-10-26T08:01:29Z",
+      "type": "round7-frozen",
+      "message": "P34/P35 exact one-file delivery scopes frozen after independent root reproduction. No implementation before6explicit reviewers; root0. All33 combined check now passed; no GitHub-green or production deployment claim."
     }
   ],
   "validation": [
@@ -4688,12 +4742,25 @@
     },
     {
       "summary": "Immutable all33 combined check.sh all:build,backend/webunits,docs,Nx/site and19defaultbrowser suites",
-      "status": "running",
-      "source": "a239c0c",
+      "status": "passed",
+      "source": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
       "exec_session": 4282,
       "log": "test-results/review-2026-10-26/all33-full.log",
       "source_record": "test-results/review-2026-10-26/all33-full-source-commit.txt",
-      "audit_harness": "Existing isolated-egress proxy wrapper only for browser launch; no request routing/cookie assertion modification. Githubunmodifiedrunner will validate separately after successful localcheck."
+      "audit_harness": "Existing isolated-egress proxy wrapper only for browser launch; no request routing/cookie assertion modification. Githubunmodifiedrunner will validate separately after successful localcheck.",
+      "recorded_at": "2026-10-26T08:01:29Z",
+      "result": "Exit0:215 Python tests,243 JavaScript tests,35 linked docs; Nx backend/web/site builds, cache restore, graph/site checks and all19 default Chromium/WebKit browser suites passed. Exact owned check containers and image verified absent after cleanup. Local audit-only browser proxy isolation; GitHub unmodified CI remains a separate pending check."
+    },
+    {
+      "summary": "Root independent Round7 delivery reproductions at all33 source",
+      "status": "confirmed baseline defects",
+      "source": "a239c0cfae2f84dc9d18b18aa0ed507d48a8052f",
+      "recorded_at": "2026-10-26T08:01:29Z",
+      "evidence": [
+        "test-results/review-2026-10-26/root-round7-delivery/cleanup-collision.log",
+        "test-results/review-2026-10-26/root-round7-delivery/runner-paths.json"
+      ],
+      "result": "Name-conflict check125 deletes only pre-existing own conflicting canary; own separate control and reused image survive. Actual history registered runner plain passes, spaces/percent fail MODULE_NOT_FOUND, spaced direct suite passes, unknown selection2. Own canaries and runner removed; no unrelated service touched."
     }
   ],
   "implementation_worktrees": [
