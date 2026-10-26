@@ -194,7 +194,9 @@ export class PrinterScrubPreview extends PlayerElement {
       if (this.hidden || this.history.peek(this.point.time)) return;
       const key = `${this.sheet.start}:${this.sheet.count}`;
       for (const [entry, until] of this.failures) if (until <= Date.now()) this.failures.delete(entry);
-      if (!this.failures.has(key)) this.load(key, this.token, { ...this.sheet });
+      if (!this.failures.has(key) && !this.failures.has('decode:sheet:' + key)) {
+        this.load(key, this.token, { ...this.sheet });
+      }
     }, 100);
   }
 

@@ -11,6 +11,7 @@ const available = [
   'browser-stream-recovery.js',
   'browser-preview-storage.js',
   'browser-preview-buffer.js',
+  'browser-preview-loading.js',
   'browser-scrub-commit.js',
   'browser-timeline-events.js',
   'browser-fullscreen.js',

@@ -46,9 +46,11 @@ Missing, evicted or unreadable local frames fall back to the existing server
 sprite endpoint, after local lookup and a short pointer debounce. One JPEG has
 six five-second frames. Its cells are cached locally alongside captured frames;
 a late server reply cannot replace a captured frame or the current pointer's
-preview. There is one backup HTTP request at a time, a ten-second failure
-cooldown and no automatic HTTP prefetch/poll loop. Capture continues collecting
-the live session even while the preview is closed.
+preview. There is one backup HTTP request at a time and a ten-second failure
+cooldown, including when a returned sprite cannot be decoded. A failed captured
+frame can still use a different server sprite. There is no automatic HTTP
+prefetch/poll loop. Capture continues collecting the live session even while
+the preview is closed.
 
 Stills do not replace video recording. Full-motion rewind beyond the bounded
 native video/segment cache still uses the server DVR. Browser storage can be
