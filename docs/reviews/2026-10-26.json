@@ -16,56 +16,62 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "initial review complete",
-      "initial_report": "test-results/review-2026-10-26/r01/"
+      "status": "round 1 ballot complete",
+      "initial_report": "test-results/review-2026-10-26/r01/",
+      "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json"
     },
     {
       "id": "r02",
       "scope": "Player, replay and timeline",
       "agent_task": "/root/review_r02_player",
-      "status": "initial review complete",
-      "initial_report": "test-results/review-2026-10-26/r02/"
+      "status": "round 1 ballot complete",
+      "initial_report": "test-results/review-2026-10-26/r02/",
+      "ballot_round1": "test-results/review-2026-10-26/r02/ballot-round1.json"
     },
     {
       "id": "r03",
       "scope": "Printer discovery and telemetry",
       "agent_task": "/root/review_r03_printers",
-      "status": "initial review complete",
-      "initial_report": "test-results/review-2026-10-26/r03/"
+      "status": "round 1 ballot complete",
+      "initial_report": "test-results/review-2026-10-26/r03/",
+      "ballot_round1": "test-results/review-2026-10-26/r03/ballot-round1.json"
     },
     {
       "id": "r04",
       "scope": "Browser previews, storage and performance",
       "agent_task": "/root/review_r04_storage",
-      "status": "initial review complete",
-      "initial_report": "test-results/review-2026-10-26/r04/"
+      "status": "round 1 ballot complete",
+      "initial_report": "test-results/review-2026-10-26/r04/",
+      "ballot_round1": "test-results/review-2026-10-26/r04/ballot-round1.json"
     },
     {
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "initial review complete",
-      "initial_report": "test-results/review-2026-10-26/r05/"
+      "status": "round 1 ballot complete",
+      "initial_report": "test-results/review-2026-10-26/r05/",
+      "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json"
     },
     {
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "initial review complete",
-      "initial_report": "test-results/review-2026-10-26/r06/"
+      "status": "round 1 ballot complete",
+      "initial_report": "test-results/review-2026-10-26/r06/",
+      "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json"
     },
     {
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "initial review complete",
+      "status": "voting round 1",
       "initial_report": "test-results/review-2026-10-26/r07/"
     },
     {
       "id": "r08",
       "scope": "Nx workspace, product website and onboarding",
       "agent_task": "/root/review_r08_workspace",
-      "status": "initial review complete",
+      "status": "voting round 1",
       "initial_report": "test-results/review-2026-10-26/r08/initial-report.json"
     },
     {
@@ -146,8 +152,51 @@
       "evidence_path": "test-results/review-2026-10-26/r01/",
       "risk": "Low; installations relying on redirects must enter the final backend origin.",
       "validation_plan": "Unit test forced policy despite caller override; browser 307/308 receivers receive no configure body; normal same-origin/CORS flow remains valid.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The real Chromium fixture forwards the configure body to a second origin after a 307 despite resolve() validating the initial origin. Forcing redirect:error after init closes that concrete secret-body escape; the specified 307/308 and normal-flow tests address the compatibility risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "PythonBackend.fetch validates only the initial origin and leaves redirect following enabled. I reran the loopback reproduction and observed the access-code POST at a second origin; forcing redirect:error after caller options directly closes that gap with the stated final-origin compatibility rule.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "PythonBackend.resolve checks only the initial origin; the Chromium fixture shows default redirect following replays the access-code POST elsewhere. Forcing redirect:error after caller options closes that demonstrated boundary violation, with the final-origin compatibility consequence explicitly documented.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "resolve validates only the initial URL; my offline Chromium rerun confirmed a 307 forwards the configure body to another origin. Forcing redirect:error after caller init enforces the selected-origin boundary. Approval includes the override unit test, 307/308 no-body browser checks, normal same-origin/CORS checks, and final-origin documentation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Independently reproduced the configure body reaching an unselected origin in Chromium. Forcing redirect:error after caller options closes that fetch boundary; the planned override, 307/308 and ordinary CORS checks cover the compatibility cost.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "PythonBackend.resolve checks only the initial origin; fetch currently follows redirects. My offline Chromium rerun delivered the configure body to a different loopback origin. Forcing redirect:error after init closes this specific boundary. Approve with the specified override, 307/308, normal CORS and final-origin documentation checks.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P02",
@@ -164,8 +213,51 @@
       "evidence_path": "test-results/review-2026-10-26/r01/",
       "risk": "Low; intentionally removes unusual secret/URL-keyed readings.",
       "validation_plan": "Nested secret/URL key fixtures and safe siblings; no secret or URL in serialized output; existing bounded sanitizer tests.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "public_stats copies surviving keys verbatim, and accepted nested fixture JSON retains both the supplied code and authenticated URL. Dropping only matching keys completes the existing public sanitization contract; the slate correctly makes no real-firmware exposure claim.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "public_stats copies surviving dictionary keys verbatim while sanitizing string values. The accepted nested-key fixture demonstrates a violation of its public-data contract; dropping matching entries avoids replacement collisions and preserves the existing traversal budgets without claiming real-firmware exposure.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "public_stats sanitizes string values but copies accepted dictionary keys verbatim, matching the nested secret/URL fixture. Omitting those entries before copying fixes the public-data contract without replacement-key collisions or expanding sanitizer budgets.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The sanitizer copies accepted object keys unchanged, and my fixture rerun retained both a saved code and authenticated URL in nested keys. Omitting those entries before budgeting is a narrow correction without replacement collisions. Approval includes nested secret/URL and safe-sibling fixtures plus existing size/node/depth sanitizer checks.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The bounded sanitizer filters values but copies surviving keys verbatim; the synthetic secret and URL keys reproduced. Dropping those entries before budgeting follows its existing public-data contract, with safe-sibling and bounds regressions sufficient.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "public_stats copies surviving dictionary keys verbatim while sanitizing string values. My offline rerun retained both the supplied code and authenticated URL as nested keys. Dropping those entries before budgeting avoids replacement collisions; nested safe-sibling and existing resource-limit regressions are appropriate. This remains synthetic defensive coverage.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P03",
@@ -183,8 +275,51 @@
       "evidence_path": "test-results/review-2026-10-26/r03/",
       "risk": "Low to moderate; private serial must remain intact, including short-code cases.",
       "validation_plan": "Synthetic paired registry checks name/firmware reports, catalog/current/debug/persistence/reload; safe identity unchanged; TLS and subscription serial retained.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "I reran the paired-registry reproduction: status redacts the source while catalog and persisted name expose it. Sanitizing public name/firmware and saved projections is bounded; preserving private serial/model and testing short-code cases protects authentication identity.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reproduced the unsanitized identity callback persisting and publishing a source URL/code despite redacted telemetry status. Sanitizing display metadata and saved public projection is the appropriate bounded fix, provided the private verified serial/model and short-code TLS/topic identity tests remain intact.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "I reran the identity fixture: a raw authenticated URL in dev_name reaches both persisted identity and catalog despite sanitized telemetry. Applying the existing policy to public name/firmware and catalog projection addresses this while the exact scope preserves private TLS/topic serials.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The identity callback bypasses the public telemetry sanitizer; my offline registry rerun confirmed leaked display metadata in catalog and persistence despite sanitized status. Public name/firmware filtering and legacy projection fit the documented boundary. Approval includes persistence/reload/debug coverage and tests preserving private serial/model, TLS pinning, subscriptions, safe metadata, and short-code cases.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Confirmed the identity callback/persistence path bypasses telemetry value redaction and leaks through catalog projection. The exact scope separates public names/firmware from private serial authentication and tests saved-data reload, safe metadata and TLS/topic identity.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The telemetry identity callback bypasses public_stats and CameraRegistry persists that identity before catalog projection. My synthetic rerun reproduced a clean telemetry status but secret-bearing persisted/catalog name. The scope correctly separates public name/firmware from private TLS/topic serials; saved-record, reload and short-code pairing regressions are required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P04",
@@ -202,8 +337,51 @@
       "evidence_path": "test-results/review-2026-10-26/r03/",
       "risk": "Moderate; pairing lifecycle, active clients and atomic persistence need focused review.",
       "validation_plan": "Pair A then discover B; B cannot use A code or create telemetry before explicit re-pair, including reload. Re-pair B succeeds; repeat A scan/offline restart/metadata delta and unrelated endpoint remain intact; persistence failure covered.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The source and rerun fixture show discovery overwriting the pinned serial while retaining the old access code, and the replacement certificate is accepted after reload. Quarantining this verified mismatch is necessary to keep codes per printer; the stated unchanged-serial, re-pair, unrelated-endpoint and persistence-failure tests cover the lifecycle risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reproduced a verified replacement serial becoming the expected TLS serial while retaining the previous printer's code, including after reload. The scoped quarantine and explicit re-pair transition addresses this concrete binding failure; atomic persistence, active-client shutdown, unchanged-serial offline behavior, legacy records, and unrelated endpoints require the listed tests.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The rerun proves discovery replaces a previously verified serial while retaining the old code, including after reload and certificate acceptance. Quarantining that changed pairing is justified; the scoped unchanged-serial, legacy-record, unrelated-endpoint and persistence-failure checks bound the lifecycle risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Discovery currently merges a replacement verified serial while retaining the old credential URL; the offline rerun confirmed that binding survives reload and accepts B's certificate. Quarantining the affected pairing addresses the actual ownership defect. Approval includes client shutdown, explicit re-pair, reload, unchanged-serial offline resumption, legacy unpinned records, sibling endpoints, and persistence-failure coverage.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The fixture independently transferred the old source code to a newly verified serial after reload. Quarantining that pairing is justified; the stated active-client, persistence-failure, explicit re-pair, unchanged-serial and unrelated-endpoint checks cover its moderate lifecycle risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "catalog merges a replacement verified serial into the endpoint's existing source binding. My fixture reproduced reload accepting B's certificate with A's code. Quarantining verified replacements is justified and preserves explicit pairing. Approve the stated active-client, persistence-failure, re-pair, unchanged-serial, legacy and unrelated-endpoint validation; shutdown must respect lock ownership.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P05",
@@ -221,8 +399,51 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Low; one legitimate initial frame request for the replacement session.",
       "validation_plan": "Unit fixture switches JPEG A/B and seeks same rounded time; assert B frame URL assigned and paused; existing timeline tests.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "close() leaves lastImagePosition intact, and the rerun A/B JPEG fixture suppresses B's historical request at the same rounded time. Resetting or session-scoping that key fixes stale media without changing pause semantics or same-session deduplication.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the production replay fixture: close leaves lastImagePosition at 30, and a different JPEG session seeking 30 keeps its live image. Resetting or session-scoping that deduplication key fixes the cross-session suppression without changing within-session pause or seek semantics.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The shipped-controller reproduction shows lastImagePosition survives close and suppresses the replacement JPEG session's same-position frame request while paused. Resetting or session-scoping that single dedup key fixes the wrong displayed frame and retains same-session request suppression.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "close resets the session but not lastImagePosition; my controller rerun reproduced B retaining its live image when the requested rounded time matched A. Resetting or session-scoping this cache is sufficient. Approval includes the paused A/B frame-URL regression, same-session deduplication, and existing timeline tests.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Reproduced the replacement JPEG session suppressing its same-time frame URL because lastImagePosition survives close. Session reset or session-scoped deduplication is narrow; the proposed two-session pause/seek regression preserves same-session request suppression.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "close resets the session but leaves lastImagePosition, and showImage deduplicates by time alone. The production-module rerun suppressed B's historical URL after seeking A and B to 30 seconds. Session reset or session-scoped deduplication is bounded; retain same-session deduplication and paused behavior in regression.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P06",
@@ -240,8 +461,61 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Moderate; asynchronous readiness across continuous, HLS and native paths.",
       "validation_plan": "Extend real-browser recovery fixtures for paused rewind and playing replay, retaining session/video/position or offset. Live recovery still progresses, Chromium/WebKit; unit intent lifecycle.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "attachMedia unconditionally resets pause/followLive, and both supplied Chromium and WebKit recovery records confirm a same-session rewind jumps near Live and resumes. Session-scoped intent restoration fits the defect; validation across readiness paths, explicit Live and new sessions is appropriately required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "attachPlayer reuses the existing session but attachMedia unconditionally resets paused/followLive. I verified the controller reproduction and inspected supplementary Chromium/WebKit paused and playing replay records showing the same session/video jump to Live after fatal-error recovery; session-owned intent restoration after readiness is justified within the stated transport and decoder limits.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "My generated-video Chromium and WebKit checks confirm both paused and playing rewind return to Live after the existing fatal-error recovery path, with the same session and native video element. Session-owned intent restoration directly fixes this; initial/new-session and explicit Live behavior are preserved by the frozen scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "attachMedia unconditionally resets paused/replay intent. I inspected the recovery harness and all four supplied browser records: both engines jump historical playback to Live while retaining the session and native video. Session-scoped restoration is justified. Approval includes readiness/cancellation lifecycle units and Chromium/WebKit paused, playing-replay, and Live recovery checks across affected attachment paths.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Inspected the fatal-error harness and all four Chromium/WebKit records: recovery retained session/video but resumed paused rewind and lost replay offset. Session-owned intent restoration is warranted; the planned paused, playing and Live recovery coverage matches its asynchronous risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Automatic recovery reaches attachPlayer and unconditionally resets replay intent through attachMedia. I inspected the controller and four supplemental Chromium/WebKit records: paused and playing rewind jump toward Live while preserving session and one video element. The required browser proof is present. Approve same-session restoration with readiness, Live/new-session and both-engine regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      },
+      "additional_evidence": {
+        "summary": "Same-session fatal decoder recovery loses paused and playing replay intent in real Chromium and WebKit generated-video fixtures; decoded clocks advanced afterward. Linux fixture evidence, not physical iPhone/native Safari or natural decoder failure.",
+        "files": [
+          "test-results/review-2026-10-26/r02/recovery-evidence.mjs",
+          "test-results/review-2026-10-26/r02/p06-chromium-paused-replay.json",
+          "test-results/review-2026-10-26/r02/p06-chromium-playing-replay.json",
+          "test-results/review-2026-10-26/r02/p06-webkit-paused-replay.json",
+          "test-results/review-2026-10-26/r02/p06-webkit-playing-replay.json"
+        ]
+      }
     },
     {
       "id": "P07",
@@ -259,8 +533,51 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Low when limited to kind=file with finite duration.",
       "validation_plan": "Unit tests near EOF and after EOF advance clock; edge and max never exceed duration, no fake end offset; pre-EOF equal-rate replay stays stable; HLS interpolation unchanged.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The rerun finite-file fixture reaches duration 100 but predicts edge 106 and displays a false six-second offset. A finite file cap preserves the real available timeline; limiting the change to file media and retaining HLS prediction avoids changing live transport behavior.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "The production fixture I reran predicts edge 106 for a finite duration-100 file at EOF and displays a false six-second offset. A finite file-duration ceiling directly removes nonexistent display time while the scope explicitly retains pre-EOF interpolation and the existing HLS prediction horizon.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The finite-file controller fixture predicts six nonexistent seconds at EOF although file seek bounds already stop at duration. A finite-duration display cap is appropriate and narrowly scoped; pre-EOF matched-rate stability and unchanged HLS prediction are explicit regression requirements.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "My controller fixture rerun produced timeline edge 106 and a false six-second offset for a finite 100-second file at EOF. A finite file-only duration cap corrects display prediction without changing HLS behavior. Approval includes near/after-EOF clock advancement, pre-EOF equal-rate stability, and unchanged HLS interpolation tests.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The production timeline fixture independently predicted edge 106 for a 100-second file and displayed a fictitious six-second offset. A finite file-only cap preserves HLS interpolation; near/after-EOF and equal-rate replay checks adequately constrain it.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "PageReplay.bounds clamps finite files but render sends them through the six-second live predictor. My module rerun produced edge 106 for duration 100 and a false six-second offset at EOF. A known finite file cap fixes the mismatch without changing HLS; verify near/after EOF and equal-rate pre-EOF replay as specified.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P08",
@@ -277,8 +594,51 @@
       "evidence_path": "test-results/review-2026-10-26/r05/",
       "risk": "Low; no transport/capability expansion.",
       "validation_plan": "Focused production-module fixtures release stale success and failure after a current refresh, asserting identity, error, camera catalog and source remain current; shared ready/refresh still work.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The rerun production-module fixture completes a new refresh, then an older probe overwrites identity and stream_url. Guarding both success and failure by current probe ownership resolves this race while preserving shared ready promises and explicit refresh.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the held-probe fixture: an older ready result overwrites the newer refresh identity and stream URL. Guarding both success and error assignments by the current probe owner addresses the stale write while preserving shared ready calls and explicit refresh behavior.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Direct.ready writes shared identity/error without probe ownership, and the held-response fixture restores old webcam URLs after a completed refresh. Guarding both success and failure assignments by the current probe resolves that race without changing approved-controller admission or live-only capabilities.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "ready callbacks mutate shared identity/error without proving ownership after refresh replaces the promise; my rerun restored the obsolete webcam after a successful current refresh. Promise/generation guards are appropriately bounded. Approval includes late stale success and failure checks for identity, error, catalog and source, with shared-ready and refresh behavior retained.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The production Direct provider allows a stale ready completion to overwrite a completed refresh. Current-probe ownership guards both success and error without expanding capabilities; stale-result, catalog/source and shared-promise tests directly cover the defect.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "refresh drops the cached promise, but an earlier ready continuation still writes shared identity/error unconditionally. My fixture rerun restored the old camera URL after the newer refresh finished. Promise/generation ownership addresses both success and failure while allowing old callers to settle; the specified catalog/source and shared-call regressions cover the boundary.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P09",
@@ -296,8 +656,51 @@
       "evidence_path": "test-results/review-2026-10-26/r05/",
       "risk": "Low; cleanup must not duplicate SDK callbacks or sender listeners.",
       "validation_plan": "Fail first script load, succeed on explicit refresh, assert only bounded retry, native picker remains synchronously invoked by click, concurrent initialization shares one active script.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Both module loading and sender.initializing retain the initial failure, and the rerun source-refresh fixture performs no second load. Clearing failed ownership with script/callback cleanup permits bounded explicit recovery; the required deduplication and synchronous picker checks protect existing Cast behavior.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the Cast fixture and confirmed both the rejected module-level loading promise and settled per-instance initializing cache prevent a second attempt after refresh. Clearing failed caches and their script/callback ownership permits the scoped explicit retry; concurrent deduplication, listener cleanup, and synchronous picker activation are necessary regression conditions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The SDK fixture and both cache layers explain why explicit source refresh cannot recover from one transient load failure. Clearing failed loading/initialization state with owned script/callback cleanup supports bounded explicit retry while retaining shared loading, sender listeners and synchronous picker activation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Both SDK loading and instance initialization retain failed state; my offline rerun confirmed explicit source refresh never makes a second script request. Clearing only failed caches and their resources enables the specified deliberate retry. Approval includes fail-then-success refresh, one concurrent active script, no autonomous retry, listener cleanup, and synchronous picker activation tests.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Both rejected SDK loading and settled instance initialization remain cached, so explicit source refresh cannot recover. Clearing failed ownership with script/callback cleanup is bounded; concurrent-load, bounded-retry and synchronous picker checks preserve the existing activation contract.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The global loading promise stays rejected and the instance initializing cache remains set after failure. My offline module rerun made zero new script requests after source refresh. Clearing only failed initialization state and cleaning its callbacks permits bounded explicit recovery. Deduplication, stale callback/listener cleanup and synchronous picker activation must pass the stated tests.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P10",
@@ -315,8 +718,51 @@
       "evidence_path": "test-results/review-2026-10-26/r04/",
       "risk": "Low; avoid suppressing a different fallback image or permanently poisoning the preview.",
       "validation_plan": "Fixture corrupt JPEG yields one request during cooldown then valid response paints after expiry; local-corrupt-frame can still fall back to server sprite; target/session cancellation preserved.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The rerun corrupt-sprite fixture issues five HTTP requests in 650ms despite only one decode and an active decode:sheet failure. Matching the scheduler to that cooldown removes this retry storm; the specified expiry and distinct-local-fallback tests prevent suppressing valid recovery.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I independently observed six sprite requests in 650 ms with only one decode because schedule checks the HTTP key but ignores decode:sheet failures. Consulting the matching sprite decode cooldown before another fetch is a precise fix, with expiry recovery and distinct local-to-server fallback preserved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "I reran the corrupt-sprite fixture: HTTP repeats while decoding is already under cooldown. Consulting the matching sprite decode failure before fetching stops the loop; preserving fallback from a different corrupt local asset and expiry retry keeps legitimate previews reachable.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The real preview state-machine fixture reproduced five HTTP fetches in 650 ms despite a single decode failure because schedule ignores the matching decode:sheet cooldown. Consulting that exact cooldown is sufficient. Approval includes corrupt-sprite request bounds, successful post-expiry retry, corrupt captured-frame fallback to a different sprite, and target/session cancellation regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Independently observed six corrupt sprite requests in 650 milliseconds despite only one decode attempt. Matching scheduling to the decode cooldown addresses the loop; expiry recovery and distinct local-frame-to-server fallback tests prevent overbroad suppression.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "bitmap records decode:sheet failures, while schedule checks only the HTTP sheet key. My rerun made five requests in 650 ms with one attempted decode at a stationary target. Matching the sprite decode cooldown before fetch is narrow. Expiry recovery, a distinct server fallback for corrupt local frames, and cancellation regressions are necessary and included.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P11",
@@ -334,8 +780,51 @@
       "evidence_path": "test-results/review-2026-10-26/r04/",
       "risk": "Low; stale completions must not repaint a newer target or closed session.",
       "validation_plan": "Delay a valid persisted read beyond500ms, assert stationary target paints automatically without pointer movement; older target/session completion cannot replace current preview; no second decoder.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The 500ms race abandons completion observation, and the rerun fixture has a resident valid disk image with zero decodes or paints until another interaction. Observing completion with current session/epoch/target guards fixes stationary previews without changing storage or decoder ownership.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "The delayed-disk fixture I reran makes the requested image resident after the 500 ms race but leaves it unpainted until another render. Retaining a completion continuation and checking current target/session/epoch restores stationary previews without increasing decoder ownership or allowing stale paints.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The rerun leaves a valid delayed disk image resident but unpainted after the 500 ms race until another pointer event. Handling the eventual completion with session, epoch and current-target guards repairs stationary preview rendering without allowing stale reads to repaint a different target.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The 500 ms race discards the UI completion path while PreviewHistory later restores the requested JPEG without notifying it. My fixture confirmed a resident image with no decode or paint until another redraw. Approval includes automatic stationary late-read rendering, current target/session/epoch guards, cancellation, bounded decoding, and preservation of the single native video decoder.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "A delayed persisted read became resident without decoding or painting until another render call, reproducing the lost completion. The scoped completion handler plus target/session/epoch checks and stale-read regressions preserve preview ownership and bounded decoding.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The 500 ms race abandons the completion that makes a persisted blob resident; PreviewHistory.get emits no change at that point. My delayed-read fixture reproduced resident data with zero decodes and no paint until another render. Retaining guarded completion handling fits existing ownership; target, epoch, session and decode-bound regressions are included.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P12",
@@ -355,8 +844,51 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. File reads already open may finish on POSIX; new lookups correctly fail after stop. Delete only the owned generation to preserve a concurrently created replacement.",
       "validation_plan": "Use the existing fake-FFmpeg RecoveryTests fixture: stop/reconfigure/forget a relay, assert its generation path and prior media URL disappear (404); separately assert a replacement generation or sibling directory survives.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The rerun fake-FFmpeg fixture stops the relay yet its old segment still returns 200, matching the missing final-generation cleanup in finally. Deleting only that owned UUID directory after termination prevents orphaned live windows; replacement/sibling survival checks keep cleanup safe.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the fake-relay fixture: after the relay thread stops, its final segment still returns HTTP 200 and its generation directory remains. Finally-block removal of only the locally owned generation closes the orphan lifetime without deleting a replacement or sibling camera directory.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The lifecycle probe still serves the final generation's segment with HTTP 200 after its relay thread stops. Removing only that relay's locally owned generation after process/reader cleanup closes the resource and retained-URL leak without deleting a concurrently started replacement.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Relay finally terminates FFmpeg but never removes its last owned generation; my fake-FFmpeg rerun confirmed old segment HTTP 200 after the relay stopped. Removing only that owned directory after process/reader cleanup is appropriate. Approval includes stop/reconfigure/forget 404 checks and preservation of replacement generations and sibling directories.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The fake-FFmpeg and loopback HTTP rerun confirmed a stopped relay's final segment remains readable. Final cleanup of only the locally owned generation is appropriate; the proposed 404 and surviving replacement/sibling checks protect concurrent relays.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The supervisor deletes prior generations only on another iteration; final shutdown leaves its last live window. My earlier offline HTTP probe confirmed old media returns 200 after the relay thread stops. Removing only the owned final directory after process cleanup is bounded. Stop/reconfigure/forget 404 checks plus replacement-directory survival address deletion risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P13",
@@ -375,8 +907,51 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. Cleanup must target only the newly created token and must not remove an archive still leased by other pages.",
       "validation_plan": "Inject ENOSPC on first collection, assert no new token or unused archive remains, restore the copy and assert create succeeds. Also fail a later tab on a shared archive and assert the existing tab/history is intact.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "create registers its token before fallible collection; I reproduced 128 inaccessible leases from ENOSPC and rejection after disk recovery. Rolling back just the new lease and unused archive is the correct transaction boundary, with the shared-tab preservation test guarding other viewers.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran injected ENOSPC creation failures and observed 128 unreturned leases block a recovered create. Rolling back only the new token and pruning an otherwise unleased archive matches the actual transaction boundary; the shared-existing-tab preservation test prevents overbroad cleanup.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "I reran 128 injected ENOSPC creates: every request fails yet hidden session leases exhaust viewer admission after storage recovers. Rolling back the new token and unused state while preserving already leased archives is the correct bounded transaction repair.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "create inserts the token before initial collection can fail; my ENOSPC rerun accumulated 128 unreturned leases and blocked admission after recovery. Rolling back only the new token and unused state fixes the leak. Approval includes restored-disk admission, original failure propagation, unused-archive cleanup, and failure of a later tab without damaging an existing shared archive.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Injected collection failures independently exhausted all 128 invisible session slots. Rolling back only the newly unreturned token restores transactional creation, and the planned existing-tab/shared-archive checks guard retained history while preserving the original failure.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "create stores its token before collection can raise, while HTTP failures return no token to release. My injected ENOSPC probe retained 128 failed sessions and blocked creation after recovery. Transactional rollback of just the new lease is justified; first-create recovery and preservation of another tab's archive are the right required regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P14",
@@ -395,8 +970,51 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low to medium. Preserve lock order; _run already holds replay.lock while calling registry.get_relay. Registry forget/configure currently release registry.lock before acquiring replay.lock.",
       "validation_plan": "Deterministically hold ReplayBuffer.lock, start a create, forget the registry/replay while the lock is held, release it, and assert create rejects without retaining a session/archive. Cover the opposite ordering so a forget following a successful create clears that session.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The deterministic rerun reproduces creation and readable media after forget completes because admission captures the relay outside replay.lock. Moving that check under the existing replay-to-registry order serializes the two outcomes; both race orderings in the validation plan are needed and sufficient for this scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the deterministic race and observed create return readable media after forget completed using a previously captured relay. Moving relay admission under ReplayBuffer.lock closes that ordering gap and matches the existing replay-to-registry lock order; both create-before-forget and forget-before-create must be tested.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The deterministic probe recreates readable history after forget returns because create captured a relay before its replay lock. Moving admission inside that lock matches the replay-to-registry order already used by _run and makes either operation ordering reject or clear the session.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The admission lookup occurs before ReplayBuffer.lock; my controlled interleaving rerun recreated readable history after forget returned. Moving it inside the lock uses the replay-to-registry order already present in _run. Approval includes deterministic create/forget tests in both orders, no residual session/archive, and preservation of the existing lock order.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Reproduced successful session/archive resurrection after forget using the relay captured before the replay lock. Moving admission inside that lock follows the existing worker lock order; both create/forget orderings are explicitly covered without broad locking changes.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Relay admission occurs before the replay lock, allowing forget to finish before a stale create resumes. My deterministic probe recreated readable footage for an unavailable printer. Moving admission under the replay lock matches _run's existing lock order. The stated two orderings must verify rejection or subsequent pruning without resurrected sessions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P15",
@@ -416,8 +1034,51 @@
       "evidence_path": "test-results/review-2026-10-26/r06/",
       "risk": "Low. FFmpeg emits a monotonic rolling manifest within each generation; keep reset behavior for a genuine reconnect.",
       "validation_plan": "Feed thousands of sequential rolling manifests under a small byte limit and assert seen remains bounded by the manifest window, no duplicate append occurs for unchanged manifests, and reconnect/page-isolation behavior is preserved.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The rerun retains 1003 source names with one stored fragment, and pruning never trims seen. Intersecting with the monotonic rolling manifest bounds bookkeeping while the specified unchanged-manifest, generation-reset and page-isolation tests protect collection semantics.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran rolling collection under a one-fragment retention cap and observed 1003 retained source names. Intersecting seen with the current monotonic manifest bounds this independent metadata growth while the scoped generation reset, unchanged-manifest deduplication, and initial page exclusion tests protect recording semantics.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The rolling-manifest probe retains 1,003 source names while media retention keeps one fragment. Bounding seen to the current manifest removes lifetime growth; the exact scope retains generation reset, initial page-history exclusion and unchanged-manifest deduplication.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "seen retains every source filename until generation change; my rolling fixture rerun retained 1003 names with one media fragment. Intersecting with the monotonic current manifest bounds bookkeeping without changing footage retention. Approval includes thousands of rolling manifests, unchanged-manifest deduplication, generation reset, and initial page-history exclusion tests.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The fixture retained 1003 seen names for one retained fragment, and FFmpeg uses monotonic names in a rolling manifest. Manifest-bounded bookkeeping is safe within each generation; duplicate, reconnect and page-isolation tests cover the relevant invariants.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "seen retains every source name until generation change although _prune removes the matching footage. My probe retained 1003 names with one fragment. The backend owns a monotonic rolling FFmpeg manifest, so intersecting with that window is bounded and preserves current-source deduplication. Repeated-manifest, generation-reset and page-isolation regressions protect the assumptions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P16",
@@ -435,8 +1096,51 @@
       "evidence_path": "test-results/review-2026-10-26/r07/site-independent.log",
       "risk": "Low; an extra declared build prerequisite, no shipped behavior change.",
       "validation_plan": "Actual nx test site from clean dist and isolated cache must build its prerequisites and pass Chromium/WebKit site and worker checks.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "site:test declares only its own build but unconditionally reads the web build's worker; the supplied clean-run ENOENT is consistent with that source dependency. Declaring web:build retains current assertions and makes the existing target runnable independently; actual clean Nx/browser validation is properly required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "site:test declares only its site build, but browser-site.js reads dist/apps/web/service-worker.js before launching a browser; the clean-build ENOENT log agrees with source. Declaring web:build as an additional prerequisite fixes the dependency rather than weakening the worker assertion, with an isolated-cache Nx run required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "site:test directly reads the built web service worker but declares only its own site build prerequisite, matching the clean-dist ENOENT fixture. Adding web:build expresses that actual dependency without weakening worker assertions or introducing a runtime.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "site:test declares only its own build while browser-site reads dist/apps/web/service-worker.js before browser launch; the clean-build ENOENT evidence matches the source. Explicitly declaring web:build is the small dependency correction. Approval requires actual nx test site from clean dist and isolated cache, including both engines and the existing worker assertions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "site:test declares only its own build yet unconditionally reads the web worker output; the clean-dist ENOENT evidence matches source. Declaring web:build preserves those assertions, and actual isolated-cache nx execution is the right validation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "site:test depends only on site build, yet browser-site reads dist/apps/web/service-worker.js before launching browsers. Source and clean-build ENOENT evidence establish the undeclared prerequisite; a full workspace build masks it. Adding the explicit web build dependency preserves the assertion. Approval includes actual clean-dist, isolated-cache nx site tests in both engines.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P17",
@@ -454,8 +1158,51 @@
       "evidence_path": "test-results/review-2026-10-26/r08/initial-report.json",
       "risk": "Low; bounded input lock with explicit cancellation.",
       "validation_plan": "Real-browser held-probe regression: address disabled, displayed origin exactly matches successful selection, Back/Escape cancel and late result ignored, failure/timeout restore editing; Direct shares lock.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The rerun chooser fixture saves A while its enabled input displays B during A's pending check. Disabling that input matches the selected request's ownership and is a small UI correction; Back/Escape, timeout/failure and late-cancel browser coverage address the interaction risk.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the production picker fixture and confirmed a submitted origin A is selected while the still-editable field displays B. Locking the address for the bounded request is consistent with the existing editor contract; the browser validation must preserve reachable Back/Escape cancellation and restore editing after cancellation/failure/timeout.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The picker snapshots config before awaiting its check while busy disables only submit, so the fixture selects origin A with origin B visible. Locking the address during the bounded probe fixes this mismatch; preserved Back/Escape cancellation and editing restoration are necessary parts of the approved scope.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "busy disables submission but leaves the address editable; my production-module rerun selected A while displaying B. A bounded address lock fixes that mismatch. Approval includes real-browser Docker/Direct held-probe checks, failure/timeout re-enabling, cancelled late-result exclusion, and Back/Escape remaining reachable even when disabling the previously focused input.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Reproduced origin A being selected while the editable address displays B. A bounded input lock matches Settings; the included real-browser cancellation, late-result, timeout and Direct checks also ensure disabling input does not strand Escape or editing.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "busy disables submission but leaves the address editable while connect captures the earlier value. My module rerun selected A while displaying B. A bounded input lock is consistent with Settings. Required real-browser checks must retain reachable Back/Escape cancellation despite focus loss from disabling input, ignore late cancelled results and restore editing.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P18",
@@ -472,8 +1219,51 @@
       "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
       "risk": "Negligible; correct existing route text without deployment.",
       "validation_plan": "Compare handler route with corrected guidance, retain isolated HTTP fixture evidence and run documentation validator.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The handler and my rerun route probe return 404 for /events and SSE for /api/events. Correcting the buffering guidance to the implemented route is an exact documentation fix with no proxy or deployment change.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the isolated route fixture and confirmed /events is 404 while /api/events is the text/event-stream route. Correcting that single documented proxy exception matches the handler and leaves actual proxy configuration and replay streaming guidance unchanged.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The handler and isolated HTTP evidence agree that /api/events is the SSE route and /events returns 404. Correcting the buffering guidance to the actual path is a precise documentation repair with no proxy or deployment change.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The installation note names /events, whereas the handler and my isolated HTTP rerun show /events 404 and /api/events 200 text/event-stream. Correcting that path is a precise documentation repair. Approval includes route comparison, retained fixture evidence and documentation validation, with existing replay/proxy requirements preserved.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Independently confirmed /events returns 404 while /api/events is the streaming route. Correcting only the documented buffering exception is accurate and needs no deployment; handler comparison and documentation validation are sufficient.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The documented buffering exception names /events, while the handler implements /api/events. My isolated HTTP rerun returned 404 for the former and 200 text/event-stream for the latter. Correcting that route is documentation-only and leaves deployment untouched; comparison with the handler and the documentation validator suffice.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P19",
@@ -490,8 +1280,51 @@
       "evidence_path": "test-results/review-2026-10-26/r10/initial-report.txt",
       "risk": "Negligible; documents current implemented policy without widening it.",
       "validation_plan": "Compare source/isolated CORS evidence and existing backend-origin tests; documentation validator after edit.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The guide's unconditional rejection statement contradicts _origin_allowed and the rerun allowed-origin/header POST result. Documenting the existing exact-origin opt-in plus viewer header makes the trust boundary accurate while retaining LAN/proxy requirements.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the fixture and confirmed untrusted origin is rejected, an allowed origin without the viewer header is rejected, and an allowed origin plus header succeeds. Qualifying the guide's unconditional cross-origin rejection accurately describes existing opt-in policy without widening any runtime permission.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Source and the CORS fixture permit an exact allowed frontend origin plus X-Viewer-Request while rejecting untrusted origins or a missing header. Qualifying the blanket rejection statement documents that existing opt-in boundary without widening access or removing trusted-network guidance.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The reference's unconditional rejection claim contradicts the exact-origin opt-in and viewer-header checks; my HTTP rerun confirmed 403/403/200 for the three specified cases. Qualifying the text accurately describes current policy. Approval includes the provider-configuration link, preserved LAN/authenticated-proxy guidance, existing backend-origin coverage and documentation validation.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The loopback rerun confirmed exact allowed-origin plus viewer-header mutation succeeds while untrusted or headerless requests fail. Qualifying the guide documents existing policy; linking configuration while retaining LAN/authentication guidance does not expand access.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "The reference guide's blanket cross-origin rejection contradicts the explicit allowed-origin policy. Source and my loopback rerun confirm untrusted 403, trusted without viewer header 403, and trusted with header 200. Clarifying opt-in access and linking its configuration accurately documents current behavior while retaining LAN/proxy and no-account constraints.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P20",
@@ -509,8 +1342,51 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low; menu focus selection only.",
       "validation_plan": "Real keyboard tests in Chromium/WebKit with Mini disabled, hidden by live-only, enabled, and no available actions. Available actions focus/cycle, Home/End work, no capability change.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "I reran Chromium/WebKit keyboard fixtures: disabled or hidden Mini receives the initial focus attempt, so the visible menu cannot be navigated normally. One visible enabled action list with safe empty handling fixes focus selection without widening PiP eligibility.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran Chromium/WebKit keyboard fixtures and confirmed initial focus and arrow navigation stall on the disabled or hidden Mini item. A shared visible-enabled action list with an empty-list guard fixes keyboard reachability while retaining capability restrictions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The menu unconditionally focuses its first button and navigates every button, including unavailable Mini actions; both browser logs show keyboard focus/navigation failing. One visible enabled action list with an empty-list guard fixes those operations while retaining all media capability restrictions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "openAt and key navigation include unavailable buttons; my independent Chromium/WebKit rerun left focus on the player when Mini was disabled/hidden and prevented arrow wrapping. A shared available-action list is the direct correction. Approval includes both engines, enabled/disabled/hidden Mini, Home/End and empty-list handling without changing PiP eligibility.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Real Chromium/WebKit keyboard reruns confirmed unavailable Mini prevents initial menu focus and breaks arrow wrapping. A shared visible/enabled action list is narrow; the proposed enabled, disabled, hidden and empty-list cases preserve PiP eligibility.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Initial focus chooses the first button and navigation includes all buttons regardless of availability. My Chromium/WebKit keyboard rerun left focus on the player with Mini disabled or hidden and failed wrapping from Stats. One visible-enabled action list fixes both paths. The specified enabled, hidden, disabled and empty-list browser regressions preserve PiP eligibility.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P21",
@@ -529,8 +1405,51 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low; focus handoff must not steal focus after unrelated pointer interactions.",
       "validation_plan": "Keyboard open Stats, assert focus inside; Escape closes and returns player focus. Keyboard Close also restores focus; timers/reconnection/media/session remain valid; pointer interactions stay natural.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "Both browser reruns move focus to body after keyboard Stats activation, leaving Escape outside the player's handler. A keyboard-owned handoff into Stats and back on dismissal repairs that concrete flow; preserving pointer behavior and avoiding a focus trap keeps the scope narrow.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran both browser fixtures: Enter on Stats hides its focused menu action, moves focus to body, and leaves Escape unable to close the panel. The bounded keyboard focus handoff and return restores the existing player-scoped Escape path; pointer behavior, sampling lifecycle, and absence of a modal trap remain required.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "Hiding the keyboard-focused menu action leaves focus on body, so the player's Escape handler cannot close visible Stats in both engines. Explicit keyboard focus handoff into Stats and restoration on dismissal fixes this local ownership gap without a modal trap or sampling changes.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "The Stats action hides its focused menu before establishing a new focus target. My browser rerun confirmed body focus and an ineffective Escape in both engines. Keyboard focus handoff and guarded return to the player fix this without a modal trap. Approval includes keyboard open/Escape/Close, natural pointer behavior, and unchanged sampling/reconnection/media/session checks.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Both engines independently lost focus to body after keyboard Stats activation, leaving Escape ineffective. Explicit keyboard focus handoff and restoration address that path; the plan preserves pointer behavior, sampling lifecycle and existing media/session ownership.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Stats activation hides its focused menu item without a focus handoff, while Escape is scoped to the player. My two-engine rerun left focus on body and Stats open after Escape. Keyboard-specific handoff and restoration are warranted. Approve the stated Close/Escape, pointer-behavior, timer and media/session regressions without a modal trap.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     },
     {
       "id": "P22",
@@ -549,14 +1468,61 @@
       "evidence_path": "test-results/review-2026-10-26/r09/report.md",
       "risk": "Low to moderate; async ownership/page visibility must be respected.",
       "validation_plan": "Chromium keyboard submission/failure retains draft and restores usable input, deliberate Enter retries once. Moving focus elsewhere, closing editor or navigating away prevents restoration. Successful setup no hidden focus; WebKit behavior unchanged.",
-      "status": "proposed",
-      "ballots": {}
+      "status": "approved",
+      "ballots": {
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The actual-controller Chromium rerun loses editor focus after configure 503 despite preserving the draft and re-enabling input; WebKit retains it. Ownership-checked failure restoration fixes keyboard retry while the required moved-focus, hidden-editor, success and WebKit cases guard against focus stealing.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:25:55Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r03": {
+          "vote": "APPROVE",
+          "rationale": "I reran the actual-controller rejection fixture and reproduced Chromium losing the submitted editor focus to body while retaining the draft and error; WebKit retained focus. Restoring only the same visible connected editor after an owned focus loss enables keyboard retry without stealing deliberately moved focus or focusing a closed/successful editor.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:26:26Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r02": {
+          "vote": "APPROVE",
+          "rationale": "The actual-controller Chromium 503 fixture shows disabling the submitted editor loses focus to body and failure never restores it. Restoring only the same still-open visible editor when focus was lost to the document enables keyboard retry while the scoped ownership checks prevent stealing deliberate focus elsewhere.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:27:24Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r04": {
+          "vote": "APPROVE",
+          "rationale": "Pending setup disables the focused editor; my actual-controller Chromium rerun lost focus to body on rejection while retaining the draft, whereas WebKit retained input focus. Ownership-checked restoration is appropriately narrow. Approval includes deliberate keyboard retry, moved-focus exclusion, closed/detached/hidden editor exclusion, success without hidden focus, busy guards and unchanged WebKit behavior.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:29:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "The actual-controller synthetic rejection independently left focus on body with the draft intact. Ownership-limited failure restoration is appropriate; deliberate focus movement, closed/navigated editors, successful setup and cross-engine checks constrain accidental focus stealing.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:30:15Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Pending configure disables the focused editor; failure re-enables it without recovering Chromium focus. My actual-controller rerun retained the draft but left focus on body; WebKit retained it. The proposed same-editor/visible-page and lost-to-document guards keep the fix narrow. Deliberate focus movement, navigation, success and one intentional retry are essential stated regressions.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T04:31:28Z",
+          "slate_sha256": "79388e4090425ce01314836c968d637694e8b7f335f7ab514b5dc7cec542551b"
+        }
+      }
     }
   ],
   "commits": [
     {
       "sha": "03ee530",
       "summary": "Process-only checkpoint: audit mandate, reviewer roster and initial proposals; no product changes."
+    },
+    {
+      "sha": "609bbc0",
+      "summary": "Process-only checkpoint: all ten initial reviews and22 frozen Round1 proposals; no product changes."
     }
   ],
   "activity": [
@@ -604,6 +1570,46 @@
       "at": "2026-10-26T04:22:11Z",
       "type": "voting setup",
       "message": "All ten initial reviews complete. Round1 slate frozen at22 bounded proposals. No substantive product edits and zero ballots inferred. P06 browser reproduction still running as supplemental evidence."
+    },
+    {
+      "at": "2026-10-26T04:25:16Z",
+      "type": "supplemental evidence",
+      "message": "P06 confirmed with actual generated video in Chromium and WebKit for both paused and playing replay; exact scope unchanged. First ballot batch R01/R02/R03 active. Product paths remain byte-identical to baseline."
+    },
+    {
+      "at": "2026-10-26T04:25:55Z",
+      "type": "ballot",
+      "message": "R01 explicit Round1 ballot imported for all22 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T04:26:26Z",
+      "type": "ballot",
+      "message": "R03 explicit Round1 ballot imported for all22 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T04:27:24Z",
+      "type": "ballot",
+      "message": "R02 explicit Round1 ballot imported for all22 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T04:29:28Z",
+      "type": "ballot",
+      "message": "R04 explicit Round1 ballot imported for all22 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T04:30:15Z",
+      "type": "ballot",
+      "message": "R05 explicit Round1 ballot imported for all22 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T04:31:28Z",
+      "type": "ballot",
+      "message": "R06 explicit Round1 ballot imported for all22 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T04:31:28Z",
+      "type": "majority",
+      "message": "All22 exact revision1 proposals reached six explicit distinct APPROVE ballots. Remaining four ballots are still pending. Approved implementations may begin in isolated worktrees; baseline checkout source stays unchanged for remaining voters."
     }
   ],
   "validation": [
