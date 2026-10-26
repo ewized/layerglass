@@ -50,6 +50,92 @@ test('RAM eviction retains disk-backed history and coalesces disk reads', async 
   assert.equal(h.peek(2699, Infinity)?.frame.time, 2695, 'A distant resident image can be an immediate labelled placeholder.');
 });
 
+test('closest persisted previews outrank nearby resident placeholders in both directions', async t => {
+  for (const [cold, warm, target] of [
+    [25.066666, 20.133333, 25.066666],
+    [25.066666, 20.133333, 24.5],
+    [20.133333, 25.066666, 20.133333],
+    [20.133333, 25.066666, 20.5],
+  ]) await t.test(`${warm} warm, ${cold} cold, target ${target}`, async () => {
+    const disk = diskStore(), h = new PreviewHistory({ disk, maxBytes: 1 });
+    h.setSession(session('page'));
+    for (const time of [cold, warm]) { h.addFrame(time, blob(time === cold ? 1 : 2)); await settle(h); }
+    h.maxBytes = 20000;
+    assert.equal((await h.get(warm)).frame.time, warm);
+    assert.equal(h.peek(target).frame.time, warm, 'peek remains a resident placeholder lookup.');
+    assert.equal(h.nearest(target).frame.time, cold);
+    const reads = [], get = disk.get;
+    disk.get = async (...args) => { reads.push(args[1]); return get(...args); };
+    const results = await Promise.all([h.get(target), h.get(target)]);
+    assert.deepEqual(reads, ['frame:' + Math.floor(cold / 5) * 5]);
+    assert(results.every(found => found.frame.time === cold));
+    assert.equal(new Uint8Array(await results[0].asset.blob.arrayBuffer())[0], 1);
+    assert.equal(h.pending.size, 0);
+    assert(h.bytes <= h.maxBytes);
+    assert.equal(h.hot.size, 1);
+  });
+});
+
+test('resident closest reads preserve LRU hits without reading disk', async () => {
+  const disk = diskStore(), h = new PreviewHistory({ disk, maxBytes: 40000 });
+  h.setSession(session('page'));
+  for (const time of [20, 25]) { h.addFrame(time, blob(time)); await settle(h); }
+  disk.get = async () => { assert.fail('A resident closest frame must not read IndexedDB.'); };
+  assert.equal((await h.get(20)).frame.time, 20);
+  assert.deepEqual([...h.hot.keys()], ['frame:25', 'frame:20']);
+  assert.equal(h.memoryHits, 1);
+  assert.equal(h.diskHits, 0);
+  assert.equal(h.bytes, 40000);
+});
+
+test('closest selection preserves earlier ties and the requested distance limit', async () => {
+  const disk = diskStore(), h = new PreviewHistory({ disk, maxBytes: 1 });
+  h.setSession(session('page'));
+  for (const time of [20, 25]) { h.addFrame(time, blob(time)); await settle(h); }
+  h.maxBytes = 20000;
+  await h.get(25);
+  const reads = [], get = disk.get;
+  disk.get = async (...args) => { reads.push(args[1]); return get(...args); };
+  assert.equal(await h.get(22.5, 2.49), null);
+  assert.deepEqual(reads, []);
+  assert.equal(h.nearest(22.5).frame.time, 20);
+  assert.equal((await h.get(22.5, 2.5)).frame.time, 20);
+  assert.deepEqual(reads, ['frame:20']);
+});
+
+test('missing closest disk data drops its metadata before using a remaining placeholder', async () => {
+  const disk = diskStore(), h = new PreviewHistory({ disk, maxBytes: 1 });
+  h.setSession(session('page'));
+  for (const time of [20.133333, 25.066666]) { h.addFrame(time, blob(1)); await settle(h); }
+  h.maxBytes = 20000;
+  await h.get(20.133333);
+  disk.rows.delete('pageframe:25');
+  assert.equal(await h.get(25.066666), null);
+  assert.equal(h.assets.has('frame:25'), false);
+  assert.equal(h.frames.has(25), false);
+  assert.equal((await h.get(25.066666)).frame.time, 20.133333);
+  assert.equal(h.pending.size, 0);
+});
+
+test('a closest disk read cannot revive a replaced asset with the same key', async () => {
+  const disk = diskStore(), h = new PreviewHistory({ disk, maxBytes: 1 });
+  h.setSession(session('page'));
+  for (const time of [20.133333, 25.066666]) { h.addFrame(time, blob(1)); await settle(h); }
+  h.maxBytes = 20000;
+  await h.get(20.133333);
+  let release;
+  disk.get = () => new Promise(resolve => { release = resolve; });
+  const pending = h.get(25.066666);
+  assert.equal(typeof release, 'function');
+  h.forgetFrame(25);
+  const replacement = h.addFrame(25.066666, blob(3));
+  release({ blob: blob(1) });
+  assert.equal(await pending, null);
+  assert.equal(h.assets.get('frame:25'), replacement);
+  assert.equal(new Uint8Array(await replacement.blob.arrayBuffer())[0], 3);
+  await settle(h);
+});
+
 test('denied/quota-limited storage stays bounded and removes unreadable metadata', async () => {
   const h = new PreviewHistory({ disk: { ...diskStore(), put: async () => false }, maxBytes: 40000 });
   h.setSession(session('page'));

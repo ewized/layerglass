@@ -210,9 +210,107 @@ try {
       assert.deepEqual(await page.evaluate(() => ({ video: document.querySelector('video') === originalVideo,
         count: document.querySelectorAll('video').length, seeks: previewSeeks })), { video: true, count: 1, seeks: 0 });
       await page.evaluate(async () => { await clearPersistedPreview(previewTest); previewTest.preview.reset(); });
+
+      const nearest = await page.evaluate(async () => {
+        const { PreviewHistory } = await import('/static/preview-history.js');
+        const canvas = document.createElement('canvas'); canvas.width = 320; canvas.height = 180;
+        const ctx = canvas.getContext('2d'), colors = ['#ff0000', '#0000ff', '#00ff00'], blobs = [];
+        for (const color of colors) {
+          ctx.fillStyle = color; ctx.fillRect(0, 0, 320, 180);
+          blobs.push(await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg')));
+        }
+        const wait = async (predicate, detail) => {
+          const deadline = performance.now() + 3000;
+          while (!predicate()) {
+            if (performance.now() > deadline) throw new Error('Closest preview did not resolve: ' + detail);
+            await new Promise(requestAnimationFrame);
+          }
+        };
+        const pixel = preview => [...preview.context.getImageData(160, 90, 1, 1).data];
+        const adjacent = [];
+        for (const [warm, cold, held] of [[20.133333, 25.066666, true], [25.066666, 20.133333, false]]) {
+          const history = new PreviewHistory({ maxBytes: 1 });
+          const fixture = configurePreview('adjacent-' + warm, history), { preview, replay } = fixture;
+          replay.session.preview_fallback = false;
+          for (const [time, blob] of [[20.133333, blobs[0]], [25.066666, blobs[1]]]) {
+            history.addFrame(time, blob); await Promise.all([...history.writes]);
+          }
+          if (history.bytes || [...history.assets.values()].some(asset => !asset.persisted)) throw new Error('Expected cold IDB assets.');
+          history.maxBytes = blobs[0].size + blobs[1].size;
+          const reads = [], get = history.disk.get.bind(history.disk);
+          let release;
+          history.disk.get = async (...args) => {
+            reads.push(args[1]);
+            const stored = await get(...args);
+            if (held && args[1] === 'frame:25') await new Promise(resolve => { release = resolve; });
+            return stored;
+          };
+          await history.get(warm);
+          preview.showPoint({ value: warm });
+          await wait(() => preview.displayed?.time === warm, 'warm placeholder');
+          const before = { nearest: history.nearest(cold).frame.time, placeholder: history.peek(cold).frame.time };
+          preview.showPoint({ value: cold });
+          let delayedPlaceholder;
+          if (held) {
+            await wait(() => release && !preview.resolving, 'held IDB deadline');
+            delayedPlaceholder = preview.displayed.time;
+            release();
+          }
+          // No second pointer event: the current read must paint the true target.
+          await wait(() => preview.displayed?.time === cold, 'cold target ' + cold);
+          adjacent.push({ warm, cold, held, before, delayedPlaceholder, displayed: preview.displayed.time,
+            pixel: pixel(preview), reads, warmStillResident: Boolean(history.assets.get('frame:' + Math.floor(warm / 5) * 5).blob),
+            bytes: history.bytes, limit: history.maxBytes, decodedBytes: preview.bitmapBytes });
+          await clearPersistedPreview(fixture); preview.reset();
+        }
+
+        const history = new PreviewHistory({ maxBytes: 1 });
+        const fixture = configurePreview('contiguous-cold-sweep', history), { preview, replay } = fixture;
+        replay.session.preview_fallback = false;
+        const times = Array.from({ length: 12 }, (_, index) => 20 + index * 5 + (index % 2 ? 0.066666 : 0.133333));
+        for (const [index, time] of times.entries()) {
+          history.addFrame(time, blobs[index % blobs.length]); await Promise.all([...history.writes]);
+        }
+        if (history.bytes || [...history.assets.values()].some(asset => !asset.persisted)) throw new Error('Sweep must begin in IDB.');
+        history.maxBytes = Math.max(...blobs.map(blob => blob.size));
+        const reads = [], get = history.disk.get.bind(history.disk), sweep = [];
+        history.disk.get = async (...args) => { reads.push(args[1]); return get(...args); };
+        for (const direction of [times, [...times].reverse()]) {
+          preview.reset(); // Avoid decoded cache hits hiding RAM/IDB selection on return.
+          for (const time of direction) {
+            preview.showPoint({ value: time });
+            await wait(() => preview.displayed?.time === time, 'contiguous target ' + time);
+            sweep.push({ time, pixel: pixel(preview), color: times.indexOf(time) % blobs.length,
+              bytes: history.bytes, limit: history.maxBytes, decodedBytes: preview.bitmapBytes });
+          }
+        }
+        const result = { adjacent, sweep, reads: reads.length, pending: history.pending.size };
+        await clearPersistedPreview(fixture); preview.reset();
+        return result;
+      });
+      for (const entry of nearest.adjacent) {
+        assert.deepEqual(entry.before, { nearest: entry.cold, placeholder: entry.warm });
+        if (entry.held) assert.equal(entry.delayedPlaceholder, entry.warm);
+        assert.equal(entry.displayed, entry.cold);
+        assert.deepEqual(entry.reads, [entry.warm, entry.cold].map(time => 'frame:' + Math.floor(time / 5) * 5));
+        assert(entry.pixel[entry.cold > entry.warm ? 2 : 0] > 240);
+        assert(entry.warmStillResident, 'Resolution must not require evicting the warm neighbor.');
+        assert(entry.bytes <= entry.limit && entry.decodedBytes <= 8 * 1024 * 1024);
+      }
+      assert.equal(nearest.sweep.length, 24);
+      for (const entry of nearest.sweep) {
+        assert(entry.pixel[[0, 2, 1][entry.color]] > 240);
+        assert(entry.bytes <= entry.limit && entry.decodedBytes <= 8 * 1024 * 1024);
+      }
+      assert(nearest.reads >= 12 && nearest.reads <= 24);
+      assert.equal(nearest.pending, 0);
+      assert.equal(requests.length, beforeDiskRequests, 'Closest local frames must not request server sprites.');
+      assert.deepEqual(await page.evaluate(() => ({ video: document.querySelector('video') === originalVideo,
+        count: document.querySelectorAll('video').length, seeks: previewSeeks })), { video: true, count: 1, seeks: 0 });
       assert.deepEqual(errors, []);
       console.log(`${name}: corrupt sprite cooldown, valid retry, local fallback and cancelled response passed.`);
       console.log(`${name}: late persisted reads, target/session/visibility ownership and coalesced decoding passed.`);
+      console.log(`${name}: closest cold frames replace warm neighbors in both directions; 24 contiguous retained stills paint within cache bounds, ${nearest.reads} IDB reads, no server requests or main seeks.`);
     } finally { await context.close(); await browser.close(); }
   }
 } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }

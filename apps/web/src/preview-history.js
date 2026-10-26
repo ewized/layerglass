@@ -156,9 +156,13 @@ export class PreviewHistory {
   }
 
   async get(time, distance = PREVIEW_INTERVAL) {
-    const cached = this.peek(time, distance);
-    if (cached) return cached;
     const found = this.nearest(time, distance);
+    // A nearby resident placeholder must not hide a closer persisted frame.
+    if (found?.asset.blob) {
+      this.touch(found.asset);
+      this.memoryHits++;
+      return found;
+    }
     if (!found?.asset.persisted || !this.disk) return null;
     const { asset } = found;
     const version = this.version;

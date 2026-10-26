@@ -35,6 +35,11 @@ asset. Each tab has its opaque page-session namespace; a newly loaded page never
 reuses another page's footage. Closing/changing the session removes its records;
 abandoned records expire after 24 hours. Cleanup is best effort on page exit.
 
+Resolution selects the closest retained frame before choosing RAM or IndexedDB.
+A nearby resident still can remain a labelled placeholder while the closer
+persisted frame loads; it cannot prevent that frame from being read and painted.
+Equal-distance ties retain the existing earlier-frame preference.
+
 `apps/web/src/components/scrub-preview.js` paints local JPEGs to one canvas. Decoded
 ImageBitmaps are independently capped to 8 MiB and closed on eviction/reset.
 Rapid movement coalesces decoding toward the latest target. A real still remains
@@ -92,3 +97,6 @@ a 45-minute physical-phone soak test. Separate checks force RAM eviction, quota
 errors and delayed server fallback, and exercise keyboard/touch/narrow layouts.
 `browser-preview-loading.js` checks corrupt-sprite cooldown and recovery, plus
 delayed IndexedDB reads with current-target, session and visibility ownership.
+It also checks adjacent warm/cold images in both directions and a short contiguous
+forward/return sweep with real IndexedDB under a one-image compressed RAM budget.
+These bounded regressions do not replace a measured full-duration retention run.
