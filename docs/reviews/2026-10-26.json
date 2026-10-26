@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active:43frozenproposals/40integrated/P38+P42superseded/P43freshvoting. Currentall40CI+hostingPASS. Older-pin native6h ongoing; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
+  "status": "Active:43frozenproposals/40integrated/P38+P42superseded/P43implementing after6freshcommittedapprovals. Currentall40CI+hostingPASS. Older-pin native6h ongoing; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -102,7 +102,7 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 13 ballot complete",
+      "status": "round 14 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -116,7 +116,8 @@
       "ballot_round10": "test-results/review-2026-10-26/r05/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r05/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r05/round12-ballot.json",
-      "ballot_round13": "test-results/review-2026-10-26/r05/round13-ballot.json"
+      "ballot_round13": "test-results/review-2026-10-26/r05/round13-ballot.json",
+      "ballot_round14": "test-results/review-2026-10-26/r05/round14-ballot.json"
     },
     {
       "id": "r06",
@@ -144,7 +145,7 @@
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 13 ballot complete",
+      "status": "round 14 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -158,7 +159,8 @@
       "ballot_round10": "test-results/review-2026-10-26/r07/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r07/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r07/round12-ballot.json",
-      "ballot_round13": "test-results/review-2026-10-26/r07/round13-ballot.json"
+      "ballot_round13": "test-results/review-2026-10-26/r07/round13-ballot.json",
+      "ballot_round14": "test-results/review-2026-10-26/r07/round14-ballot.json"
     },
     {
       "id": "r08",
@@ -185,7 +187,7 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 13 ballot complete",
+      "status": "round 14 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -199,13 +201,14 @@
       "ballot_round10": "test-results/review-2026-10-26/r09/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r09/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r09/round12-ballot.json",
-      "ballot_round13": "test-results/review-2026-10-26/r09/round13-ballot.json"
+      "ballot_round13": "test-results/review-2026-10-26/r09/round13-ballot.json",
+      "ballot_round14": "test-results/review-2026-10-26/r09/round14-ballot.json"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 13 ballot complete",
+      "status": "round 14 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -220,7 +223,8 @@
       "ballot_round10": "test-results/review-2026-10-26/r10/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r10/round11-ballot.json",
       "ballot_round12": "test-results/review-2026-10-26/r10/round12-ballot.json",
-      "ballot_round13": "test-results/review-2026-10-26/r10/round13-ballot.json"
+      "ballot_round13": "test-results/review-2026-10-26/r10/round13-ballot.json",
+      "ballot_round14": "test-results/review-2026-10-26/r10/round14-ballot.json"
     }
   ],
   "rounds": [
@@ -599,10 +603,14 @@
         "r02",
         "r03",
         "r04",
+        "r05",
         "r06",
-        "r08"
+        "r07",
+        "r08",
+        "r09",
+        "r10"
       ],
-      "decision": "6fresh explicitAPPROVE exact P43rev1; threshold reached. Quorum must be committed before new author worktree/edits. Remaining4ballots pending, none inferred or transferred.",
+      "decision": "All10 fresh explicitAPPROVE P43rev1. Implementation only after6fresh approvals committed1eaa2b4 before new authorworktree creation. All earlierP42votes preserved and nottransferred. Exact-final connectedbrowser/independentREADY still required.",
       "notes": "Consumer-only precise descriptor view explicitly authorizes local retention/mapping effect, exactly3files. P42STOP/original10approvals preserved; no vote transfer."
     }
   ],
@@ -5089,7 +5097,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/p42-scope-stop-report.json",
       "risk": "A coverage-only gate hides legitimate events because legacy anchors are rounded; a render-only fix leaves stale activation and destructive retention. A broad model change risks legacy modes. Consumer-only precise views must use the accepted descriptor rather than raw metadata, preserve original session identity and pending summaries, and recompute activation position. Connected native/browser proof remains required; original stopped proposal approvals do not transfer.",
       "validation_plan": "Connected production timeline component in Chromium/WebKit with actual production-recorder-derived metadata/history and real native decoded JPEGs: initial proven0..2/display0..3 hides stored2.5PAUSE; stale rendered/menu actions outside current intersection make0seek/0unfulfilledemit; successor1030 admits the SAME2.5event, pointer/keyboard each commit exactly1seek2.5 with same session/image ownership, correct held pixels and PAUSE at1002.5. Add BOTH exact fractional-origin/anchor payloads from STOP report; assert current precise event mapping, no deletion of valid retained summaries, unchanged original model/controller sessions and exactly mapped seek/emit. Coverage-gate removal must recover upper-tail clamped marker mismatch; precise-view removal must recover fractional hidden/deleted-event negatives. Test inclusive actual bounds, real pruning, offscreen hide/reveal, frozen original display/group placement, pending summaries and stale cached-position activation. Preserve descriptorless/invalid JPEG, H264/file, remote and disabled behavior;0additional telemetry/media requests on render/hover. Run relevantJS units, registered browser-timeline-events, browser-jpeg-clock and browser-preview-loading both engines, docslinks. Obtain independent exact-final READY before integration, then one new normal fullCI on the tested source. No real printer/device/prod/cloud probes, deploy, relaxed assertions or unchanged-source rerun. Preserve all original failed controls and P42STOP reports.",
-      "status": "approved",
+      "status": "implementing",
       "ballots": {
         "r02": {
           "vote": "APPROVE",
@@ -5132,9 +5140,37 @@
           "revision": 1,
           "recorded_at": "2026-10-26T13:41:48Z",
           "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment of P43, not transferred P42 approval. Pinned source confirms exactly two production visible() calls, both in the allowed component; visible() accepts an identity-preserving session argument and derives both destructive retention and mapping from it. Actual recorder v2 payloads use the real rounded observation 1030.124: the fractional-origin case maps below true start, while the fractional-anchor case prunes it at legacy cutoff 1030.1246 despite precise retained cutoff 1030.1238. Independent arithmetic agrees with the raw payloads; integer controls and the unchanged-original-session shallow-view control support the bounded remedy. Approve using only the accepted local owned descriptor view at BOTH calls, current proven/display intersection and fresh-ID mapped-position activation, preserving original display placement, shared sessions/global functions, other-mode rendering AND activation, pending summaries and ownership. The initial raw-timestamp assertion failure is excluded evidence. These sink/model controls do not establish native browser correctness: all frozen connected two-engine upper-tail/fractional/successor, removed-gate/view negatives, stale activation, trimming/boundaries, compatibility/no-extra-request regressions and independent exact-final READY remain required before integration; no retroactive recovery or new tolerance is authorized.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:42:48Z",
+          "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Fresh review supports this expanded consumer scope. Pinned visible() derives both mapping and destructive retention from its session argument; both production callers are in the component. Saved recorder evidence and independent arithmetic confirm legacy mapping below actual start and cutoff1030.1246 deleting valid observation1030.124. Original-session controls retain both fractional events through offscreen hide/reveal with a precise view, while integer controls pass. Using the accepted returned descriptor, including its stale-sequence guard, for BOTH local visibility calls addresses mapping/retention without changing global model/controller sessions. Fresh-ID position resolution also closes stale activation; original upper-tail/successor evidence still requires proven/display eligibility while preserving pending summaries. The exact three-file scope preserves other-mode rendering AND activation, slider placement, ownership and existing clocks without tolerance or extra requests. I approve the frozen future two-engine connected-native plan, separate removed-view/coverage negatives, precise/retention/stale/legacy controls and exact-final independent review. Existing proofs use IO/render sinks, not native decoding. Canonical slate hash, 26 evidence entries and seven source hashes verified. No P42 vote transfer, other ballots, author tree or app runtime.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:44:34Z",
+          "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment of e6527f1 and the verified recorder/model/controller evidence supports this exact three-file scope. The component's two visible() calls both use rounded legacy sessions; one fractional case maps a selectable observation below actual coverage and another prunes it, while the separate upper-tail case seeks 2/RUNNING for an event at 2.5. Passing a nonmutating accepted-descriptor view to both existing calls addresses mapping and retention without changing model/controller sessions; pending and offscreen summaries remain stored. Re-resolving the eligible event by ID and seeking/emitting its current precise position closes stale menu/marker activation. Approval includes the frozen original-slider placement, local-only ownership/descriptor guards and unchanged legacy/invalid/remote modes. Existing evidence is not connected native-browser proof: both-engine decoded-image precision/tail/successor cases, removed-policy negatives, stale activation and compatibility/ownership checks, focused suites and independent exact-final READY are required before integration. No P42 approval transfers.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:47:40Z",
+          "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Fresh assessment, with no P42 approval transfer. Pinned recorder source separately rounds legacy bounds/anchors and telemetry while preserving precise descriptor clocks. Verified v2 payload arithmetic shows legacy mapping10.123000000000022 below actual start10.12320000000011 for valid target10.12340000000006, and legacy retention1030.1246 deletes observation1030.124 despite actual cutoff1030.1238/seekable target10.122799999999984. Integer upward/aligned controls pass; the initial raw-timestamp assertion failure is preserved and excluded. Source confirms exactly two production visible() callers, both in this component, and visible() accepts a same-ID view without replacing model.session. The precise-view control retains identities/summaries offscreen; original upper-tail2.5-versus2 proof still establishes coverage gating. Approve only the exact three-file local/no-remote/returned-valid-owned-descriptor branch: both visible calls use the nonmutating precise view, activation resolves the current eligible mapped ID/position, original slider placement/offsets and every legacy rendering/activation path remain intact, with no global clock/model/session change or recovery promise. Approval includes all frozen connected native Chromium/WebKit precision/tail/successor, removed-view/coverage negatives, stale-position/menu, actual pruning/boundaries/pending/frozen-window/ownership/request/legacy controls, relevant suites/docs and independent exact-final READY. Supplied recorder/model sinks are not native connected-browser proof.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:47:40Z",
+          "slate_sha256": "24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612"
         }
       },
-      "implementation_status": "Approved6/10, no author worktree or source edits yet. Exact three-file new consumer-view scope; independent exact-finalREADY required."
+      "implementation_status": "R02 exact3file P43 implementation in NEW /workspace/layerglass-review/jpeg-event-precision, parent1eaa2b4 with6fresh committed approvals before creation. Original P42tree remains unedited. Independent exact-finalREADY required."
     }
   ],
   "commits": [
@@ -6424,6 +6460,36 @@
       "at": "2026-10-26T13:41:48Z",
       "type": "quorum",
       "message": "P43rev1 reached6fresh explicitAPPROVE: R01/R02/R03/R04/R06/R08 against frozen SHA24dc3f3a6042f7057f1ca7654c1e75cb4bfd8385198f4370bdc97bdc74ce1612. Committing before any new author worktree or source edits. P42 remains superseded, its10votes not transferred."
+    },
+    {
+      "at": "2026-10-26T13:42:48Z",
+      "type": "ballot",
+      "message": "R07 explicit Round14 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:42:48Z",
+      "type": "implementation",
+      "message": "P43newexclusiveauthorworktree created after committed6approvalquorum1eaa2b4, assigned R02 exactfrozen3files/nativepositive+negativecompatibility checks. Target14:40UTC final to leave peer+normalCI beforedeadline. Remaining ballots requested; originalP42tree clean/untouched."
+    },
+    {
+      "at": "2026-10-26T13:44:34Z",
+      "type": "ballot",
+      "message": "R05 explicit Round14 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:47:40Z",
+      "type": "ballot",
+      "message": "R09 explicit Round14 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:47:40Z",
+      "type": "ballot",
+      "message": "R10 explicit Round14 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:47:40Z",
+      "type": "ballot-complete",
+      "message": "Round14 P43rev1 complete10/10fresh APPROVE. All43frozenproposals now have430explicit ballots:429APPROVE/1ABSTAIN/0REJECT. P38+P42 superseded drafts remain unintegrated;40corrections integrated; P43implementation pending finaltests/peer. Root0votes."
     }
   ],
   "validation": [
@@ -7031,6 +7097,15 @@
       "parent": "d4b6abf",
       "quorum_before_creation": 8,
       "scope": "Exact3files frozen Round13; sourcefindingR03-FINAL-PRINT-01; currentprovenownedJPEGcoverage render+activationgate only."
+    },
+    {
+      "proposal": "P43",
+      "reviewer": "r02",
+      "path": "/workspace/layerglass-review/jpeg-event-precision",
+      "branch": "review/jpeg-event-precision",
+      "parent": "1eaa2b4393dc8133b0f17bff0973ee3dbd96d96e",
+      "quorum_before_creation": 6,
+      "scope": "New frozen Round14 exact3files, accepted-descriptor precise local event view/retention/mapping, current mapped-ID activation; P42originalapprovalnottransferred."
     }
   ],
   "delivery": {
