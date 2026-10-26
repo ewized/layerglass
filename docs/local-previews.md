@@ -19,6 +19,14 @@ captured, and stale JPEG encodes cannot populate a changed image or session.
 Capture pauses when the page/player is hidden or playing remotely. It cannot
 reconstruct video the browser has not decoded while paused or in the background.
 
+For local JPEG replay with a valid owned descriptor, preview points, backup-sheet
+samples, history trimming, clock validity and late backup replies use the precise
+page/retained bounds returned by `PageReplay`. Rounded legacy session timestamps
+must not discard an available first capture or admit a provisional-tail sample.
+Actual retention advancement still removes older captures and rejects old replies.
+Legacy JPEG without a valid descriptor, H.264, file/demo and remote playback keep
+their existing session clipping. Projected Live labels and seek gestures are unchanged.
+
 `apps/web/src/preview-history.js` keeps compressed JPEGs in a 32 MiB LRU, with bounded
 24-hour/five-second metadata. At 20 KiB per image, 45 minutes is 540 images and
 about 10.3 MiB. Actual image sizes depend on the scene. `apps/web/src/preview-storage.js`
@@ -104,6 +112,11 @@ delayed IndexedDB reads with current-target, session and visibility ownership.
 It also checks adjacent warm/cold images in both directions and a short contiguous
 forward/return sweep with real IndexedDB under a one-image compressed RAM budget.
 These bounded regressions do not replace a measured full-duration retention run.
+The same suite uses actual recorder metadata with upward/downward rounding,
+native JPEG decode/capture/encoding and real IndexedDB to retain and paint a cold
+first capture without preview HTTP. Precise end/provisional-tail, real retained-start
+advancement, valid/stale delayed backup and legacy/remote controls cover the consumer
+boundary; no timing tolerance or metadata normalization stands in for those bounds.
 
 `browser-jpeg-clock.js` checks real JPEG decoding, fixed paused readings and
 thumbnail timestamps, precise/completed/provisional positions, delayed image and

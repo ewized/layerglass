@@ -1,7 +1,7 @@
 import { PlayerElement } from './base.js';
 import { PageReplay } from '../replay.js';
 import { previewPoint, previewLeft, previewSheet } from '../scrub-preview.js';
-import { PreviewHistory, PREVIEW_WIDTH, PREVIEW_HEIGHT } from '../preview-history.js';
+import { PreviewHistory, PREVIEW_INTERVAL, PREVIEW_WIDTH, PREVIEW_HEIGHT } from '../preview-history.js';
 
 export class PrinterScrubPreview extends PlayerElement {
   static template = `<div class="scrub-preview-frame"><canvas width="320" height="180"></canvas></div><span class="scrub-preview-time"></span>`;
@@ -65,6 +65,15 @@ export class PrinterScrubPreview extends PlayerElement {
 
   atPointer(event) { this.showPoint({ x: event.clientX }); }
 
+  retainedBounds(replay) {
+    // Only a local, valid JPEG descriptor proves precise page/retention bounds.
+    // Other transports keep their existing legacy session clipping.
+    if (!replay.remote && replay.session.kind === 'jpeg' && replay.jpegDescriptor?.()) {
+      return { ...replay.bounds(), precise: true };
+    }
+    return { start: replay.session.start_seconds, end: replay.session.end_seconds };
+  }
+
   showPoint(position) {
     const replay = this.readReplay?.(), session = replay?.session;
     if (this.slider.disabled || !session?.ready || replay.backend?.id !== 'demo' && !this.ownerDocument.defaultView.navigator.onLine) return this.hide();
@@ -75,15 +84,15 @@ export class PrinterScrubPreview extends PlayerElement {
       this.token = session.session_id;
       this.history.setSession(session);
     }
-    const bounds = replay.bounds(), rect = this.slider.getBoundingClientRect();
+    const bounds = replay.bounds(), retained = this.retainedBounds(replay), rect = this.slider.getBoundingClientRect();
     const point = previewPoint({ min: Number(this.slider.min), max: Number(this.slider.max),
-      start: Math.max(bounds.start, session.start_seconds), end: Math.min(bounds.end, session.end_seconds),
+      start: Math.max(bounds.start, retained.start), end: Math.min(bounds.end, retained.end),
       left: rect.left, width: rect.width, ...position });
-    const sheet = point && previewSheet({ time: point.time, start: session.start_seconds, end: session.end_seconds });
+    const sheet = point && previewSheet({ time: point.time, start: retained.start, end: retained.end });
     if (!sheet) return this.hide();
     this.point = point;
     this.sheet = sheet;
-    this.history.trim(session.start_seconds);
+    this.history.trim(retained.start);
     this.hidden = false;
     this.style.left = `${previewLeft(point.fraction, rect.width, this.offsetWidth)}px`;
     this.clockTimer ??= setInterval(() => this.updateClock(), 500);
@@ -196,8 +205,9 @@ export class PrinterScrubPreview extends PlayerElement {
 
   updateClock() {
     const replay = this.readReplay?.();
-    if (replay?.session?.session_id !== this.token || this.slider.disabled ||
-        !this.point || this.point.time < replay.session.start_seconds) return this.hide();
+    if (replay?.session?.session_id !== this.token || this.slider.disabled || !this.point) return this.hide();
+    const retained = this.retainedBounds(replay);
+    if (this.point.time < retained.start || retained.precise && this.point.time >= retained.end) return this.hide();
     const time = this.painted ? this.displayed.time : this.point.time;
     const approximate = this.painted && Math.abs(time - this.point.time) > 5 ? '≈ ' : '';
     this.clock.textContent = `${approximate}−${PageReplay.time(Math.max(0, (replay.timeline.edge ?? replay.session.end_seconds) - time))}`;
@@ -227,8 +237,10 @@ export class PrinterScrubPreview extends PlayerElement {
         { signal: request.controller.signal, cache: 'no-store', priority: 'low' });
       if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/jpeg')) throw new Error('Preview unavailable');
       const blob = await response.blob();
-      if (request.controller.signal.aborted || token !== this.token || this.hidden ||
-          sheet.start < this.readReplay().session.start_seconds) return;
+      if (request.controller.signal.aborted || token !== this.token || this.hidden) return;
+      const retained = this.retainedBounds(this.readReplay());
+      if (sheet.start < retained.start || retained.precise &&
+          sheet.start + (sheet.count - 1) * PREVIEW_INTERVAL >= retained.end) return;
       this.history.addSheet(sheet, blob);
     } catch (_) {
       if (!request.controller.signal.aborted) this.failures.set(key, Date.now() + 10000);
