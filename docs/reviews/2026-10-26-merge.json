@@ -1,9 +1,9 @@
 {
   "phase": "User-authorized merge after the completed twelve-hour review",
   "started_observed_at": "2026-10-26T16:18:55Z",
-  "updated_at": "2026-10-26T16:51:14.004397+00:00",
+  "updated_at": "2026-10-26T16:51:36.649336+00:00",
   "user_request": "dont forget to merge this in at the end",
-  "status": "Investigating final CI failure and verifying default-branch integration before actual merge.",
+  "status": "Independent fixture acceptance complete; combined source ready for normal CI before actual main merge.",
   "review_result_commit": "ddf84213ed5cc7a5e8732c13e2b1f56c2835a569",
   "review_outcome_sha256": "84b085edcaf45b243018c6258c7df88c2f6abf8b76742773eb2ba2efb611e44f",
   "original_window": "2026-10-26T04:03:49Z/2026-10-26T16:03:49Z",
@@ -36,7 +36,7 @@
         "apps/web/tests/browser-timeline-events.js",
         "docs/development/testing.md"
       ],
-      "status": "independently accepted; integration authorized for combined CI",
+      "status": "integrated; normal combined CI pending",
       "ballots": [
         {
           "reviewer": "r01",
@@ -399,7 +399,9 @@
           "apps/web/tests/browser-timeline-events.js": "fac07f5d7d183b4d222798f7142f93932a6d6ed3916995d1f9d2a93e0bc4955e",
           "docs/development/testing.md": "729d50e058606756793fce72df965ebcdacf50540f8022204f7c72341b5f3a23"
         }
-      }
+      },
+      "canonical_commit": "9e0945113351a21e3c7c385da57c9f8a6d51b89f",
+      "canonical_file_hashes_match_peer": true
     }
   ],
   "integration": {
@@ -411,7 +413,8 @@
     "reconciled_commit": "c64445551082157cc6b916a9cfcc0fda097e6bf9",
     "result": "Main dependency history retained by merge; no file/tree changes from prior review head.",
     "branch_policy": "Official main branch response protected=false, rulesets=[]; detailed admin view inaccessible.",
-    "cloudflare": "Merge may trigger existing gated public deployment; user authorized merge and prior Cloudflare delivery. No gate changes or credential access required."
+    "cloudflare": "Merge may trigger existing gated public deployment; user authorized merge and prior Cloudflare delivery. No gate changes or credential access required.",
+    "main_is_ancestor": true
   },
   "validation": [
     {
@@ -432,6 +435,10 @@
     {
       "at": "2026-10-26T16:51:14.004397+00:00",
       "event": "R09 accepted exact-final b71f7f6/two file hashes before canonical integration. Original assertions/budgets/failed evidence preserved. New combined CI still required before main merge."
+    },
+    {
+      "at": "2026-10-26T16:51:36.649336+00:00",
+      "event": "Approved exact-final P46 cherry-picked after independent acceptance. Canonical test/guide hashes match peer; production source matches author, old outcome and failed raw log unchanged."
     }
   ]
 }
