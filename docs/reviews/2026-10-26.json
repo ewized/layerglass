@@ -16,7 +16,7 @@
       "id": "r01",
       "scope": "Security and trust boundaries",
       "agent_task": "/root/review_r01_security",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r01/",
       "ballot_round1": "test-results/review-2026-10-26/r01/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r01/ballot-round2.json",
@@ -28,7 +28,8 @@
       "ballot_round7": "test-results/review-2026-10-26/r01/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r01/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r01/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r01/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r01/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r01/round11-ballot.json"
     },
     {
       "id": "r02",
@@ -89,7 +90,7 @@
       "id": "r05",
       "scope": "Backend providers, casting and PiP",
       "agent_task": "/root/review_r05_providers",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r05/",
       "ballot_round1": "test-results/review-2026-10-26/r05/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r05/ballot-round2.json",
@@ -100,13 +101,14 @@
       "ballot_round7": "test-results/review-2026-10-26/r05/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r05/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r05/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r05/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r05/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r05/round11-ballot.json"
     },
     {
       "id": "r06",
       "scope": "Python DVR, concurrency and resource cleanup",
       "agent_task": "/root/review_r06_backend",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r06/",
       "ballot_round1": "test-results/review-2026-10-26/r06/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r06/ballot-round2.json",
@@ -118,13 +120,14 @@
       "ballot_round7": "test-results/review-2026-10-26/r06/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r06/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r06/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r06/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r06/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r06/round11-ballot.json"
     },
     {
       "id": "r07",
       "scope": "Docker, CI/CD, Cloudflare and delivery",
       "agent_task": "/root/review_r07_delivery",
-      "status": "round 10 ballot complete",
+      "status": "round 11 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r07/",
       "ballot_round1": "test-results/review-2026-10-26/r07/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r07/ballot-round2.json",
@@ -135,7 +138,8 @@
       "ballot_round7": "test-results/review-2026-10-26/r07/round7-ballot.json",
       "ballot_round8": "test-results/review-2026-10-26/r07/round8-ballot.json",
       "ballot_round9": "test-results/review-2026-10-26/r07/round9-ballot.json",
-      "ballot_round10": "test-results/review-2026-10-26/r07/round10-ballot.json"
+      "ballot_round10": "test-results/review-2026-10-26/r07/round10-ballot.json",
+      "ballot_round11": "test-results/review-2026-10-26/r07/round11-ballot.json"
     },
     {
       "id": "r08",
@@ -494,16 +498,21 @@
       "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c",
       "ballots_started": true,
       "reviewers_completed": [
+        "r01",
         "r02",
         "r03",
         "r04",
+        "r05",
+        "r06",
+        "r07",
         "r08",
         "r09",
         "r10"
       ],
       "notes": "P40actualrecorder/bothengineIDB precision/retention finding. OutsideP36scope; sixfreshvotes beforeanycomponent/test/product-docedit. Originalsynthetic/initialattempt andexactprimary/countercontrol retained.",
       "majority_recorded_at": "2026-10-26T10:20:35Z",
-      "decision": "P40rev1 approved6/10 beforeimplementation;4remainingballots pending,root0."
+      "decision": "P40rev1 all10freshAPPROVE; first6saved+committed inee2a6fb before author edits, root0. No prior scope votes transferred. Independent exact-final review still required before integration.",
+      "completed_at": "2026-10-26T10:29:54Z"
     }
   ],
   "proposals": [
@@ -4720,6 +4729,34 @@
           "revision": 1,
           "recorded_at": "2026-10-26T10:20:35Z",
           "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r01": {
+          "vote": "APPROVE",
+          "rationale": "The pinned producer intentionally rounds legacy start_seconds while retaining jpeg_frame.start precision (apps/backend/replay.py:184,198-202). PageReplay.bounds uses that validated descriptor for local JPEG (replay.js:296-304,400-411), and PreviewCapture accepts its first owned frame at the precise start (preview-history.js:222,244). The component then reintroduces the rounded bound in point clipping, sheet construction, trimming, clock validity and late fallback acceptance (components/scrub-preview.js:80-86,197-203,230-232). In particular trim strictly deletes frames below that rounded start, including their actual disk assets (preview-history.js:53-69). The saved actual-recorder payload and both-engine primary/aligned results support a real cache-loss and avoidable-request defect without claiming a blank image or playback failure. The frozen three-file scope corrects those consumers consistently only for valid local descriptor JPEG, retaining the existing behavior for remote, descriptor-absent JPEG and other transports. Approval includes the specified upward/downward rounding, real retention advancement, precise end/provisional tail, delayed fallback and page/session/target/visibility controls, plus native capture and actual cold-IDB preservation with zero preview HTTP. A numeric tolerance or removal of actual retention exclusions would fall outside this approval.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:21:19Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r05": {
+          "vote": "APPROVE",
+          "rationale": "Independently inspected the pinned 5b51ab7 component/helpers, PageReplay bounds, capture/trim code, frozen scope and named actual-recorder/browser evidence. Actual metadata has precise start 10.123677999999927 versus rounded 10.124. showPoint reintroduces the rounded start for clipping/sheets/trim; trim deletes the valid captured asset and real IDB row. Both engines make one avoidable preview HTTP request; aligning only the diagnostic fixture's legacy bound retains the frame/row with zero HTTP. The demonstrated impact is thumbnail deletion and unnecessary fallback; no wrong-pixel or main-player failure is claimed. The actual primary payload is unchanged, and synthetic/one-byte attempts are qualified honestly. Verified all 23 source/evidence hashes against the pinned baseline. The closed three-file scope gates consistent point/sheet/trim/clock/late-result boundaries on valid local JPEG precision, preserves other transports/remote/legacy behavior and excludes blanket tolerance or relaxed retention. Approval includes the existing rounding-direction, precise end/page, actual retention advancement, stale/valid late fallback, real IDB/native capture, P37/cooldown/ownership and complete focused two-engine browser validation plan. No prior vote transfers, other ballots or implementation tree read, new behavioral probe or product edit.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:27:42Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r07": {
+          "vote": "APPROVE",
+          "rationale": "Verified the frozen hash, exact 5b51ab7 component/PageReplay/capture/trim source and relevant existing browser tests. The component hash matches R04's tested source. ReplayBuffer emits legacy start10.124 beside precise descriptor start10.123677999999927; PreviewCapture accepts that owned first image, but showPoint reintroduces the rounded bound for clipping/sheet/trim, and forgetFrame removes the final asset reference and IDB row. The saved actual native-decode/toBlob/real-IDB results and fixture hashes independently check out in Chromium and WebKit: unchanged actual-recorder metadata loses frame:10 and its row and makes one fallback HTTP, while changing only the diagnostic fixture's legacy start retains both with zero HTTP. This establishes avoidable local-data deletion/request cost, without claiming blank/wrong pixels or a main-player failure. The exact three-file scope correctly unifies actual proven bounds across point/sheet/trim/clock/late fallback only for valid local descriptor JPEG, with no blanket tolerance or transport/storage expansion. Approval includes both rounding directions, page/retained-first and precise-end/tail controls, genuine retention advancement and stale fallback exclusion, unchanged legacy/no-descriptor/H264/file/demo/remote behavior, budgets/ownership/P37/500ms/cooldown guards and both complete named browser suites plus focused units/35docs. Those are required implementation validation, not claimed newly run here. Prior P36/P37 approvals do not stand in for this vote. Verification is r07/round11-verification.log; no product/ledger edits, other ballots or new product probes.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:28:07Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
+        },
+        "r06": {
+          "vote": "APPROVE",
+          "rationale": "Fresh source/evidence-only assessment at5b51ab7. The component reintroduces rounded session.start_seconds in point/sheet bounds, trim, clock hiding and late-load acceptance despite PageReplay's valid precise local JPEG bounds. Actual recorder metadata has10.124 versus10.123677999999927; inspected immutable primary fixture deep-equality assertion, native capture/real-IDB results and logs show both engines delete frame:10/its disk row and make one fallback request. Aligning only the diagnostic fixture legacy start preserves the same blue capture with zero HTTP. This establishes avoidable data loss/fallback, not blank or wrong pixels or a main-player failure. Closed three-file correction consistently using proven bounds only for descriptor-backed local JPEG addresses the cause without tolerance or backend/storage changes. Mandatory upward/downward, true retention and stale/valid fallback cases plus unchanged remote/legacy/H264/file/demo/P37/cooldown behavior are essential safeguards before integration. Source and preserved artifact hashes inspected; slate hash verified. No current implementation/other ballots read, no new runtime/probe or harness execution.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T10:29:54Z",
+          "slate_sha256": "747227d50cf476a1fc640d86e46aca69aa3726ee56df42b83e194ebc0179a79c"
         }
       },
       "implementation": {
@@ -5728,6 +5765,31 @@
       "at": "2026-10-26T10:20:35Z",
       "type": "P40authorized",
       "message": "SixfreshP40APPROVE savedbeforeany3filecomponent/test/docedit. Exactfrozen5b51target3bytesunchanged. AuthorR04newisolatedworktree followscommittedauthorization. Rootdoesnotvote; preserveallactual/syntheticnegatives/6hrun."
+    },
+    {
+      "at": "2026-10-26T10:21:19Z",
+      "type": "ballot",
+      "message": "R01 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:27:42Z",
+      "type": "ballot",
+      "message": "R05 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:28:07Z",
+      "type": "ballot",
+      "message": "R07 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T10:28:59Z",
+      "type": "qa-preparation",
+      "message": "R06 generated-JPEG endurance plan/harness prepared, NOT executed or pilot/hour authorized. Root source inspection identified task mount UID99 versus launcher1000 and rendered-layer full-value expectation draft mismatches for correction before separately authorized pilot. Existing a505 native six-hour run continues with45min sweep passed; not yet retention-pruning/six-hour pass."
+    },
+    {
+      "at": "2026-10-26T10:29:54Z",
+      "type": "ballot",
+      "message": "R06 explicit Round11 ballot imported for all1 exact proposal revisions; no votes inferred."
     }
   ],
   "validation": [
