@@ -565,7 +565,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Low; one legitimate initial frame request for the replacement session.",
       "validation_plan": "Unit fixture switches JPEG A/B and seeks same rounded time; assert B frame URL assigned and paused; existing timeline tests.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -641,12 +641,15 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/replay-recovery",
         "commit": "99f2c8c",
-        "integrated": false,
+        "integrated": true,
         "peer_review": {
           "reviewer": "r04",
-          "status": "in progress"
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r04/r02-independent-review.json",
+          "evidence": "Exact implementation diffs reviewed and42 timeline units passed independently. P06 separately held, not included in this ready assessment."
         },
-        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check."
+        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check.",
+        "integrated_commit": "f417a4a"
       }
     },
     {
@@ -665,7 +668,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Moderate; asynchronous readiness across continuous, HLS and native paths.",
       "validation_plan": "Extend real-browser recovery fixtures for paused rewind and playing replay, retaining session/video/position or offset. Live recovery still progresses, Chromium/WebKit; unit intent lifecycle.",
-      "status": "implemented",
+      "status": "implementing",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -758,7 +761,8 @@
           "finding": "Hidden tab during initial-media readiness deadline can return with no decoder and attaching/mediaRestore retained; transport resumes without constructing HLS. Within approved recovery/cancellation scope.",
           "evidence": "test-results/review-2026-10-26/r04/r02-hidden-readiness-result.json"
         },
-        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check."
+        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check.",
+        "followup": "R02 correcting hidden/offline readiness cancellation after R04 reproduction; no P06 commit integrated yet."
       }
     },
     {
@@ -777,7 +781,7 @@
       "evidence_path": "test-results/review-2026-10-26/r02/",
       "risk": "Low when limited to kind=file with finite duration.",
       "validation_plan": "Unit tests near EOF and after EOF advance clock; edge and max never exceed duration, no fake end offset; pre-EOF equal-rate replay stays stable; HLS interpolation unchanged.",
-      "status": "implemented",
+      "status": "committed",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -853,12 +857,15 @@
       "implementation": {
         "worktree": "/workspace/layerglass-review/replay-recovery",
         "commit": "850c861",
-        "integrated": false,
+        "integrated": true,
         "peer_review": {
           "reviewer": "r04",
-          "status": "in progress"
+          "status": "ready",
+          "report": "test-results/review-2026-10-26/r04/r02-independent-review.json",
+          "evidence": "Exact implementation diffs reviewed and42 timeline units passed independently. P06 separately held, not included in this ready assessment."
         },
-        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check."
+        "validation": "R02:209 JS units,35 docs, five focused browser suites Chromium/WebKit; final frozen-source14 real-decoding recovery cases pass. Physical native Safari HLS remains a device check.",
+        "integrated_commit": "2070a48"
       }
     },
     {
@@ -2463,6 +2470,14 @@
     {
       "sha": "fd0306d",
       "summary": "P16: declare site test web build dependency; R07 reviewed clean-run evidence."
+    },
+    {
+      "sha": "f417a4a",
+      "summary": "P05: scope JPEG frame deduplication to page session; R04 reviewed."
+    },
+    {
+      "sha": "2070a48",
+      "summary": "P07: bound finite-file display time at EOF; R04 reviewed."
     }
   ],
   "activity": [
@@ -2595,6 +2610,11 @@
       "at": "2026-10-26T05:06:00Z",
       "type": "review",
       "message": "R07 docs/build ready; P16/P18/P19 integrated. R04 independently found P06 hidden-readiness timeout blocker; P06 held for correction, P05/P07 ready pending final review record. Root reproduced a distinct cancelled telemetry-window retry defect for Round2 proposals only; no unvoted source edits. R07 starting deeper delivery review pinned tofd0306d."
+    },
+    {
+      "at": "2026-10-26T05:12:18Z",
+      "type": "review",
+      "message": "P05/P07 integrated after R04 review;17 approved proposals integrated. R02 correcting P06 hidden/offline readiness dead-end. R09 finished UI implementation and is validating both engines. R07 submitted one concrete Round2 artifact-path candidate; root telemetry-cancellation candidate retained separately. R01 conducting independent Round2 security/lifecycle pass. No Round2 source changes or ballots yet. Two-engine retention pilot running against pinned2070a48 with4KiB compressed RAM cap; cold real IDB previews paint with zero preview/video restart requests."
     }
   ],
   "validation": [
