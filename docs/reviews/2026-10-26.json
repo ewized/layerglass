@@ -2,7 +2,7 @@
   "schema_version": 1,
   "started_at": "2026-10-26T04:03:49Z",
   "deadline": "2026-10-26T16:03:49Z",
-  "status": "Active:42frozenproposals/40integrated/P38superseded/P42voting; currentall40CI+hostingPASS. Native6holder-pinrunongoing beyond4h; JPEGdiagnosticpartial, nohour. Deadline16:03:49UTC.",
+  "status": "Active:42frozenproposals/40integrated/P38superseded/P42stopped before edits under required precision stop clause. Currentall40CI+hostingPASS. Older-pin native6h ongoing; JPEGdiagnosticRAWFAIL/nohour. Deadline16:03:49UTC.",
   "baseline": "eb9cec53841087fd592495f76cdedbf090d2fbbe",
   "branch": "review/2026-10-26-twelve-hour",
   "quorum": {
@@ -179,7 +179,7 @@
       "id": "r09",
       "scope": "Mobile UI, accessibility and Web Components",
       "agent_task": "/root/review_r09_accessibility",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r09/report.md",
       "ballot_round1": "test-results/review-2026-10-26/r09/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r09/ballot-round2.json",
@@ -192,13 +192,14 @@
       "ballot_round9": "test-results/review-2026-10-26/r09/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r09/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r09/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r09/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r09/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r09/round13-ballot.json"
     },
     {
       "id": "r10",
       "scope": "Documentation accuracy and validation quality",
       "agent_task": "/root/review_r10_documentation",
-      "status": "round 12 ballot complete",
+      "status": "round 13 ballot complete",
       "initial_report": "test-results/review-2026-10-26/r10/initial-report.txt",
       "ballot_round1": "test-results/review-2026-10-26/r10/ballot-round1.json",
       "ballot_round2": "test-results/review-2026-10-26/r10/ballot-round2.json",
@@ -212,7 +213,8 @@
       "ballot_round9": "test-results/review-2026-10-26/r10/round9-ballot.json",
       "ballot_round10": "test-results/review-2026-10-26/r10/round10-ballot.json",
       "ballot_round11": "test-results/review-2026-10-26/r10/round11-ballot.json",
-      "ballot_round12": "test-results/review-2026-10-26/r10/round12-ballot.json"
+      "ballot_round12": "test-results/review-2026-10-26/r10/round12-ballot.json",
+      "ballot_round13": "test-results/review-2026-10-26/r10/round13-ballot.json"
     }
   ],
   "rounds": [
@@ -571,10 +573,12 @@
         "r05",
         "r06",
         "r07",
-        "r08"
+        "r08",
+        "r09",
+        "r10"
       ],
       "notes": "3file localvalidJPEG timelineconsumer eligibility/activation only; lowerprecision/retention separateissue stop clause. No edits/authorworktree before6committed approvals.",
-      "decision": "P42 revision1 approved by8 explicit independent reviewers; threshold committed before implementation. Remaining2 ballots requested separately, none inferred."
+      "decision": "All10 fresh APPROVE exact P42rev1. Author then reported required independent lower-precision/retention STOP condition BEFORE tracked edits; source/evidence review in progress. No expanded implementation authorized; approvals cannot transfer."
     }
   ],
   "proposals": [
@@ -4967,7 +4971,7 @@
       "evidence_path": "test-results/review-2026-10-26/r03/final-print-stats-timeline-review.json",
       "risk": "Wrong replay-mode gating, erasing pending summaries or applying display rather than proven bounds can hide legitimate events or preserve the clamped marker bug. Render-only filtering leaves stale activation possible. Keep exact event/clock identity, original placement and compatibility; source proof still needs connected browser validation.",
       "validation_plan": "Connected production timeline component in Chromium/WebKit with production-recorder-derived JPEG metadata/history and real native decoded stills: initial0..2proven/0..3slider hides stored2.5PAUSE; stale rendered/menu activation outside currentintersection makes0seek/0unfulfilledemit; accepted1030successor admits same2.5event, pointer/keyboard activation commits exactly1seek to2.5 with same session/imageowner, correct held pixels and PAUSE at1002.5. Removing coveragegate is required negative control recovering original mismatch. Test valid completedJPEG, inclusive actualbounds, realretention, fractional lowerbound compatibility, offscreen/frozen display mappings and pending summary preservation. Legacy descriptorless/invalidJPEG, file/H264/remote anddisabled controls unchanged,0extra telemetry/media requests from render/hover alone. If independent lower-precision/retention issue arises stop without broader edits. Run focused relevantJS plus existing registered browser-timeline-events, JPEGclock and preview-loading bothengines, docslinks; independent exact-final READY before integration. New normalfullCI after voted/tested implementation; no unchanged-source rerun, realprinter/device/deploy.",
-      "status": "approved",
+      "status": "stopped",
       "ballots": {
         "r01": {
           "vote": "APPROVE",
@@ -5024,9 +5028,23 @@
           "revision": 1,
           "recorded_at": "2026-10-26T13:23:06Z",
           "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r10": {
+          "vote": "APPROVE",
+          "rationale": "Pinned e6527f1 component lines39-41 admits model events through projected slider bounds, and lines128-142 rechecks only session-wide event identity before seeking/emitting the requested position. PageReplay.bounds/jpegTarget instead use the valid local JPEG descriptor's precise proven coverage. The hash-verified production-recorder payload and production-method fixture demonstrate event2.5 within slider0..3 but beyond provenend2, committing2/RUNNING; successor1030 admits the same2.5 observation with the preceding still and PAUSE history. This supports the exact three-file local-valid-owned-JPEG eligibility/activation correction while retaining original placement, pending summaries, legacy/remote behavior and all clock/recorder/retention semantics. Approval includes every frozen validation requirement: connected production component/native decoded JPEGs in Chromium and WebKit, removed-gate failure control, stale marker/menu zero-seek/zero-unfulfilled-emit, successor pointer/keyboard exact-one-seek/owned pixels/history, precise inclusive/fractional/retention/frozen-window and legacy/disabled/request controls, relevant suites/docs and independent exact-final READY. Existing evidence uses IO/render sinks and is not connected-browser proof; any separate precision/retention defect requires a new scope/vote.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:27:54Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
+        },
+        "r09": {
+          "vote": "APPROVE",
+          "rationale": "Pinned e6527f1 component renders against projected slider bounds and activates against the legacy session-visible list, while a valid local JPEG controller clamps to its proven descriptor end. R03's actual-recorder/production-model proof therefore admits PAUSE2.5 in display0..3 but commits2 within proven0..2 and watches RUNNING; successor1030 makes that same2.5 held interval valid and PAUSE at1002.5. This supports the exact three-file eligibility correction, not a clock/model rewrite. Approve current proven/display intersection at both render and activation for valid local owned JPEG only, with original placement/grouping/offset mapping and pending summary/time retained. Connected native Chromium/WebKit proof, stale marker/menu zero-seek/zero-unfulfilled-emit controls, removed-gate negative, successor one-seek/owned-pixel/PAUSE control and exact-final independent READY remain mandatory; existing proof is not connected-browser evidence. Preserve disabled/session/camera/legacy/invalid/file/H264/remote/retention and no-request behavior. Fractional lower-bound/retention checks are compatibility only; separately demonstrated defects require revised scope rather than silent expansion. No prior vote transfer.",
+          "revision": 1,
+          "recorded_at": "2026-10-26T13:29:17Z",
+          "slate_sha256": "35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9"
         }
       },
-      "implementation_status": "Approved8/10; not yet started. Exact three-file scope; independent connected-browser acceptance required."
+      "implementation_status": "R02 reports independent fractional clock-conversion and retention defects forbidden by frozen stop clause. No tracked source/docs/tests edits; author worktree remains d4b6abf. Raw STOP report being frozen; root and R03 independent assessment pending. Fresh scope/votes required before any broader implementation."
     }
   ],
   "commits": [
@@ -6246,6 +6264,26 @@
       "at": "2026-10-26T13:23:13Z",
       "type": "quorum",
       "message": "P42 revision1 has8 explicit APPROVE ballots against exact frozen Round13 SHA35bcb7108a81f22a269307f9f658451aa911383f73d2ee636c3fd4052c29fdb9. No source edits/worktree created. Committing quorum before author work begins."
+    },
+    {
+      "at": "2026-10-26T13:24:35Z",
+      "type": "implementation",
+      "message": "P42 exclusive authorworktree created only after committed8approvalquorumd4b6abf. R02 assigned exactfrozen3fileimplementation and connectednativebrowsernegative/compatibility checks; R09/R10 remainingindependentballots requested. No appsource edit in canonical tree."
+    },
+    {
+      "at": "2026-10-26T13:27:54Z",
+      "type": "ballot",
+      "message": "R10 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:29:17Z",
+      "type": "ballot",
+      "message": "R09 explicit Round13 ballot imported for all1 exact proposal revisions; no votes inferred."
+    },
+    {
+      "at": "2026-10-26T13:29:17Z",
+      "type": "scope-stop",
+      "message": "P42 reached10/10 fresh approvals but author discovered separately evidenced fractional lower-clock/retention issue required by exact frozen stop clause. No tracked edits. Root requested exact immutable STOP report and R03 independent source/evidence assessment before any fresh expanded proposal. Prior approvals will not transfer."
     }
   ],
   "validation": [
@@ -6836,6 +6874,15 @@
         "P33"
       ],
       "starting_commit": "181366a"
+    },
+    {
+      "proposal": "P42",
+      "reviewer": "r02",
+      "path": "/workspace/layerglass-review/jpeg-timeline-coverage",
+      "branch": "review/jpeg-timeline-coverage",
+      "parent": "d4b6abf",
+      "quorum_before_creation": 8,
+      "scope": "Exact3files frozen Round13; sourcefindingR03-FINAL-PRINT-01; currentprovenownedJPEGcoverage render+activationgate only."
     }
   ],
   "delivery": {
