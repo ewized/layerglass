@@ -135,9 +135,9 @@ so MJPEG does not advertise video PiP, casting or pause/rewind controls.
 
 ## Verification and sources
 
-`direct.test.js` covers approval, invalid devices, URLs, authorization failures,
+`direct.test.ts` covers approval, invalid devices, URLs, authorization failures,
 request sharing, unavailable capabilities, multipart chunk boundaries and
-bounded image cleanup. `browser-direct.js` serves generated JPEGs over a real
+bounded image cleanup. `browser-direct.ts` serves generated JPEGs over a real
 cross-origin HTTP multipart response and checks Chromium camera playback,
 selection, reconnect, CORS, rejected redirects and live-only controls. WebKit
 checks the explicit unsupported state, zero printer requests, and recovery from

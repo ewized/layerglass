@@ -1,7 +1,13 @@
 import { nativeFetch } from '../../../backend-contracts/src/index.js';
 import { cancelTimeout, cancelInterval } from '../../../backend-contracts/src/index.js';
 import type { PreviewCapture } from '../preview-history.js';
-import type { PreviewAsset, PreviewMatch, PreviewSheet, PreviewBitmap } from '../preview-types.js';
+import type {
+  PreviewAsset,
+  PreviewFrame,
+  PreviewMatch,
+  PreviewSheet,
+  PreviewBitmap,
+} from '../preview-types.js';
 interface PreviewRead {
   time: number;
   epoch: number;
@@ -35,7 +41,7 @@ export class PrinterScrubPreview extends PlayerElement {
   declare request: { controller: AbortController; key: string; sheet: PreviewSheet } | null;
   declare requestTimer: ReturnType<typeof setTimeout> | null;
   declare clockTimer: ReturnType<typeof setInterval> | null;
-  declare displayed: { time: number; asset?: string } | null;
+  declare displayed: ({ time: number } & Partial<PreviewFrame>) | null;
   declare painted: boolean;
 
   static override template = `<div class="scrub-preview-frame"><canvas width="320" height="180"></canvas></div><span class="scrub-preview-time"></span>`;

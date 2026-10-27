@@ -19,6 +19,7 @@
       },
       "{workspaceRoot}/tsconfig*.json",
       "{workspaceRoot}/types/**/*.d.ts",
+      "{workspaceRoot}/tests/**/*.ts",
       "{workspaceRoot}/eslint.config.ts",
       "{workspaceRoot}/.prettierrc.json"
     ]

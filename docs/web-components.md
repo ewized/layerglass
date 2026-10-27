@@ -113,11 +113,11 @@ as a replacement.
 
 `PageReplay`, `PlayerVideoStream`, `PlayerUpdates`, and the fullscreen/gesture
 controllers keep their existing media, timeline, SSE and orientation behavior.
-`apps/layerglass/tests/browser-components.js` covers native registration, independent instances,
+`apps/layerglass/tests/browser-components.ts` covers native registration, independent instances,
 safe names, labels, reconnecting editors, one action per gesture, and sampling
 cleanup in Chromium and WebKit. The existing browser suites cover the player
 behavior against generated footage.
-`apps/layerglass/tests/browser-keyboard-focus.js` covers available menu actions,
+`apps/layerglass/tests/browser-keyboard-focus.ts` covers available menu actions,
 keyboard Stats handoffs, copy-feedback focus ownership, held onboarding checks,
 and rejected printer/backend setup focus ownership
 with actual Chromium/WebKit keyboard events and generated responses.

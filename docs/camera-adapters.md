@@ -152,7 +152,7 @@ Restarting before a successful save reloads the prior settings file.
 validation, concurrent races, per-host caching, and model/protocol admission.
 `apps/python-backend/tests/test_providers.py` covers hidden generic candidates and legacy settings,
 approved URL enforcement, explicit adapter approval, migration, and internal
-transport reuse. `apps/layerglass/tests/browser-providers.js` verifies the code-only printer
+transport reuse. `apps/layerglass/tests/browser-providers.ts` verifies the code-only printer
 list and API rejection in Chromium and WebKit.
 `apps/python-backend/tests/test_printer_bindings.py` covers verified replacements,
 quarantine/reload/re-pair/forget, failed persistence, shutdown lock ownership,

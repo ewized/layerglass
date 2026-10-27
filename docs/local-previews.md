@@ -111,7 +111,7 @@ The accelerated 45-minute test checks every five-second timestamp and image
 color with no preview HTTP requests or main-video seeks; it is not a claim of
 a 45-minute physical-phone soak test. Separate checks force RAM eviction, quota
 errors and delayed server fallback, and exercise keyboard/touch/narrow layouts.
-`browser-preview-loading.js` checks corrupt-sprite cooldown and recovery, plus
+`browser-preview-loading.ts` checks corrupt-sprite cooldown and recovery, plus
 delayed IndexedDB reads with current-target, session and visibility ownership.
 It also checks adjacent warm/cold images in both directions and a short contiguous
 forward/return sweep with real IndexedDB under a one-image compressed RAM budget.
@@ -127,7 +127,7 @@ first capture without preview HTTP. Precise end/provisional-tail, real retained-
 advancement, valid/stale delayed backup and legacy/remote controls cover the consumer
 boundary; no timing tolerance or metadata normalization stands in for those bounds.
 
-`browser-jpeg-clock.js` checks real JPEG decoding, fixed paused readings and
+`browser-jpeg-clock.ts` checks real JPEG decoding, fixed paused readings and
 thumbnail timestamps, precise/completed/provisional positions, delayed image and
 metadata ordering, source/session changes, reattachment and legacy/no-recording
 fallback in Chromium and WebKit using generated loopback fixtures.

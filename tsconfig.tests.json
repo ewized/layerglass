@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "paths": {
+      "/static/*": ["./apps/layerglass/src/*"],
+      "/backend-python.js": ["./apps/layerglass/src/backend/python.ts"]
+    }
+  },
+  "include": ["apps/**/tests/**/*.ts", "tests/**/*.ts", "types/browser.d.ts"]
+}

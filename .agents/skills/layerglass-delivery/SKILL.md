@@ -27,7 +27,7 @@ targets, paths and static-hosting outputs.
   Python-served compiled HTML keeps its Python default. Never let a public static host
   silently probe a visitor's LAN or proxy private printer feeds.
 - Nx remote caching is not configured. Cache static/source builds and deterministic
-  JavaScript units only; Python runtime checks, browser checks and serve targets
+  TypeScript units only; Python runtime checks, browser checks and serve targets
   are deliberately uncached. Keep generated outputs and `.nx/` out of source control.
 - Public PR checks run on GitHub-hosted runners with read-only repository access;
   never attach those checks to a runner with access to someone's printer LAN.

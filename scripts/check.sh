@@ -2,7 +2,7 @@
 set -euo pipefail
 
 mode=${1:-all}
-case "$mode" in python|javascript|workspace|unit|browser|all) ;; *) echo 'Usage: scripts/check.sh [python|javascript|workspace|unit|browser|all] [browser-suite.js ...]' >&2; exit 2 ;; esac
+case "$mode" in python|javascript|workspace|unit|browser|all) ;; *) echo 'Usage: scripts/check.sh [python|javascript|workspace|unit|browser|all] [browser-suite.ts ...]' >&2; exit 2 ;; esac
 task_browser_suites=("${@:2}")
 project_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
 task_host_path=${LAYERGLASS_HOST_PATH:-$project_root}
@@ -61,7 +61,7 @@ task_metadata_image=$task_image
 task_metadata_command=(python -B -c "import json; print(json.load(open('package.json'))['devDependencies']['playwright'])")
 if [[ "$mode" == javascript || "$mode" == workspace ]]; then
   task_metadata_image=node:24-bookworm
-  task_metadata_command=(node --input-type=commonjs -p "require('./package.json').devDependencies.playwright")
+  task_metadata_command=(node scripts/playwright-version.ts)
 fi
 task_playwright_version=$(docker run --rm --init --name "${task_prefix}_playwright_version" \
   --cidfile "$task_container_dir/playwright_version.cid" \
@@ -132,7 +132,7 @@ run_browsers() {
     --network "container:$task_fixture" --shm-size=512m \
     -e npm_config_cache=/tmp/npm-cache -e VIEWER_URL=http://127.0.0.1:8080 -e PWA_CACHE_ENABLED=0 \
     -v "$task_host_path:/app:ro" -v "$task_host_path/test-results:/app/test-results" -w /app \
-    "$task_playwright_image" sh apps/layerglass/tests/run-js.sh apps/layerglass/tests/run-browser.js "${task_browser_suites[@]}" \
+    "$task_playwright_image" sh apps/layerglass/tests/run-js.sh apps/layerglass/tests/run-browser.ts "${task_browser_suites[@]}" \
     2>&1 | tee "$project_root/test-results/browser.log"
 }
 

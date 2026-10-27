@@ -35,6 +35,9 @@ Documentation lives in the Obsidian vault at [`docs/`](docs/index.md).
   checks require the user's intended device scope.
 - Prefer native ES modules and Web Components. Preserve the single native video
   decoder and existing browser storage keys unless a task includes a migration.
+- All authored JavaScript-family code, including unit tests, browser fixtures and
+  tooling, must be TypeScript and pass strict checking. JavaScript belongs only
+  in generated build outputs or installed dependencies.
 - Nx manages `python-backend`, `demo-backend`, `local-backend`, `layerglass`
   and `layerglass-site` targets plus the shared `backend-contracts` library. Keep the player native
   ESM; use Lit custom elements and the document-scoped Emotion cache described in

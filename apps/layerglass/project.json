@@ -35,11 +35,12 @@
       "cache": true,
       "inputs": [
         "default",
-        "^default"
+        "^default",
+        "{workspaceRoot}/scripts/check-typescript-only.ts"
       ],
       "outputs": [],
       "options": {
-        "command": "node --import tsx --experimental-vm-modules --test apps/layerglass/tests/*.test.js"
+        "command": "node --import tsx --experimental-vm-modules --test apps/layerglass/tests/*.test.ts"
       }
     },
     "browser": {

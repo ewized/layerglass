@@ -13,10 +13,14 @@ for module ownership.
 
 ## Types and boundaries
 
-Write application browser and Node tooling modules in TypeScript, with native ESM imports.
-Legacy browser/VM regression fixtures remain executable JavaScript against the emitted
-modules; they are behavioral tests, not unchecked TypeScript renamed for appearances.
-New typed transport and rendering tests use TypeScript.
+Write all authored browser code, Node tooling, tests and fixtures in TypeScript,
+with native ESM imports. Tests use the same strict compiler guardrails as application
+code. Model test doubles and browser instrumentation explicitly; do not suppress
+checking or replace missing types with `any`. Generated browser JavaScript is a build
+output, never an alternate source of truth.
+The [test-source guide](testing.md#typescript-test-sources) describes checked
+platform doubles, malformed-input controls and compiled browser fixtures. CI's
+source policy prevents authored JavaScript from re-entering the repository.
 Browser imports name the emitted `.js` file; Node-only tools use explicit `.ts`
 imports and Node's type stripping. Use type-only imports for erased dependencies.
 Keep strict checking and checked array indexing enabled. Prefer inferred local

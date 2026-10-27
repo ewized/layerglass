@@ -8,8 +8,8 @@ tags: [development, testing]
 [Vault home](../index.md) · [Workflow](workflow.md)
 
 `./scripts/check.sh all` builds the runtime image, checks strict TypeScript in the
-browser, service-worker, Node and edge environments, runs ESLint and Prettier, then
-runs all Python and JavaScript
+browser, service-worker, Node, edge and test environments, runs ESLint and Prettier, then
+runs all Python and TypeScript
 unit tests, validates documentation/version metadata, starts a generated-camera
 fixture, and runs representative Chromium/WebKit regressions. It needs Docker,
 not a printer or host-installed language toolchains. `unit` and `browser` modes
@@ -22,27 +22,56 @@ The independent `layerglass-site:test` target writes screenshots into its checko
 directory; the temporary-copy workspace harness defaults it to the mounted
 artifact collector so those screenshots survive container cleanup.
 Pass representative suite names to focus a browser run, for example
-`./scripts/check.sh browser browser-scrub-commit.js browser-components.js`.
+`./scripts/check.sh browser browser-scrub-commit.ts browser-components.ts`.
+
+## TypeScript test sources
+
+All unit tests, browser suites and test helpers are TypeScript. The dedicated
+[`tsconfig.tests.json`](../../tsconfig.tests.json) applies the same strict compiler
+options and checked indexing as the application. The
+[source policy](../../scripts/check-typescript-only.ts) runs before typechecking
+and rejects authored `.js`, `.mjs`, `.cjs` and `.jsx` files, including in copied CI
+workspaces without a Git index. Installed dependencies and generated outputs are
+excluded; the browser still receives compiled native ES modules.
+
+Shared platform doubles live in [`tests/doubles.ts`](../../tests/doubles.ts),
+and loopback HTTP helpers in [`tests/http.ts`](../../tests/http.ts). Model fake
+methods and mutable state explicitly. `testDouble` checks a deliberately partial
+platform implementation at fixture construction; assertions about application
+results retain the actual production types. `untrustedInput` is reserved for
+deliberately malformed wire data in validation/rejection tests. Do not use it to
+bypass checking of valid fixtures. Non-null assertions require a local setup or
+readiness invariant, or an explicit assertion about the value.
+
+The browser fixtures under `apps/layerglass/tests/fixtures/` compile through
+[`fixture-module.ts`](../../apps/layerglass/tests/fixture-module.ts) before being
+served. Keep fixture scripts in checked TypeScript modules instead of untyped
+JavaScript embedded in HTML strings. Playwright callbacks are checked as part of
+their enclosing TypeScript suite; use its existing module-state helpers when
+passing application handles into browser predicates.
+Browser entrypoints use Node 24's native type stripping so serialized Playwright
+callbacks do not depend on transpiler helpers. Source-importing unit tests keep
+the `tsx` loader to resolve emitted `.js` specifiers to their TypeScript sources.
 
 | Change | Focused coverage |
 | --- | --- |
 | Approved devices, discovery/backoff, credentials | `test_providers.py`, `test_identification.py`, `test_discovery_cache.py`, `test_cameras.py`, `test_printer_bindings.py` |
-| MQTT data and replay time | `test_printer.py`, `test_public_telemetry.py`, `test_printer_history.py`, `printer-history.test.js`, `printer-stats.test.js`, `browser-history-reconnect.js` |
-| Video transport and DVR | `test_video_stream.py`, `test_replay.py`, `video-stream.test.js`, browser video-stream/stream-recovery/replay-recovery/replay-suspension suites |
-| Live-relative timeline and gesture commits | `timeline.test.js`, `scrub-preview.test.js`, browser scrub-commit suite |
-| Observed print-event markers | `timeline-events.test.js`, browser timeline-events suite |
-| Backend selection and CORS | `backend.test.js`, `test_backend_cors.py`, browser backends/backend-origin suites |
-| Direct printer admission and live-only MJPEG | `apps/local-backend/tests/direct.test.js`, browser direct suite (generated HTTP multipart media, no printer) |
-| Browser backend modules and public roots | `apps/demo-backend/tests/demo.test.js`, `apps/local-backend/tests/file.test.js`, `test_browser_modules.py`, static player smoke checks |
-| Local thumbnail retention, storage and loading | `preview-history.test.js`, `browser-preview-storage.js`, `browser-preview-buffer.js`, `browser-preview-loading.js` |
-| Media/platform UI | `media.test.js`, `cast-sender.test.js`, browser fullscreen/Google Cast suites |
-| Modules and UI ownership | `browser-module.js` helpers, browser ESM/components suites |
-| Keyboard focus and pending editors | `browser-keyboard-focus.js` (Chromium/WebKit keyboard navigation, Stats, onboarding cancellation and rejected setup) |
+| MQTT data and replay time | `test_printer.py`, `test_public_telemetry.py`, `test_printer_history.py`, `printer-history.test.ts`, `printer-stats.test.ts`, `browser-history-reconnect.ts` |
+| Video transport and DVR | `test_video_stream.py`, `test_replay.py`, `video-stream.test.ts`, browser video-stream/stream-recovery/replay-recovery/replay-suspension suites |
+| Live-relative timeline and gesture commits | `timeline.test.ts`, `scrub-preview.test.ts`, browser scrub-commit suite |
+| Observed print-event markers | `timeline-events.test.ts`, browser timeline-events suite |
+| Backend selection and CORS | `backend.test.ts`, `test_backend_cors.py`, browser backends/backend-origin suites |
+| Direct printer admission and live-only MJPEG | `apps/local-backend/tests/direct.test.ts`, browser direct suite (generated HTTP multipart media, no printer) |
+| Browser backend modules and public roots | `apps/demo-backend/tests/demo.test.ts`, `apps/local-backend/tests/file.test.ts`, `test_browser_modules.py`, static player smoke checks |
+| Local thumbnail retention, storage and loading | `preview-history.test.ts`, `browser-preview-storage.ts`, `browser-preview-buffer.ts`, `browser-preview-loading.ts` |
+| Media/platform UI | `media.test.ts`, `cast-sender.test.ts`, browser fullscreen/Google Cast suites |
+| Modules and UI ownership | `browser-module.ts` helpers, browser ESM/components suites |
+| Keyboard focus and pending editors | `browser-keyboard-focus.ts` (Chromium/WebKit keyboard navigation, Stats, onboarding cancellation and rejected setup) |
 | Edge SSR and adoption | `infra/cloudflare/tests/rendering.test.ts`, local Wrangler checks, Lit identity/Emotion hydration checks in browser components |
 | Delivery artifacts and public routing | `infra/cloudflare/tests/delivery.test.ts`, `hosting.test.ts`, local Wrangler checks |
-| Shell/update behavior | `test_pwa.py`, `pwa.test.js`, browser PWA suite |
+| Shell/update behavior | `test_pwa.py`, `pwa.test.ts`, browser PWA suite |
 
-The selected browser list is maintained in [`apps/layerglass/tests/run-browser.js`](../../apps/layerglass/tests/run-browser.js).
+The selected browser list is maintained in [`apps/layerglass/tests/run-browser.ts`](../../apps/layerglass/tests/run-browser.ts).
 GitHub CI also runs the independent hosting workflow: it tests artifact source
 identity, tampered/missing/extra files, private output and symlink rejection,
 public-byte verification, headers and real 404 routing before publication.
@@ -104,20 +133,20 @@ docker image rm local/layerglass-test
 `apps/layerglass/tests/run-js.sh` copies sources into a temporary directory, installs locked npm
 dependencies there, compiles the browser staging tree and runs type/lint/format
 checks plus `npm test` by default. Append a script such as
-`apps/layerglass/tests/browser-esm.js` for a focused browser run. Use the pinned Playwright image
+`apps/layerglass/tests/browser-esm.ts` for a focused browser run. Use the pinned Playwright image
 from `scripts/check.sh`. Point `VIEWER_URL` at the generated fixture, ideally
 `http://127.0.0.1:8080` in its shared Docker network namespace for secure-context
 storage/service-worker checks. No `node_modules` directory is written to the checkout.
 
 The default CI PWA run verifies network-only development mode. Full offline
-update/rollback checks in `browser-pwa.js` require a separate fixture with
+update/rollback checks in `browser-pwa.ts` require a separate fixture with
 `FIXTURE_PWA=1` and `PWA_CACHE_ENABLED=1`, and `FIXTURE_PWA=1` in the browser
 container. Do not enable caching in the normal dev stack just to run those checks.
 
 ## Hardware and opt-in checks
 
-`check_live_discovery.py`, `benchmark_discovery.py`, `browser-discovery-live.js`
-and `browser-scrub-preview-live.js` are manual integration tools, excluded from
+`check_live_discovery.py`, `benchmark_discovery.py`, `browser-discovery-live.ts`
+and `browser-scrub-preview-live.ts` are manual integration tools, excluded from
 the automatic suite. Set their target/scope explicitly before running them.
 Do not point CI at a personal deployment or attach public PR jobs to a LAN runner.
 
