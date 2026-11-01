@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "5.20261026.1",
-    "@types/node": "24.19.2",
+    "@types/node": "26.6.6",
     "esbuild": "0.28.2",
     "eslint": "10.13.0",
     "hls.js": "1.7.3",
