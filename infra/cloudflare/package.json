@@ -8,7 +8,7 @@
     "test:local": "node tests/local-hosting.ts"
   },
   "devDependencies": {
-    "wrangler": "4.152.0"
+    "wrangler": "4.158.0"
   },
   "engines": {
     "node": ">=22"
